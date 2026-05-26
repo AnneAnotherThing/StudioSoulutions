@@ -6,7 +6,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 <meta name="theme-color" content="#F5EDE0" />
-<title>Studio Soulutions — Cedar Lane Suites</title>
+<title>Studio Soulutions — Salon Plus Studio Suites</title>
+<link rel="stylesheet" href="/assets/css/tokens.css">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -787,10 +788,19 @@ body {
 
 <!-- DISCOVER VIEW -->
 <section class="view active" id="view-discover">
-  <div class="welcome">
+  <!-- Lobby/corridor photo behind the welcome block so visitors orient instantly -->
+  <div class="welcome welcome--with-hero" style="
+    position: relative;
+    background-image: linear-gradient(180deg, rgba(245,237,224,0.35) 0%, rgba(245,237,224,0.92) 78%, var(--bg) 100%), url('/assets/photos/1000040457.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 64px 20px 28px;
+    margin: -16px -20px 16px;
+    border-radius: 0 0 28px 28px;
+  ">
     <div class="welcome-eyebrow">You're inside</div>
-    <h1 class="serif">Cedar Lane Suites</h1>
-    <p>10 independent studios under one roof. Tap any to learn more.</p>
+    <h1 class="serif">Salon Plus Studio Suites</h1>
+    <p>Independent studios under one roof. Tap any to learn more.</p>
   </div>
 
   <div class="section-eyebrow">Did you know?</div>
@@ -924,7 +934,7 @@ const didYouKnow = [
   { theme: 'sage', eyebrow: 'Did you know?', text: 'There\'s a licensed massage therapist two doors down from your color appointment.', link: 'See Quiet Hands', linkId: 't4' },
   { theme: 'clay', eyebrow: 'Pair it', text: 'A facial at Verdant + a brow shape at Bloom — both on the 2nd floor, easy walk between.', link: 'See the pairing', linkId: 't2' },
   { theme: 'sand', eyebrow: 'Local secret', text: 'Tilde does 1:1 makeup lessons — perfect for the morning of a wedding day in the building.', link: 'See Tilde', linkId: 't8' },
-  { theme: 'sage', eyebrow: 'New here', text: 'Amaranth Aesthetics joined Cedar Lane last month. Botox & fillers from a board-certified RN.', link: 'See Amaranth', linkId: 't10' },
+  { theme: 'sage', eyebrow: 'New here', text: 'Amaranth Aesthetics joined Salon Plus last month. Botox & fillers from a board-certified RN.', link: 'See Amaranth', linkId: 't10' },
   { theme: 'clay', eyebrow: 'Walk-ins', text: 'Bloom Brow Bar takes walk-ins for brow shaping — usually 15 minutes, no appointment needed.', link: 'See Bloom', linkId: 't5' }
 ];
 

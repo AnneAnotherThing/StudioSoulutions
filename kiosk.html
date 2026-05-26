@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="kiosk">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#F5EDE0" />
+<title>Studio Soulutions — Salon Plus Studio Suites · Lobby</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<style>
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    background: var(--ink);
+    color: var(--cream);
+    position: relative;
+  }
+
+  /* ---------- Attract loop (idle) ---------- */
+  #attract {
+    position: fixed; inset: 0;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+    pointer-events: none;
+    background: var(--ink);
+  }
+  #attract.is-on { opacity: 1; pointer-events: auto; }
+  .attract-slide {
+    position: absolute; inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 2s ease;
+  }
+  .attract-slide.is-on { opacity: 1; }
+  .attract-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(61,53,48,0.15) 0%, rgba(61,53,48,0.55) 60%, rgba(61,53,48,0.85) 100%);
+    z-index: 2;
+  }
+  .attract-mark {
+    position: absolute; left: 0; right: 0; bottom: 14vh;
+    z-index: 3;
+    text-align: center;
+    color: var(--cream);
+  }
+  .attract-mark .eyebrow {
+    font-size: 1.1rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 1.2rem;
+  }
+  .attract-mark .wordmark {
+    font-family: var(--font-serif);
+    font-size: 5.5rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-weight: 500;
+  }
+  .attract-mark .wordmark em {
+    color: var(--clay-soft);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .attract-mark .tap-hint {
+    margin-top: 2.4rem;
+    font-size: 1.1rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50%      { opacity: 0.85; }
+  }
+
+  /* ---------- Active app ---------- */
+  #app {
+    position: fixed; inset: 0;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    background: var(--bg);
+    color: var(--ink);
+  }
+
+  header.kiosk-header {
+    padding: 1.4rem 2.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--cream);
+    border-bottom: 1px solid var(--line);
+  }
+  .brand {
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .brand-mark {
+    width: 56px; height: 56px;
+    background: var(--ink); color: var(--cream);
+    border-radius: var(--r-md);
+    display: grid; place-items: center;
+    font-family: var(--font-serif); font-weight: 600;
+    font-size: 1.6rem;
+  }
+  .brand-name {
+    font-family: var(--font-serif);
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .brand-sub {
+    font-size: 0.7rem;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    margin-top: 2px;
+  }
+  .header-time {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--ink-muted);
+  }
+
+  main.kiosk-main {
+    overflow: hidden;
+    padding: 2.4rem;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 2.4rem;
+  }
+  .panel {
+    background: var(--cream);
+    border-radius: var(--r-xl);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .panel h2 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 1.2rem;
+  }
+  .placeholder {
+    color: var(--ink-muted);
+    font-style: italic;
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+  }
+
+  nav.kiosk-nav {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.8rem;
+    padding: 1.2rem 2.4rem 1.8rem;
+    background: var(--cream);
+    border-top: 1px solid var(--line);
+  }
+  .nav-btn {
+    background: var(--surface-2);
+    color: var(--ink);
+    border: 0;
+    border-radius: var(--r-lg);
+    padding: 1.4rem 1rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    min-height: 88px;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.2s ease;
+  }
+  .nav-btn:active { transform: scale(0.97); background: var(--sand); }
+  .nav-btn.is-active { background: var(--ink); color: var(--cream); }
+</style>
+</head>
+<body>
+
+  <!-- ATTRACT LOOP (idle screen) -->
+  <div id="attract" class="is-on" aria-hidden="true">
+    <div class="attract-slide is-on" style="background-image: url('/assets/photos/1000040457.jpg');"></div>
+    <div class="attract-slide" style="background-image: url('/assets/photos/1000040455.jpg');"></div>
+    <div class="attract-slide" style="background-image: url('/assets/photos/1000040453.jpg');"></div>
+    <div class="attract-slide" style="background-image: url('/assets/photos/1000040456.jpg');"></div>
+    <div class="attract-overlay"></div>
+    <div class="attract-mark">
+      <div class="eyebrow">Welcome to Salon Plus Studio Suites</div>
+      <div class="wordmark">Studio Soul<em>utions</em></div>
+      <div class="tap-hint">Touch anywhere to explore</div>
+    </div>
+  </div>
+
+  <!-- ACTIVE APP -->
+  <div id="app" hidden>
+    <header class="kiosk-header">
+      <div class="brand">
+        <div class="brand-mark">s</div>
+        <div>
+          <div class="brand-name">Studio Soul<em style="color: var(--clay-deep); font-family: var(--font-serif);">utions</em></div>
+          <div class="brand-sub">Salon Plus Studio Suites</div>
+        </div>
+      </div>
+      <div class="header-time" id="clock">—</div>
+    </header>
+
+    <main class="kiosk-main">
+      <section class="panel" id="panel-primary">
+        <h2>Directory</h2>
+        <p class="placeholder">Tenant cards slot in here (task #4). Tap a card → map highlights the suite + route.</p>
+      </section>
+      <section class="panel" id="panel-map">
+        <h2>Map</h2>
+        <p class="placeholder">Interactive floor plan slots in here (task #4). "You are here" pin + animated route to selected suite.</p>
+      </section>
+    </main>
+
+    <nav class="kiosk-nav">
+      <button class="nav-btn is-active" data-view="directory">Directory</button>
+      <button class="nav-btn" data-view="about">About the Studio</button>
+      <button class="nav-btn" data-view="highlights">Highlights</button>
+      <button class="nav-btn" data-view="map">Map</button>
+    </nav>
+  </div>
+
+<script type="module">
+  import { getStudio, getTenants } from '/assets/js/data.js';
+
+  /* ---------- Attract loop crossfade ---------- */
+  const slides = document.querySelectorAll('#attract .attract-slide');
+  let slideIdx = 0;
+  setInterval(() => {
+    slides[slideIdx].classList.remove('is-on');
+    slideIdx = (slideIdx + 1) % slides.length;
+    slides[slideIdx].classList.add('is-on');
+  }, 6500);
+
+  /* ---------- Wake / sleep ---------- */
+  const attract = document.getElementById('attract');
+  const app = document.getElementById('app');
+  let idleTimer;
+  const IDLE_MS = 60_000;     // 60s with no touch → back to attract
+
+  function wake() {
+    attract.classList.remove('is-on');
+    app.hidden = false;
+    resetIdle();
+  }
+  function sleep() {
+    attract.classList.add('is-on');
+    app.hidden = true;
+  }
+  function resetIdle() {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(sleep, IDLE_MS);
+  }
+
+  attract.addEventListener('click', wake);
+  attract.addEventListener('touchstart', wake, { passive: true });
+  document.addEventListener('click', resetIdle);
+  document.addEventListener('touchstart', resetIdle, { passive: true });
+
+  /* ---------- Clock ---------- */
+  function tickClock() {
+    const d = new Date();
+    document.getElementById('clock').textContent =
+      d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  }
+  tickClock();
+  setInterval(tickClock, 30_000);
+
+  /* ---------- Studio name from data ---------- */
+  getStudio().then(s => { /* hook for dynamic header later */ });
+
+  /* ---------- Nav stub ---------- */
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      // Real panel swaps land with task #4.
+    });
+  });
+</script>
+
+</body>
+</html>
