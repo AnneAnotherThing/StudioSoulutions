@@ -1,0 +1,2031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#0e0c0a" />
+<title>Studio Soulutions — Owner Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+/* =====================================================================
+   Studio Soulutions — Owner Admin
+   Hive-Rise · light, neutral, taupe + sage (beauty-industry-appropriate)
+   ===================================================================== */
+:root {
+  /* Surfaces */
+  --bg:           #F5EDE0;       /* warm sand cream — primary surface */
+  --bg-2:         #EFE4D2;
+  --bg-3:         #E5D9C3;
+  --surface:      #FBF6EE;
+  --surface-2:    #FFFBF4;
+  /* Text */
+  --ink:          #3D3530;
+  --ink-soft:     #6B6357;
+  --ink-faint:    #8B7E70;
+  --ink-ghost:    #B8AB9C;
+  /* Accents */
+  --sage:         #8B9A7E;
+  --sage-deep:    #6B7A5F;
+  --sage-soft:    #C5D0B8;
+  --taupe:        #B5A795;
+  --taupe-deep:   #8B7E6A;
+  --taupe-soft:   #D9CBB8;
+  --clay:         #C97B5A;
+  --clay-deep:    #A8593E;
+  --clay-soft:    #E8C8B5;
+  /* Lines */
+  --line:         #E5D9C3;
+  --line-2:       #D4C4A8;
+  /* Legacy aliases — bumped alphas so cards and buttons have clear contrast
+     against the cream bg. */
+  --cream:        var(--ink);
+  --cream-soft:   var(--surface);
+  --ink-on-cream: var(--surface-2);
+  --cream-04: rgba(61,53,48,0.05);
+  --cream-06: rgba(61,53,48,0.07);
+  --cream-10: rgba(61,53,48,0.11);
+  --cream-15: rgba(61,53,48,0.15);
+  --cream-20: rgba(61,53,48,0.20);
+  --cream-30: rgba(61,53,48,0.26);
+  --cream-40: rgba(61,53,48,0.48);
+  --cream-50: rgba(61,53,48,0.58);
+  --cream-70: rgba(61,53,48,0.80);
+  --cream-90: rgba(61,53,48,0.93);
+
+  --shadow:       0 2px 4px rgba(61,53,48,0.10), 0 10px 28px rgba(61,53,48,0.16);
+  --shadow-lift:  0 10px 32px rgba(61,53,48,0.18), 0 30px 70px rgba(61,53,48,0.22);
+}
+
+/* Lift treatment so cards and buttons stand off the cream bg */
+.tenant-tile, .highlight-row, .login-card, .ai-block, aside.sidebar, .drawer {
+  box-shadow: var(--shadow);
+}
+.tenant-tile:hover { box-shadow: var(--shadow-lift); }
+.login-card { box-shadow: var(--shadow-lift); }
+.drawer { box-shadow: -20px 0 60px -20px rgba(61,53,48,0.30); }
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  background: var(--bg);
+  color: var(--cream);
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+body {
+  background-image:
+    radial-gradient(80% 50% at 80% -10%, rgba(139,154,126,0.10) 0%, transparent 70%),
+    radial-gradient(60% 40% at 0% 100%, rgba(181,167,149,0.08) 0%, transparent 70%);
+  background-attachment: fixed;
+}
+
+.serif    { font-family: 'Fraunces', Georgia, serif; font-weight: 500; letter-spacing: -0.01em; }
+.serif-it { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-weight: 400; }
+.eyebrow {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-weight: 700;
+  color: var(--cream-50);
+}
+
+a, button { font-family: inherit; }
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--cream);
+  background: transparent;
+  border: 0;
+  outline: 0;
+}
+
+/* ---------- Login overlay ---------- */
+.login-shell {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  /* Lighter photo wash so the storefront reads as a backdrop, and the card pops off it */
+  background:
+    radial-gradient(80% 60% at 80% 0%, rgba(139,154,126,0.16) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(245,237,224,0.18) 0%, rgba(245,237,224,0.42) 60%, rgba(245,237,224,0.72) 100%),
+    url('assets/photos/1000040456.jpg');
+  background-size: cover;
+  background-position: center;
+  display: grid; place-items: center;
+  padding: 24px;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+.login-shell.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.login-card {
+  width: 100%; max-width: 440px;
+  background: var(--surface-2);          /* solid lightest cream so the card lifts off the photo */
+  border: 1px solid var(--line-2);
+  border-radius: 26px;
+  padding: 36px 32px 32px;
+  /* Deeper drop shadow gives a real "lifted card" feel */
+  box-shadow:
+    0 4px 12px rgba(61,53,48,0.18),
+    0 28px 60px rgba(61,53,48,0.30),
+    0 60px 120px rgba(61,53,48,0.20);
+}
+.login-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+.brand-mark {
+  width: 44px; height: 44px;
+  background: var(--cream);
+  color: var(--ink-on-cream);
+  border-radius: 12px;
+  display: grid; place-items: center;
+  font-family: 'Fraunces', serif; font-weight: 600;
+  font-size: 22px;
+}
+.login-brand .name {
+  font-family: 'Fraunces', serif;
+  font-size: 18px; font-weight: 500;
+  color: var(--cream);
+  letter-spacing: -0.01em;
+}
+.login-brand .name em { font-style: italic; font-weight: 400; color: var(--clay-soft); }
+.login-brand .sub { font-size: 10px; text-transform: uppercase; letter-spacing: 0.22em; color: var(--cream-50); margin-top: 3px; font-weight: 700; }
+
+.login-card h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+.login-card h1 em { font-style: italic; font-weight: 400; color: var(--clay-soft); }
+.login-card p.lead { color: var(--cream-70); margin-bottom: 26px; }
+
+.field { display: block; margin-bottom: 14px; }
+.field label {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--cream-50);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.field input, .field textarea, .field select {
+  width: 100%;
+  background: var(--cream-06);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: var(--cream);
+  transition: border-color 0.15s, background 0.2s;
+}
+.field input:focus, .field textarea:focus, .field select:focus {
+  border-color: var(--clay-soft);
+  background: var(--cream-10);
+}
+.field input::placeholder, .field textarea::placeholder { color: var(--cream-40); }
+.field textarea { resize: vertical; min-height: 80px; }
+
+.btn {
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  gap: 8px;
+  border-radius: 12px;
+  padding: 13px 18px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.btn:active { transform: scale(0.985); }
+.btn-primary { background: var(--cream); color: var(--ink-on-cream); }
+.btn-primary:hover { background: var(--cream-soft); }
+.btn-secondary {
+  background: var(--cream-10);
+  color: var(--cream);
+  border-color: var(--line-2);
+  backdrop-filter: blur(10px);
+}
+.btn-secondary:hover { background: var(--cream-15); }
+.btn-ghost {
+  background: transparent;
+  color: var(--cream-70);
+  border-color: var(--line);
+}
+.btn-ghost:hover { color: var(--cream); border-color: var(--line-2); }
+.btn-danger {
+  background: rgba(168,89,62,0.18);
+  color: var(--clay-soft);
+  border-color: rgba(201,123,90,0.30);
+}
+.btn-danger:hover { background: rgba(168,89,62,0.30); }
+.btn-block { width: 100%; }
+
+.login-mode-pill {
+  display: inline-flex;
+  align-items: center; gap: 6px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  margin-top: 18px;
+}
+.login-mode-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--taupe-deep); }
+
+/* Login-card-specific overrides: deeper field contrast against the solid surface */
+.login-card .field input {
+  background: var(--bg);
+  border: 1px solid var(--line-2);
+}
+.login-card .field input:focus {
+  background: var(--surface);
+  border-color: var(--taupe-deep);
+}
+.login-card .field label { color: var(--ink-soft); }
+
+/* ---------- App layout ---------- */
+.app {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.app.is-on { opacity: 1; }
+
+@media (max-width: 880px) {
+  .app { grid-template-columns: 1fr; }
+  aside.sidebar { display: none; }
+}
+
+aside.sidebar {
+  position: sticky; top: 0;
+  height: 100vh;
+  background: rgba(245,237,224,0.65);
+  backdrop-filter: blur(18px);
+  border-right: 1px solid var(--line);
+  padding: 26px 18px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.sidebar .brand-row { display: flex; align-items: center; gap: 10px; padding: 0 6px 18px; border-bottom: 1px solid var(--line); }
+.sidebar .brand-row .brand-mark { width: 36px; height: 36px; font-size: 18px; border-radius: 10px; }
+.sidebar .brand-row .name { font-family: 'Fraunces', serif; font-size: 15px; color: var(--cream); }
+.sidebar .brand-row .name em { font-style: italic; font-weight: 400; color: var(--clay-soft); }
+.sidebar .brand-row .sub { font-size: 9px; text-transform: uppercase; letter-spacing: 0.22em; color: var(--cream-50); margin-top: 2px; font-weight: 700; }
+
+.sidebar nav { display: flex; flex-direction: column; gap: 4px; margin-top: 14px; }
+.nav-link {
+  display: flex; align-items: center; gap: 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 11px 12px;
+  color: var(--cream-70);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-link:hover { color: var(--cream); background: var(--cream-04); }
+.nav-link.is-active {
+  background: var(--cream-10);
+  color: var(--cream);
+  border-color: var(--line-2);
+}
+.nav-link svg { width: 18px; height: 18px; opacity: 0.85; }
+
+.sidebar .footer { margin-top: auto; }
+.sidebar .footer .session {
+  background: var(--cream-04);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.sidebar .footer .avatar {
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #8c4a32 0%, #5a2e1f 100%);
+  display: grid; place-items: center;
+  font-family: 'Fraunces', serif; font-size: 16px;
+  color: var(--cream);
+}
+.sidebar .footer .who { flex: 1; min-width: 0; }
+.sidebar .footer .who .nm { font-size: 13px; color: var(--cream); font-weight: 600; }
+.sidebar .footer .who .em { font-size: 11px; color: var(--cream-50); }
+.sidebar .signout {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--cream-50);
+  border-radius: 10px;
+  padding: 6px 8px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+}
+.sidebar .signout:hover { color: var(--cream); border-color: var(--line-2); }
+
+/* main content */
+.main { padding: 28px 32px 80px; max-width: 1400px; }
+@media (max-width: 880px) { .main { padding: 18px 16px 80px; } }
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 26px;
+  flex-wrap: wrap;
+}
+.topbar .breadcrumbs { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.topbar h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 32px;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+}
+.topbar h1 em { font-style: italic; font-weight: 400; color: var(--clay-soft); }
+.topbar .sub { font-size: 13px; color: var(--cream-70); }
+
+.actions-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+.mode-banner {
+  margin-bottom: 18px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(139,154,126,0.10) 0%, rgba(245,237,224,0.30) 100%);
+  border: 1px solid rgba(139,154,126,0.25);
+  color: var(--clay-soft);
+  font-size: 12px;
+  font-weight: 600;
+  display: flex; align-items: center; gap: 10px;
+}
+.mode-banner .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--clay-soft); }
+.mode-banner.is-live { background: linear-gradient(180deg, rgba(197,208,184,0.10) 0%, rgba(245,237,224,0.04) 100%); border-color: rgba(139,154,126,0.30); color: var(--sage-soft); }
+.mode-banner.is-live .dot { background: var(--sage-soft); }
+
+/* sections */
+.tab-panel { display: none; }
+.tab-panel.is-active { display: block; animation: fade 0.25s ease; }
+@keyframes fade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Tenants grid ---------- */
+.search-bar {
+  background: var(--cream-06);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 14px;
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 18px;
+  backdrop-filter: blur(10px);
+  flex: 1; min-width: 220px;
+}
+.search-bar svg { color: var(--cream-40); }
+.search-bar input { flex: 1; }
+
+.tenant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+.tenant-tile {
+  background: var(--cream-06);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  display: flex; flex-direction: column;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+}
+.tenant-tile:hover { background: var(--cream-10); border-color: var(--line-2); transform: translateY(-1px); }
+.tenant-tile .photo {
+  aspect-ratio: 16/9;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--bg-3);
+  position: relative;
+}
+/* Light earthy gradient placeholders for tenants without photos */
+.tenant-tile .photo.av-sage  { background: linear-gradient(135deg, #C5D0B8 0%, #8B9A7E 100%); color: var(--ink) !important; }
+.tenant-tile .photo.av-clay  { background: linear-gradient(135deg, #E8C8B5 0%, #C97B5A 100%); color: var(--ink) !important; }
+.tenant-tile .photo.av-sand  { background: linear-gradient(135deg, #E5D9C3 0%, #B5A795 100%); color: var(--ink) !important; }
+.tenant-tile .photo.av-rose  { background: linear-gradient(135deg, #E2C5C0 0%, #B89090 100%); color: var(--ink) !important; }
+.tenant-tile .photo.av-moss  { background: linear-gradient(135deg, #B5C5A5 0%, #6B7A5F 100%); color: var(--ink) !important; }
+.tenant-tile .photo.av-rust  { background: linear-gradient(135deg, #D4A693 0%, #A8593E 100%); color: var(--ink) !important; }
+.tenant-tile .photo.av-stone { background: linear-gradient(135deg, #D4C4A8 0%, #8B7E70 100%); color: var(--ink) !important; }
+.tenant-tile .photo.av-fern  { background: linear-gradient(135deg, #B5C5A5 0%, #5E7558 100%); color: var(--ink) !important; }
+.tenant-tile .photo.av-amber { background: linear-gradient(135deg, #E8D5A5 0%, #B59055 100%); color: var(--ink) !important; }
+.tenant-tile .photo.av-bone  { background: linear-gradient(135deg, #F0E8D8 0%, #B8AB9C 100%); color: var(--ink) !important; }
+/* Test / concept pill — unconfirmed tenants and their photos read as placeholders */
+.test-pill {
+  position: absolute; right: 10px; top: 10px;
+  background: rgba(245,237,224,0.85);
+  backdrop-filter: blur(8px);
+  border: 1px dashed var(--taupe-deep);
+  color: var(--taupe-deep);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 999px;
+  z-index: 2;
+}
+/* Field row helper for the editor toggle */
+.field-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  cursor: pointer;
+}
+.field-toggle input { width: 18px; height: 18px; accent-color: var(--taupe-deep); }
+.field-toggle .toggle-meta {
+  flex: 1; min-width: 0;
+}
+.field-toggle .toggle-meta .ttl { font-weight: 600; color: var(--ink); font-size: 13px; }
+.field-toggle .toggle-meta .des { color: var(--ink-faint); font-size: 12px; margin-top: 2px; }
+
+.tenant-tile .status-pill {
+  position: absolute; left: 10px; top: 10px;
+  background: rgba(245,237,224,0.88);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--cream-20);
+  color: var(--cream);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 999px;
+  display: flex; align-items: center; gap: 5px;
+}
+.tenant-tile .status-pill.active        { color: var(--sage-soft); }
+.tenant-tile .status-pill.coming_soon   { color: var(--clay-soft); }
+.tenant-tile .status-pill.archived      { color: var(--cream-40); }
+.tenant-tile .status-pill .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.tenant-tile .body { padding: 14px 16px 16px; flex: 1; display: flex; flex-direction: column; }
+.tenant-tile .name { font-family: 'Fraunces', serif; font-weight: 500; font-size: 17px; color: var(--cream); letter-spacing: -0.01em; }
+.tenant-tile .meta { font-size: 12px; color: var(--cream-50); margin-top: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; }
+.tenant-tile .svc { font-size: 13px; color: var(--cream-70); margin-top: 8px; }
+.tenant-tile .row {
+  margin-top: 12px;
+  display: flex; align-items: center; gap: 6px;
+  flex-wrap: wrap;
+}
+.svc-tag {
+  background: var(--cream-04);
+  border: 1px solid var(--line);
+  color: var(--cream-70);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border-radius: 6px;
+}
+
+/* "Add tenant" tile */
+.tenant-tile.add-tile {
+  background: transparent;
+  border-style: dashed;
+  display: grid; place-items: center;
+  min-height: 240px;
+  text-align: center;
+  color: var(--cream-70);
+}
+.tenant-tile.add-tile:hover { background: var(--cream-04); color: var(--cream); }
+.tenant-tile.add-tile .plus {
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  border: 1px solid var(--line-2);
+  background: var(--cream-06);
+  display: grid; place-items: center;
+  margin: 0 auto 12px;
+  font-size: 22px;
+  color: var(--cream);
+}
+
+/* ---------- Editor drawer ---------- */
+.drawer-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(61,53,48,0.40);
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+  z-index: 100;
+}
+.drawer-backdrop.is-on { opacity: 1; visibility: visible; }
+
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: min(640px, 100%);
+  background: var(--bg);
+  border-left: 1px solid var(--line);
+  z-index: 101;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  overflow-y: auto;
+}
+.drawer.is-on { transform: translateX(0); }
+
+.drawer-head {
+  position: sticky; top: 0;
+  z-index: 5;
+  background: rgba(14,12,10,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+  padding: 18px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.drawer-head .ttl {
+  font-family: 'Fraunces', serif;
+  font-weight: 500; font-size: 20px;
+  letter-spacing: -0.01em;
+  color: var(--cream);
+}
+.drawer-head .ttl em { font-style: italic; font-weight: 400; color: var(--clay-soft); }
+.drawer-close {
+  width: 34px; height: 34px;
+  border-radius: 999px;
+  background: var(--cream-10);
+  border: 1px solid var(--line-2);
+  color: var(--cream);
+  cursor: pointer;
+  display: grid; place-items: center;
+  font-size: 16px;
+}
+.drawer-body { padding: 22px 24px 100px; }
+
+.drawer-foot {
+  position: sticky; bottom: 0;
+  background: rgba(14,12,10,0.95);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--line);
+  padding: 14px 24px;
+  display: flex; gap: 10px; align-items: center; justify-content: flex-end;
+}
+
+.field.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field.row-2 > div > label { margin-bottom: 6px; display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--cream-50); font-weight: 700; }
+
+/* Tags / chips */
+.tags-input {
+  background: var(--cream-06);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px;
+  display: flex; flex-wrap: wrap; gap: 6px;
+  min-height: 46px;
+  align-items: center;
+}
+.tags-input .tag {
+  background: var(--cream-10);
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  padding: 4px 10px 4px 12px;
+  font-size: 12px;
+  color: var(--cream);
+  display: flex; align-items: center; gap: 6px;
+}
+.tags-input .tag .x {
+  cursor: pointer;
+  opacity: 0.5;
+  font-size: 14px;
+  line-height: 1;
+}
+.tags-input .tag .x:hover { opacity: 1; }
+.tags-input input {
+  flex: 1; min-width: 100px;
+  background: transparent; border: 0; padding: 4px 8px;
+  color: var(--cream);
+}
+.tags-input input::placeholder { color: var(--cream-40); }
+
+/* Photo upload */
+.photo-zone {
+  position: relative;
+  aspect-ratio: 16/9;
+  border-radius: 14px;
+  border: 1px dashed var(--line-2);
+  background: var(--cream-04);
+  background-size: cover;
+  background-position: center;
+  display: grid; place-items: center;
+  cursor: pointer;
+  overflow: hidden;
+  color: var(--cream-50);
+  text-align: center;
+}
+.photo-zone .placeholder {
+  font-family: 'Fraunces', serif; font-style: italic; font-size: 14px;
+  padding: 18px;
+}
+.photo-zone.has-photo {
+  border-style: solid;
+  border-color: var(--line);
+}
+.photo-zone .overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(245,237,224,0.88) 100%);
+  display: flex; align-items: flex-end;
+  padding: 12px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.photo-zone:hover .overlay { opacity: 1; }
+.photo-zone .overlay .replace {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--cream);
+  background: rgba(245,237,224,0.88);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--cream-20);
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+.photo-zone input[type=file] {
+  position: absolute; inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* AI bio generator panel */
+.ai-block {
+  background: linear-gradient(180deg, rgba(197,208,184,0.08) 0%, rgba(245,237,224,0.04) 100%);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 6px;
+}
+.ai-block .head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.ai-block .head .lbl {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em;
+  font-weight: 700; color: var(--sage-soft);
+  display: flex; align-items: center; gap: 6px;
+}
+.ai-block .head .meta { font-size: 11px; color: var(--cream-50); font-weight: 600; }
+.ai-block textarea { width: 100%; }
+.ai-block .toolbar {
+  margin-top: 10px;
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+}
+.tone-chip {
+  background: var(--cream-06);
+  border: 1px solid var(--line);
+  color: var(--cream-70);
+  border-radius: 999px;
+  padding: 5px 11px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.tone-chip.is-on {
+  background: var(--cream);
+  color: var(--ink-on-cream);
+  border-color: var(--cream);
+}
+.ai-results { margin-top: 12px; display: grid; gap: 10px; }
+.ai-result {
+  background: var(--cream-04);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--cream-90);
+  line-height: 1.55;
+  position: relative;
+}
+.ai-result .toneband { font-size: 10px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--cream-50); font-weight: 700; margin-bottom: 6px; }
+.ai-result .use {
+  margin-top: 8px;
+  background: var(--cream-10);
+  border: 1px solid var(--line-2);
+  color: var(--cream);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  padding: 5px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.ai-result .use:hover { background: var(--cream-15); }
+
+/* Highlights list */
+.highlights-list { display: grid; gap: 10px; }
+.highlight-row {
+  background: var(--cream-06);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 14px;
+  backdrop-filter: blur(10px);
+}
+.highlight-row .type-pill {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.16em; font-weight: 700;
+  padding: 4px 8px; border-radius: 999px;
+  background: var(--cream-04); border: 1px solid var(--line);
+  color: var(--cream-70);
+  flex-shrink: 0;
+}
+.highlight-row .body { flex: 1; min-width: 0; }
+.highlight-row .body .t { font-family: 'Fraunces', serif; font-weight: 500; color: var(--cream); font-size: 15px; }
+.highlight-row .body .b { font-size: 13px; color: var(--cream-70); margin-top: 2px; }
+.highlight-row .body .stamp { font-size: 10px; color: var(--cream-40); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.16em; font-weight: 700; }
+
+/* Empty state */
+.empty {
+  background: var(--cream-04);
+  border: 1px dashed var(--line-2);
+  border-radius: 18px;
+  padding: 60px 24px;
+  text-align: center;
+  color: var(--cream-50);
+}
+.empty h3 {
+  font-family: 'Fraunces', serif; font-weight: 500;
+  font-size: 22px; color: var(--cream); margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.empty p { color: var(--cream-70); margin-bottom: 18px; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--cream);
+  color: var(--ink-on-cream);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
+  z-index: 300;
+  box-shadow: var(--shadow-lift);
+}
+.toast.is-on {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Misc */
+hr.sep { border: 0; height: 1px; background: var(--line); margin: 18px 0; }
+
+/* Coming-soon placeholder */
+.placeholder-canvas {
+  background: var(--cream-04);
+  border: 1px dashed var(--line-2);
+  border-radius: 18px;
+  padding: 60px 28px;
+  text-align: center;
+  color: var(--cream-50);
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 15px;
+}
+.placeholder-canvas h3 {
+  font-family: 'Fraunces', serif; font-style: normal; font-weight: 500;
+  color: var(--cream); font-size: 24px; margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+
+</style>
+</head>
+<body>
+
+<!-- Back to walkthrough -->
+<a href="../../../Laura-Walkthrough-v1.html" style="
+    position: fixed; top: 14px; left: 14px; z-index: 300;
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(245,237,224,0.94);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(61,53,48,0.12);
+    color: #6B6357;
+    padding: 7px 14px 7px 11px;
+    border-radius: 999px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(61,53,48,0.10), 0 10px 28px rgba(61,53,48,0.14);
+  ">
+  ← Walkthrough
+</a>
+
+<!-- ===================== LOGIN ===================== -->
+<div class="login-shell" id="loginShell">
+  <form class="login-card" id="loginForm" onsubmit="return handleLogin(event)" novalidate>
+    <div class="login-brand">
+      <div class="brand-mark">s</div>
+      <div>
+        <div class="name">Studio Soul<em>utions</em></div>
+        <div class="sub">Owner admin · Salon Plus</div>
+      </div>
+    </div>
+
+    <h1>Welcome back, <em>Laura</em></h1>
+    <p class="lead">Sign in to manage your suites, tenants, and lobby content.</p>
+
+    <div class="field">
+      <label>Email or username</label>
+      <input type="text" id="loginEmail" placeholder="demo (anything works in demo mode)" autocomplete="username" />
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="demo (anything works)" autocomplete="current-password" />
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block" id="loginBtn" style="margin-top: 6px;">Sign in →</button>
+
+    <div class="login-mode-pill" id="loginModeBadge">
+      <span class="dot"></span> Demo mode · any credentials work
+    </div>
+  </form>
+</div>
+
+<!-- ===================== APP ===================== -->
+<div class="app" id="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand-row">
+      <div class="brand-mark">s</div>
+      <div>
+        <div class="name">Studio Soul<em>utions</em></div>
+        <div class="sub">Owner admin</div>
+      </div>
+    </div>
+
+    <nav>
+      <button class="nav-link is-active" data-tab="tenants" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Tenants
+      </button>
+      <button class="nav-link" data-tab="highlights" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+        Highlights
+      </button>
+      <button class="nav-link" data-tab="building" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/></svg>
+        Building
+      </button>
+      <button class="nav-link" data-tab="vacancies" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7.5"/><path d="M12 3L3 9.5h18L12 3z"/><path d="M9 22V13h6v9"/></svg>
+        Available suites
+      </button>
+      <button class="nav-link" data-tab="floor" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+        Floor plan
+      </button>
+      <button class="nav-link" data-tab="voice" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        Voice profiles
+      </button>
+    </nav>
+
+    <div class="footer">
+      <div class="session">
+        <div class="avatar">L</div>
+        <div class="who">
+          <div class="nm">Laura</div>
+          <div class="em" id="sessionEmail">demo mode</div>
+        </div>
+        <button class="signout" onclick="handleSignout()" type="button">Sign out</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <div class="mode-banner" id="modeBanner">
+      <span class="dot"></span>
+      <span id="modeBannerText">Demo mode · changes save to your browser. Connect Supabase to go live.</span>
+    </div>
+
+    <!-- ===== TENANTS ===== -->
+    <section class="tab-panel is-active" id="tab-tenants">
+      <div class="topbar">
+        <div class="breadcrumbs">
+          <h1>Tenants</h1>
+          <span class="sub" id="tenantCountSub">— studios in your building</span>
+        </div>
+        <div class="actions-row">
+          <div class="search-bar" style="max-width: 320px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="tenantSearch" placeholder="Search studios, services, suites" />
+          </div>
+          <button class="btn btn-primary" onclick="openTenantEditor()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            Add tenant
+          </button>
+        </div>
+      </div>
+
+      <div class="tenant-grid" id="tenantGrid"></div>
+    </section>
+
+    <!-- ===== HIGHLIGHTS ===== -->
+    <section class="tab-panel" id="tab-highlights">
+      <div class="topbar">
+        <div class="breadcrumbs">
+          <h1>Highlights</h1>
+          <span class="sub">Welcomes, promos, building news — appears on the kiosk and the phone</span>
+        </div>
+        <div class="actions-row">
+          <button class="btn btn-primary" onclick="addPost()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            New post
+          </button>
+        </div>
+      </div>
+      <div class="highlights-list" id="highlightsList"></div>
+    </section>
+
+    <!-- ===== VACANCIES (Available suites) ===== -->
+    <section class="tab-panel" id="tab-vacancies">
+      <div class="topbar">
+        <div class="breadcrumbs">
+          <h1>Available <em>suites</em></h1>
+          <span class="sub" id="vacancyCountSub">— suites open for lease</span>
+        </div>
+        <div class="actions-row">
+          <button class="btn btn-primary" onclick="openVacancyEditor()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            List a suite
+          </button>
+        </div>
+      </div>
+
+      <div class="tenant-grid" id="vacancyGrid"></div>
+    </section>
+
+    <!-- ===== BUILDING ===== -->
+    <section class="tab-panel" id="tab-building">
+      <div class="topbar">
+        <div class="breadcrumbs">
+          <h1>Building</h1>
+          <span class="sub">Studio-level info that appears across the kiosk + phone</span>
+        </div>
+        <div class="actions-row">
+          <button class="btn btn-primary" onclick="saveBuilding()">Save</button>
+        </div>
+      </div>
+
+      <div style="display: grid; gap: 14px; max-width: 720px;">
+        <div class="field">
+          <label>Studio name</label>
+          <input type="text" id="b_name" />
+        </div>
+        <div class="field">
+          <label>Tagline</label>
+          <input type="text" id="b_tagline" />
+        </div>
+        <div class="field">
+          <label>About the studio</label>
+          <textarea id="b_about" rows="3"></textarea>
+        </div>
+        <div class="field">
+          <label>Note from the owner</label>
+          <textarea id="b_owner_note" rows="4" placeholder="A note shown on the kiosk and phone as ‘From the owner.’"></textarea>
+        </div>
+        <div class="field row-2">
+          <div>
+            <label>Contact email</label>
+            <input type="email" id="b_email" />
+          </div>
+          <div>
+            <label>Contact phone</label>
+            <input type="tel" id="b_phone" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Street address</label>
+          <input type="text" id="b_address" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FLOOR PLAN ===== -->
+    <section class="tab-panel" id="tab-floor">
+      <div class="topbar">
+        <div class="breadcrumbs">
+          <h1>Floor plan</h1>
+          <span class="sub">Interactive map for the lobby kiosk and the phone</span>
+        </div>
+      </div>
+      <div class="placeholder-canvas">
+        <h3>Floor plan editor — next up</h3>
+        Upload a scanned floor plan, then mark each suite's location and link it to a tenant.<br>
+        The interactive map will render in the kiosk and phone once this is wired.
+      </div>
+    </section>
+
+    <!-- ===== VOICE PROFILES ===== -->
+    <section class="tab-panel" id="tab-voice">
+      <div class="topbar">
+        <div class="breadcrumbs">
+          <h1>Voice profiles</h1>
+          <span class="sub">House voice and per-tenant voice the AI bio writer conditions on</span>
+        </div>
+      </div>
+      <div class="placeholder-canvas">
+        <h3>House voice · Warm · Earthy · Considered · Never pushy</h3>
+        Per-tenant voice tuning lives here. Wired up alongside the live AI bio generator.
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ===================== TENANT EDITOR DRAWER ===================== -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer" role="dialog" aria-labelledby="drawerTitle">
+  <div class="drawer-head">
+    <div class="ttl" id="drawerTitle">Add a <em>tenant</em></div>
+    <button class="drawer-close" onclick="closeDrawer()" aria-label="Close">×</button>
+  </div>
+  <div class="drawer-body">
+
+    <!-- Photo -->
+    <div class="field">
+      <label>Hero photo</label>
+      <label class="photo-zone" id="photoZone" for="photoInput">
+        <span class="placeholder">Drop a photo or click to choose</span>
+        <div class="overlay"><span class="replace">Replace photo</span></div>
+        <input type="file" id="photoInput" accept="image/*" onchange="handlePhoto(event)" />
+      </label>
+    </div>
+
+    <hr class="sep" />
+
+    <!-- Identity -->
+    <div class="field">
+      <label>Business name</label>
+      <input type="text" id="t_business_name" placeholder="Dueces Nail Studio" />
+    </div>
+    <div class="field row-2">
+      <div>
+        <label>Owner name</label>
+        <input type="text" id="t_owner_name" placeholder="Owner name" />
+      </div>
+      <div>
+        <label>Suite number</label>
+        <input type="text" id="t_suite_number" placeholder="102" />
+      </div>
+    </div>
+    <div class="field row-2">
+      <div>
+        <label>Phone</label>
+        <input type="tel" id="t_phone" placeholder="(555) 555-1234" />
+      </div>
+      <div>
+        <label>Email</label>
+        <input type="email" id="t_email" placeholder="hello@dueces.com" />
+      </div>
+    </div>
+    <div class="field row-2">
+      <div>
+        <label>Instagram (handle)</label>
+        <input type="text" id="t_instagram" placeholder="duecesnails" />
+      </div>
+      <div>
+        <label>Website</label>
+        <input type="url" id="t_website" placeholder="https://dueces.com" />
+      </div>
+    </div>
+
+    <!-- Services -->
+    <div class="field">
+      <label>Services</label>
+      <div class="tags-input" id="t_services_tags" onclick="document.getElementById('t_services_input').focus()">
+        <input type="text" id="t_services_input" placeholder="Type a service, press Enter" onkeydown="handleTagKey(event, 't_services')" />
+      </div>
+    </div>
+
+    <!-- Hours + status -->
+    <div class="field row-2">
+      <div>
+        <label>Hours</label>
+        <input type="text" id="t_hours" placeholder="Tue–Sat 10–6" />
+      </div>
+      <div>
+        <label>Status</label>
+        <select id="t_status">
+          <option value="active">Active</option>
+          <option value="coming_soon">Coming soon</option>
+          <option value="archived">Archived</option>
+        </select>
+      </div>
+    </div>
+
+    <hr class="sep" />
+
+    <!-- Test data toggle -->
+    <div class="field">
+      <label for="t_is_concept" class="field-toggle">
+        <input type="checkbox" id="t_is_concept" />
+        <div class="toggle-meta">
+          <div class="ttl">Mark as test / concept data</div>
+          <div class="des">Adds a "Test" pill to this tenant on the kiosk + phone so guests know it's a demo card, not a real tenant. Uncheck when the tenant is confirmed.</div>
+        </div>
+      </label>
+    </div>
+
+    <hr class="sep" />
+
+    <!-- AI bio generator -->
+    <div class="field">
+      <label>AI bio generator</label>
+      <div class="ai-block">
+        <div class="head">
+          <div class="lbl">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+            In their voice
+          </div>
+          <div class="meta" id="aiProviderMeta">Demo · returns 3 sample tones</div>
+        </div>
+        <textarea id="t_ai_input" rows="3" placeholder="Paste rough notes, a sentence or two — what they do, how they describe themselves, anything tenant-specific."></textarea>
+        <div class="toolbar">
+          <div class="tone-chip is-on" data-tone="warm">Warm &amp; welcoming</div>
+          <div class="tone-chip" data-tone="editorial">Editorial / minimal</div>
+          <div class="tone-chip" data-tone="friendly">Friendly &amp; approachable</div>
+          <div style="flex:1"></div>
+          <button class="btn btn-secondary" type="button" onclick="generateBio()" id="generateBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Generate 3 options
+          </button>
+        </div>
+        <div class="ai-results" id="aiResults"></div>
+      </div>
+    </div>
+
+    <!-- Final bio -->
+    <div class="field">
+      <label>Final bio (shown on kiosk + phone)</label>
+      <textarea id="t_bio" rows="4" placeholder="The polished version. Use one of the AI options above, or write your own."></textarea>
+    </div>
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn btn-danger" id="deleteBtn" onclick="deleteTenant()" style="display:none;">Delete</button>
+    <div style="flex:1"></div>
+    <button class="btn btn-ghost" onclick="closeDrawer()">Cancel</button>
+    <button class="btn btn-primary" onclick="saveTenant()">Save tenant</button>
+  </div>
+</div>
+
+<!-- ===================== VACANCY EDITOR DRAWER ===================== -->
+<div class="drawer-backdrop" id="vacancyBackdrop" onclick="closeVacancyDrawer()"></div>
+<div class="drawer" id="vacancyDrawer" role="dialog" aria-labelledby="vacancyDrawerTitle">
+  <div class="drawer-head">
+    <div class="ttl" id="vacancyDrawerTitle">List a <em>suite</em></div>
+    <button class="drawer-close" onclick="closeVacancyDrawer()" aria-label="Close">×</button>
+  </div>
+  <div class="drawer-body">
+
+    <!-- Photo -->
+    <div class="field">
+      <label>Suite photo (optional)</label>
+      <label class="photo-zone" id="vPhotoZone" for="vPhotoInput">
+        <span class="placeholder">Drop a photo of the empty suite, or skip</span>
+        <div class="overlay"><span class="replace">Replace photo</span></div>
+        <input type="file" id="vPhotoInput" accept="image/*" onchange="handleVacancyPhoto(event)" />
+      </label>
+    </div>
+
+    <hr class="sep" />
+
+    <!-- Core fields -->
+    <div class="field row-2">
+      <div>
+        <label>Suite number</label>
+        <input type="text" id="v_suite_number" placeholder="108" />
+      </div>
+      <div>
+        <label>Available from</label>
+        <input type="text" id="v_available_from" placeholder="July 2026" />
+      </div>
+    </div>
+
+    <div class="field row-2">
+      <div>
+        <label>Square footage</label>
+        <input type="number" id="v_sqft" placeholder="110" />
+      </div>
+      <div>
+        <label>Monthly rent ($)</label>
+        <input type="number" id="v_monthly_rent" placeholder="875" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Description</label>
+      <textarea id="v_description" rows="3" placeholder="What makes this suite special? Windows, plumbing, storage, recent updates..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Contact note (shown to interested tenants)</label>
+      <input type="text" id="v_contact_note" placeholder="Email the building owner to tour" />
+    </div>
+
+    <hr class="sep" />
+
+    <!-- Test data toggle -->
+    <div class="field">
+      <label for="v_is_concept" class="field-toggle">
+        <input type="checkbox" id="v_is_concept" />
+        <div class="toggle-meta">
+          <div class="ttl">Mark as test / concept data</div>
+          <div class="des">Adds a "Test" pill so visitors know this listing is illustrative, not a real opening yet.</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn btn-danger" id="vacancyDeleteBtn" onclick="deleteVacancy()" style="display:none;">Delete</button>
+    <div style="flex:1"></div>
+    <button class="btn btn-ghost" onclick="closeVacancyDrawer()">Cancel</button>
+    <button class="btn btn-primary" onclick="saveVacancy()">Save suite</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+
+<script>
+/* =====================================================================
+   Studio Soulutions — Admin · single-page app
+   ===================================================================== */
+
+const STORAGE_KEY    = 'ss_tenants_v1';
+const SETTINGS_KEY   = 'ss_studio_v1';
+const POSTS_KEY      = 'ss_posts_v1';
+const VACANCIES_KEY  = 'ss_vacancies_v1';
+const SESSION_KEY    = 'ss_admin_session_v1';
+
+/* ----- Seed data (matches the mobile prototype so first-load looks populated) ----- */
+const SEED_TENANTS = [
+  { id: 't1',  name: 'Dueces Nail Studio', owner_name: '', suite: 'Sage Suite', phone: '', email: '', instagram: 'duecesnails', website: '',
+    service: 'Manicure · Pedicure · Nail Art', services: ['Gel', 'Pedicure', 'Nail Art', 'Structured Mani'],
+    category: 'nails', open: true, status: 'active', hours: 'Tue–Sat 10–6',
+    photo: 'assets/photos/1000040455.jpg',
+    bio: 'Sage-walled and softly lit — a quiet, careful place for nails done with intention. Gel, pedicures, nail art. Eight years of practice. Appointments preferred, walk-ins welcome when the chair is open.',
+    avatar: 'D', theme: 'av-sage', is_concept: false },
+  { id: 't2',  name: 'Suite 2 — placeholder', owner_name: '', suite: 'Suite (placeholder)', phone: '', email: '', instagram: '', website: '',
+    service: 'Pedicure · Lash', services: ['Pedicure', 'Manicure', 'Lash'],
+    category: 'nails', open: true, status: 'active', hours: 'Tue–Sat 10–7',
+    photo: 'assets/photos/nails1.png',
+    bio: 'A warm-neutral suite with a hydraulic pedicure chair and full mani bar. Placeholder card while Laura confirms the tenant lineup.',
+    avatar: 'W', theme: 'av-clay', is_concept: true },
+  { id: 't3',  name: 'Suite 3 — placeholder', owner_name: '', suite: 'Suite (placeholder)', phone: '', email: '', instagram: '', website: '',
+    service: 'Pedicure · Spa', services: ['Pedicure', 'Spa', 'Quick Mani'],
+    category: 'nails', open: true, status: 'active', hours: 'Tue–Sat 10–6',
+    photo: 'assets/photos/nails2.png',
+    bio: 'Spa-style pedicure and quick mani service. Placeholder card while Laura confirms the tenant lineup.',
+    avatar: 'S', theme: 'av-sand', is_concept: true },
+  { id: 't4',  name: 'Indigo & Oak', owner_name: '', suite: 'Suite 204', phone: '', email: '', instagram: '', website: '',
+    service: 'Color & Balayage Specialist', services: ['Balayage','Color','Cuts','Toners','Gloss'],
+    category: 'hair', open: true, status: 'active', hours: 'Tue–Sat 9–6',
+    photo: 'assets/photos/hair1.png',
+    bio: 'Lived-in color, hand-painted balayage, and dimensional brunettes. Specializing in low-maintenance grow-outs for busy clients.',
+    avatar: 'IO', theme: 'av-moss', is_concept: true },
+  { id: 't5',  name: 'Verdant Skin Studio', owner_name: '', suite: 'Suite 212', phone: '', email: '', instagram: '', website: '',
+    service: 'Facials & Skincare', services: ['Facials','Dermaplane','Chemical Peels','LED Therapy'],
+    category: 'skin', open: true, status: 'active', hours: 'Wed–Sun 10–7',
+    photo: 'assets/photos/facial.png',
+    bio: 'Holistic facials with medical-grade results. Custom protocols for acne, hyperpigmentation, and aging skin. Licensed esthetician.',
+    avatar: 'V', theme: 'av-sage', is_concept: true },
+  { id: 't6',  name: 'The Lash Loft', owner_name: '', suite: 'Suite 210', phone: '', email: '', instagram: '', website: '',
+    service: 'Lash Extensions & Lifts', services: ['Extensions','Lifts','Tints','Removals'],
+    category: 'brows', open: true, status: 'active', hours: 'Mon–Sat 9–7',
+    photo: 'assets/photos/lash1.png',
+    bio: 'Custom lash sets designed to your eye shape. Classic, hybrid, and volume — plus lifts and tints for low-maintenance days.',
+    avatar: 'LL', theme: 'av-rose', is_concept: true },
+  { id: 't7',  name: 'Bloom Brow Bar', owner_name: '', suite: 'Suite 206', phone: '', email: '', instagram: '', website: '',
+    service: 'Brows, Lamination & Microblading', services: ['Shaping','Lamination','Tinting','Microblading'],
+    category: 'brows', open: true, status: 'active', hours: 'Tue–Sat 10–6',
+    photo: 'assets/photos/lash2.png',
+    bio: 'Brow shaping done right. Lamination, tinting, henna, and certified microblading. Walk-ins welcome for shaping.',
+    avatar: 'B', theme: 'av-clay', is_concept: true },
+  { id: 't8',  name: 'Quiet Hands', owner_name: '', suite: 'Suite 218', phone: '', email: '', instagram: '', website: '',
+    service: 'Therapeutic Massage', services: ['Deep Tissue','Swedish','Prenatal','Sports Recovery'],
+    category: 'wellness', open: false, status: 'active', hours: 'Tue–Sat 11–8',
+    photo: 'assets/photos/massage1.png',
+    bio: 'Deep tissue, Swedish, and prenatal massage by a licensed RMT. Quiet space, warm towels, no upselling.',
+    avatar: 'Q', theme: 'av-stone', is_concept: true },
+  { id: 't9',  name: 'Tilde Cosmetics', owner_name: '', suite: 'Suite 208', phone: '', email: '', instagram: '', website: '',
+    service: 'Bridal Makeup & Lessons', services: ['Bridal','Events','Lessons','Airbrush'],
+    category: 'makeup', open: true, status: 'active', hours: 'By appointment',
+    photo: 'assets/photos/makeup.png',
+    bio: 'Editorial-trained makeup artist specializing in bridal, special event, and 1:1 personal makeup lessons.',
+    avatar: 'T', theme: 'av-rust', is_concept: true },
+  { id: 't10', name: 'Finch Hair Studio', owner_name: '', suite: 'Suite 202', phone: '', email: '', instagram: '', website: '',
+    service: "Precision Cuts & Men's Grooming", services: ['Cuts',"Men's Grooming",'Beards','Styling'],
+    category: 'hair', open: true, status: 'active', hours: 'Tue–Sat 10–7',
+    photo: 'assets/photos/hair2.png',
+    bio: "Sharp cuts for all genders. Men's grooming, beard work, and that one good textured cut that grows out beautifully.",
+    avatar: 'F', theme: 'av-sand', is_concept: true },
+  { id: 't11', name: 'Rooted Wellness', owner_name: '', suite: 'Suite 222', phone: '', email: '', instagram: '', website: '',
+    service: 'Reiki & Acupuncture', services: ['Acupuncture','Reiki','Cupping','Herbs'],
+    category: 'wellness', open: false, status: 'active', hours: 'Mon, Wed, Fri 9–5',
+    photo: 'assets/photos/massage2.png',
+    bio: 'Licensed acupuncturist offering treatments for stress, sleep, fertility, and chronic pain. Reiki sessions by appointment.',
+    avatar: 'R', theme: 'av-fern', is_concept: true },
+  { id: 't12', name: 'Amaranth Aesthetics', owner_name: '', suite: 'Suite 216', phone: '', email: '', instagram: '', website: '',
+    service: 'Botox, Fillers & Medspa', services: ['Botox','Fillers','Skin Boosters','Consults'],
+    category: 'wellness', open: false, status: 'active', hours: 'Thu–Sat 11–6',
+    photo: 'assets/photos/massage3.png',
+    bio: 'Board-certified nurse injector. Conservative, natural-looking results. Botox, dermal fillers, and skin boosters.',
+    avatar: 'A', theme: 'av-amber', is_concept: true }
+];
+
+const SEED_STUDIO = {
+  name: 'Studio Soulutions — Salon Plus Studio Suites',
+  tagline: 'A home for the people who make people feel at home.',
+  about: 'A community of independent stylists, nail artists, and wellness pros — each with their own suite and their own story.',
+  owner_note: 'Salon Plus Studio Suites is home to a careful group of independent artists — color, nails, lash, wellness, skin. This screen exists so that everyone who walks in finds the studio that fits them — not just the one closest to the door.\n— Laura',
+  email: 'hello@salonplus.com',
+  phone: '',
+  address: ''
+};
+
+const SEED_POSTS = [
+  { id: 'p1', type: 'welcome', title: 'Welcome Dueces Nail Studio', body: 'Newly opened in our sage-green suite — stop by and say hi.', published_at: new Date().toISOString() },
+  { id: 'p2', type: 'building_news', title: 'New touchscreen kiosk in the lobby', body: 'Our directory is now interactive — explore every studio in the building from the front door.', published_at: new Date(Date.now() - 86400000 * 3).toISOString() }
+];
+
+// Concept vacancy seeds — Anne's "test" content for the Available Suites view.
+const SEED_VACANCIES = [
+  { id: 'v1', suite_number: '108', sqft: 110, monthly_rent: 875,  photo: '', description: 'Front-facing single-station suite. Two large windows. Plumbing for a shampoo station.', available_from: 'July 2026',   contact_note: 'Email the building owner to tour',         is_concept: true },
+  { id: 'v2', suite_number: '116', sqft: 140, monthly_rent: 1050, photo: '', description: 'Corner double suite with private storage. Recently renovated walls + flooring.',   available_from: 'August 2026', contact_note: 'Email the building owner to tour',         is_concept: true }
+];
+
+/* ----- State ----- */
+let store = {
+  tenants: [],
+  studio: { ...SEED_STUDIO },
+  posts: [],
+  vacancies: []
+};
+let editing = null;          // editing tenant
+let editingVacancy = null;   // editing vacancy
+let aiTone = 'warm';
+let isLive = false;          // true once Supabase is wired
+
+/* ----- Persistence (mock mode) ----- */
+function loadStore() {
+  try {
+    const t = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+    store.tenants = Array.isArray(t) && t.length ? t : SEED_TENANTS.map(x => ({...x}));
+  } catch { store.tenants = SEED_TENANTS.map(x => ({...x})); }
+
+  try {
+    const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || 'null');
+    store.studio = s ? { ...SEED_STUDIO, ...s } : { ...SEED_STUDIO };
+  } catch { store.studio = { ...SEED_STUDIO }; }
+
+  try {
+    const p = JSON.parse(localStorage.getItem(POSTS_KEY) || 'null');
+    store.posts = Array.isArray(p) ? p : [...SEED_POSTS];
+  } catch { store.posts = [...SEED_POSTS]; }
+
+  try {
+    const v = JSON.parse(localStorage.getItem(VACANCIES_KEY) || 'null');
+    store.vacancies = Array.isArray(v) ? v : SEED_VACANCIES.map(x => ({...x}));
+  } catch { store.vacancies = SEED_VACANCIES.map(x => ({...x})); }
+}
+function saveTenants()    { localStorage.setItem(STORAGE_KEY,    JSON.stringify(store.tenants));   }
+function saveSettings()   { localStorage.setItem(SETTINGS_KEY,   JSON.stringify(store.studio));    }
+function savePosts()      { localStorage.setItem(POSTS_KEY,      JSON.stringify(store.posts));     }
+function saveVacancies()  { localStorage.setItem(VACANCIES_KEY,  JSON.stringify(store.vacancies)); }
+
+/* ----- Auth ----- */
+function isAuthed() { return !!localStorage.getItem(SESSION_KEY); }
+function setSession(email) {
+  localStorage.setItem(SESSION_KEY, JSON.stringify({ email, at: Date.now() }));
+}
+function clearSession() { localStorage.removeItem(SESSION_KEY); }
+
+function handleLogin(e) {
+  e.preventDefault();
+  // Demo mode is permissive — any input (or none) unlocks the admin.
+  const email = document.getElementById('loginEmail').value.trim() || 'demo';
+  setSession(email);
+  showApp(email);
+  return false;
+}
+
+function handleSignout() {
+  clearSession();
+  document.getElementById('app').classList.remove('is-on');
+  document.getElementById('loginShell').classList.remove('is-hidden');
+}
+
+function showApp(email) {
+  document.getElementById('sessionEmail').textContent = email || 'demo mode';
+  document.getElementById('loginShell').classList.add('is-hidden');
+  document.getElementById('app').classList.add('is-on');
+}
+
+/* ----- Navigation ----- */
+document.querySelectorAll('.nav-link').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('is-active'));
+    el.classList.add('is-active');
+    const tab = el.dataset.tab;
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('is-active'));
+    document.getElementById('tab-' + tab).classList.add('is-active');
+    if (tab === 'building') populateBuilding();
+    if (tab === 'highlights') renderHighlights();
+    if (tab === 'vacancies') renderVacancies();
+  });
+});
+
+/* ----- Render: tenants ----- */
+function renderTenants() {
+  const q = (document.getElementById('tenantSearch').value || '').trim().toLowerCase();
+  const grid = document.getElementById('tenantGrid');
+
+  const visible = store.tenants.filter(t => {
+    if (!q) return true;
+    return (t.name || '').toLowerCase().includes(q)
+        || (t.service || '').toLowerCase().includes(q)
+        || (t.suite || '').toLowerCase().includes(q)
+        || (t.services || []).some(s => (s || '').toLowerCase().includes(q));
+  });
+
+  document.getElementById('tenantCountSub').textContent =
+    visible.length === store.tenants.length
+      ? `${store.tenants.length} studios in your building`
+      : `${visible.length} of ${store.tenants.length} match`;
+
+  const photoVisual = (t) =>
+    t.photo
+      ? `<div class="photo" style="background-image:url('${t.photo}');">`
+      : `<div class="photo ${t.theme || 'av-stone'}" style="display:grid; place-items:center; color: var(--cream); font-family: 'Fraunces', serif; font-size: 36px; letter-spacing: -0.02em;">${t.avatar || (t.name || '?')[0]}`;
+
+  grid.innerHTML =
+    visible.map(t => `
+      <div class="tenant-tile" onclick="openTenantEditor('${t.id}')">
+        ${photoVisual(t)}
+          <span class="status-pill ${t.status || 'active'}">
+            <span class="dot"></span>${(t.status === 'coming_soon') ? 'Coming soon' : (t.status === 'archived') ? 'Archived' : 'Active'}
+          </span>
+          ${t.is_concept ? '<span class="test-pill">Test</span>' : ''}
+        </div>
+        <div class="body">
+          <div class="name">${t.name || 'Untitled'}</div>
+          <div class="meta">${t.suite || 'No suite'}</div>
+          <div class="svc">${t.service || ''}</div>
+          <div class="row">
+            ${(t.services || []).slice(0, 3).map(s => `<span class="svc-tag">${s}</span>`).join('')}
+          </div>
+        </div>
+      </div>
+    `).join('') + `
+      <div class="tenant-tile add-tile" onclick="openTenantEditor()">
+        <div>
+          <div class="plus">+</div>
+          <div class="serif" style="font-size: 18px; color: var(--cream);">Add a tenant</div>
+          <div style="font-size: 12px; color: var(--cream-50); margin-top: 6px;">Name, suite, photo, services, AI bio.</div>
+        </div>
+      </div>
+    `;
+}
+
+document.getElementById('tenantSearch').addEventListener('input', renderTenants);
+
+/* ----- Editor drawer ----- */
+function openTenantEditor(id) {
+  editing = id ? store.tenants.find(t => t.id === id) || null : null;
+  const isNew = !editing;
+
+  document.getElementById('drawerTitle').innerHTML = isNew
+    ? 'Add a <em>tenant</em>'
+    : `Edit · <em>${editing.name || 'tenant'}</em>`;
+
+  document.getElementById('deleteBtn').style.display = isNew ? 'none' : 'inline-flex';
+
+  // Fill form
+  const t = editing || {};
+  setVal('t_business_name', t.name || '');
+  setVal('t_owner_name', t.owner_name || '');
+  setVal('t_suite_number', t.suite || '');
+  setVal('t_phone', t.phone || '');
+  setVal('t_email', t.email || '');
+  setVal('t_instagram', t.instagram || '');
+  setVal('t_website', t.website || '');
+  setVal('t_hours', t.hours || '');
+  setVal('t_status', t.status || 'active');
+  setVal('t_bio', t.bio || '');
+  setVal('t_ai_input', '');
+  // New tenants default to "test/concept" ON so Anne doesn't have to remember to flag them;
+  // editing existing reflects the saved value.
+  document.getElementById('t_is_concept').checked = isNew ? true : !!t.is_concept;
+
+  // Photo
+  const pz = document.getElementById('photoZone');
+  if (t.photo) {
+    pz.style.backgroundImage = `url('${t.photo}')`;
+    pz.classList.add('has-photo');
+    pz.dataset.photo = t.photo;
+  } else {
+    pz.style.backgroundImage = '';
+    pz.classList.remove('has-photo');
+    delete pz.dataset.photo;
+  }
+
+  // Services tags
+  renderTags('t_services', t.services || []);
+
+  // AI results — clear
+  document.getElementById('aiResults').innerHTML = '';
+
+  // Show
+  document.getElementById('drawer').classList.add('is-on');
+  document.getElementById('drawerBackdrop').classList.add('is-on');
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('is-on');
+  document.getElementById('drawerBackdrop').classList.remove('is-on');
+  editing = null;
+}
+function setVal(id, v) { document.getElementById(id).value = v; }
+function getVal(id) { return document.getElementById(id).value.trim(); }
+
+/* Tags input (services) */
+function renderTags(prefix, tags) {
+  const container = document.getElementById(prefix + '_tags');
+  // Clear all existing chips (keep the input element)
+  container.querySelectorAll('.tag').forEach(el => el.remove());
+  // Insert chips before the input
+  const input = document.getElementById(prefix + '_input');
+  tags.forEach(tag => {
+    const chip = document.createElement('span');
+    chip.className = 'tag';
+    chip.innerHTML = `${tag}<span class="x" aria-label="Remove">×</span>`;
+    chip.querySelector('.x').onclick = (e) => {
+      e.stopPropagation();
+      chip.remove();
+    };
+    container.insertBefore(chip, input);
+  });
+}
+function readTags(prefix) {
+  const container = document.getElementById(prefix + '_tags');
+  return Array.from(container.querySelectorAll('.tag')).map(el => el.firstChild.textContent.trim());
+}
+function handleTagKey(e, prefix) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    const input = e.target;
+    const val = input.value.trim().replace(/,$/, '');
+    if (val) {
+      renderTags(prefix, [...readTags(prefix), val]);
+      input.value = '';
+    }
+  } else if (e.key === 'Backspace' && !e.target.value) {
+    const tags = readTags(prefix);
+    if (tags.length) {
+      renderTags(prefix, tags.slice(0, -1));
+    }
+  }
+}
+
+/* Photo upload (mock mode → data URL) */
+function handlePhoto(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const url = reader.result;
+    const pz = document.getElementById('photoZone');
+    pz.style.backgroundImage = `url('${url}')`;
+    pz.classList.add('has-photo');
+    pz.dataset.photo = url;
+  };
+  reader.readAsDataURL(file);
+}
+
+/* AI bio generator (stub) */
+document.querySelectorAll('.tone-chip').forEach(c => {
+  c.addEventListener('click', () => {
+    document.querySelectorAll('.tone-chip').forEach(x => x.classList.remove('is-on'));
+    c.classList.add('is-on');
+    aiTone = c.dataset.tone;
+  });
+});
+
+async function generateBio() {
+  const input = getVal('t_ai_input');
+  const name = getVal('t_business_name');
+  if (!input && !name) {
+    toast('Add a few notes about the tenant first');
+    return;
+  }
+  const services = readTags('t_services').slice(0, 4);
+  const payload = { name, input, services, suite: getVal('t_suite_number'), hours: getVal('t_hours') };
+
+  const btn = document.getElementById('generateBtn');
+  const results = document.getElementById('aiResults');
+  const providerMeta = document.getElementById('aiProviderMeta');
+  if (btn) btn.disabled = true;
+  if (btn) btn.textContent = 'Generating…';
+
+  let bios = null;
+  let source = 'stub';
+
+  // Try the real Netlify Function first; fall back to the local stub if it isn't there
+  // (e.g. when running via file:// or a plain local server without the function).
+  try {
+    const res = await fetch('/.netlify/functions/generate-bio', {
+      method:  'POST',
+      headers: { 'content-type': 'application/json' },
+      body:    JSON.stringify(payload),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && Array.isArray(data.bios) && data.bios.length) {
+        bios   = data.bios;
+        source = 'live';
+        if (providerMeta) providerMeta.textContent = `Live · ${data.model_used || 'Claude'}`;
+      }
+    } else if (res.status === 500) {
+      // The function exists but isn't configured (e.g. missing API key). Fall back silently.
+      console.info('AI function not configured, using stub.');
+    }
+  } catch (err) {
+    // Network error / function not deployed — fall back to the stub.
+    console.info('AI function unreachable, using stub.', err);
+  }
+
+  if (!bios) {
+    bios = generateThreeTones(payload);
+    if (providerMeta) providerMeta.textContent = 'Demo · returns 3 sample tones';
+  }
+
+  results.innerHTML = bios.map((s, i) => `
+    <div class="ai-result">
+      <div class="toneband">${escapeHtml(s.tone)}${source === 'live' ? '' : ' · sample'}</div>
+      <div>${escapeHtml(s.text)}</div>
+      <button class="use" type="button" onclick="useBio(${i})">Use this</button>
+    </div>
+  `).join('');
+  window.__lastBios = bios;
+
+  if (btn) { btn.disabled = false; btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Generate 3 options'; }
+  if (source === 'live') toast('Generated with Claude');
+}
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function useBio(i) {
+  const s = window.__lastBios && window.__lastBios[i];
+  if (!s) return;
+  document.getElementById('t_bio').value = s.text;
+  toast('Bio applied');
+}
+
+/* Three-tone bio writer — stub that does substring detection in mock mode.
+   The real implementation will call a Netlify Function that wraps Claude. */
+function generateThreeTones({ name, input, services, suite, hours }) {
+  const subj = name || 'this studio';
+  const what = (services && services.length)
+    ? services.join(' · ').toLowerCase()
+    : (input ? input.toLowerCase().match(/\b(nails?|gel|pedi|color|cut|balayage|lash|brow|skin|facial|massage|reiki|botox|wax|makeup|bridal|hair)\w*/gi)?.join(' · ') : '') || 'their craft';
+
+  const placeNoun = /sage|nail/i.test(input + ' ' + subj) ? 'sage-walled studio'
+                  : /warm/i.test(input + ' ' + subj)      ? 'warm-neutral suite'
+                  : /quiet|calm/i.test(input)             ? 'softly lit space'
+                  : 'studio';
+
+  const tones = {
+    warm: `A ${placeNoun} for ${what.replace(/[·]/g,'and')} done with intention. ${name ? name + ' brings ' : 'Brings '}a careful, unrushed practice to ${(suite || 'the room').toLowerCase()}${hours ? ', ' + hours.toLowerCase() : ''}. Walk in welcomed when the chair is open.`,
+    editorial: `${subj}. Considered ${what}. ${hours || 'By appointment.'}`,
+    friendly: `Hi! ${name ? "I'm " + (name.split(' ')[0]) : "We're"} — I love a calm, no-rush appointment. ${(what || 'A few things').replace(/[·]/g, 'and')}, plus whatever you want to bring me. ${hours || 'Book in or walk in when I'm not booked.'}`
+  };
+  return [
+    { tone: 'Warm & welcoming',     text: tones.warm.replace(/\s+/g,' ').trim() },
+    { tone: 'Editorial / minimal',  text: tones.editorial.replace(/\s+/g,' ').trim() },
+    { tone: 'Friendly & approachable', text: tones.friendly.replace(/\s+/g,' ').trim() }
+  ];
+}
+
+/* Save / delete */
+function saveTenant() {
+  const name = getVal('t_business_name');
+  if (!name) {
+    toast('Business name is required');
+    return;
+  }
+  const services = readTags('t_services');
+  const photo = document.getElementById('photoZone').dataset.photo || '';
+  const category = inferCategory(services);
+
+  const data = {
+    id: editing ? editing.id : 't' + (Date.now()),
+    name,
+    owner_name:  getVal('t_owner_name'),
+    suite:       getVal('t_suite_number'),
+    phone:       getVal('t_phone'),
+    email:       getVal('t_email'),
+    instagram:   getVal('t_instagram'),
+    website:     getVal('t_website'),
+    services,
+    service:     services.join(' · '),
+    hours:       getVal('t_hours'),
+    status:      getVal('t_status'),
+    bio:         getVal('t_bio'),
+    photo,
+    category,
+    open:        (getVal('t_status') === 'active'),
+    avatar:      (name[0] || '?').toUpperCase(),
+    theme:       editing?.theme || 'av-stone',
+    is_concept:  document.getElementById('t_is_concept').checked
+  };
+
+  if (editing) {
+    const idx = store.tenants.findIndex(t => t.id === editing.id);
+    if (idx >= 0) store.tenants[idx] = data;
+  } else {
+    store.tenants.unshift(data);
+  }
+  saveTenants();
+  renderTenants();
+  closeDrawer();
+  toast(editing ? 'Tenant updated' : 'Tenant added — visible in the lobby on next reload');
+}
+
+function deleteTenant() {
+  if (!editing) return;
+  if (!confirm(`Delete ${editing.name}? This can't be undone.`)) return;
+  store.tenants = store.tenants.filter(t => t.id !== editing.id);
+  saveTenants();
+  renderTenants();
+  closeDrawer();
+  toast('Tenant removed');
+}
+
+function inferCategory(services) {
+  const flat = (services || []).join(' ').toLowerCase();
+  if (/(nail|gel|pedi|mani)/.test(flat))            return 'nails';
+  if (/(color|cut|hair|balayage|gloss|men)/.test(flat)) return 'hair';
+  if (/(facial|skin|peel|derma)/.test(flat))        return 'skin';
+  if (/(lash|brow|microblad|lamination|tint)/.test(flat)) return 'brows';
+  if (/(makeup|bridal|airbrush)/.test(flat))        return 'makeup';
+  if (/(massage|reiki|acupuncture|wellness|botox|filler)/.test(flat)) return 'wellness';
+  return 'wellness';
+}
+
+/* ----- Building tab ----- */
+function populateBuilding() {
+  setVal('b_name', store.studio.name || '');
+  setVal('b_tagline', store.studio.tagline || '');
+  setVal('b_about', store.studio.about || '');
+  setVal('b_owner_note', store.studio.owner_note || '');
+  setVal('b_email', store.studio.email || '');
+  setVal('b_phone', store.studio.phone || '');
+  setVal('b_address', store.studio.address || '');
+}
+function saveBuilding() {
+  store.studio = {
+    name: getVal('b_name'),
+    tagline: getVal('b_tagline'),
+    about: getVal('b_about'),
+    owner_note: getVal('b_owner_note'),
+    email: getVal('b_email'),
+    phone: getVal('b_phone'),
+    address: getVal('b_address')
+  };
+  saveSettings();
+  toast('Building info saved');
+}
+
+/* ----- Highlights ----- */
+function renderHighlights() {
+  const list = document.getElementById('highlightsList');
+  if (!store.posts.length) {
+    list.innerHTML = `<div class="empty"><h3>No highlights yet</h3><p>Welcome a new tenant, post a promo, or share building news.</p><button class="btn btn-primary" onclick="addPost()">New post</button></div>`;
+    return;
+  }
+  list.innerHTML = store.posts.map(p => `
+    <div class="highlight-row">
+      <div class="type-pill">${p.type.replace('_',' ')}</div>
+      <div class="body">
+        <div class="t">${p.title}</div>
+        <div class="b">${p.body || ''}</div>
+        <div class="stamp">${new Date(p.published_at).toLocaleDateString()}</div>
+      </div>
+      <button class="btn btn-ghost" onclick="deletePost('${p.id}')">Remove</button>
+    </div>
+  `).join('');
+}
+function addPost() {
+  const title = prompt('Post title');
+  if (!title) return;
+  const body  = prompt('Post body (optional)') || '';
+  store.posts.unshift({ id: 'p' + Date.now(), type: 'building_news', title, body, published_at: new Date().toISOString() });
+  savePosts();
+  renderHighlights();
+  toast('Post added');
+}
+function deletePost(id) {
+  store.posts = store.posts.filter(p => p.id !== id);
+  savePosts();
+  renderHighlights();
+}
+
+/* ----- Vacancies (Available Suites) ----- */
+function renderVacancies() {
+  const grid = document.getElementById('vacancyGrid');
+  const sub  = document.getElementById('vacancyCountSub');
+  const vs   = store.vacancies;
+
+  if (sub) sub.textContent = vs.length
+    ? `${vs.length} suite${vs.length === 1 ? '' : 's'} open for lease`
+    : 'No suites listed yet';
+
+  const tile = v => `
+    <div class="tenant-tile" onclick="openVacancyEditor('${v.id}')">
+      ${v.photo
+        ? `<div class="photo" style="background-image:url('${v.photo}');">`
+        : `<div class="photo av-bone" style="display:grid; place-items:center; color: var(--ink); font-family:'Fraunces',serif; font-size:32px; letter-spacing:-0.02em;">Suite ${v.suite_number || '?'}`
+      }
+        <span class="status-pill active"><span class="dot"></span>Open for lease</span>
+        ${v.is_concept ? '<span class="test-pill">Test</span>' : ''}
+      </div>
+      <div class="body">
+        <div class="name">Suite ${v.suite_number || '—'}</div>
+        <div class="meta">${v.sqft ? v.sqft + ' sq ft · ' : ''}${v.monthly_rent ? '$' + Number(v.monthly_rent).toLocaleString() + '/mo' : 'Rent on request'}</div>
+        <div class="svc">${(v.description || '').slice(0, 110)}${(v.description || '').length > 110 ? '…' : ''}</div>
+        <div class="row">
+          <span class="svc-tag">Available ${v.available_from || 'soon'}</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const addTile = `
+    <div class="tenant-tile add-tile" onclick="openVacancyEditor()">
+      <div>
+        <div class="plus">+</div>
+        <div class="serif" style="font-size: 18px; color: var(--ink);">List a suite</div>
+        <div style="font-size: 12px; color: var(--ink-faint); margin-top: 6px;">Photo, sqft, rent, available-from.</div>
+      </div>
+    </div>
+  `;
+
+  grid.innerHTML = vs.map(tile).join('') + addTile;
+}
+
+function openVacancyEditor(id) {
+  editingVacancy = id ? store.vacancies.find(v => v.id === id) || null : null;
+  const isNew = !editingVacancy;
+
+  document.getElementById('vacancyDrawerTitle').innerHTML = isNew
+    ? 'List a <em>suite</em>'
+    : `Edit · Suite <em>${(editingVacancy.suite_number || 'suite').toString()}</em>`;
+  document.getElementById('vacancyDeleteBtn').style.display = isNew ? 'none' : 'inline-flex';
+
+  const v = editingVacancy || {};
+  setVal('v_suite_number',   v.suite_number   || '');
+  setVal('v_available_from', v.available_from || '');
+  setVal('v_sqft',           v.sqft           || '');
+  setVal('v_monthly_rent',   v.monthly_rent   || '');
+  setVal('v_description',    v.description    || '');
+  setVal('v_contact_note',   v.contact_note   || 'Email the building owner to tour');
+  document.getElementById('v_is_concept').checked = isNew ? true : !!v.is_concept;
+
+  const pz = document.getElementById('vPhotoZone');
+  if (v.photo) {
+    pz.style.backgroundImage = `url('${v.photo}')`;
+    pz.classList.add('has-photo');
+    pz.dataset.photo = v.photo;
+  } else {
+    pz.style.backgroundImage = '';
+    pz.classList.remove('has-photo');
+    delete pz.dataset.photo;
+  }
+
+  document.getElementById('vacancyDrawer').classList.add('is-on');
+  document.getElementById('vacancyBackdrop').classList.add('is-on');
+}
+
+function closeVacancyDrawer() {
+  document.getElementById('vacancyDrawer').classList.remove('is-on');
+  document.getElementById('vacancyBackdrop').classList.remove('is-on');
+  editingVacancy = null;
+}
+
+function handleVacancyPhoto(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const url = reader.result;
+    const pz = document.getElementById('vPhotoZone');
+    pz.style.backgroundImage = `url('${url}')`;
+    pz.classList.add('has-photo');
+    pz.dataset.photo = url;
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveVacancy() {
+  const suite = getVal('v_suite_number');
+  if (!suite) { toast('Suite number is required'); return; }
+
+  const data = {
+    id:              editingVacancy ? editingVacancy.id : 'v' + Date.now(),
+    suite_number:    suite,
+    available_from:  getVal('v_available_from'),
+    sqft:            Number(getVal('v_sqft')) || null,
+    monthly_rent:    Number(getVal('v_monthly_rent')) || null,
+    description:     getVal('v_description'),
+    contact_note:    getVal('v_contact_note'),
+    photo:           document.getElementById('vPhotoZone').dataset.photo || '',
+    is_concept:      document.getElementById('v_is_concept').checked
+  };
+
+  if (editingVacancy) {
+    const idx = store.vacancies.findIndex(v => v.id === editingVacancy.id);
+    if (idx >= 0) store.vacancies[idx] = data;
+  } else {
+    store.vacancies.unshift(data);
+  }
+  saveVacancies();
+  renderVacancies();
+  closeVacancyDrawer();
+  toast(editingVacancy ? 'Suite updated' : 'Suite listed — visible in the lobby on next reload');
+}
+
+function deleteVacancy() {
+  if (!editingVacancy) return;
+  if (!confirm(`Remove Suite ${editingVacancy.suite_number}? This can't be undone.`)) return;
+  store.vacancies = store.vacancies.filter(v => v.id !== editingVacancy.id);
+  saveVacancies();
+  renderVacancies();
+  closeVacancyDrawer();
+  toast('Suite removed');
+}
+
+/* ----- Toast ----- */
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('is-on');
+  clearTimeout(window.__tt);
+  window.__tt = setTimeout(() => el.classList.remove('is-on'), 2200);
+}
+
+/* ----- Boot ----- */
+loadStore();
+renderTenants();
+renderVacancies();
+
+const sess = (() => { try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch { return null; } })();
+if (sess && sess.email) {
+  showApp(sess.email);
+} else {
+  // login shell stays visible
+}
+
+/* If Supabase env is present, swap the banner. The actual Supabase wiring lands
+   once env vars are in place; the localStorage layer is the demo runtime. */
+if (typeof window !== 'undefined' && window.SS_ENV && window.SS_ENV.SUPABASE_URL) {
+  isLive = true;
+  const b = document.getElementById('modeBanner');
+  b.classList.add('is-live');
+  document.getElementById('modeBannerText').textContent = 'Live · changes save to your Supabase project and appear in the lobby instantly.';
+  document.getElementById('loginModeBadge').innerHTML = '<span class="dot"></span> Live mode · Supabase connected';
+  document.getElementById('aiProviderMeta').textContent = 'Live · Claude via Netlify Function';
+}
+</script>
+</body>
+</html>

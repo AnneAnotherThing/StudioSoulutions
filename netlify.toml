@@ -3,6 +3,7 @@
 
 [build]
   publish = "."
+  functions = "netlify/functions"
   # No build step yet — static site. When we add a bundler, set command + a /dist publish dir.
 
 # Pretty URLs for the three entry points
