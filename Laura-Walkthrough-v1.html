@@ -576,44 +576,13 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
     <div class="signoff">— Anne · Hive-Rise</div>
   </section>
 
-  <!-- ===================== HEADS UP — what's rough, what's not real, what's untested ===================== -->
-  <section class="caveat" aria-label="Heads up — what's still rough">
-    <div class="caveat-eyebrow">Heads up · this is a working prototype</div>
-    <h2 class="caveat-title">Some of it is real. Some of it isn't yet. <em>Here's what to watch for.</em></h2>
+  <!-- ===================== HEADS UP — light-touch caveat ===================== -->
+  <section class="caveat" aria-label="Heads up">
+    <div class="caveat-eyebrow">Heads up</div>
+    <h2 class="caveat-title">This is a working sketch, <em>not a finished product.</em></h2>
     <p class="caveat-lead">
-      Everything below clicks and reacts, but a few pieces are placeholders or stubs while we shape the design. None of it is "production live" yet — think of this as a working sketch you can walk through.
+      A lot of it works. Some of it is placeholder. And there are surely things I haven't tested. If something looks broken or weird, tell me — that's almost certainly on me, not on you.
     </p>
-
-    <div class="caveat-grid">
-      <div class="caveat-col">
-        <h3>What we <em>know</em> doesn't fully work yet</h3>
-        <ul class="caveat-list">
-          <li><strong>AI bio generator</strong> — returns three nicely written sample tones, but it's not calling Claude live. The wiring is there; flipping it on needs an API key in the deployment.</li>
-          <li><strong>Data is browser-only</strong> — anything you add in the admin lives in <em>this</em> browser. Open it on your phone or another laptop and you'll see seed data, not your edits. Real sync comes with the backend.</li>
-          <li><strong>Suite map is stylized</strong> — the floor plan is a generic two-corridor layout I drew to demonstrate interactivity. It doesn't match the actual Salon Plus building yet. (Send me a photo or sketch and I'll trace it.)</li>
-          <li><strong>Most tenants are marked "Test"</strong> — only Dueces is confirmed. The rest are placeholder names, photos, and bios so the kiosk doesn't look empty.</li>
-          <li><strong>Vacancies are example data</strong> — suites 108 / 110 / 112 / etc. are placeholders, not real available rooms.</li>
-          <li><strong>"Book with…" buttons</strong> — placeholders. They don't connect to a real booking system yet.</li>
-          <li><strong>Kiosk on a phone</strong> — shows a miniature, non-interactive preview by design. Use a desktop browser (or the real touchscreen later) to actually click around.</li>
-          <li><strong>Logo</strong> — placeholder. You've seen the alternatives on the Logo card below.</li>
-        </ul>
-      </div>
-
-      <div class="caveat-col">
-        <h3>What we <em>haven't tested</em> (so probably has rough edges)</h3>
-        <ul class="caveat-list">
-          <li>Real touchscreen behavior — only mouse + keyboard so far.</li>
-          <li>Different screen sizes — should adapt, but a weird phone or tablet might surprise us.</li>
-          <li>Photos at much higher counts (we have ~10 tenants seeded; 30+ may need layout tweaks).</li>
-          <li>Slow networks — image loading hasn't been optimized.</li>
-          <li>Accessibility — basic structure is there, but no full screen-reader pass yet.</li>
-          <li>Older browsers (anything that isn't current Chrome / Safari / Firefox / Edge).</li>
-        </ul>
-        <p class="caveat-aside">
-          If you click something and it does the wrong thing — or nothing — that's almost certainly on me, not on you. Tell me what you tapped and I'll fix it.
-        </p>
-      </div>
-    </div>
   </section>
 
   <!-- ===================== PITCH ===================== -->
