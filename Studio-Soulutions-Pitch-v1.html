@@ -121,7 +121,7 @@
       box-shadow: 0 2px 4px rgba(61,53,48,0.06), 0 10px 28px rgba(61,53,48,0.10);">
   <div class="max-w-7xl mx-auto px-6 lg:px-12 py-4 flex items-center justify-between">
     <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-xl bg-[var(--ink)] text-[var(--surface-2)] grid place-items-center serif text-lg">s</div>
+      <div class="w-9 h-9 rounded-xl grid place-items-center" style="background:#FFFBF4;padding:4px;"><img src="assets/logo-placeholder.svg" alt="Studio Soulutions" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
       <div class="serif text-[17px] text-[var(--ink)]">Studio Soul<span class="serif-it text-[var(--taupe-deep)]">utions</span></div>
     </div>
     <div class="hidden md:flex items-center gap-7 text-sm font-semibold" style="color: var(--ink-soft);">
@@ -249,80 +249,40 @@
     </div>
 
     <div class="grid lg:grid-cols-12 gap-10 items-start">
-      <!-- KIOSK MOCKUP -->
+      <!-- KIOSK MOCKUP — live iframe of the actual kiosk.html, scaled to fit -->
       <div class="lg:col-span-7">
-        <div class="kiosk-frame mx-auto" style="max-width: 560px;">
-          <div class="relative aspect-[9/16] rounded-[24px] overflow-hidden">
-            <!-- background corridor -->
-            <div class="absolute inset-0 bg-cover bg-center"
-                 style="background-image: url('assets/photos/1000040457.jpg');"></div>
-            <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(245,237,224,0.20) 0%, rgba(245,237,224,0.30) 50%, rgba(245,237,224,0.88) 100%);"></div>
-
-            <!-- KIOSK UI -->
-            <div class="relative h-full flex flex-col p-7 text-[var(--ink)]">
-              <!-- top -->
-              <div class="flex items-start justify-between">
-                <div>
-                  <div class="eyebrow text-cream-50">Welcome to</div>
-                  <div class="serif text-3xl leading-tight mt-2">Salon Plus<br/><span class="serif-it text-[var(--sage-deep)]">Studio Suites</span></div>
-                </div>
-                <div class="rounded-2xl bg-cream-10 backdrop-blur border-cream-20 px-3 py-3 text-center">
-                  <div class="w-14 h-14 rounded-md bg-[var(--cream)] qr-grid mx-auto"></div>
-                  <div class="text-[9px] eyebrow text-[var(--ink)] mt-2">Scan · Take it with you</div>
-                </div>
-              </div>
-
-              <!-- center menu -->
-              <div class="mt-8 grid gap-2.5">
-                <button class="rounded-2xl border-cream-20 bg-cream-10 backdrop-blur text-left p-4 hover:bg-cream-15 transition flex items-center justify-between">
-                  <span class="serif text-lg">Directory</span>
-                  <span class="text-cream-50 text-sm">10 studios</span>
-                </button>
-                <button class="rounded-2xl border-cream-20 bg-cream-10 backdrop-blur text-left p-4 hover:bg-cream-15 transition flex items-center justify-between">
-                  <span class="serif text-lg">Suite map</span>
-                  <span class="text-cream-50 text-sm">You are here</span>
-                </button>
-                <button class="rounded-2xl border-cream-20 bg-cream-10 backdrop-blur text-left p-4 hover:bg-cream-15 transition flex items-center justify-between">
-                  <span class="serif text-lg">Open right now</span>
-                  <span class="text-[var(--sage-deep)] text-sm flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[var(--sage-deep)] pulse-dot" style="color: var(--sage-soft)"></span>4 studios</span>
-                </button>
-                <button class="rounded-2xl border-cream-20 bg-cream-10 backdrop-blur text-left p-4 hover:bg-cream-15 transition flex items-center justify-between">
-                  <span class="serif text-lg">From the owner</span>
-                  <span class="text-cream-50 text-sm">— the owner</span>
-                </button>
-              </div>
-
-              <!-- spacer -->
-              <div class="flex-1"></div>
-
-              <!-- featured tenant -->
-              <div class="rounded-2xl bg-[rgba(245,237,224,0.30)] backdrop-blur border-cream-20 p-4">
-                <div class="eyebrow text-cream-50">Featured today</div>
-                <div class="flex items-center gap-4 mt-3">
-                  <div class="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0">
-                    <img src="assets/photos/1000040455.jpg" class="w-full h-full object-cover" alt="Dueces Nail Studio"/>
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <div class="serif text-lg leading-tight">Dueces Nail Studio</div>
-                    <div class="text-sm text-cream-70">Manicure · Pedicure · Nail Art</div>
-                  </div>
-                  <div class="text-[var(--sage-deep)] text-xs flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-[var(--sage-deep)]"></span> Open
-                  </div>
-                </div>
-              </div>
-
-              <!-- footer time -->
-              <div class="flex items-center justify-between mt-4 text-[11px] eyebrow text-cream-40">
-                <span>Salon Plus · Lobby</span>
-                <span>Tap anywhere to begin</span>
-              </div>
-            </div>
+        <div class="kiosk-frame mx-auto" style="max-width: 700px;">
+          <div class="relative rounded-[24px] overflow-hidden" style="aspect-ratio: 16 / 10;">
+            <!-- Live kiosk rendered at its native 1280x800, scaled down to the frame -->
+            <iframe src="kiosk.html"
+                    title="Live kiosk preview"
+                    loading="lazy"
+                    style="
+                      position: absolute; top: 0; left: 0;
+                      width: 1280px; height: 800px;
+                      border: 0;
+                      transform-origin: top left;
+                      transform: scale(calc(var(--kiosk-frame-w, 668) / 1280));
+                      pointer-events: none;"></iframe>
           </div>
         </div>
 
-        <p class="text-center text-xs eyebrow text-cream-40 mt-4">9:16 touchscreen · lobby mode shown</p>
+        <p class="text-center text-xs eyebrow text-cream-40 mt-4">Live kiosk · running in this page · <a href="kiosk.html" class="underline hover:text-[var(--ink)]" target="_blank" rel="noopener">open full-screen →</a></p>
       </div>
+      <script>
+        /* Match kiosk-frame inner width so the scale stays crisp at any breakpoint */
+        (function syncKioskScale() {
+          const frames = document.querySelectorAll('.kiosk-frame');
+          const set = () => frames.forEach(f => {
+            const inner = f.firstElementChild;
+            if (!inner) return;
+            const w = inner.getBoundingClientRect().width;
+            inner.style.setProperty('--kiosk-frame-w', w);
+          });
+          set();
+          window.addEventListener('resize', set);
+        })();
+      </script>
 
       <!-- KIOSK CAPABILITIES -->
       <div class="lg:col-span-5">
@@ -400,16 +360,38 @@
         </div>
       </div>
 
-      <!-- RIGHT: phone mockup (dark — matches the live mobile prototype) -->
+      <!-- RIGHT: live iframe of the actual mobile prototype (index.html) -->
       <div class="flex justify-center">
         <div class="phone-frame relative" style="width: 320px;">
           <div class="phone-notch"></div>
+          <div class="rounded-[34px] overflow-hidden relative" style="background: #F5EDE0; color: var(--ink); height: 660px;">
+            <iframe src="index.html"
+                    title="Live mobile preview"
+                    loading="lazy"
+                    style="
+                      position: absolute; top: 0; left: 0;
+                      width: 390px; height: 844px;
+                      border: 0;
+                      transform-origin: top left;
+                      transform: scale(calc(296 / 390));
+                      pointer-events: none;"></iframe>
+          </div>
+          <p class="text-center text-xs eyebrow text-cream-40 mt-4">Live mobile · <a href="index.html" class="underline hover:text-[var(--ink)]" target="_blank" rel="noopener">open in a new tab →</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- legacy hand-coded phone removed; iframe above renders the real index.html.
+     Old splash menu kept commented in source history. -->
+<div style="display: none;">
           <div class="rounded-[34px] overflow-hidden relative" style="background: #F5EDE0; color: var(--ink); height: 660px; background-image: radial-gradient(90% 30% at 80% 0%, rgba(139,154,126,0.12) 0%, transparent 70%);">
 
             <!-- mobile header -->
             <div class="flex items-center justify-between px-5 pt-8 pb-3" style="background: rgba(245,237,224,0.88); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(61,53,48,0.11);">
               <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-lg grid place-items-center serif text-base" style="background: var(--ink); color: var(--surface-2);">s</div>
+                <div class="w-8 h-8 rounded-lg grid place-items-center" style="background:#FFFBF4;padding:3px;"><img src="assets/logo-placeholder.svg" alt="Studio Soulutions" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
                 <div class="serif text-[15px]" style="color: var(--ink);">Studio Soul<span class="serif-it" style="color: #8B7E6A;">utions</span></div>
               </div>
               <div class="w-8 h-8 rounded-lg grid place-items-center" style="background: rgba(61,53,48,0.11); border:1px solid rgba(61,53,48,0.18); backdrop-filter: blur(10px);">
@@ -510,10 +492,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ===================== AI BIOS ===================== -->
 <section id="ai" class="relative py-24 lg:py-32" style="background: linear-gradient(180deg, #F5EDE0 0%, #EFE4D2 100%);">

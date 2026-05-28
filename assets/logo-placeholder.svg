@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 96" role="img" aria-label="Studio Soulutions placeholder mark">
+  <defs>
+    <linearGradient id="clayG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D88766"/>
+      <stop offset="55%" stop-color="#C97B5A"/>
+      <stop offset="100%" stop-color="#A8593E"/>
+    </linearGradient>
+    <linearGradient id="sageG" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D9CBB8"/>
+      <stop offset="100%" stop-color="#C5D0B8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- sage highlight strokes behind the S -->
+  <path d="M 8 38 Q 36 18 64 36 Q 88 50 110 32" fill="none" stroke="url(#sageG)" stroke-width="6" stroke-linecap="round" opacity="0.85"/>
+  <path d="M 10 64 Q 38 80 64 64 Q 90 48 112 62" fill="none" stroke="url(#sageG)" stroke-width="6" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- top curl of the S -->
+  <path d="M 92 22
+           C 78 10, 50 12, 38 26
+           C 28 38, 36 48, 56 48
+           C 38 50, 22 40, 24 24
+           C 28 8, 60 0, 86 12 Z"
+        fill="url(#clayG)"/>
+
+  <!-- bottom curl of the S (mirror of top) -->
+  <path d="M 28 74
+           C 42 86, 70 84, 82 70
+           C 92 58, 84 48, 64 48
+           C 82 46, 98 56, 96 72
+           C 92 88, 60 96, 34 84 Z"
+        fill="url(#clayG)"/>
+
+  <!-- keyhole in the center -->
+  <circle cx="60" cy="44" r="4.2" fill="#1F1812"/>
+  <path d="M 57.4 44 L 62.6 44 L 61.4 53 L 58.6 53 Z" fill="#1F1812"/>
+</svg>

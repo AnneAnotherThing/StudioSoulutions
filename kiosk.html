@@ -6,20 +6,17 @@
 <meta name="theme-color" content="#F5EDE0" />
 <title>Studio Soulutions — Salon Plus Studio Suites · Lobby</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<!-- tokens.css inlined into this file so the kiosk works standalone (double-click or served) -->
 <style>
-  /* ---------- Kiosk shell — pitch-mockup aesthetic blended with Studio Soulutions earthy palette ---------- */
   :root {
-    /* Light, neutral, taupe + sage — beauty-industry-appropriate */
-    --bg:            #F5EDE0;       /* warm sand cream — primary surface */
-    --bg-2:          #EFE4D2;       /* slightly deeper */
-    --bg-3:          #E5D9C3;       /* warm tan */
+    --bg:            #F5EDE0;
+    --bg-2:          #EFE4D2;
+    --bg-3:          #E5D9C3;
     --surface:       #FBF6EE;
-    --surface-2:     #FFFBF4;       /* lightest */
-    --ink:           #3D3530;       /* primary text */
+    --surface-2:     #FFFBF4;
+    --ink:           #3D3530;
     --ink-soft:      #6B6357;
     --ink-faint:     #8B7E70;
-    --ink-ghost:     #B8AB9C;
+    --ink-ghost:    #B8AB9C;
     --sage:          #8B9A7E;
     --sage-deep:     #6B7A5F;
     --sage-soft:     #C5D0B8;
@@ -31,16 +28,7 @@
     --clay-soft:     #E8C8B5;
     --line:          #E5D9C3;
     --line-2:        #D4C4A8;
-    /* Glass on cream — subtle ink wash */
-    --glass-04:      rgba(61,53,48,0.04);
-    --glass-06:      rgba(61,53,48,0.05);
-    --glass-08:      rgba(61,53,48,0.07);
-    --glass-line:    rgba(61,53,48,0.10);
-    --glass-line-2:  rgba(61,53,48,0.16);
-    /* Legacy aliases — bumped alphas so cards/buttons have clear contrast on cream */
     --bg-dark:       var(--bg);
-    --bg-dark-2:     var(--bg-2);
-    --bg-dark-3:     var(--bg-3);
     --cream-on-dark: var(--ink);
     --cream-04:      rgba(61,53,48,0.05);
     --cream-06:      rgba(61,53,48,0.07);
@@ -48,94 +36,20 @@
     --cream-10:      rgba(61,53,48,0.11);
     --cream-15:      rgba(61,53,48,0.15);
     --cream-20:      rgba(61,53,48,0.20);
+    --cream-40:      rgba(61,53,48,0.48);
     --cream-50:      rgba(61,53,48,0.58);
     --cream-70:      rgba(61,53,48,0.80);
-    --line-dark:     var(--glass-line);
   }
 
-  /* Lift treatment for kiosk's clickable surfaces */
-  .menu-btn, .tenant-card, .qr-card, .right-panel {
-    box-shadow: 0 2px 4px rgba(61,53,48,0.10), 0 10px 28px rgba(61,53,48,0.18);
-  }
-  .menu-btn:active, .tenant-card:active {
-    box-shadow: 0 6px 18px rgba(61,53,48,0.20), 0 24px 48px rgba(61,53,48,0.24);
-  }
-  /* Header lift on the kiosk top strip + footer strip */
-  .kiosk-header, .kiosk-foot {
-    background: rgba(245,237,224,0.55);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-radius: 20px;
-    padding-left: 1.4rem; padding-right: 1.4rem;
-    box-shadow: 0 2px 4px rgba(61,53,48,0.10), 0 10px 28px rgba(61,53,48,0.16);
-  }
-
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; overflow: hidden; background: var(--bg-dark); color: var(--cream-on-dark); }
   body { font-family: 'Inter', -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 
-  .serif { font-family: 'Fraunces', Georgia, serif; font-weight: 500; letter-spacing: -0.02em; }
+  .serif    { font-family: 'Fraunces', Georgia, serif; font-weight: 500; letter-spacing: -0.02em; }
   .serif-it { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-weight: 400; }
   .eyebrow {
-    font-size: 0.7rem;
-    letter-spacing: 0.32em;
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--cream-50);
-  }
-
-  /* ---------- Attract loop (idle) ---------- */
-  #attract {
-    position: fixed; inset: 0;
-    z-index: 10;
-    opacity: 0;
-    transition: opacity 1.2s ease;
-    pointer-events: none;
-    background: var(--bg-dark);
-  }
-  #attract.is-on { opacity: 1; pointer-events: auto; }
-  .attract-slide {
-    position: absolute; inset: 0;
-    background-size: cover;
-    background-position: center;
-    opacity: 0;
-    transition: opacity 2s ease;
-  }
-  .attract-slide.is-on { opacity: 1; }
-  .attract-overlay {
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(120% 80% at 80% 20%, rgba(139,154,126,0.14) 0%, transparent 55%),
-      linear-gradient(180deg, rgba(245,237,224,0.28) 0%, rgba(245,237,224,0.70) 55%, rgba(245,237,224,0.96) 100%);
-    z-index: 2;
-  }
-  .attract-mark {
-    position: absolute; left: 0; right: 0; bottom: 16vh;
-    z-index: 3;
-    text-align: center;
-    color: var(--cream-on-dark);
-  }
-  .attract-mark .eyebrow { margin-bottom: 1.6rem; font-size: 0.85rem; letter-spacing: 0.4em; }
-  .attract-mark .wordmark {
-    font-family: 'Fraunces', Georgia, serif;
-    font-weight: 500;
-    font-size: 6.5rem;
-    line-height: 1;
-    letter-spacing: -0.02em;
-  }
-  .attract-mark .wordmark em {
-    font-style: italic; font-weight: 400; color: var(--taupe-deep);
-  }
-  .attract-mark .tap-hint {
-    margin-top: 3rem;
-    font-size: 0.95rem;
-    letter-spacing: 0.32em;
-    text-transform: uppercase;
-    opacity: 0.55;
-    animation: tappulse 2.4s ease-in-out infinite;
-  }
-  @keyframes tappulse {
-    0%, 100% { opacity: 0.35 }
-    50%      { opacity: 0.85 }
+    font-size: 0.7rem; letter-spacing: 0.32em; text-transform: uppercase;
+    font-weight: 600; color: var(--cream-50);
   }
 
   /* ---------- Active app ---------- */
@@ -145,739 +59,280 @@
     background: var(--bg-dark);
     color: var(--cream-on-dark);
   }
-
-  /* Photo backdrop */
   #app::before {
-    content: '';
-    position: absolute; inset: 0;
+    content: ''; position: absolute; inset: 0;
     background-image: url('assets/photos/1000040457.jpg');
-    background-size: cover;
-    background-position: center;
+    background-size: cover; background-position: center;
     z-index: 0;
   }
   #app::after {
-    content: '';
-    position: absolute; inset: 0;
+    content: ''; position: absolute; inset: 0;
     background:
       radial-gradient(80% 60% at 80% 0%, rgba(139,154,126,0.12) 0%, transparent 60%),
       linear-gradient(180deg, rgba(245,237,224,0.55) 0%, rgba(245,237,224,0.82) 60%, rgba(245,237,224,0.96) 100%);
     z-index: 1;
   }
 
-  .kiosk-shell {
-    position: relative; z-index: 2;
-    height: 100%;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    padding: 2.4rem 3rem;
-    gap: 2rem;
-  }
-
-  /* Header */
-  .kiosk-header {
-    display: flex; align-items: flex-start; justify-content: space-between;
-    gap: 2rem;
-  }
-  .brand { display: flex; align-items: center; gap: 1rem; }
-  .brand-mark {
-    width: 56px; height: 56px;
-    background: var(--ink); color: var(--surface-2);
-    border-radius: 14px;
-    display: grid; place-items: center;
-    font-family: 'Fraunces', serif; font-weight: 600;
-    font-size: 1.7rem;
-  }
-  .brand-name {
-    font-family: 'Fraunces', serif;
-    font-size: 1.5rem;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-  }
-  .brand-name em {
-    font-style: italic; font-weight: 400; color: var(--taupe-deep);
-    font-family: 'Fraunces', serif;
-  }
-  .brand-sub {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    color: var(--cream-50);
-    margin-top: 4px;
-  }
-
-  /* QR card */
-  .qr-card {
-    background: var(--cream-10);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border: 1px solid var(--cream-20);
-    border-radius: 22px;
-    padding: 14px 16px;
-    text-align: center;
-    min-width: 160px;
-  }
-  .qr-grid {
-    width: 90px; height: 90px; margin: 0 auto;
-    background: var(--surface-2);
-    background-image:
-      linear-gradient(var(--ink) 1.5px, transparent 1.5px),
-      linear-gradient(90deg, var(--ink) 1.5px, transparent 1.5px);
-    background-size: 9px 9px;
-    border-radius: 8px;
-    border: 1px solid var(--line);
-  }
-  .qr-card .lbl {
-    margin-top: 8px;
-    font-size: 0.65rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--cream-on-dark);
-    font-weight: 600;
-  }
-  .qr-card .sub { font-size: 0.62rem; color: var(--cream-50); letter-spacing: 0.08em; margin-top: 2px; }
-
-  /* Hero (welcome) */
-  .welcome {
-    align-self: end;
-    max-width: 70%;
-  }
-  .welcome .eyebrow { margin-bottom: 0.8rem; }
-  .welcome h1 {
-    font-family: 'Fraunces', serif; font-weight: 500;
-    font-size: 4.4rem; line-height: 1; letter-spacing: -0.02em;
-    color: var(--cream-on-dark);
-  }
-  .welcome h1 em {
-    font-style: italic; font-weight: 400; color: var(--taupe-deep);
-    font-family: 'Fraunces', serif;
-  }
-  .welcome p {
-    margin-top: 1rem;
-    font-size: 1rem;
-    color: var(--cream-70);
-    max-width: 32em;
-  }
-
-  /* Main grid: welcome+menu / featured */
-  .kiosk-main {
-    display: grid;
-    grid-template-columns: 1.05fr 1fr;
-    gap: 2.4rem;
-    align-items: stretch;
-    overflow: hidden;
-  }
-
-  /* Menu (left) */
-  .menu-stack {
-    display: flex; flex-direction: column;
-    justify-content: flex-end;
-    gap: 0.8rem;
-  }
-  .menu-btn {
-    background: var(--cream-10);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--cream-20);
-    border-radius: 22px;
-    padding: 18px 22px;
-    color: var(--cream-on-dark);
-    font-family: 'Inter', sans-serif;
-    cursor: pointer;
-    text-align: left;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 1.5rem;
-    transition: background 0.2s ease, transform 0.15s ease;
-  }
-  .menu-btn:active { transform: scale(0.985); background: var(--cream-15); }
-  .menu-btn.is-active { background: var(--cream-15); border-color: var(--cream-20); }
-  .menu-btn .label {
-    font-family: 'Fraunces', serif;
-    font-weight: 500;
-    font-size: 1.45rem;
-    letter-spacing: -0.01em;
-  }
-  .menu-btn .meta {
-    font-size: 0.78rem; color: var(--cream-50);
-    text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600;
-    display: flex; align-items: center; gap: 8px; flex-shrink: 0;
-  }
-  .menu-btn .meta.open { color: var(--sage-deep); }
-  .open-dot {
-    width: 8px; height: 8px; border-radius: 50%; background: var(--sage-deep); position: relative;
-  }
-  .open-dot::after {
-    content: ''; position: absolute; inset: -4px; border-radius: 50%;
-    background: var(--sage-deep); opacity: 0.3;
-    animation: opdot 2s ease-out infinite;
-  }
-  @keyframes opdot { 0% { transform: scale(1); opacity: 0.3 } 100% { transform: scale(2.4); opacity: 0 } }
-
-  /* Right panel — featured / view content */
-  .right-panel {
-    background: var(--cream-04);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--cream-10);
-    border-radius: 28px;
-    padding: 1.8rem;
-    overflow: hidden;
-    display: flex; flex-direction: column;
-    min-height: 0;
-  }
-  .panel-head {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 1.2rem;
-  }
-  .panel-head h2 {
-    font-family: 'Fraunces', serif;
-    font-weight: 500;
-    font-size: 1.5rem;
-    letter-spacing: -0.01em;
-  }
-
-  /* Tenant grid for Directory view */
-  .tenant-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.85rem;
-    overflow-y: auto;
-    flex: 1;
-    padding-right: 4px;
-    align-content: start;
-    scrollbar-width: thin;
-    scrollbar-color: var(--cream-15) transparent;
-  }
-  .tenant-grid::-webkit-scrollbar { width: 6px; }
-  .tenant-grid::-webkit-scrollbar-thumb { background: var(--cream-15); border-radius: 3px; }
-  .tenant-card {
-    background: var(--cream-06);
-    border: 1px solid var(--cream-10);
-    border-radius: 18px;
-    padding: 0.9rem;
-    cursor: pointer;
-    transition: background 0.2s ease, transform 0.15s ease;
-    display: flex; flex-direction: column; gap: 0.7rem;
-  }
-  .tenant-card:active { transform: scale(0.985); background: var(--cream-10); }
-  .tenant-photo {
-    aspect-ratio: 16/10;
-    border-radius: 12px;
-    background-size: cover;
-    background-position: center;
-    background-color: var(--bg-dark-3);
-    position: relative;
-    overflow: hidden;
-  }
-  /* Concept / test data pill — unconfirmed tenants */
-  .test-pill {
-    position: absolute; right: 8px; top: 8px;
-    background: rgba(245,237,224,0.85);
-    backdrop-filter: blur(8px);
-    border: 1px dashed var(--taupe-deep);
-    color: var(--taupe-deep);
-    font-size: 0.55rem;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 999px;
-  }
-  .tenant-photo .status {
-    position: absolute; left: 8px; bottom: 8px;
-    background: rgba(245,237,224,0.55);
-    backdrop-filter: blur(8px);
-    border: 1px solid var(--cream-20);
-    border-radius: 999px;
-    padding: 4px 10px;
-    font-size: 0.55rem;
-    text-transform: uppercase;
-    letter-spacing: 0.16em;
-    font-weight: 700;
-    display: flex; align-items: center; gap: 5px;
-  }
-  .tenant-photo .status.open  { color: var(--sage-deep); }
-  .tenant-photo .status.closed{ color: var(--ink-faint); }
-  .tenant-photo .status .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
-  /* Light earthy gradient placeholders for tenants without photos yet */
-  .tenant-photo.av-sage  { background: linear-gradient(135deg, #C5D0B8 0%, #8B9A7E 100%); color: var(--ink); }
-  .tenant-photo.av-clay  { background: linear-gradient(135deg, #E8C8B5 0%, #C97B5A 100%); color: var(--ink); }
-  .tenant-photo.av-sand  { background: linear-gradient(135deg, #E5D9C3 0%, #B5A795 100%); color: var(--ink); }
-  .tenant-photo.av-rose  { background: linear-gradient(135deg, #E2C5C0 0%, #B89090 100%); color: var(--ink); }
-  .tenant-photo.av-moss  { background: linear-gradient(135deg, #B5C5A5 0%, #6B7A5F 100%); color: var(--ink); }
-  .tenant-photo.av-rust  { background: linear-gradient(135deg, #D4A693 0%, #A8593E 100%); color: var(--ink); }
-  .tenant-photo.av-stone { background: linear-gradient(135deg, #D4C4A8 0%, #8B7E70 100%); color: var(--ink); }
-  .tenant-photo.av-fern  { background: linear-gradient(135deg, #B5C5A5 0%, #5E7558 100%); color: var(--ink); }
-  .tenant-photo.av-amber { background: linear-gradient(135deg, #E8D5A5 0%, #B59055 100%); color: var(--ink); }
-  .tenant-photo.av-bone  { background: linear-gradient(135deg, #F0E8D8 0%, #B8AB9C 100%); color: var(--ink); }
-  .tenant-name { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.05rem; letter-spacing: -0.01em; }
-  .tenant-service { font-size: 0.72rem; color: var(--cream-70); margin-top: 1px; }
-  .tenant-meta { font-size: 0.6rem; color: var(--cream-50); text-transform: uppercase; letter-spacing: 0.14em; font-weight: 600; }
-
-  /* Featured single card variant */
-  .featured-card {
-    background: var(--cream-06);
-    border: 1px solid var(--cream-10);
-    border-radius: 22px;
-    padding: 1rem;
-    display: flex; flex-direction: column; gap: 1rem;
-  }
-  .featured-card .feat-photo {
-    aspect-ratio: 16/10;
-    border-radius: 16px;
-    background-size: cover;
-    background-position: center;
-  }
-  .featured-card h3 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.4rem; letter-spacing: -0.01em; }
-
-  /* From-the-owner view */
-  .owner-note {
-    background: var(--cream-06);
-    border: 1px solid var(--cream-10);
-    border-radius: 18px;
-    padding: 1.5rem;
-    line-height: 1.6;
-    color: var(--cream-70);
-    font-size: 0.95rem;
-    flex: 1;
-    overflow-y: auto;
-  }
-  .owner-sig {
-    margin-top: 1.2rem;
-    font-family: 'Fraunces', serif; font-style: italic;
-    color: var(--cream-on-dark);
-    font-size: 1.05rem;
-  }
-
-  /* Suite map placeholder */
-  .map-canvas {
-    position: relative;
-    flex: 1;
-    background: var(--cream-04);
-    border: 1px dashed var(--cream-15);
-    border-radius: 18px;
-    min-height: 240px;
-    display: grid; place-items: center;
-  }
-  .map-canvas p { color: var(--cream-50); font-family: 'Fraunces', serif; font-style: italic; }
-
-  /* Footer / nav bar */
-  .kiosk-foot {
-    display: flex; align-items: center; justify-content: space-between;
-    color: var(--cream-50);
-    font-size: 0.78rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-  .kiosk-foot .clock { color: var(--cream-on-dark); font-family: 'Fraunces', serif; letter-spacing: -0.01em; text-transform: none; font-size: 1.05rem; font-weight: 500; }
-
-  /* Hidden helper */
-  [hidden] { display: none !important; }
-
-  /* ==========================================================
-     KIOSK v2 — client-first redesign
-     "Who are you here to see?" front and center, browse below,
-     everything else lives quietly under "by the way".
-     ========================================================== */
-
-  /* Compact top strip */
-  .kiosk-top {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 1.4rem;
-    padding: 0.6rem 1.4rem;
-    background: rgba(245,237,224,0.55);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-radius: 18px;
-    border: 1px solid var(--cream-10);
-  }
-  .kiosk-top .clock {
-    color: var(--cream-on-dark); font-family: 'Fraunces', serif;
-    letter-spacing: -0.01em; font-size: 1.1rem; font-weight: 500;
-  }
-
-  /* HERO SEARCH */
-  .hero-search {
-    align-self: center;
-    text-align: center;
-    padding: 1.4rem 0 0.4rem;
-  }
-  .hero-search .eyebrow { margin-bottom: 0.7rem; }
-  .hero-search h1 {
-    font-family: 'Fraunces', serif; font-weight: 500;
-    font-size: 3.2rem; line-height: 1.05; letter-spacing: -0.02em;
-    color: var(--cream-on-dark);
-    margin-bottom: 1.4rem;
-  }
-  .hero-search h1 em {
-    font-style: italic; font-weight: 400; color: var(--taupe-deep);
-    font-family: 'Fraunces', serif;
-  }
-
-  .search-shell {
-    position: relative;
-    max-width: 720px;
-    margin: 0 auto;
-  }
-  .search-icon {
-    position: absolute; left: 22px; top: 50%; transform: translateY(-50%);
-    width: 22px; height: 22px;
-    color: var(--cream-50);
-    pointer-events: none;
-  }
-  .search-input {
-    width: 100%;
-    background: rgba(251,246,238,0.85);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border: 1.5px solid var(--cream-15);
-    border-radius: 999px;
-    padding: 18px 24px 18px 56px;
-    font-family: 'Fraunces', serif;
-    font-weight: 500;
-    font-size: 1.35rem;
-    color: var(--cream-on-dark);
-    letter-spacing: -0.01em;
-    box-shadow: 0 2px 6px rgba(61,53,48,0.08), 0 14px 36px rgba(61,53,48,0.14);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    outline: none;
-  }
-  .search-input::placeholder {
-    color: var(--cream-50);
-    font-style: italic;
-    font-family: 'Fraunces', serif;
-  }
-  .search-input:focus {
-    border-color: var(--sage);
-    box-shadow: 0 2px 6px rgba(61,53,48,0.08), 0 14px 36px rgba(139,154,126,0.22);
-  }
-
-  /* Search results dropdown */
-  .search-results {
-    max-width: 720px;
-    margin: 0.8rem auto 0;
-    background: rgba(251,246,238,0.95);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border: 1px solid var(--cream-15);
-    border-radius: 22px;
-    overflow: hidden;
-    box-shadow: 0 2px 6px rgba(61,53,48,0.08), 0 14px 36px rgba(61,53,48,0.14);
-    text-align: left;
-    max-height: 320px;
-    overflow-y: auto;
-  }
-  .search-result {
-    display: flex; align-items: center; gap: 14px;
-    padding: 12px 18px;
-    cursor: pointer;
-    border-bottom: 1px solid var(--cream-10);
-    transition: background 0.15s ease;
-  }
-  .search-result:last-child { border-bottom: 0; }
-  .search-result:hover { background: var(--cream-06); }
-  .sr-mark {
-    width: 44px; height: 44px;
-    border-radius: 12px;
-    flex-shrink: 0;
-    background-size: cover; background-position: center;
-    background-color: var(--bg-dark-3);
-    display: grid; place-items: center;
-    font-family: 'Fraunces', serif; font-weight: 500;
-    color: var(--ink); font-size: 1.1rem;
-  }
-  .sr-body { flex: 1; min-width: 0; }
-  .sr-name {
-    font-family: 'Fraunces', serif; font-weight: 500;
-    font-size: 1.05rem; letter-spacing: -0.01em;
-    color: var(--cream-on-dark);
-  }
-  .sr-meta {
-    font-size: 0.72rem; color: var(--cream-50);
-    margin-top: 2px;
-    text-transform: uppercase; letter-spacing: 0.14em; font-weight: 600;
-  }
-  .sr-suite {
-    font-family: 'Fraunces', serif; font-weight: 500;
-    font-size: 0.95rem;
-    color: var(--sage-deep);
-    margin-left: 10px;
-    flex-shrink: 0;
-  }
-  .search-empty {
-    padding: 18px;
-    text-align: center;
-    color: var(--cream-50);
-    font-family: 'Fraunces', serif; font-style: italic;
-  }
-
-  .search-hint {
-    margin-top: 1rem;
-    font-size: 0.78rem;
-    color: var(--cream-50);
-    letter-spacing: 0.06em;
-    font-style: italic;
-    font-family: 'Fraunces', serif;
-  }
-
-  /* BROWSE */
-  .browse {
-    display: flex; flex-direction: column;
-    gap: 1rem;
-    min-height: 0;
-    flex: 1;
-    margin-top: 1.4rem;
-  }
-  .browse-tabs {
-    display: flex; align-items: center; gap: 0.6rem;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .tab {
-    background: var(--cream-06);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid var(--cream-15);
-    border-radius: 999px;
-    padding: 9px 18px;
-    color: var(--cream-on-dark);
-    font-family: 'Inter', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    cursor: pointer;
-    display: inline-flex; align-items: center; gap: 9px;
-    transition: background 0.2s ease, border-color 0.2s ease;
-  }
-  .tab:hover { background: var(--cream-10); }
-  .tab.is-active {
-    background: var(--ink);
-    color: var(--surface-2);
-    border-color: var(--ink);
-  }
-  .tab .tab-meta {
-    font-size: 0.72rem;
-    opacity: 0.7;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-weight: 700;
-    display: inline-flex; align-items: center; gap: 5px;
-  }
-  .tab.is-active .tab-meta { opacity: 0.85; }
-  .tab .tab-meta.open { color: var(--sage-deep); }
-  .tab.is-active .tab-meta.open { color: var(--sage-soft); }
-
-  .browse-content {
-    flex: 1;
-    min-height: 0;
-    background: var(--cream-04);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--cream-10);
-    border-radius: 24px;
-    padding: 1.4rem;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(61,53,48,0.08), 0 10px 28px rgba(61,53,48,0.14);
-  }
-  .browse-content .tenant-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 0.85rem;
-    max-height: 100%;
-    overflow-y: auto;
-    padding-right: 4px;
-  }
-
-  /* BY THE WAY */
-  .byway {
-    margin-top: 1.2rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--cream-15);
-  }
-  .byway-eyebrow {
-    font-size: 0.65rem;
-    letter-spacing: 0.34em;
-    text-transform: uppercase;
-    font-weight: 700;
-    color: var(--cream-50);
-    margin-bottom: 0.8rem;
-    font-family: 'Inter', sans-serif;
-  }
-  .byway-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.8rem;
-  }
-  .byway-card {
-    background: rgba(251,246,238,0.55);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid var(--cream-10);
-    border-radius: 16px;
-    padding: 0.85rem 1rem;
-    display: flex; flex-direction: column;
-    gap: 4px;
-  }
-  .byway-card h3 {
-    font-family: 'Fraunces', serif;
-    font-weight: 500;
-    font-size: 0.95rem;
-    letter-spacing: -0.01em;
-    color: var(--cream-on-dark);
-  }
-  .byway-card p {
-    font-size: 0.78rem;
-    color: var(--cream-70);
-    line-height: 1.45;
-  }
-  .byway-card.qr {
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 0.6rem;
-  }
-  .byway-card.qr .qr-grid {
-    width: 56px; height: 56px;
-    background: var(--surface-2);
-    background-image:
-      linear-gradient(var(--ink) 1.5px, transparent 1.5px),
-      linear-gradient(90deg, var(--ink) 1.5px, transparent 1.5px);
-    background-size: 6px 6px;
-    border-radius: 6px;
-    border: 1px solid var(--line);
-    margin-bottom: 4px;
-  }
-  .byway-card.qr .lbl {
-    font-size: 0.6rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--cream-on-dark);
-    font-weight: 600;
-  }
-  .byway-card.qr .sub {
-    font-size: 0.6rem;
-    color: var(--cream-50);
-  }
-
-  /* New shell layout: top / hero / browse / byway / foot */
   .kiosk-shell-v2 {
     position: relative; z-index: 2;
     height: 100%;
     display: grid;
-    grid-template-rows: auto auto 1fr auto auto;
-    padding: 1.6rem 2.4rem 1.6rem;
+    grid-template-rows: auto auto 1fr auto;
+    padding: 1.6rem 2.4rem;
     gap: 1rem;
     overflow: hidden;
   }
+
+  /* Top */
+  .kiosk-top {
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(245,237,224,0.55);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-radius: 20px;
+    padding: 0.8rem 1.4rem;
+    box-shadow: 0 2px 4px rgba(61,53,48,0.10), 0 10px 28px rgba(61,53,48,0.16);
+  }
+  .brand { display: flex; align-items: center; gap: 1rem; }
+  .brand-mark {
+    width: 52px; height: 52px;
+    background: var(--ink); color: var(--surface-2);
+    border-radius: 14px;
+    display: grid; place-items: center;
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.6rem;
+  }
+  .brand-name {
+    font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .brand-name em { font-style: italic; font-weight: 400; color: var(--taupe-deep); font-family: 'Fraunces', serif; }
+  .brand-sub { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--cream-50); margin-top: 4px; }
+  .clock { font-family: 'Fraunces', serif; font-size: 1.4rem; color: var(--ink); }
+
+  /* Hero search */
+  .hero-search { padding: 0.4rem 0.2rem; }
+  .hero-search .eyebrow { margin-bottom: 0.8rem; }
+  .hero-search h1 {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 3.2rem; line-height: 1.05; letter-spacing: -0.02em;
+    color: var(--ink); margin-bottom: 1.2rem;
+  }
+  .hero-search h1 em { font-style: italic; font-weight: 400; color: var(--taupe-deep); }
+  .search-shell { position: relative; }
+  .search-icon {
+    position: absolute; top: 50%; left: 22px; width: 22px; height: 22px;
+    transform: translateY(-50%); color: var(--ink-faint);
+  }
+  .search-input {
+    width: 100%;
+    background: rgba(255,251,244,0.85);
+    border: 1px solid var(--line-2);
+    border-radius: 999px;
+    padding: 18px 24px 18px 58px;
+    font-size: 1.2rem; font-family: inherit;
+    color: var(--ink);
+    box-shadow: 0 2px 8px rgba(61,53,48,0.10), 0 12px 32px rgba(61,53,48,0.12);
+  }
+  .search-input::placeholder { color: var(--ink-faint); }
+  .search-input:focus { outline: none; border-color: var(--taupe-deep); }
+  .search-results {
+    margin-top: 10px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    max-height: 280px;
+    overflow-y: auto;
+    box-shadow: 0 10px 32px rgba(61,53,48,0.12);
+  }
+  .search-result {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .search-result:last-child { border-bottom: 0; }
+  .sr-mark {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--bg-2); color: var(--ink);
+    display: grid; place-items: center;
+    font-family: 'Fraunces', serif; font-size: 1.1rem;
+  }
+  .sr-body { flex: 1; min-width: 0; }
+  .sr-name { font-family: 'Fraunces', serif; font-size: 1.05rem; color: var(--ink); }
+  .sr-meta { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); margin-top: 2px; }
+  .sr-suite { font-size: 0.85rem; color: var(--ink-soft); margin-left: 8px; }
+  .search-hint { color: var(--ink-faint); font-size: 0.85rem; margin-top: 0.9rem; }
+
+  /* Browse */
+  .browse { display: flex; flex-direction: column; gap: 0.9rem; min-height: 0; }
+  .browse-tabs { display: flex; gap: 0.6rem; }
+  .tab {
+    background: rgba(245,237,224,0.5);
+    border: 1px solid var(--cream-10);
+    border-radius: 999px;
+    padding: 9px 18px;
+    font-family: inherit; font-size: 0.85rem; font-weight: 600;
+    color: var(--ink-soft); cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+    backdrop-filter: blur(10px);
+  }
+  .tab.is-active { background: var(--ink); color: var(--surface-2); border-color: var(--ink); }
+  .tab-meta { font-size: 0.7rem; letter-spacing: 0.06em; opacity: 0.85; display: inline-flex; align-items: center; gap: 6px; }
+  .tab-meta.open { color: var(--sage-deep); }
+  .tab.is-active .tab-meta.open { color: var(--sage-soft); }
+  .open-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--sage-deep); display: inline-block; }
+  .browse-content {
+    background: rgba(255,251,244,0.65);
+    border: 1px solid var(--cream-10);
+    border-radius: 22px;
+    padding: 1.1rem;
+    min-height: 0;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 2px 6px rgba(61,53,48,0.06), 0 16px 40px rgba(61,53,48,0.08);
+  }
+  .browse-content .tenant-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.7rem;
+    max-height: 100%;
+    overflow-y: auto;
+  }
+  /* The HTML `hidden` attribute must beat `display: grid` above */
+  .browse-content [hidden] { display: none !important; }
+  .tenant-card {
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 0.6rem;
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);   /* small photo on the LEFT, text fills the rest */
+    align-items: center;
+    gap: 0.7rem;
+    box-shadow: 0 2px 4px rgba(61,53,48,0.06), 0 10px 24px rgba(61,53,48,0.08);
+  }
+  .tenant-photo {
+    width: 64px; height: 64px;
+    background-size: cover; background-position: center;
+    background-color: var(--bg-2);
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+  .tenant-body { min-width: 0; }
+  .tenant-name { font-family: 'Fraunces', serif; font-size: 1rem; color: var(--ink); line-height: 1.2; }
+  .tenant-service { font-size: 0.78rem; color: var(--ink-soft); }
+  .tenant-meta { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); display: flex; align-items: center; gap: 6px; }
+  .test-pill {
+    display: inline-block;
+    background: var(--clay-soft); color: var(--clay-deep);
+    padding: 2px 8px; border-radius: 999px;
+    font-size: 0.55rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;
+    margin-left: 6px;
+  }
+  .map-canvas {
+    padding: 2rem; text-align: center;
+    color: var(--ink-soft);
+  }
+
+  /* By the way */
+  .byway { padding-top: 1rem; border-top: 1px solid var(--cream-10); }
+  .byway-eyebrow { font-size: 0.65rem; letter-spacing: 0.32em; text-transform: uppercase; font-weight: 700; color: var(--cream-50); margin-bottom: 0.7rem; }
+  .byway-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; }
+  .byway-card {
+    background: rgba(255,251,244,0.85);
+    border: 1px solid var(--cream-10);
+    border-radius: 14px;
+    padding: 0.9rem 1rem;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 2px 4px rgba(61,53,48,0.06), 0 12px 28px rgba(61,53,48,0.08);
+  }
+  .byway-card h3 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 0.95rem; color: var(--ink); margin-bottom: 0.3rem; }
+  .byway-card p { font-size: 0.78rem; color: var(--ink-soft); line-height: 1.4; }
+  .byway-card.qr { text-align: center; }
+  .byway-card.qr .qr-grid {
+    width: 64px; height: 64px; margin: 0 auto 6px;
+    background: var(--surface-2);
+    background-image:
+      linear-gradient(var(--ink) 1.5px, transparent 1.5px),
+      linear-gradient(90deg, var(--ink) 1.5px, transparent 1.5px);
+    background-size: 8px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+  }
+  .byway-card.qr .lbl { font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); font-weight: 600; }
+  .byway-card.qr .sub { font-size: 0.6rem; color: var(--cream-50); }
+
   @media (max-width: 900px) {
+    .browse-content .tenant-grid { grid-template-columns: repeat(2, 1fr); }
     .byway-grid { grid-template-columns: repeat(2, 1fr); }
     .hero-search h1 { font-size: 2.4rem; }
     .kiosk-shell-v2 { padding: 1rem 1.2rem; }
   }
 
-  /* "Best on the lobby touchscreen" banner — only visible at phone widths */
+  /* Phone-only apology banner */
   .mobile-apology {
     display: none;
-    margin: 0 0 0.5rem 0;
-    padding: 0.7rem 0.95rem;
-    background: rgba(245,237,224,0.55);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    margin: 0 auto 0.9rem;
+    padding: 0.85rem 1rem;
+    max-width: 360px;
+    background: rgba(245,237,224,0.85);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     border: 1px dashed var(--taupe);
     border-radius: 14px;
     color: var(--cream-70);
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     line-height: 1.45;
     text-align: center;
+    box-shadow: 0 2px 6px rgba(61,53,48,0.08), 0 12px 32px rgba(61,53,48,0.10);
   }
-  .mobile-apology strong { color: var(--cream-on-dark); font-weight: 600; }
+  .mobile-apology strong {
+    color: var(--cream-on-dark);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.2rem;
+    font-family: 'Fraunces', serif;
+    font-size: 0.95rem;
+  }
 
-  /* ---------- True phone breakpoint ---------- */
+  /* ---------- True phone breakpoint: render the kiosk as a miniature ---------- */
   @media (max-width: 600px) {
-    /* Allow vertical scroll on phones — the kiosk is bigger than a phone screen */
-    html, body { overflow: auto; height: auto; min-height: 100%; }
-    #app { position: relative; inset: auto; min-height: 100vh; }
-    /* Backdrop photo stays as page background via #app::before */
+    html, body { overflow: auto; height: auto; min-height: 100%; background: var(--bg-dark); }
 
-    .mobile-apology { display: block; }
+    body > .mobile-apology { display: block; position: relative; margin: 64px auto 14px; z-index: 10; }
+    #app .mobile-apology { display: none; }
 
+    /* The phone "device frame" that holds the scaled-down kiosk */
+    #app {
+      position: relative; inset: auto;
+      width: 92vw;
+      max-width: 360px;
+      margin: 0 auto 28px;
+      aspect-ratio: 16 / 10;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow:
+        0 2px 6px rgba(61,53,48,0.12),
+        0 24px 60px rgba(61,53,48,0.22),
+        0 0 0 1px rgba(61,53,48,0.10) inset;
+    }
+    #app::before, #app::after { z-index: 0; }
+
+    /* Render the kiosk at fixed kiosk dimensions, then scale-to-fit. */
     .kiosk-shell-v2 {
-      grid-template-rows: none;
-      height: auto;
-      padding: 0.9rem 0.9rem 1.4rem;
-      gap: 0.7rem;
-      overflow: visible;
+      position: absolute; top: 0; left: 0;
+      width: 1280px;
+      height: 800px;
+      transform-origin: top left;
+      transform: scale(min(calc(92vw / 1280), calc(360px / 1280)));
+      padding: 1.6rem 2.4rem;
+      gap: 1rem;
+      overflow: hidden;
+      pointer-events: none;
     }
 
-    .kiosk-top {
-      padding: 0.45rem 0.85rem;
-      border-radius: 14px;
-    }
-    .kiosk-top .brand-mark { width: 36px; height: 36px; font-size: 1.05rem; border-radius: 10px; }
-    .kiosk-top .brand-name { font-size: 1rem; }
-    .kiosk-top .brand-sub { font-size: 0.55rem; letter-spacing: 0.16em; margin-top: 2px; }
-    .kiosk-top .clock { font-size: 0.85rem; }
-
-    .hero-search { padding: 0.3rem 0 0.2rem; }
-    .hero-search .eyebrow { font-size: 0.58rem; letter-spacing: 0.26em; margin-bottom: 0.4rem; }
-    .hero-search h1 {
-      font-size: 1.7rem;
-      margin-bottom: 0.85rem;
-      line-height: 1.1;
-    }
-    .search-input {
-      font-size: 1rem;
-      padding: 13px 18px 13px 44px;
-      border-radius: 999px;
-    }
-    .search-icon { left: 16px; width: 18px; height: 18px; }
-    .search-results { border-radius: 16px; max-height: 240px; }
-    .search-result { padding: 10px 14px; gap: 10px; }
-    .sr-mark { width: 36px; height: 36px; border-radius: 9px; font-size: 0.95rem; }
-    .sr-name { font-size: 0.92rem; }
-    .sr-meta { font-size: 0.6rem; letter-spacing: 0.1em; }
-    .sr-suite { font-size: 0.78rem; margin-left: 6px; }
-    .search-hint { font-size: 0.7rem; margin-top: 0.7rem; }
-
-    .browse { margin-top: 0.7rem; gap: 0.6rem; flex: none; }
-    .browse-tabs { gap: 0.4rem; }
-    .tab {
-      padding: 7px 12px;
-      font-size: 0.72rem;
-      border-radius: 999px;
-    }
-    .tab .tab-meta { font-size: 0.62rem; }
-    .browse-content {
-      padding: 0.85rem;
-      border-radius: 18px;
-    }
-    .browse-content .tenant-grid {
-      grid-template-columns: 1fr 1fr;
-      gap: 0.55rem;
-      max-height: none;
-      overflow: visible;
-    }
-    .tenant-card { padding: 0.55rem; border-radius: 14px; gap: 0.5rem; }
-    .tenant-photo { border-radius: 9px; }
-    .tenant-name { font-size: 0.85rem; }
-    .tenant-service { font-size: 0.62rem; }
-    .tenant-meta { font-size: 0.52rem; }
-    .test-pill { font-size: 0.48rem; padding: 2px 6px; }
-
-    .byway { margin-top: 0.8rem; padding-top: 0.7rem; }
-    .byway-eyebrow { font-size: 0.55rem; letter-spacing: 0.26em; margin-bottom: 0.55rem; }
-    .byway-grid { grid-template-columns: 1fr 1fr; gap: 0.55rem; }
-    .byway-card { padding: 0.65rem 0.75rem; border-radius: 12px; }
-    .byway-card h3 { font-size: 0.8rem; }
-    .byway-card p { font-size: 0.68rem; line-height: 1.35; }
-    .byway-card.qr .qr-grid { width: 44px; height: 44px; }
-
-    /* The walkthrough back-link — pull it tighter so it doesn't crowd the brand */
     a[href="Laura-Walkthrough-v1.html"] {
-      top: 8px !important;
-      left: 8px !important;
-      padding: 5px 10px 5px 8px !important;
-      font-size: 10px !important;
+      top: 12px !important;
+      left: 12px !important;
+      padding: 6px 12px 6px 10px !important;
+      font-size: 11px !important;
     }
   }
 </style>
@@ -897,54 +352,50 @@
       font-family: 'Inter', system-ui, sans-serif;
       font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
       text-decoration: none;
-      box-shadow: 0 2px 6px rgba(61,53,48,0.10), 0 10px 28px rgba(61,53,48,0.14);
-    ">
-    ← Walkthrough
+      box-shadow: 0 2px 6px rgba(61,53,48,0.10), 0 10px 28px rgba(61,53,48,0.14);">
+    &larr; Walkthrough
   </a>
 
-  <!-- KIOSK v2 — client-first, no splash lock -->
+  <!-- Phone-only banner -->
+  <div class="mobile-apology">
+    <strong>This is the lobby kiosk</strong>
+    Built for the full-size touchscreen in the building. Here's a miniature so you can see how it'll feel.
+  </div>
+
   <div id="app">
     <div class="kiosk-shell-v2">
 
-      <!-- Mobile-only "best on the lobby screen" banner -->
-      <div class="mobile-apology">
-        <strong>This is the lobby kiosk.</strong> It's built for the full-size touchscreen in the building — here's a miniature preview so you can see how it'll feel.
-      </div>
-
-      <!-- Compact top: brand + clock -->
       <header class="kiosk-top">
         <div class="brand">
-          <div class="brand-mark">s</div>
+          <div class="brand-mark" style="background:#FFFBF4;padding:5px;"><img src="assets/logo-placeholder.svg" alt="Studio Soulutions" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
           <div>
             <div class="brand-name">Studio Soul<em>utions</em></div>
             <div class="brand-sub">Salon Plus Studio Suites</div>
           </div>
         </div>
-        <span class="clock" id="clock">—</span>
+        <span class="clock" id="clock">&mdash;</span>
       </header>
 
-      <!-- HERO: search front and center -->
       <section class="hero-search">
         <div class="eyebrow">Welcome inside</div>
         <h1>Who are you <em>here to see?</em></h1>
         <div class="search-shell">
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input id="searchInput" class="search-input" type="text" placeholder="Type a name, studio, or service…" autocomplete="off" />
+          <input id="searchInput" class="search-input" type="text" placeholder="Type a name, studio, or service&hellip;" autocomplete="off" />
         </div>
         <div class="search-results" id="searchResults" hidden></div>
-        <p class="search-hint">Or browse below — see who's here, who's open, where to go.</p>
+        <p class="search-hint">Or browse below &mdash; see who's here, who's open, where to go.</p>
       </section>
 
-      <!-- BROWSE: tabs + grid -->
       <section class="browse">
         <div class="browse-tabs">
           <button class="tab is-active" data-tab="all" type="button">
             All studios
-            <span class="tab-meta"><span id="dir-count">—</span></span>
+            <span class="tab-meta"><span id="dir-count">&mdash;</span></span>
           </button>
           <button class="tab" data-tab="now" type="button">
             Open right now
-            <span class="tab-meta open"><span class="open-dot"></span><span id="now-count">—</span></span>
+            <span class="tab-meta open"><span class="open-dot"></span><span id="now-count">&mdash;</span></span>
           </button>
           <button class="tab" data-tab="map" type="button">Suite map</button>
         </div>
@@ -952,12 +403,11 @@
           <div class="tenant-grid" id="tenantGrid" data-tab="all"></div>
           <div class="tenant-grid" id="nowGrid" data-tab="now" hidden></div>
           <div class="map-canvas" id="mapCanvas" data-tab="map" hidden>
-            <p>Interactive floor plan — coming with the kiosk install.</p>
+            <p>Interactive floor plan &mdash; coming with the kiosk install.</p>
           </div>
         </div>
       </section>
 
-      <!-- BY THE WAY: quiet bottom strip -->
       <section class="byway">
         <div class="byway-eyebrow">By the way</div>
         <div class="byway-grid">
@@ -967,11 +417,11 @@
           </div>
           <div class="byway-card">
             <h3>From the owner</h3>
-            <p id="ownerNote">— Laura</p>
+            <p id="ownerNote">&mdash; Laura</p>
           </div>
           <div class="byway-card">
             <h3>Building info</h3>
-            <p>Salon Plus Studio Suites · Lobby</p>
+            <p>Salon Plus Studio Suites &middot; Lobby</p>
           </div>
           <div class="byway-card qr">
             <div class="qr-grid" aria-hidden="true"></div>
@@ -985,227 +435,144 @@
   </div>
 
 <script>
-  /* ---------- Inline data layer (mock-mode) ----------
-     Reads from localStorage 'ss_tenants_v1' if the admin has saved tenants;
-     otherwise falls back to a seed list. Replaces the prior ES-module
-     data.js dependency so the kiosk works standalone — double-click or served. */
   const SEED_TENANTS = [
-    { id: 't1', business_name: 'Dueces Nail Studio',    suite_number: 'Sage Suite', services: ['Gel','Pedicure','Nail Art'],  hero_photo_url: 'assets/photos/1000040455.jpg', bio: 'Sage-walled and softly lit — quiet, careful nail work.', status: 'active', open: true, theme: 'av-sage', avatar: 'D', is_concept: false },
-    { id: 't2', business_name: 'Suite 2 — placeholder', suite_number: '—',          services: ['Pedicure','Manicure','Lash'], hero_photo_url: '',                              bio: 'Placeholder card while Laura confirms the tenant lineup.', status: 'active', open: true, theme: 'av-clay', avatar: 'W', is_concept: true },
-    { id: 't3', business_name: 'Suite 3 — placeholder', suite_number: '—',          services: ['Pedicure','Spa'],             hero_photo_url: '',                              bio: 'Placeholder card while Laura confirms the tenant lineup.', status: 'active', open: true, theme: 'av-sand', avatar: 'S', is_concept: true }
+    { id:'t1', name:'Dueces Nail Studio', suite:'Sage Suite', service:'Manicure · Pedicure · Nail Art',
+      services:['Gel','Pedicure','Nail Art','Structured Mani'], open:true, status:'active',
+      photo:'assets/photos/1000040455.jpg', avatar:'D', is_concept:false },
+    { id:'t4', name:'Indigo & Oak', suite:'Suite 204', service:'Color & Balayage Specialist',
+      services:['Balayage','Color','Cuts'], open:true, status:'active',
+      photo:'assets/photos/hair1.png', avatar:'IO', is_concept:true },
+    { id:'t5', name:'Verdant Skin Studio', suite:'Suite 212', service:'Facials & Skincare',
+      services:['Facials','Peels','LED'], open:true, status:'active',
+      photo:'assets/photos/facial.png', avatar:'V', is_concept:true },
+    { id:'t6', name:'The Lash Loft', suite:'Suite 210', service:'Lash Extensions & Lifts',
+      services:['Extensions','Lifts','Tints'], open:true, status:'active',
+      photo:'assets/photos/lash1.png', avatar:'LL', is_concept:true },
+    { id:'t7', name:'Bloom Brow Bar', suite:'Suite 206', service:'Brows, Lamination & Microblading',
+      services:['Shaping','Lamination','Tinting'], open:true, status:'active',
+      photo:'assets/photos/lash2.png', avatar:'B', is_concept:true },
+    { id:'t8', name:'Quiet Hands', suite:'Suite 218', service:'Therapeutic Massage',
+      services:['Deep Tissue','Swedish','Prenatal'], open:false, status:'active',
+      photo:'assets/photos/massage1.png', avatar:'Q', is_concept:true },
+    { id:'t9', name:'Tilde Cosmetics', suite:'Suite 208', service:'Bridal Makeup & Lessons',
+      services:['Bridal','Events','Lessons'], open:true, status:'active',
+      photo:'assets/photos/makeup.png', avatar:'T', is_concept:true },
+    { id:'t10', name:'Finch Hair Studio', suite:'Suite 202', service:"Precision Cuts & Men's Grooming",
+      services:['Cuts',"Men's Grooming",'Beards'], open:true, status:'active',
+      photo:'assets/photos/hair2.png', avatar:'F', is_concept:true }
   ];
-  function readLocalTenants() {
+
+  function loadTenants() {
     try {
-      const raw = localStorage.getItem('ss_tenants_v1');
-      if (!raw) return null;
-      const arr = JSON.parse(raw);
-      if (!Array.isArray(arr) || !arr.length) return null;
-      // Admin shape → kiosk renderer shape
-      return arr.filter(t => t.status !== 'archived').map(t => ({
-        id: t.id,
-        business_name: t.name,
-        suite_number: (t.suite || '').replace(/^Suite\s+/i, ''),
-        services: t.services || [],
-        hero_photo_url: t.photo || '',
-        bio: t.bio || '',
-        status: t.status || 'active',
-        open: t.open !== false,
-        theme: t.theme || 'av-stone',
-        avatar: t.avatar || (t.name || '?')[0],
-        is_concept: !!t.is_concept
-      }));
-    } catch { return null; }
+      const t = JSON.parse(localStorage.getItem('ss_tenants_v1') || 'null');
+      if (Array.isArray(t) && t.length) return t.filter(x => x.status !== 'archived');
+    } catch (e) {}
+    return SEED_TENANTS;
   }
-  function getTenants() { return Promise.resolve(readLocalTenants() || SEED_TENANTS); }
-  function getStudio()  { return Promise.resolve({ owner_note: '— Laura', about_text: 'Salon Plus Studio Suites — independent studios under one roof.' }); }
 
-  /* ---------- Clock ---------- */
-  function tickClock() {
-    const d = new Date();
-    document.getElementById('clock').textContent =
-      d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-  }
-  tickClock();
-  setInterval(tickClock, 30_000);
-
-  /* ---------- Tab routing (browse section) ---------- */
-  function showTab(t) {
-    document.querySelectorAll('[data-tab]').forEach(el => {
-      if (el.tagName === 'BUTTON') {
-        el.classList.toggle('is-active', el.dataset.tab === t);
-      } else {
-        el.hidden = (el.dataset.tab !== t);
-      }
-    });
-  }
-  document.querySelectorAll('.tab').forEach(btn => {
-    btn.addEventListener('click', () => showTab(btn.dataset.tab));
-  });
-
-  /* ---------- Render tenants from data layer ---------- */
   function tenantCard(t) {
-    const open = t.status === 'active' || t.open === true;
-    const photo = t.hero_photo_url || t.photo || '';
-    const name = t.business_name || t.name || 'Studio';
-    const monogram = (t.avatar || name).trim()[0]?.toUpperCase() || '?';
-    const themeClass = t.theme || 'av-stone';
-    const services = (t.services || t.tags || []).slice(0,2).join(' · ');
-    const suite = t.suite_number ? `Suite ${t.suite_number}` : (t.suite || '');
-
-    const testPill = t.is_concept ? `<span class="test-pill">Test</span>` : '';
-
-    const visual = photo
-      ? `<div class="tenant-photo" style="background-image: url('${photo}');">`
-      : `<div class="tenant-photo ${themeClass}" style="display:grid; place-items:center; color: var(--cream-on-dark); font-family: 'Fraunces', serif; font-size: 2.4rem; letter-spacing: -0.02em;">${monogram}`;
-
-    return `
-      <div class="tenant-card" role="button" tabindex="0" data-tenant-id="${t.id || ''}">
-        ${visual}
-          <span class="status ${open ? 'open' : 'closed'}">
-            <span class="dot"></span>${open ? 'Open' : 'Closed'}
-          </span>
-          ${testPill}
-        </div>
-        <div>
-          <div class="tenant-name">${name}</div>
-          <div class="tenant-service">${services}</div>
-          ${suite ? `<div class="tenant-meta" style="margin-top:6px;">${suite}</div>` : ''}
-        </div>
-      </div>
-    `;
+    const photo = t.photo
+      ? '<div class="tenant-photo" style="background-image:url(\'' + t.photo + '\');"></div>'
+      : '<div class="tenant-photo" style="display:grid;place-items:center;color:var(--ink);font-family:\'Fraunces\',serif;font-size:1.6rem;">' + (t.avatar || (t.name || '?')[0]) + '</div>';
+    const openHtml = t.open
+      ? '<span class="open-dot"></span><span style="color:var(--sage-deep);">Open</span>'
+      : '<span style="color:var(--ink-faint);">Closed</span>';
+    return '' +
+      '<div class="tenant-card">' +
+        photo +
+        '<div class="tenant-body">' +
+          '<div class="tenant-name">' + (t.name || 'Studio') + (t.is_concept ? ' <span class="test-pill">Test</span>' : '') + '</div>' +
+          '<div class="tenant-service">' + (t.service || '') + '</div>' +
+          '<div class="tenant-meta">' + (t.suite || '') + ' &middot; ' + openHtml + '</div>' +
+        '</div>' +
+      '</div>';
   }
 
-  getTenants().then(tenants => {
+  function render() {
+    const tenants = loadTenants();
     const grid = document.getElementById('tenantGrid');
     const nowGrid = document.getElementById('nowGrid');
-    const dirCount = document.getElementById('dir-count');
-    const nowCount = document.getElementById('now-count');
+    if (grid) grid.innerHTML = tenants.map(tenantCard).join('');
+    if (nowGrid) nowGrid.innerHTML = tenants.filter(t => t.open).map(tenantCard).join('');
+    const dc = document.getElementById('dir-count'); if (dc) dc.textContent = tenants.length;
+    const nc = document.getElementById('now-count'); if (nc) nc.textContent = tenants.filter(t => t.open).length + ' open';
 
-    if (!tenants || tenants.length === 0) {
-      grid.innerHTML = `<div style="color:var(--cream-50);font-family:'Fraunces',serif;font-style:italic;">Tenants will populate from the data layer.</div>`;
-      return;
-    }
-
-    grid.innerHTML = tenants.map(tenantCard).join('');
-    const open = tenants.filter(t => (t.status === 'active' || t.open === true));
-    nowGrid.innerHTML = open.length
-      ? open.map(tenantCard).join('')
-      : `<div style="color:var(--cream-50);font-family:'Fraunces',serif;font-style:italic;">No studios are open right now.</div>`;
-    dirCount.textContent = tenants.length;
-    nowCount.textContent = open.length;
-  }).catch(() => {
-    document.getElementById('tenantGrid').innerHTML =
-      `<div style="color:var(--cream-50);font-family:'Fraunces',serif;font-style:italic;">Couldn't load tenants. Check Supabase config.</div>`;
-  });
-
-  getStudio().then(s => {
-    if (s && s.owner_note) {
-      // "By the way" version — short, just the owner sig under a single line
-      document.getElementById('ownerNote').textContent = s.owner_note || '— Laura';
-    }
-  }).catch(() => {});
-
-  /* ---------- Live search ----------
-     "Who are you here to see?" — filters tenants by name, suite, services, bio.
-     Shows up to 6 suggestions; clicking one scrolls the browse grid into focus
-     and highlights the matching card. */
-  let _allTenants = [];
-  getTenants().then(list => { _allTenants = list || []; });
-
-  const searchInput   = document.getElementById('searchInput');
-  const searchResults = document.getElementById('searchResults');
-
-  function searchTenants(q) {
-    if (!q || q.trim().length < 1) return [];
-    const needle = q.trim().toLowerCase();
-    return _allTenants
-      .map(t => {
-        const name = (t.business_name || t.name || '').toLowerCase();
-        const suite = String(t.suite_number || t.suite || '').toLowerCase();
-        const services = (t.services || t.tags || []).join(' ').toLowerCase();
-        const bio = (t.bio || '').toLowerCase();
-        const hay = `${name} ${suite} ${services} ${bio}`;
-        if (!hay.includes(needle)) return null;
-        // crude relevance: prefer name matches > suite > services > bio
-        const score = (name.startsWith(needle) ? 0 : 1)
-                    + (name.includes(needle) ? 0 : 4)
-                    + (suite.includes(needle) ? 0 : 1)
-                    + (services.includes(needle) ? 0 : 1);
-        return { t, score };
-      })
-      .filter(Boolean)
-      .sort((a, b) => a.score - b.score)
-      .slice(0, 6)
-      .map(x => x.t);
-  }
-
-  function renderSearchResult(t) {
-    const name = t.business_name || t.name || 'Studio';
-    const monogram = (t.avatar || name).trim()[0]?.toUpperCase() || '?';
-    const services = (t.services || t.tags || []).slice(0, 2).join(' · ');
-    const photo = t.hero_photo_url || t.photo || '';
-    const suite = t.suite_number ? `Suite ${t.suite_number}` : (t.suite || '');
-    const open = t.status === 'active' || t.open === true;
-    const mark = photo
-      ? `<div class="sr-mark" style="background-image: url('${photo}');"></div>`
-      : `<div class="sr-mark ${t.theme || 'av-stone'}">${monogram}</div>`;
-    return `
-      <div class="search-result" data-id="${t.id || ''}">
-        ${mark}
-        <div class="sr-body">
-          <div class="sr-name">${name}</div>
-          <div class="sr-meta">${services || (open ? 'Open now' : 'Closed')}</div>
-        </div>
-        ${suite ? `<div class="sr-suite">${suite}</div>` : ''}
-      </div>
-    `;
-  }
-
-  function updateSearchResults() {
-    const q = searchInput.value;
-    if (!q.trim()) {
-      searchResults.hidden = true;
-      searchResults.innerHTML = '';
-      return;
-    }
-    const matches = searchTenants(q);
-    if (matches.length === 0) {
-      searchResults.innerHTML = `<div class="search-empty">No studios match "${q}". Try a different name or service.</div>`;
-    } else {
-      searchResults.innerHTML = matches.map(renderSearchResult).join('');
-    }
-    searchResults.hidden = false;
-  }
-
-  // Click a search result → switch to the All-studios tab and highlight the card
-  searchResults.addEventListener('click', (e) => {
-    const row = e.target.closest('.search-result');
-    if (!row) return;
-    const id = row.dataset.id;
-    showTab('all');
-    setTimeout(() => {
-      const card = document.querySelector(`#tenantGrid [data-tenant-id="${id}"]`);
-      if (card) {
-        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        card.style.transition = 'box-shadow 0.4s ease, transform 0.4s ease';
-        card.style.boxShadow  = '0 0 0 3px var(--sage), 0 10px 28px rgba(107,122,95,0.30)';
-        card.style.transform  = 'scale(1.02)';
-        setTimeout(() => {
-          card.style.boxShadow = '';
-          card.style.transform = '';
-        }, 1600);
+    try {
+      const s = JSON.parse(localStorage.getItem('ss_studio_v1') || 'null');
+      if (s && s.owner_note) {
+        const on = document.getElementById('ownerNote');
+        if (on) on.textContent = s.owner_note.split('\n')[0].slice(0, 120) + (s.owner_note.length > 120 ? '…' : '');
       }
-    }, 30);
+    } catch (e) {}
+
+    try {
+      const v = JSON.parse(localStorage.getItem('ss_vacancies_v1') || 'null');
+      const vb = document.getElementById('bywayVacancy');
+      if (vb && Array.isArray(v) && v.length) {
+        vb.textContent = v.length + ' suite' + (v.length === 1 ? '' : 's') + ' open — ask Laura for a tour.';
+      }
+    } catch (e) {}
+  }
+
+  /* Search */
+  const searchInput = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+  if (searchInput && searchResults) {
+    searchInput.addEventListener('input', function() {
+      const q = searchInput.value.trim().toLowerCase();
+      if (!q) { searchResults.hidden = true; searchResults.innerHTML = ''; return; }
+      const tenants = loadTenants();
+      const matches = tenants.filter(function(t) {
+        return (t.name || '').toLowerCase().indexOf(q) > -1
+          || (t.service || '').toLowerCase().indexOf(q) > -1
+          || (t.services || []).join(' ').toLowerCase().indexOf(q) > -1
+          || (t.suite || '').toLowerCase().indexOf(q) > -1;
+      }).slice(0, 6);
+      searchResults.hidden = false;
+      if (!matches.length) {
+        searchResults.innerHTML = '<div class="search-result" style="opacity:.7;">No match — try a service like "lash" or "color".</div>';
+        return;
+      }
+      searchResults.innerHTML = matches.map(function(t) {
+        return '<div class="search-result">' +
+          '<div class="sr-mark">' + (t.avatar || (t.name || '?')[0]) + '</div>' +
+          '<div class="sr-body">' +
+            '<div class="sr-name">' + (t.name || '') + '</div>' +
+            '<div class="sr-meta">' + (t.service || '') + '</div>' +
+          '</div>' +
+          '<div class="sr-suite">' + (t.suite || '') + '</div>' +
+        '</div>';
+      }).join('');
+    });
+  }
+
+  /* Tabs */
+  document.querySelectorAll('.browse-tabs .tab').forEach(function(t) {
+    t.addEventListener('click', function() {
+      document.querySelectorAll('.browse-tabs .tab').forEach(function(x) { x.classList.remove('is-active'); });
+      t.classList.add('is-active');
+      const tab = t.dataset.tab;
+      document.querySelectorAll('.browse-content [data-tab]').forEach(function(p) {
+        p.hidden = (p.dataset.tab !== tab);
+      });
+    });
   });
 
-  searchInput.addEventListener('input', updateSearchResults);
-  searchInput.addEventListener('focus', updateSearchResults);
-  // Click outside the search shell collapses results
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.hero-search')) {
-      searchResults.hidden = true;
-    }
-  });
+  /* Clock */
+  function tickClock() {
+    const el = document.getElementById('clock');
+    if (!el) return;
+    const d = new Date();
+    let h = d.getHours();
+    const m = d.getMinutes().toString().padStart(2, '0');
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12; if (h === 0) h = 12;
+    el.textContent = h + ':' + m + ' ' + ampm;
+  }
+  tickClock();
+  setInterval(tickClock, 30000);
+
+  render();
 </script>
 
 </body>

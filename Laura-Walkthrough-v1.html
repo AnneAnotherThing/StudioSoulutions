@@ -175,9 +175,9 @@ main { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
   display: grid;
   grid-template-columns: 1fr;
 }
-@media (min-width: 720px) {
-  .tool { grid-template-columns: 1.1fr 1fr; }
-}
+/* Right-side photo previews intentionally hidden on the walkthrough —
+   the page is text-only, photos live in the kiosk / mobile / admin themselves. */
+.tool-preview { display: none !important; }
 .tool-body { padding: 30px 30px 28px; }
 .tool .step {
   font-family: 'Fraunces', serif;
@@ -217,23 +217,32 @@ main { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
   flex-direction: column;
   gap: 8px;
 }
-/* Grid columns keep every dot in the same vertical lane, no matter how the text wraps */
+/* Bulleted list — use absolute-positioned dot so inline children (<strong>, <code>, etc.)
+   stay in the natural text flow. Earlier grid version broke any bullet with multiple
+   child nodes — second child got auto-placed into the 14px dot column, wrapping per word. */
 .tool li {
-  display: grid;
-  grid-template-columns: 14px 1fr;
-  column-gap: 6px;
-  align-items: start;
+  position: relative;
+  padding-left: 20px;
   font-size: 14px;
   color: var(--ink);
   line-height: 1.55;
 }
 .tool li::before {
   content: '';
+  position: absolute;
+  left: 0; top: 0.6em;
   width: 6px; height: 6px;
   border-radius: 50%;
   background: var(--sage-deep);
-  margin-top: 9px;       /* aligns dot with the x-height of the first line */
-  justify-self: start;
+}
+/* Inline-code tokens (ANTHROPIC_API_KEY etc.) — shrink to fit phones, stay one whole token. */
+.tool li code {
+  font-size: 0.82em;
+  background: var(--bg-2);
+  padding: 1px 6px;
+  border-radius: 5px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: nowrap;
 }
 
 .tool .actions {
@@ -267,22 +276,23 @@ main { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
 }
 .btn-ghost:hover { background: var(--bg-3); }
 
-/* Right-side preview panel */
+/* Right-side preview panel — now a mini live iframe of the actual tool */
 .tool-preview {
   background: var(--bg-2);
   border-left: 1px solid var(--line);
   position: relative;
   min-height: 280px;
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
 }
 .tool-preview .photo-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(245,237,224,0.10) 0%, rgba(245,237,224,0.30) 80%, rgba(245,237,224,0.50) 100%);
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(245,237,224,0.00) 0%, rgba(245,237,224,0.00) 80%, rgba(245,237,224,0.10) 100%);
+  z-index: 2;
 }
 .tool-preview .preview-chip {
   position: absolute; left: 18px; bottom: 18px;
-  background: rgba(245,237,224,0.85);
+  background: rgba(245,237,224,0.92);
   backdrop-filter: blur(10px);
   border: 1px solid var(--line);
   color: var(--ink);
@@ -292,6 +302,24 @@ main { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
   text-transform: uppercase;
   letter-spacing: 0.18em;
   font-weight: 700;
+  z-index: 3;
+  box-shadow: 0 2px 6px rgba(61,53,48,0.10);
+}
+.tool-preview iframe {
+  position: absolute; top: 0; left: 0;
+  border: 0;
+  transform-origin: top left;
+  pointer-events: none;     /* preview, click the "Open" button instead */
+  z-index: 1;
+}
+/* Kiosk + admin + pitch render at landscape 1280×800; mobile at 390×844 */
+.tool-preview iframe.is-landscape {
+  width: 1280px; height: 800px;
+  transform: scale(var(--mini-scale, 0.32));
+}
+.tool-preview iframe.is-portrait {
+  width: 390px; height: 844px;
+  transform: scale(var(--mini-scale, 0.36));
 }
 
 /* status pill — hangs cleanly next to the h2 title */
@@ -428,7 +456,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
 <header class="app-header">
   <div class="row">
     <div class="brand">
-      <div class="brand-mark">s</div>
+      <div class="brand-mark" style="background:#FFFBF4;padding:5px;"><img src="assets/logo-placeholder.svg" alt="Studio Soulutions" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
       <div>
         <div class="brand-name">Studio Soul<em>utions</em></div>
         <div class="brand-sub">A walkthrough for Laura</div>
@@ -475,7 +503,8 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
         <a class="btn btn-primary" href="Studio-Soulutions-Pitch-v1.html">Open the pitch →</a>
       </div>
     </div>
-    <div class="tool-preview" style="background-image: url('assets/photos/1000040457.jpg');">
+    <div class="tool-preview">
+      <iframe class="is-landscape" src="Studio-Soulutions-Pitch-v1.html" title="Pitch preview" loading="lazy"></iframe>
       <div class="photo-overlay"></div>
       <div class="preview-chip">Studio-Soulutions-Pitch-v1.html</div>
     </div>
@@ -503,7 +532,8 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
         <span class="tip">Press F11 in your browser for full-screen</span>
       </div>
     </div>
-    <div class="tool-preview" style="background-image: url('assets/photos/1000040457.jpg');">
+    <div class="tool-preview">
+      <iframe class="is-landscape" src="kiosk.html" title="Kiosk preview" loading="lazy"></iframe>
       <div class="photo-overlay"></div>
       <div class="preview-chip">kiosk.html</div>
     </div>
@@ -531,7 +561,8 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
         <span class="tip">Best viewed in a phone-shape browser window</span>
       </div>
     </div>
-    <div class="tool-preview" style="background-image: url('assets/photos/1000040455.jpg');">
+    <div class="tool-preview">
+      <iframe class="is-portrait" src="index.html" title="Mobile preview" loading="lazy"></iframe>
       <div class="photo-overlay"></div>
       <div class="preview-chip">index.html</div>
     </div>
