@@ -331,6 +331,70 @@ main { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
 /* small */
 .muted { color: var(--ink-faint); }
 hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
+
+/* ==========================================================
+   Phone-friendly overrides — Laura will read this on her phone
+   ========================================================== */
+@media (max-width: 720px) {
+  main { padding: 24px 14px 56px; }
+
+  /* Hero — softer, smaller, doesn't overwhelm */
+  .hero {
+    padding: 28px 20px;
+    border-radius: 18px;
+  }
+  .hero h1 { font-size: 32px; line-height: 1.08; }
+  .hero p.lead { font-size: 15px; margin-top: 14px; }
+  .hero .signoff { font-size: 14px; margin-top: 16px; }
+
+  /* Tool cards — preview becomes a slim hero photo at the TOP of each card */
+  .tool {
+    border-radius: 18px;
+    margin-top: 16px;
+  }
+  .tool-body {
+    padding: 22px 22px 22px;
+    order: 2; /* text below the photo on mobile */
+  }
+  .tool-preview {
+    order: 1; /* photo on top */
+    border-left: 0;
+    border-bottom: 1px solid var(--line);
+    min-height: 170px;
+    height: 170px;
+  }
+  /* The bottom cream wash was making images look 'beige boxy' — let them breathe */
+  .tool-preview .photo-overlay {
+    background: linear-gradient(180deg, rgba(245,237,224,0.00) 0%, rgba(245,237,224,0.05) 60%, rgba(245,237,224,0.20) 100%);
+  }
+  .tool-preview .preview-chip {
+    left: 12px; bottom: 12px;
+    font-size: 10px;
+    padding: 6px 10px;
+    letter-spacing: 0.14em;
+  }
+  /* Logo section is single-column already; just chill the inside padding */
+  #logo .tool-body { padding: 24px 22px; }
+  #logo img { border-radius: 14px; }
+
+  .tool h2 { font-size: 24px; }
+  .tool .summary { font-size: 14px; }
+  .tool li { font-size: 13px; }
+  .btn { padding: 12px 16px; font-size: 13px; }
+  .tool .actions { gap: 8px; }
+
+  .foot-note { padding: 14px 16px; font-size: 13px; line-height: 1.55; margin-top: 24px; }
+
+  /* Status pill — shrink so it doesn't push the h2 onto two lines */
+  .status { font-size: 9px; padding: 4px 8px; }
+}
+
+/* Very small phones — squeeze a bit more */
+@media (max-width: 380px) {
+  .hero h1 { font-size: 28px; }
+  .tool h2 { font-size: 22px; }
+  .tool-preview { min-height: 150px; height: 150px; }
+}
 </style>
 </head>
 <body>
