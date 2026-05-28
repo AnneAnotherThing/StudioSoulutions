@@ -232,8 +232,111 @@
     margin-left: 6px;
   }
   .map-canvas {
-    padding: 2rem; text-align: center;
+    padding: 0;
     color: var(--ink-soft);
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .map-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    background: rgba(255,251,244,0.55);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  /* When Laura drops her photo at assets/floor-plan.jpg this will fade in behind the SVG. */
+  .map-photo {
+    position: absolute; inset: 0;
+    background-image: url('assets/floor-plan.jpg');
+    background-size: cover; background-position: center;
+    opacity: 0.18;
+    pointer-events: none;
+  }
+  .map-svg {
+    position: relative; z-index: 1;
+    width: 100%; height: 100%;
+    display: block;
+  }
+  /* Suite rooms */
+  .suite rect {
+    fill: rgba(255,251,244,0.92);
+    stroke: rgba(61,53,48,0.30);
+    stroke-width: 1.5;
+    transition: fill 0.2s ease, stroke 0.2s ease, transform 0.2s ease;
+    cursor: pointer;
+  }
+  .suite text {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 18px;
+    fill: var(--ink-faint);
+    pointer-events: none;
+    transition: fill 0.2s ease;
+  }
+  .suite:hover rect {
+    fill: rgba(245,237,224,1);
+    stroke: var(--taupe-deep);
+  }
+  /* Occupied suites — colored by the JS that knows which tenants exist */
+  .suite.is-occupied rect {
+    fill: rgba(139,154,126,0.22);     /* sage tint */
+    stroke: var(--sage-deep);
+  }
+  .suite.is-occupied text { fill: var(--ink); }
+  .suite.is-occupied.is-open rect { fill: rgba(139,154,126,0.40); }
+  /* Vacancies — clay tint */
+  .suite.is-vacant rect {
+    fill: rgba(201,123,90,0.16);
+    stroke: var(--clay-deep);
+    stroke-dasharray: 4 3;
+  }
+  .suite.is-vacant text { fill: var(--clay-deep); }
+  /* Currently selected suite */
+  .suite.is-active rect {
+    fill: var(--ink);
+    stroke: var(--ink);
+  }
+  .suite.is-active text { fill: var(--surface-2); }
+
+  /* Legend swatches */
+  .legend-occupied { fill: rgba(139,154,126,0.40); stroke: var(--sage-deep); stroke-width: 1.2; }
+  .legend-vacant   { fill: rgba(201,123,90,0.20); stroke: var(--clay-deep); stroke-width: 1.2; stroke-dasharray: 3 2; }
+  .legend-empty    { fill: rgba(255,251,244,0.92); stroke: rgba(61,53,48,0.30); stroke-width: 1.2; }
+
+  /* "You are here" pulse */
+  .you-are-here circle:first-child {
+    animation: youAreHerePulse 2.4s ease-out infinite;
+    transform-origin: center;
+  }
+  @keyframes youAreHerePulse {
+    0%   { transform: scale(0.6); opacity: 0.45; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+
+  /* Detail panel that appears over the map when a suite is tapped */
+  .map-detail {
+    position: absolute;
+    right: 18px; bottom: 18px;
+    z-index: 3;
+    width: 320px;
+    max-width: calc(100% - 36px);
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px 18px;
+    box-shadow: 0 6px 20px rgba(61,53,48,0.18), 0 24px 60px rgba(61,53,48,0.18);
+  }
+  .map-detail .md-suite { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-faint); font-weight: 700; }
+  .map-detail .md-name { font-family: 'Fraunces', serif; font-size: 1.2rem; color: var(--ink); margin-top: 4px; }
+  .map-detail .md-service { color: var(--ink-soft); font-size: 0.9rem; margin-top: 4px; }
+  .map-detail .md-status { display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; margin-top: 10px; }
+  .map-detail .md-close {
+    position: absolute; top: 8px; right: 10px;
+    background: transparent; border: 0; cursor: pointer;
+    font-size: 18px; color: var(--ink-faint); line-height: 1;
+    padding: 4px 8px;
   }
 
   /* By the way */
@@ -408,7 +511,65 @@
           <div class="tenant-grid" id="tenantGrid" data-tab="all"></div>
           <div class="tenant-grid" id="nowGrid" data-tab="now" hidden></div>
           <div class="map-canvas" id="mapCanvas" data-tab="map" hidden>
-            <p>Interactive floor plan &mdash; coming with the kiosk install.</p>
+            <div class="map-wrap">
+              <!-- When Laura drops her real floor-plan photo into assets/floor-plan.jpg
+                   it'll show through behind the interactive overlay. Until then the
+                   stylized SVG below stands in. -->
+              <div class="map-photo" aria-hidden="true"></div>
+              <svg class="map-svg" viewBox="0 0 1200 520" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Suite map">
+                <!-- Building outline -->
+                <rect x="20" y="20" width="1160" height="480" rx="14" fill="rgba(255,251,244,0.75)" stroke="rgba(61,53,48,0.18)" stroke-width="2"/>
+                <!-- Corridors -->
+                <rect x="60" y="170" width="1080" height="58" fill="rgba(245,237,224,0.85)" stroke="rgba(61,53,48,0.10)"/>
+                <rect x="60" y="294" width="1080" height="58" fill="rgba(245,237,224,0.85)" stroke="rgba(61,53,48,0.10)"/>
+                <!-- "You are here" pin at the lobby entrance -->
+                <g class="you-are-here" transform="translate(80, 260)">
+                  <circle r="14" fill="#C97B5A" opacity="0.18"/>
+                  <circle r="6" fill="#C97B5A"/>
+                  <text y="-22" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700" letter-spacing="1.6" fill="#A8593E">YOU ARE HERE</text>
+                </g>
+
+                <!-- North-row suites (top corridor — 202–214) -->
+                <g class="suites" id="mapSuites">
+                  <g class="suite" data-suite="202"><rect x="160" y="60"  width="120" height="100" rx="10"/><text x="220" y="115" text-anchor="middle">202</text></g>
+                  <g class="suite" data-suite="204"><rect x="290" y="60"  width="120" height="100" rx="10"/><text x="350" y="115" text-anchor="middle">204</text></g>
+                  <g class="suite" data-suite="206"><rect x="420" y="60"  width="120" height="100" rx="10"/><text x="480" y="115" text-anchor="middle">206</text></g>
+                  <g class="suite" data-suite="208"><rect x="550" y="60"  width="120" height="100" rx="10"/><text x="610" y="115" text-anchor="middle">208</text></g>
+                  <g class="suite" data-suite="210"><rect x="680" y="60"  width="120" height="100" rx="10"/><text x="740" y="115" text-anchor="middle">210</text></g>
+                  <g class="suite" data-suite="212"><rect x="810" y="60"  width="120" height="100" rx="10"/><text x="870" y="115" text-anchor="middle">212</text></g>
+                  <g class="suite" data-suite="214"><rect x="940" y="60"  width="120" height="100" rx="10"/><text x="1000" y="115" text-anchor="middle">214</text></g>
+
+                  <!-- South-row suites (bottom corridor — 216–222 + Sage Suite) -->
+                  <g class="suite" data-suite="Sage Suite"><rect x="160" y="240" width="120" height="48" rx="10"/><text x="220" y="270" text-anchor="middle" font-size="14">Sage</text></g>
+                  <g class="suite" data-suite="216"><rect x="290" y="240" width="120" height="48" rx="10"/><text x="350" y="270" text-anchor="middle" font-size="14">216</text></g>
+                  <g class="suite" data-suite="218"><rect x="420" y="240" width="120" height="48" rx="10"/><text x="480" y="270" text-anchor="middle" font-size="14">218</text></g>
+                  <g class="suite" data-suite="220"><rect x="550" y="240" width="120" height="48" rx="10"/><text x="610" y="270" text-anchor="middle" font-size="14">220</text></g>
+                  <g class="suite" data-suite="222"><rect x="680" y="240" width="120" height="48" rx="10"/><text x="740" y="270" text-anchor="middle" font-size="14">222</text></g>
+
+                  <!-- Lower-row suites (south of bottom corridor — 108–116, vacancies) -->
+                  <g class="suite" data-suite="108"><rect x="160" y="358" width="120" height="100" rx="10"/><text x="220" y="413" text-anchor="middle">108</text></g>
+                  <g class="suite" data-suite="110"><rect x="290" y="358" width="120" height="100" rx="10"/><text x="350" y="413" text-anchor="middle">110</text></g>
+                  <g class="suite" data-suite="112"><rect x="420" y="358" width="120" height="100" rx="10"/><text x="480" y="413" text-anchor="middle">112</text></g>
+                  <g class="suite" data-suite="114"><rect x="550" y="358" width="120" height="100" rx="10"/><text x="610" y="413" text-anchor="middle">114</text></g>
+                  <g class="suite" data-suite="116"><rect x="680" y="358" width="120" height="100" rx="10"/><text x="740" y="413" text-anchor="middle">116</text></g>
+                  <g class="suite" data-suite="118"><rect x="810" y="358" width="120" height="100" rx="10"/><text x="870" y="413" text-anchor="middle">118</text></g>
+                  <g class="suite" data-suite="120"><rect x="940" y="358" width="120" height="100" rx="10"/><text x="1000" y="413" text-anchor="middle">120</text></g>
+                </g>
+
+                <!-- Legend -->
+                <g transform="translate(20, 488)" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing="1.4" fill="#6B6357">
+                  <rect x="0"   y="-12" width="14" height="14" rx="3" class="legend-occupied"/>
+                  <text x="20"  y="-1">OCCUPIED · tap to see tenant</text>
+                  <rect x="240" y="-12" width="14" height="14" rx="3" class="legend-vacant"/>
+                  <text x="260" y="-1">OPEN FOR LEASE</text>
+                  <rect x="400" y="-12" width="14" height="14" rx="3" class="legend-empty"/>
+                  <text x="420" y="-1">UNASSIGNED</text>
+                </g>
+              </svg>
+
+              <!-- Detail panel: appears when a suite is tapped -->
+              <div class="map-detail" id="mapDetail" hidden></div>
+            </div>
           </div>
         </div>
       </section>
@@ -551,6 +712,74 @@
     });
   }
 
+  /* Suite map: paint occupancy, wire taps to a detail panel */
+  function renderMap() {
+    const tenants = loadTenants();
+    // Build a lookup by suite — match on the trailing number OR the literal suite string
+    const bySuite = {};
+    tenants.forEach(function(t) {
+      const raw = (t.suite || '').trim();
+      bySuite[raw] = t;
+      const m = raw.match(/(\d{2,4})/);
+      if (m) bySuite[m[1]] = t;
+    });
+    let vacancies = [];
+    try { vacancies = JSON.parse(localStorage.getItem('ss_vacancies_v1') || '[]') || []; } catch (e) {}
+    const vacantNums = new Set(vacancies.map(function(v) { return String(v.suite_number); }));
+
+    document.querySelectorAll('#mapSuites .suite').forEach(function(g) {
+      const key = g.dataset.suite;
+      g.classList.remove('is-occupied', 'is-vacant', 'is-open', 'is-active');
+      const t = bySuite[key];
+      if (t) {
+        g.classList.add('is-occupied');
+        if (t.open) g.classList.add('is-open');
+      } else if (vacantNums.has(key)) {
+        g.classList.add('is-vacant');
+      }
+      g.addEventListener('click', function() {
+        document.querySelectorAll('#mapSuites .suite').forEach(function(x) { x.classList.remove('is-active'); });
+        g.classList.add('is-active');
+        showMapDetail(key, bySuite[key], vacancies.find(function(v) { return String(v.suite_number) === key; }));
+      });
+    });
+  }
+
+  function showMapDetail(suiteKey, tenant, vacancy) {
+    const el = document.getElementById('mapDetail');
+    if (!el) return;
+    el.hidden = false;
+    if (tenant) {
+      const open = tenant.open
+        ? '<span style="color:var(--sage-deep);">&#11044; Open now</span>'
+        : '<span style="color:var(--ink-faint);">&#9711; Closed</span>';
+      el.innerHTML =
+        '<button class="md-close" type="button" aria-label="Close">&times;</button>' +
+        '<div class="md-suite">Suite ' + suiteKey + '</div>' +
+        '<div class="md-name">' + (tenant.name || '') + (tenant.is_concept ? ' <span class="test-pill">Test</span>' : '') + '</div>' +
+        '<div class="md-service">' + (tenant.service || '') + '</div>' +
+        '<div class="md-status">' + open + '</div>';
+    } else if (vacancy) {
+      el.innerHTML =
+        '<button class="md-close" type="button" aria-label="Close">&times;</button>' +
+        '<div class="md-suite">Suite ' + suiteKey + '</div>' +
+        '<div class="md-name" style="color:var(--clay-deep);">Open for lease</div>' +
+        '<div class="md-service">' + (vacancy.sqft ? vacancy.sqft + ' sq ft' : '') + (vacancy.monthly_rent ? ' &middot; $' + Number(vacancy.monthly_rent).toLocaleString() + '/mo' : '') + '</div>' +
+        '<div class="md-status" style="color:var(--ink-soft);">Available ' + (vacancy.available_from || 'soon') + ' &middot; ask Laura for a tour.</div>';
+    } else {
+      el.innerHTML =
+        '<button class="md-close" type="button" aria-label="Close">&times;</button>' +
+        '<div class="md-suite">Suite ' + suiteKey + '</div>' +
+        '<div class="md-name" style="color:var(--ink-faint);">Unassigned</div>' +
+        '<div class="md-service">No tenant yet. Talk to Laura if you\'re curious.</div>';
+    }
+    const closeBtn = el.querySelector('.md-close');
+    if (closeBtn) closeBtn.addEventListener('click', function() {
+      el.hidden = true;
+      document.querySelectorAll('#mapSuites .suite').forEach(function(x) { x.classList.remove('is-active'); });
+    });
+  }
+
   /* Tabs */
   document.querySelectorAll('.browse-tabs .tab').forEach(function(t) {
     t.addEventListener('click', function() {
@@ -578,6 +807,7 @@
   setInterval(tickClock, 30000);
 
   render();
+  renderMap();
 </script>
 
 </body>
