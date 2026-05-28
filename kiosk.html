@@ -473,32 +473,49 @@
       pointer-events: none;
     }
 
-    a[href="Laura-Walkthrough-v1.html"] {
+    .back-to-walkthrough {
       top: 12px !important;
       left: 12px !important;
-      padding: 6px 12px 6px 10px !important;
+      padding: 5px 11px 5px 9px !important;
       font-size: 11px !important;
     }
   }
+
+  /* Walkthrough back-pill — clean, subtle, on-brand */
+  .back-to-walkthrough {
+    position: fixed;
+    top: 18px; left: 18px;
+    z-index: 250;
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(61, 53, 48, 0.78);
+    backdrop-filter: blur(14px) saturate(120%);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    color: rgba(255, 251, 244, 0.92);
+    padding: 7px 14px 7px 11px;
+    border-radius: 999px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.10), 0 10px 24px rgba(61,53,48,0.18);
+    transition: background 0.18s ease, transform 0.15s ease;
+  }
+  .back-to-walkthrough:hover {
+    background: rgba(61, 53, 48, 0.92);
+    transform: translateY(-1px);
+  }
+  .back-to-walkthrough svg { width: 13px; height: 13px; opacity: 0.85; }
+  .back-to-walkthrough span { line-height: 1; }
+  .back-to-walkthrough--right { left: auto; right: 18px; }
 </style>
 </head>
 <body>
 
   <!-- Back to walkthrough -->
-  <a href="Laura-Walkthrough-v1.html" style="
-      position: fixed; top: 14px; left: 14px; z-index: 200;
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(245,237,224,0.94);
-      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(61,53,48,0.12);
-      color: #6B6357;
-      padding: 7px 14px 7px 11px;
-      border-radius: 999px;
-      font-family: 'Inter', system-ui, sans-serif;
-      font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
-      text-decoration: none;
-      box-shadow: 0 2px 6px rgba(61,53,48,0.10), 0 10px 28px rgba(61,53,48,0.14);">
-    &larr; Walkthrough
+  <a href="Laura-Walkthrough-v1.html" class="back-to-walkthrough">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l-6 6 6 6"/></svg>
+    <span>Walkthrough</span>
   </a>
 
   <!-- Phone-only banner -->
