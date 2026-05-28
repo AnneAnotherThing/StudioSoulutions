@@ -948,6 +948,32 @@
 
   render();
   renderMap();
+
+  /* Mobile preview scaling — CSS calc with vw units can't feed scale() directly,
+     so we measure the bezel and set the transform in JS. Same pattern the pitch deck uses. */
+  (function syncKioskPreviewScale() {
+    const KIOSK_NATIVE_W = 1280;
+    const shell = document.querySelector('.kiosk-shell-v2');
+    const bezel = document.querySelector('.kiosk-device-bezel');
+    if (!shell) return;
+    function apply() {
+      if (window.matchMedia('(min-width: 601px)').matches) {
+        // Desktop: clear any inline transform so the shell renders full-screen.
+        shell.style.transform = '';
+        return;
+      }
+      const frame = bezel ? bezel.querySelector('#app') : null;
+      const target = frame || bezel;
+      if (!target) return;
+      const w = target.getBoundingClientRect().width;
+      if (!w) return;
+      shell.style.transform = 'scale(' + (w / KIOSK_NATIVE_W) + ')';
+      shell.style.transformOrigin = 'top left';
+    }
+    apply();
+    window.addEventListener('load', apply);
+    window.addEventListener('resize', apply);
+  })();
 </script>
 
 </body>
