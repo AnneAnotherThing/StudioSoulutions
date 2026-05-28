@@ -294,7 +294,7 @@ main { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
   font-weight: 700;
 }
 
-/* status pill */
+/* status pill — hangs cleanly next to the h2 title */
 .status {
   display: inline-flex;
   align-items: center;
@@ -307,13 +307,39 @@ main { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
   padding: 5px 10px;
   border-radius: 999px;
   border: 1px solid var(--line-2);
-  margin-left: 8px;
-  vertical-align: 4px;
+  margin-left: 12px;
+  position: relative;
+  top: -0.35em;       /* lifts the pill so it sits at the visual top of the h2, not the baseline */
   color: var(--ink-faint);
+  white-space: nowrap;
 }
-.status.live { color: var(--sage-deep); background: rgba(197,208,184,0.30); border-color: rgba(139,154,126,0.40); }
-.status.stub { color: var(--taupe-deep); background: rgba(217,203,184,0.40); border-color: var(--taupe); border-style: dashed; }
+.status.live { color: var(--sage-deep); background: rgba(197,208,184,0.32); border-color: rgba(139,154,126,0.40); }
+.status.stub { color: var(--taupe-deep); background: rgba(217,203,184,0.42); border-color: var(--taupe); border-style: dashed; }
 .status .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* Inline helper note that sometimes sits next to an Open button — wrap it
+   so it reads as a deliberate pill, not orphaned copy. */
+.actions .tip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-style: italic;
+  font-family: 'Fraunces', Georgia, serif;
+  color: var(--ink-soft);
+  background: rgba(217,203,184,0.30);
+  border: 1px solid var(--line);
+  padding: 8px 14px;
+  border-radius: 999px;
+  line-height: 1;
+}
+.actions .tip::before {
+  content: '';
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--taupe-deep);
+  flex-shrink: 0;
+}
 
 /* Footer note */
 .foot-note {
@@ -474,7 +500,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
       </ul>
       <div class="actions">
         <a class="btn btn-primary" href="kiosk.html">Open the kiosk →</a>
-        <span class="muted" style="font-size: 12px;">Tip: press F11 in your browser for full-screen.</span>
+        <span class="tip">Press F11 in your browser for full-screen</span>
       </div>
     </div>
     <div class="tool-preview" style="background-image: url('assets/photos/1000040457.jpg');">
@@ -502,7 +528,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
       </ul>
       <div class="actions">
         <a class="btn btn-primary" href="index.html">Open the mobile prototype →</a>
-        <span class="muted" style="font-size: 12px;">Best viewed in a phone-shape browser window (or DevTools device mode).</span>
+        <span class="tip">Best viewed in a phone-shape browser window</span>
       </div>
     </div>
     <div class="tool-preview" style="background-image: url('assets/photos/1000040455.jpg');">
