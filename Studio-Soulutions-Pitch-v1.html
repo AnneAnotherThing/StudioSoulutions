@@ -260,12 +260,13 @@
             <iframe src="kiosk.html"
                     title="Live kiosk preview"
                     loading="lazy"
+                    data-mini-iframe="kiosk"
                     style="
                       position: absolute; top: 0; left: 0;
                       width: 1280px; height: 800px;
                       border: 0;
                       transform-origin: top left;
-                      transform: scale(calc(var(--kiosk-frame-w, 668) / 1280));
+                      transform: scale(0.5);
                       pointer-events: none;"></iframe>
           </div>
         </div>
@@ -273,17 +274,22 @@
         <p class="text-center text-xs eyebrow text-cream-40 mt-4">Live kiosk · running in this page · <a href="kiosk.html" class="underline hover:text-[var(--ink)]" target="_blank" rel="noopener">open full-screen →</a></p>
       </div>
       <script>
-        /* Match kiosk-frame inner width so the scale stays crisp at any breakpoint */
-        (function syncKioskScale() {
-          const frames = document.querySelectorAll('.kiosk-frame');
-          const set = () => frames.forEach(f => {
-            const inner = f.firstElementChild;
-            if (!inner) return;
-            const w = inner.getBoundingClientRect().width;
-            inner.style.setProperty('--kiosk-frame-w', w);
-          });
-          set();
-          window.addEventListener('resize', set);
+        /* Scale the kiosk preview iframe to whatever width the device frame ends up. */
+        (function syncMiniIframes() {
+          function setScale() {
+            document.querySelectorAll('iframe[data-mini-iframe]').forEach(function(ifr) {
+              const parent = ifr.parentElement;
+              if (!parent) return;
+              const containerW = parent.getBoundingClientRect().width;
+              const nativeW = parseFloat(ifr.style.width) || ifr.offsetWidth || 1280;
+              const scale = containerW / nativeW;
+              ifr.style.transform = 'scale(' + scale + ')';
+            });
+          }
+          // Run once now, then again after the iframe's parent has its final size
+          setScale();
+          window.addEventListener('load', setScale);
+          window.addEventListener('resize', setScale);
         })();
       </script>
 
@@ -371,12 +377,13 @@
             <iframe src="index.html"
                     title="Live mobile preview"
                     loading="lazy"
+                    data-mini-iframe="mobile"
                     style="
                       position: absolute; top: 0; left: 0;
                       width: 390px; height: 844px;
                       border: 0;
                       transform-origin: top left;
-                      transform: scale(calc(296 / 390));
+                      transform: scale(0.76);
                       pointer-events: none;"></iframe>
           </div>
           <p class="text-center text-xs eyebrow text-cream-40 mt-4">Live mobile · <a href="index.html" class="underline hover:text-[var(--ink)]" target="_blank" rel="noopener">open in a new tab →</a></p>

@@ -267,8 +267,9 @@ input, textarea, select {
 .app.is-on { opacity: 1; }
 
 @media (max-width: 880px) {
-  .app { grid-template-columns: 1fr; }
-  aside.sidebar { display: none; }
+  .app { grid-template-columns: 1fr !important; }
+  /* The general aside.sidebar rule (below) sets display: flex; this !important wins on phones. */
+  aside.sidebar { display: none !important; }
 }
 
 aside.sidebar {
