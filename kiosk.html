@@ -473,12 +473,313 @@
 
   /* Hidden helper */
   [hidden] { display: none !important; }
+
+  /* ==========================================================
+     KIOSK v2 — client-first redesign
+     "Who are you here to see?" front and center, browse below,
+     everything else lives quietly under "by the way".
+     ========================================================== */
+
+  /* Compact top strip */
+  .kiosk-top {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1.4rem;
+    padding: 0.6rem 1.4rem;
+    background: rgba(245,237,224,0.55);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 18px;
+    border: 1px solid var(--cream-10);
+  }
+  .kiosk-top .clock {
+    color: var(--cream-on-dark); font-family: 'Fraunces', serif;
+    letter-spacing: -0.01em; font-size: 1.1rem; font-weight: 500;
+  }
+
+  /* HERO SEARCH */
+  .hero-search {
+    align-self: center;
+    text-align: center;
+    padding: 1.4rem 0 0.4rem;
+  }
+  .hero-search .eyebrow { margin-bottom: 0.7rem; }
+  .hero-search h1 {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 3.2rem; line-height: 1.05; letter-spacing: -0.02em;
+    color: var(--cream-on-dark);
+    margin-bottom: 1.4rem;
+  }
+  .hero-search h1 em {
+    font-style: italic; font-weight: 400; color: var(--taupe-deep);
+    font-family: 'Fraunces', serif;
+  }
+
+  .search-shell {
+    position: relative;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .search-icon {
+    position: absolute; left: 22px; top: 50%; transform: translateY(-50%);
+    width: 22px; height: 22px;
+    color: var(--cream-50);
+    pointer-events: none;
+  }
+  .search-input {
+    width: 100%;
+    background: rgba(251,246,238,0.85);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1.5px solid var(--cream-15);
+    border-radius: 999px;
+    padding: 18px 24px 18px 56px;
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.35rem;
+    color: var(--cream-on-dark);
+    letter-spacing: -0.01em;
+    box-shadow: 0 2px 6px rgba(61,53,48,0.08), 0 14px 36px rgba(61,53,48,0.14);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+  }
+  .search-input::placeholder {
+    color: var(--cream-50);
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+  }
+  .search-input:focus {
+    border-color: var(--sage);
+    box-shadow: 0 2px 6px rgba(61,53,48,0.08), 0 14px 36px rgba(139,154,126,0.22);
+  }
+
+  /* Search results dropdown */
+  .search-results {
+    max-width: 720px;
+    margin: 0.8rem auto 0;
+    background: rgba(251,246,238,0.95);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid var(--cream-15);
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(61,53,48,0.08), 0 14px 36px rgba(61,53,48,0.14);
+    text-align: left;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+  .search-result {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 18px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--cream-10);
+    transition: background 0.15s ease;
+  }
+  .search-result:last-child { border-bottom: 0; }
+  .search-result:hover { background: var(--cream-06); }
+  .sr-mark {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    flex-shrink: 0;
+    background-size: cover; background-position: center;
+    background-color: var(--bg-dark-3);
+    display: grid; place-items: center;
+    font-family: 'Fraunces', serif; font-weight: 500;
+    color: var(--ink); font-size: 1.1rem;
+  }
+  .sr-body { flex: 1; min-width: 0; }
+  .sr-name {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 1.05rem; letter-spacing: -0.01em;
+    color: var(--cream-on-dark);
+  }
+  .sr-meta {
+    font-size: 0.72rem; color: var(--cream-50);
+    margin-top: 2px;
+    text-transform: uppercase; letter-spacing: 0.14em; font-weight: 600;
+  }
+  .sr-suite {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--sage-deep);
+    margin-left: 10px;
+    flex-shrink: 0;
+  }
+  .search-empty {
+    padding: 18px;
+    text-align: center;
+    color: var(--cream-50);
+    font-family: 'Fraunces', serif; font-style: italic;
+  }
+
+  .search-hint {
+    margin-top: 1rem;
+    font-size: 0.78rem;
+    color: var(--cream-50);
+    letter-spacing: 0.06em;
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+  }
+
+  /* BROWSE */
+  .browse {
+    display: flex; flex-direction: column;
+    gap: 1rem;
+    min-height: 0;
+    flex: 1;
+    margin-top: 1.4rem;
+  }
+  .browse-tabs {
+    display: flex; align-items: center; gap: 0.6rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .tab {
+    background: var(--cream-06);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--cream-15);
+    border-radius: 999px;
+    padding: 9px 18px;
+    color: var(--cream-on-dark);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 9px;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+  .tab:hover { background: var(--cream-10); }
+  .tab.is-active {
+    background: var(--ink);
+    color: var(--surface-2);
+    border-color: var(--ink);
+  }
+  .tab .tab-meta {
+    font-size: 0.72rem;
+    opacity: 0.7;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .tab.is-active .tab-meta { opacity: 0.85; }
+  .tab .tab-meta.open { color: var(--sage-deep); }
+  .tab.is-active .tab-meta.open { color: var(--sage-soft); }
+
+  .browse-content {
+    flex: 1;
+    min-height: 0;
+    background: var(--cream-04);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--cream-10);
+    border-radius: 24px;
+    padding: 1.4rem;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(61,53,48,0.08), 0 10px 28px rgba(61,53,48,0.14);
+  }
+  .browse-content .tenant-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.85rem;
+    max-height: 100%;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  /* BY THE WAY */
+  .byway {
+    margin-top: 1.2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--cream-15);
+  }
+  .byway-eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--cream-50);
+    margin-bottom: 0.8rem;
+    font-family: 'Inter', sans-serif;
+  }
+  .byway-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.8rem;
+  }
+  .byway-card {
+    background: rgba(251,246,238,0.55);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--cream-10);
+    border-radius: 16px;
+    padding: 0.85rem 1rem;
+    display: flex; flex-direction: column;
+    gap: 4px;
+  }
+  .byway-card h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+    color: var(--cream-on-dark);
+  }
+  .byway-card p {
+    font-size: 0.78rem;
+    color: var(--cream-70);
+    line-height: 1.45;
+  }
+  .byway-card.qr {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.6rem;
+  }
+  .byway-card.qr .qr-grid {
+    width: 56px; height: 56px;
+    background: var(--surface-2);
+    background-image:
+      linear-gradient(var(--ink) 1.5px, transparent 1.5px),
+      linear-gradient(90deg, var(--ink) 1.5px, transparent 1.5px);
+    background-size: 6px 6px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    margin-bottom: 4px;
+  }
+  .byway-card.qr .lbl {
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--cream-on-dark);
+    font-weight: 600;
+  }
+  .byway-card.qr .sub {
+    font-size: 0.6rem;
+    color: var(--cream-50);
+  }
+
+  /* New shell layout: top / hero / browse / byway / foot */
+  .kiosk-shell-v2 {
+    position: relative; z-index: 2;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto auto;
+    padding: 1.6rem 2.4rem 1.6rem;
+    gap: 1rem;
+    overflow: hidden;
+  }
+  @media (max-width: 900px) {
+    .byway-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-search h1 { font-size: 2.4rem; }
+    .kiosk-shell-v2 { padding: 1rem 1.2rem; }
+  }
 </style>
 </head>
 <body>
 
   <!-- Back to walkthrough -->
-  <a href="../../../Laura-Walkthrough-v1.html" style="
+  <a href="Laura-Walkthrough-v1.html" style="
       position: fixed; top: 14px; left: 14px; z-index: 200;
       display: inline-flex; align-items: center; gap: 6px;
       background: rgba(245,237,224,0.94);
@@ -495,22 +796,12 @@
     ← Walkthrough
   </a>
 
-  <!-- WELCOME (static — corridor / hallway view only, no wake-on-touch) -->
-  <div id="attract" class="is-on" aria-hidden="true">
-    <div class="attract-slide is-on" style="background-image: url('assets/photos/1000040457.jpg');"></div>
-    <div class="attract-overlay"></div>
-    <div class="attract-mark">
-      <div class="eyebrow">Welcome to Salon Plus Studio Suites</div>
-      <div class="wordmark">Studio Soul<em>utions</em></div>
-    </div>
-  </div>
+  <!-- KIOSK v2 — client-first, no splash lock -->
+  <div id="app">
+    <div class="kiosk-shell-v2">
 
-  <!-- ACTIVE APP -->
-  <div id="app" hidden>
-    <div class="kiosk-shell">
-
-      <!-- Header -->
-      <header class="kiosk-header">
+      <!-- Compact top: brand + clock -->
+      <header class="kiosk-top">
         <div class="brand">
           <div class="brand-mark">s</div>
           <div>
@@ -518,96 +809,66 @@
             <div class="brand-sub">Salon Plus Studio Suites</div>
           </div>
         </div>
-        <div class="qr-card" aria-label="Scan to continue on your phone">
-          <div class="qr-grid" aria-hidden="true"></div>
-          <div class="lbl">Scan</div>
-          <div class="sub">Take it with you</div>
-        </div>
+        <span class="clock" id="clock">—</span>
       </header>
 
-      <!-- Main: left = welcome + menu, right = view content -->
-      <main class="kiosk-main">
+      <!-- HERO: search front and center -->
+      <section class="hero-search">
+        <div class="eyebrow">Welcome inside</div>
+        <h1>Who are you <em>here to see?</em></h1>
+        <div class="search-shell">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="searchInput" class="search-input" type="text" placeholder="Type a name, studio, or service…" autocomplete="off" />
+        </div>
+        <div class="search-results" id="searchResults" hidden></div>
+        <p class="search-hint">Or browse below — see who's here, who's open, where to go.</p>
+      </section>
 
-        <!-- LEFT — welcome + glassmorphic menu -->
-        <section class="menu-stack">
-          <div class="welcome">
-            <div class="eyebrow">You're inside</div>
-            <h1>Salon Plus<br/><em>Studio Suites</em></h1>
-            <p>Independent studios under one roof. Tap a card to see who's here, what they offer, and who's open right now.</p>
-          </div>
-
-          <button class="menu-btn is-active" data-view="directory" type="button">
-            <span class="label">Directory</span>
-            <span class="meta"><span id="dir-count">—</span> studios</span>
+      <!-- BROWSE: tabs + grid -->
+      <section class="browse">
+        <div class="browse-tabs">
+          <button class="tab is-active" data-tab="all" type="button">
+            All studios
+            <span class="tab-meta"><span id="dir-count">—</span></span>
           </button>
-          <button class="menu-btn" data-view="now" type="button">
-            <span class="label">Open right now</span>
-            <span class="meta open"><span class="open-dot"></span><span id="now-count">—</span> open</span>
+          <button class="tab" data-tab="now" type="button">
+            Open right now
+            <span class="tab-meta open"><span class="open-dot"></span><span id="now-count">—</span></span>
           </button>
-          <button class="menu-btn" data-view="map" type="button">
-            <span class="label">Suite map</span>
-            <span class="meta">You are here</span>
-          </button>
-          <button class="menu-btn" data-view="owner" type="button">
-            <span class="label">From the owner</span>
-            <span class="meta">— Laura</span>
-          </button>
-        </section>
-
-        <!-- RIGHT — view content -->
-        <section class="right-panel">
-
-          <!-- DIRECTORY VIEW -->
-          <div class="view" id="view-directory">
-            <div class="panel-head">
-              <h2>All studios</h2>
-              <div class="eyebrow">Tap any to see more</div>
-            </div>
-            <div class="tenant-grid" id="tenantGrid"></div>
+          <button class="tab" data-tab="map" type="button">Suite map</button>
+        </div>
+        <div class="browse-content">
+          <div class="tenant-grid" id="tenantGrid" data-tab="all"></div>
+          <div class="tenant-grid" id="nowGrid" data-tab="now" hidden></div>
+          <div class="map-canvas" id="mapCanvas" data-tab="map" hidden>
+            <p>Interactive floor plan — coming with the kiosk install.</p>
           </div>
+        </div>
+      </section>
 
-          <!-- OPEN-NOW VIEW -->
-          <div class="view" id="view-now" hidden>
-            <div class="panel-head">
-              <h2>Open right now</h2>
-              <div class="eyebrow"><span class="open-dot" style="display:inline-block; margin-right:6px; vertical-align:-1px;"></span>Live</div>
-            </div>
-            <div class="tenant-grid" id="nowGrid"></div>
+      <!-- BY THE WAY: quiet bottom strip -->
+      <section class="byway">
+        <div class="byway-eyebrow">By the way</div>
+        <div class="byway-grid">
+          <div class="byway-card">
+            <h3>Available suites</h3>
+            <p id="bywayVacancy">Talk to Laura if you'd like to tour a room.</p>
           </div>
-
-          <!-- SUITE MAP VIEW -->
-          <div class="view" id="view-map" hidden>
-            <div class="panel-head">
-              <h2>Suite map</h2>
-              <div class="eyebrow">You are here</div>
-            </div>
-            <div class="map-canvas">
-              <p>Interactive floor plan — coming with the kiosk install.</p>
-            </div>
+          <div class="byway-card">
+            <h3>From the owner</h3>
+            <p id="ownerNote">— Laura</p>
           </div>
-
-          <!-- FROM-THE-OWNER VIEW -->
-          <div class="view" id="view-owner" hidden>
-            <div class="panel-head">
-              <h2>From the owner</h2>
-              <div class="eyebrow">A note from Laura</div>
-            </div>
-            <div class="owner-note" id="ownerNote">
-              <p>Salon Plus Studio Suites is home to a careful group of independent artists — color, nails, lash, wellness, skin. Each one runs their own room, their own brand, their own way.</p>
-              <p style="margin-top: 0.9rem;">This screen exists so that everyone who walks in finds the studio that fits them — not just the one closest to the door.</p>
-              <div class="owner-sig">— Laura</div>
-            </div>
+          <div class="byway-card">
+            <h3>Building info</h3>
+            <p>Salon Plus Studio Suites · Lobby</p>
           </div>
-
-        </section>
-      </main>
-
-      <!-- Footer -->
-      <footer class="kiosk-foot">
-        <span>Salon Plus · Lobby</span>
-        <span class="clock" id="clock">—</span>
-        <span>Tap anywhere to explore</span>
-      </footer>
+          <div class="byway-card qr">
+            <div class="qr-grid" aria-hidden="true"></div>
+            <div class="lbl">Scan</div>
+            <div class="sub">Take it with you</div>
+          </div>
+        </div>
+      </section>
 
     </div>
   </div>
@@ -647,25 +908,6 @@
   function getTenants() { return Promise.resolve(readLocalTenants() || SEED_TENANTS); }
   function getStudio()  { return Promise.resolve({ owner_note: '— Laura', about_text: 'Salon Plus Studio Suites — independent studios under one roof.' }); }
 
-  /* ---------- Static welcome (no crossfade, no wake-on-touch) ----------
-     The kiosk is intentionally locked on the corridor / hallway view per Anne.
-     The wake / sleep / view-routing scaffolding below is left in place so we
-     can re-enable interaction later by uncommenting the listeners. */
-  // Photo crossfade disabled — only the corridor photo shows.
-  // const slides = document.querySelectorAll('#attract .attract-slide');
-  // let slideIdx = 0;
-  // setInterval(() => {
-  //   slides[slideIdx].classList.remove('is-on');
-  //   slideIdx = (slideIdx + 1) % slides.length;
-  //   slides[slideIdx].classList.add('is-on');
-  // }, 6500);
-
-  // Wake / sleep listeners disabled — touching the screen does nothing.
-  // const attract = document.getElementById('attract');
-  // const app = document.getElementById('app');
-  // attract.addEventListener('click', wake);
-  // attract.addEventListener('touchstart', wake, { passive: true });
-
   /* ---------- Clock ---------- */
   function tickClock() {
     const d = new Date();
@@ -675,13 +917,18 @@
   tickClock();
   setInterval(tickClock, 30_000);
 
-  /* ---------- View routing ---------- */
-  function showView(v) {
-    document.querySelectorAll('.view').forEach(el => el.hidden = (el.id !== 'view-' + v));
-    document.querySelectorAll('.menu-btn').forEach(b => b.classList.toggle('is-active', b.dataset.view === v));
+  /* ---------- Tab routing (browse section) ---------- */
+  function showTab(t) {
+    document.querySelectorAll('[data-tab]').forEach(el => {
+      if (el.tagName === 'BUTTON') {
+        el.classList.toggle('is-active', el.dataset.tab === t);
+      } else {
+        el.hidden = (el.dataset.tab !== t);
+      }
+    });
   }
-  document.querySelectorAll('.menu-btn').forEach(btn => {
-    btn.addEventListener('click', () => showView(btn.dataset.view));
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', () => showTab(btn.dataset.tab));
   });
 
   /* ---------- Render tenants from data layer ---------- */
@@ -701,7 +948,7 @@
       : `<div class="tenant-photo ${themeClass}" style="display:grid; place-items:center; color: var(--cream-on-dark); font-family: 'Fraunces', serif; font-size: 2.4rem; letter-spacing: -0.02em;">${monogram}`;
 
     return `
-      <div class="tenant-card" role="button" tabindex="0">
+      <div class="tenant-card" role="button" tabindex="0" data-tenant-id="${t.id || ''}">
         ${visual}
           <span class="status ${open ? 'open' : 'closed'}">
             <span class="dot"></span>${open ? 'Open' : 'Closed'}
@@ -742,12 +989,112 @@
 
   getStudio().then(s => {
     if (s && s.owner_note) {
-      document.getElementById('ownerNote').innerHTML = `
-        <p>${s.about_text || 'Salon Plus Studio Suites is home to a careful group of independent artists.'}</p>
-        <div class="owner-sig">${s.owner_note}</div>
-      `;
+      // "By the way" version — short, just the owner sig under a single line
+      document.getElementById('ownerNote').textContent = s.owner_note || '— Laura';
     }
   }).catch(() => {});
+
+  /* ---------- Live search ----------
+     "Who are you here to see?" — filters tenants by name, suite, services, bio.
+     Shows up to 6 suggestions; clicking one scrolls the browse grid into focus
+     and highlights the matching card. */
+  let _allTenants = [];
+  getTenants().then(list => { _allTenants = list || []; });
+
+  const searchInput   = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+
+  function searchTenants(q) {
+    if (!q || q.trim().length < 1) return [];
+    const needle = q.trim().toLowerCase();
+    return _allTenants
+      .map(t => {
+        const name = (t.business_name || t.name || '').toLowerCase();
+        const suite = String(t.suite_number || t.suite || '').toLowerCase();
+        const services = (t.services || t.tags || []).join(' ').toLowerCase();
+        const bio = (t.bio || '').toLowerCase();
+        const hay = `${name} ${suite} ${services} ${bio}`;
+        if (!hay.includes(needle)) return null;
+        // crude relevance: prefer name matches > suite > services > bio
+        const score = (name.startsWith(needle) ? 0 : 1)
+                    + (name.includes(needle) ? 0 : 4)
+                    + (suite.includes(needle) ? 0 : 1)
+                    + (services.includes(needle) ? 0 : 1);
+        return { t, score };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.score - b.score)
+      .slice(0, 6)
+      .map(x => x.t);
+  }
+
+  function renderSearchResult(t) {
+    const name = t.business_name || t.name || 'Studio';
+    const monogram = (t.avatar || name).trim()[0]?.toUpperCase() || '?';
+    const services = (t.services || t.tags || []).slice(0, 2).join(' · ');
+    const photo = t.hero_photo_url || t.photo || '';
+    const suite = t.suite_number ? `Suite ${t.suite_number}` : (t.suite || '');
+    const open = t.status === 'active' || t.open === true;
+    const mark = photo
+      ? `<div class="sr-mark" style="background-image: url('${photo}');"></div>`
+      : `<div class="sr-mark ${t.theme || 'av-stone'}">${monogram}</div>`;
+    return `
+      <div class="search-result" data-id="${t.id || ''}">
+        ${mark}
+        <div class="sr-body">
+          <div class="sr-name">${name}</div>
+          <div class="sr-meta">${services || (open ? 'Open now' : 'Closed')}</div>
+        </div>
+        ${suite ? `<div class="sr-suite">${suite}</div>` : ''}
+      </div>
+    `;
+  }
+
+  function updateSearchResults() {
+    const q = searchInput.value;
+    if (!q.trim()) {
+      searchResults.hidden = true;
+      searchResults.innerHTML = '';
+      return;
+    }
+    const matches = searchTenants(q);
+    if (matches.length === 0) {
+      searchResults.innerHTML = `<div class="search-empty">No studios match "${q}". Try a different name or service.</div>`;
+    } else {
+      searchResults.innerHTML = matches.map(renderSearchResult).join('');
+    }
+    searchResults.hidden = false;
+  }
+
+  // Click a search result → switch to the All-studios tab and highlight the card
+  searchResults.addEventListener('click', (e) => {
+    const row = e.target.closest('.search-result');
+    if (!row) return;
+    const id = row.dataset.id;
+    showTab('all');
+    setTimeout(() => {
+      const card = document.querySelector(`#tenantGrid [data-tenant-id="${id}"]`);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.style.transition = 'box-shadow 0.4s ease, transform 0.4s ease';
+        card.style.boxShadow  = '0 0 0 3px var(--sage), 0 10px 28px rgba(107,122,95,0.30)';
+        card.style.transform  = 'scale(1.02)';
+        setTimeout(() => {
+          card.style.boxShadow = '';
+          card.style.transform = '';
+        }, 1600);
+      }
+    }, 30);
+  });
+
+  searchInput.addEventListener('input', updateSearchResults);
+  searchInput.addEventListener('focus', updateSearchResults);
+  // Click outside the search shell collapses results
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.hero-search')) {
+      searchResults.hidden = true;
+    }
+  });
 </script>
 
 </body>
