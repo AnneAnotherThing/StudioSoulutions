@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="theme-color" content="#F5EDE0" />
+<title>Studio Soulutions — Cedar Lane Suites</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F5EDE0;
+  --surface: #FBF6EE;
+  --surface-2: #EFE4D2;
+  --cream: #FFFBF4;
+  --ink: #3D3530;
+  --ink-muted: #8B7E70;
+  --ink-soft: #B8AB9C;
+  --sage: #8B9A7E;
+  --sage-deep: #6B7A5F;
+  --sage-soft: #C5D0B8;
+  --clay: #C97B5A;
+  --clay-deep: #A8593E;
+  --clay-soft: #E8C8B5;
+  --sand: #D4C4A8;
+  --line: #E5D9C3;
+  --shadow: 0 1px 2px rgba(61, 53, 48, 0.04), 0 4px 16px rgba(61, 53, 48, 0.06);
+  --shadow-lift: 0 4px 12px rgba(61, 53, 48, 0.08), 0 12px 32px rgba(61, 53, 48, 0.10);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+body {
+  max-width: 440px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding-bottom: 88px;
+  position: relative;
+}
+
+.serif { font-family: 'Fraunces', Georgia, serif; font-weight: 500; letter-spacing: -0.01em; }
+
+/* HEADER */
+.app-header {
+  position: sticky;
+  top: 0;
+  background: rgba(245, 237, 224, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 14px 20px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 50;
+  border-bottom: 1px solid rgba(229, 217, 195, 0.6);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand-mark {
+  width: 32px; height: 32px;
+  background: var(--ink);
+  color: var(--cream);
+  border-radius: 10px;
+  display: grid; place-items: center;
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 16px;
+}
+.brand-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.brand-name em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--clay-deep);
+}
+.header-action {
+  width: 38px; height: 38px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  display: grid; place-items: center;
+  color: var(--ink);
+  font-size: 16px;
+  position: relative;
+  cursor: pointer;
+}
+.header-action .badge {
+  position: absolute;
+  top: -4px; right: -4px;
+  background: var(--clay);
+  color: var(--cream);
+  font-size: 10px;
+  font-weight: 600;
+  min-width: 16px; height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  display: grid; place-items: center;
+}
+
+/* VIEWS */
+.view { display: none; padding: 20px 20px 32px; }
+.view.active { display: block; animation: fade 0.25s ease; }
+@keyframes fade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* DISCOVER — WELCOME */
+.welcome {
+  background: linear-gradient(135deg, #EFE4D2 0%, #E5D5B8 100%);
+  border-radius: 20px;
+  padding: 22px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.welcome::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 140px; height: 140px;
+  background: radial-gradient(circle, rgba(139, 154, 126, 0.25) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.welcome-eyebrow {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--sage-deep);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.welcome h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 1.15;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+  position: relative;
+}
+.welcome p {
+  font-size: 14px;
+  color: var(--ink-muted);
+  position: relative;
+}
+
+/* SECTION HEADERS */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 28px 0 14px;
+}
+.section-head h2 {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 18px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.section-head .link {
+  font-size: 13px;
+  color: var(--sage-deep);
+  font-weight: 500;
+  cursor: pointer;
+}
+.section-eyebrow {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* DID YOU KNOW CAROUSEL */
+.dyk-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 8px;
+  margin: 0 -20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  scrollbar-width: none;
+}
+.dyk-scroll::-webkit-scrollbar { display: none; }
+.dyk-card {
+  flex: 0 0 78%;
+  scroll-snap-align: start;
+  background: var(--cream);
+  border-radius: 18px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+}
+.dyk-card[data-theme="sage"] { background: linear-gradient(160deg, #DAE4CC 0%, #C5D0B8 100%); }
+.dyk-card[data-theme="clay"] { background: linear-gradient(160deg, #F0D5C2 0%, #E8C8B5 100%); }
+.dyk-card[data-theme="sand"] { background: linear-gradient(160deg, #EFE4D2 0%, #DCC9A8 100%); }
+.dyk-eyebrow {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  color: var(--ink);
+  opacity: 0.5;
+  margin-bottom: 10px;
+}
+.dyk-card p {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.35;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.dyk-card .dyk-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: rgba(61, 53, 48, 0.3);
+  text-underline-offset: 3px;
+}
+
+/* TENANT CARDS — FEATURED */
+.featured-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.tenant-card {
+  background: var(--cream);
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.tenant-card:active { transform: scale(0.98); box-shadow: var(--shadow-lift); }
+.tenant-avatar {
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 30px;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+  position: relative;
+}
+.tenant-card-body {
+  padding: 12px 14px 14px;
+}
+.tenant-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  margin-bottom: 2px;
+}
+.tenant-service {
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+.tenant-suite {
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* AVATAR COLOR THEMES — earthy gradients with monogram */
+.av-sage { background: linear-gradient(135deg, #9CAB91 0%, #6B7A5F 100%); }
+.av-clay { background: linear-gradient(135deg, #D08C6B 0%, #A8593E 100%); }
+.av-sand { background: linear-gradient(135deg, #C9B68F 0%, #9A8866 100%); }
+.av-rose { background: linear-gradient(135deg, #C99B95 0%, #A07570 100%); }
+.av-moss { background: linear-gradient(135deg, #7A8A6B 0%, #4F5C44 100%); }
+.av-rust { background: linear-gradient(135deg, #B86A4F 0%, #8B4732 100%); }
+.av-bone { background: linear-gradient(135deg, #D5C5A8 0%, #A89578 100%); color: var(--ink) !important; }
+.av-stone { background: linear-gradient(135deg, #9C9489 0%, #6B645A 100%); }
+.av-fern { background: linear-gradient(135deg, #8FA888 0%, #5E7558 100%); }
+.av-amber { background: linear-gradient(135deg, #C9A66B 0%, #97783D 100%); }
+
+/* CURRENTLY HERE */
+.now-strip {
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.now-dot {
+  width: 8px; height: 8px;
+  background: var(--sage);
+  border-radius: 50%;
+  position: relative;
+  flex-shrink: 0;
+}
+.now-dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: var(--sage);
+  opacity: 0.3;
+  animation: pulse 2s ease-out infinite;
+}
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.3; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+.now-text {
+  flex: 1;
+  font-size: 13px;
+  color: var(--ink);
+}
+.now-text strong { font-weight: 600; }
+.now-text small { color: var(--ink-muted); font-size: 12px; }
+
+/* DIRECTORY VIEW */
+.search-wrap {
+  position: relative;
+  margin-bottom: 14px;
+}
+.search-input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 13px 16px 13px 42px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+.search-input:focus { border-color: var(--sage); }
+.search-input::placeholder { color: var(--ink-soft); }
+.search-icon {
+  position: absolute;
+  left: 14px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-soft);
+  pointer-events: none;
+}
+
+.filter-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin: 0 -20px 18px;
+  padding: 4px 20px 4px;
+  scrollbar-width: none;
+}
+.filter-row::-webkit-scrollbar { display: none; }
+.chip {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.chip.active {
+  background: var(--ink);
+  color: var(--cream);
+  border-color: var(--ink);
+}
+
+/* DIRECTORY LIST */
+.directory-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.directory-row {
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.directory-row:active { transform: scale(0.99); }
+.row-avatar {
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 20px;
+  color: var(--cream);
+  flex-shrink: 0;
+  letter-spacing: -0.02em;
+}
+.row-meta { flex: 1; min-width: 0; }
+.row-meta .tenant-name { font-size: 15px; }
+.row-meta .row-tags {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+.row-tag {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  color: var(--ink-muted);
+  background: var(--surface-2);
+  padding: 3px 7px;
+  border-radius: 4px;
+}
+.row-status {
+  font-size: 11px;
+  color: var(--sage-deep);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.row-status.away { color: var(--ink-soft); }
+.row-status .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* SAVED */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--ink-muted);
+}
+.empty-state .em-icon {
+  font-size: 36px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+.empty-state .em-title {
+  font-family: 'Fraunces', serif;
+  font-size: 17px;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.empty-state p { font-size: 13px; }
+
+/* BOTTOM NAV */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 440px;
+  background: rgba(251, 246, 238, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--line);
+  display: flex;
+  padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
+  z-index: 100;
+}
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ink-soft);
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 0.15s ease;
+}
+.nav-item.active { color: var(--ink); }
+.nav-item svg { width: 22px; height: 22px; }
+
+/* TENANT PROFILE SHEET */
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(61, 53, 48, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 200;
+}
+.sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+
+.sheet {
+  position: fixed;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  width: 100%;
+  max-width: 440px;
+  max-height: 92vh;
+  background: var(--bg);
+  border-radius: 24px 24px 0 0;
+  z-index: 201;
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.sheet.open { transform: translateX(-50%) translateY(0); }
+
+.sheet-handle {
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  padding: 10px 0 6px;
+  display: grid;
+  place-items: center;
+  z-index: 2;
+}
+.sheet-handle::before {
+  content: '';
+  width: 38px; height: 4px;
+  background: var(--ink-soft);
+  border-radius: 2px;
+  opacity: 0.4;
+}
+.sheet-close {
+  position: absolute;
+  top: 10px; right: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  cursor: pointer;
+  color: var(--ink);
+  font-size: 16px;
+  z-index: 3;
+}
+
+.profile-hero {
+  margin: 0 20px;
+  height: 180px;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 64px;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+  position: relative;
+  overflow: hidden;
+}
+.profile-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.12) 100%);
+}
+
+.profile-body { padding: 22px 20px 40px; }
+.profile-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.profile-service {
+  font-size: 14px;
+  color: var(--ink-muted);
+  margin-bottom: 14px;
+}
+.profile-meta {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  color: var(--ink);
+}
+.profile-meta span {
+  display: flex; align-items: center; gap: 5px;
+}
+.profile-meta strong { color: var(--ink); font-weight: 600; }
+
+.profile-bio {
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+
+.profile-tags {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-bottom: 22px;
+}
+.profile-tag {
+  background: var(--surface-2);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 11px;
+  border-radius: 999px;
+}
+
+.profile-actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.btn {
+  border: none;
+  border-radius: 14px;
+  padding: 15px 18px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.15s ease;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--ink); color: var(--cream); }
+.btn-secondary {
+  background: var(--cream);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  width: 52px;
+  padding: 15px;
+}
+.btn-secondary.saved { background: var(--clay); color: var(--cream); border-color: var(--clay); }
+
+.pair-with {
+  margin-top: 8px;
+}
+.pair-with h3 {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 16px;
+  margin-bottom: 4px;
+  color: var(--ink);
+}
+.pair-with .sub {
+  font-size: 12px;
+  color: var(--ink-muted);
+  margin-bottom: 12px;
+}
+.pair-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  margin: 0 -20px;
+  padding: 0 20px 4px;
+  scrollbar-width: none;
+}
+.pair-scroll::-webkit-scrollbar { display: none; }
+.pair-card {
+  flex: 0 0 130px;
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px;
+  cursor: pointer;
+}
+.pair-card .pair-avatar {
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+.pair-card .pair-name {
+  font-family: 'Fraunces', serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.pair-card .pair-service {
+  font-size: 11px;
+  color: var(--ink-muted);
+  margin-top: 2px;
+}
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 110px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink);
+  color: var(--cream);
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
+  z-index: 300;
+  white-space: nowrap;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* FOOTER NOTE — prototype only */
+.proto-note {
+  margin-top: 24px;
+  padding: 14px 16px;
+  background: rgba(139, 154, 126, 0.12);
+  border: 1px dashed var(--sage);
+  border-radius: 12px;
+  font-size: 12px;
+  color: var(--sage-deep);
+  line-height: 1.5;
+}
+.proto-note strong { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand">
+    <div class="brand-mark">s</div>
+    <div>
+      <div class="brand-name">Studio Soul<em>utions</em></div>
+    </div>
+  </div>
+  <div class="header-action" id="bookmarkBtn" onclick="switchView('saved')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    <span class="badge" id="savedCount" style="display:none">0</span>
+  </div>
+</header>
+
+<!-- DISCOVER VIEW -->
+<section class="view active" id="view-discover">
+  <div class="welcome">
+    <div class="welcome-eyebrow">You're inside</div>
+    <h1 class="serif">Cedar Lane Suites</h1>
+    <p>10 independent studios under one roof. Tap any to learn more.</p>
+  </div>
+
+  <div class="section-eyebrow">Did you know?</div>
+  <div class="dyk-scroll" id="dykScroll">
+    <!-- populated by JS -->
+  </div>
+
+  <div class="section-head" style="margin-top: 24px;">
+    <h2>Featured today</h2>
+    <span class="link" onclick="switchView('directory')">See all</span>
+  </div>
+  <div class="featured-grid" id="featuredGrid"></div>
+
+  <div class="section-head">
+    <h2>Right now</h2>
+  </div>
+  <div class="now-strip">
+    <div class="now-dot"></div>
+    <div class="now-text">
+      <strong>4 studios</strong> have availability in the next hour<br>
+      <small>Tap "Right now" in the directory to filter</small>
+    </div>
+  </div>
+</section>
+
+<!-- DIRECTORY VIEW -->
+<section class="view" id="view-directory">
+  <div class="search-wrap">
+    <div class="search-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </div>
+    <input type="text" class="search-input" id="searchInput" placeholder="Search studios or services">
+  </div>
+
+  <div class="filter-row" id="filterRow">
+    <div class="chip active" data-filter="all">All</div>
+    <div class="chip" data-filter="now">Right now</div>
+    <div class="chip" data-filter="hair">Hair</div>
+    <div class="chip" data-filter="skin">Skin</div>
+    <div class="chip" data-filter="nails">Nails</div>
+    <div class="chip" data-filter="brows">Brows & Lashes</div>
+    <div class="chip" data-filter="wellness">Wellness</div>
+    <div class="chip" data-filter="makeup">Makeup</div>
+  </div>
+
+  <div class="directory-list" id="directoryList"></div>
+</section>
+
+<!-- SAVED VIEW -->
+<section class="view" id="view-saved">
+  <div class="section-head" style="margin-top: 0;">
+    <h2>Saved studios</h2>
+  </div>
+  <div class="directory-list" id="savedList"></div>
+  <div class="empty-state" id="savedEmpty">
+    <div class="em-icon">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    </div>
+    <div class="em-title serif">Nothing saved yet</div>
+    <p>Tap the bookmark on any studio to come back to it later.</p>
+  </div>
+
+  <div class="proto-note">
+    <strong>A note on this preview:</strong> everything here is placeholder — the building, the studios, the photos, the "Did You Know?" copy. "Studio Soulutions" and the earthy palette are working ideas, fully swappable once we land on the real ones. Booking, real-time availability, and tenant signup all come next.
+  </div>
+</section>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-item active" data-view="discover" onclick="switchView('discover')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+    Discover
+  </button>
+  <button class="nav-item" data-view="directory" onclick="switchView('directory')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+    Directory
+  </button>
+  <button class="nav-item" data-view="saved" onclick="switchView('saved')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    Saved
+  </button>
+</nav>
+
+<!-- TENANT PROFILE SHEET -->
+<div class="sheet-backdrop" id="sheetBackdrop" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <button class="sheet-close" onclick="closeSheet()">×</button>
+  <div id="sheetContent"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ DATA ============
+const tenants = [
+  { id: 't1', name: 'Indigo & Oak', service: 'Color & Balayage Specialist', category: 'hair', suite: 'Suite 204', avatar: 'IO', theme: 'av-moss', open: true,
+    bio: 'Lived-in color, hand-painted balayage, and dimensional brunettes. Specializing in low-maintenance grow-outs for busy clients.',
+    tags: ['Balayage', 'Color', 'Cuts', 'Toners', 'Gloss'], hours: 'Tue–Sat 9–6' },
+  { id: 't2', name: 'Verdant Skin Studio', service: 'Facials & Skincare', category: 'skin', suite: 'Suite 212', avatar: 'V', theme: 'av-sage', open: true,
+    bio: 'Holistic facials with medical-grade results. Custom protocols for acne, hyperpigmentation, and aging skin. Licensed esthetician.',
+    tags: ['Facials', 'Dermaplane', 'Chemical Peels', 'LED Therapy'], hours: 'Wed–Sun 10–7' },
+  { id: 't3', name: 'The Lash Loft', service: 'Lash Extensions & Lifts', category: 'brows', suite: 'Suite 210', avatar: 'LL', theme: 'av-rose', open: true,
+    bio: 'Custom lash sets designed to your eye shape. Classic, hybrid, and volume — plus lifts and tints for low-maintenance days.',
+    tags: ['Extensions', 'Lifts', 'Tints', 'Removals'], hours: 'Mon–Sat 9–7' },
+  { id: 't4', name: 'Quiet Hands', service: 'Therapeutic Massage', category: 'wellness', suite: 'Suite 218', avatar: 'Q', theme: 'av-stone', open: false,
+    bio: 'Deep tissue, Swedish, and prenatal massage by a licensed RMT. Quiet space, warm towels, no upselling.',
+    tags: ['Deep Tissue', 'Swedish', 'Prenatal', 'Sports Recovery'], hours: 'Tue–Sat 11–8' },
+  { id: 't5', name: 'Bloom Brow Bar', service: 'Brows, Lamination & Microblading', category: 'brows', suite: 'Suite 206', avatar: 'B', theme: 'av-clay', open: true,
+    bio: 'Brow shaping done right. Lamination, tinting, henna, and certified microblading. Walk-ins welcome for shaping.',
+    tags: ['Shaping', 'Lamination', 'Tinting', 'Microblading'], hours: 'Tue–Sat 10–6' },
+  { id: 't6', name: 'Saltwater Nails', service: 'Manicures, Pedicures, Gel', category: 'nails', suite: 'Suite 220', avatar: 'S', theme: 'av-bone', open: true,
+    bio: 'Clean, gentle nail care. Non-toxic polishes, gel, and structured manicures. Sanitization protocols you can actually see.',
+    tags: ['Gel', 'Structured Mani', 'Pedicure', 'Nail Art'], hours: 'Wed–Sun 10–7' },
+  { id: 't7', name: 'Rooted Wellness', service: 'Reiki & Acupuncture', category: 'wellness', suite: 'Suite 222', avatar: 'R', theme: 'av-fern', open: false,
+    bio: 'Licensed acupuncturist offering treatments for stress, sleep, fertility, and chronic pain. Reiki sessions by appointment.',
+    tags: ['Acupuncture', 'Reiki', 'Cupping', 'Herbs'], hours: 'Mon, Wed, Fri 9–5' },
+  { id: 't8', name: 'Tilde Cosmetics', service: 'Bridal Makeup & Lessons', category: 'makeup', suite: 'Suite 208', avatar: 'T', theme: 'av-rust', open: true,
+    bio: 'Editorial-trained makeup artist specializing in bridal, special event, and 1:1 personal makeup lessons.',
+    tags: ['Bridal', 'Events', 'Lessons', 'Airbrush'], hours: 'By appointment' },
+  { id: 't9', name: 'Finch Hair Studio', service: 'Precision Cuts & Men\'s Grooming', category: 'hair', suite: 'Suite 202', avatar: 'F', theme: 'av-sand', open: true,
+    bio: 'Sharp cuts for all genders. Men\'s grooming, beard work, and that one good textured cut that grows out beautifully.',
+    tags: ['Cuts', 'Men\'s Grooming', 'Beards', 'Styling'], hours: 'Tue–Sat 10–7' },
+  { id: 't10', name: 'Amaranth Aesthetics', service: 'Botox, Fillers & Medspa', category: 'wellness', suite: 'Suite 216', avatar: 'A', theme: 'av-amber', open: false,
+    bio: 'Board-certified nurse injector. Conservative, natural-looking results. Botox, dermal fillers, and skin boosters.',
+    tags: ['Botox', 'Fillers', 'Skin Boosters', 'Consults'], hours: 'Thu–Sat 11–6' }
+];
+
+const didYouKnow = [
+  { theme: 'sage', eyebrow: 'Did you know?', text: 'There\'s a licensed massage therapist two doors down from your color appointment.', link: 'See Quiet Hands', linkId: 't4' },
+  { theme: 'clay', eyebrow: 'Pair it', text: 'A facial at Verdant + a brow shape at Bloom — both on the 2nd floor, easy walk between.', link: 'See the pairing', linkId: 't2' },
+  { theme: 'sand', eyebrow: 'Local secret', text: 'Tilde does 1:1 makeup lessons — perfect for the morning of a wedding day in the building.', link: 'See Tilde', linkId: 't8' },
+  { theme: 'sage', eyebrow: 'New here', text: 'Amaranth Aesthetics joined Cedar Lane last month. Botox & fillers from a board-certified RN.', link: 'See Amaranth', linkId: 't10' },
+  { theme: 'clay', eyebrow: 'Walk-ins', text: 'Bloom Brow Bar takes walk-ins for brow shaping — usually 15 minutes, no appointment needed.', link: 'See Bloom', linkId: 't5' }
+];
+
+// ============ STATE ============
+let savedIds = new Set();
+let activeFilter = 'all';
+let searchTerm = '';
+let currentTenant = null;
+
+// ============ RENDER ============
+function renderDYK() {
+  const wrap = document.getElementById('dykScroll');
+  wrap.innerHTML = didYouKnow.map(d => `
+    <div class="dyk-card" data-theme="${d.theme}" onclick="openTenant('${d.linkId}')">
+      <div class="dyk-eyebrow">${d.eyebrow}</div>
+      <p>${d.text}</p>
+      <span class="dyk-link">${d.link} →</span>
+    </div>
+  `).join('');
+}
+
+function renderFeatured() {
+  const featured = [tenants[0], tenants[2], tenants[4], tenants[8]];
+  document.getElementById('featuredGrid').innerHTML = featured.map(t => `
+    <div class="tenant-card" onclick="openTenant('${t.id}')">
+      <div class="tenant-avatar ${t.theme}">${t.avatar}</div>
+      <div class="tenant-card-body">
+        <div class="tenant-name">${t.name}</div>
+        <div class="tenant-service">${t.service.split('&')[0].split(',')[0].trim()}</div>
+        <div class="tenant-suite">${t.suite}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderDirectory() {
+  const list = document.getElementById('directoryList');
+  const filtered = tenants.filter(t => {
+    if (activeFilter === 'now' && !t.open) return false;
+    if (activeFilter !== 'all' && activeFilter !== 'now' && t.category !== activeFilter) return false;
+    if (searchTerm) {
+      const q = searchTerm.toLowerCase();
+      return t.name.toLowerCase().includes(q) ||
+             t.service.toLowerCase().includes(q) ||
+             t.tags.some(tag => tag.toLowerCase().includes(q));
+    }
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="em-title serif">No matches</div><p>Try a different search or filter.</p></div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map(t => `
+    <div class="directory-row" onclick="openTenant('${t.id}')">
+      <div class="row-avatar ${t.theme}">${t.avatar}</div>
+      <div class="row-meta">
+        <div class="tenant-name">${t.name}</div>
+        <div class="tenant-service">${t.service}</div>
+        <div class="row-tags">
+          <span class="row-tag">${t.tags[0]}</span>
+          <span class="row-tag">${t.tags[1]}</span>
+        </div>
+      </div>
+      <div class="row-status ${t.open ? '' : 'away'}">
+        <span class="dot"></span>${t.open ? 'Open' : 'Closed'}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderSaved() {
+  const list = document.getElementById('savedList');
+  const empty = document.getElementById('savedEmpty');
+  const saved = tenants.filter(t => savedIds.has(t.id));
+
+  if (saved.length === 0) {
+    list.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+  list.style.display = 'flex';
+  empty.style.display = 'none';
+  list.innerHTML = saved.map(t => `
+    <div class="directory-row" onclick="openTenant('${t.id}')">
+      <div class="row-avatar ${t.theme}">${t.avatar}</div>
+      <div class="row-meta">
+        <div class="tenant-name">${t.name}</div>
+        <div class="tenant-service">${t.service}</div>
+      </div>
+      <div class="row-status ${t.open ? '' : 'away'}">
+        <span class="dot"></span>${t.open ? 'Open' : 'Closed'}
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateSavedBadge() {
+  const badge = document.getElementById('savedCount');
+  if (savedIds.size > 0) {
+    badge.style.display = 'grid';
+    badge.textContent = savedIds.size;
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+// ============ INTERACTIONS ============
+function switchView(view) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(`view-${view}`).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.view === view));
+  if (view === 'saved') renderSaved();
+  window.scrollTo(0, 0);
+}
+
+function openTenant(id) {
+  const t = tenants.find(x => x.id === id);
+  if (!t) return;
+  currentTenant = t;
+  const isSaved = savedIds.has(t.id);
+  const pairs = tenants.filter(p => p.id !== t.id && p.category !== t.category).slice(0, 4);
+
+  document.getElementById('sheetContent').innerHTML = `
+    <div class="profile-hero ${t.theme}">${t.avatar}</div>
+    <div class="profile-body">
+      <div class="profile-name">${t.name}</div>
+      <div class="profile-service">${t.service}</div>
+      <div class="profile-meta">
+        <span><strong>${t.suite}</strong></span>
+        <span style="color: var(--ink-soft)">•</span>
+        <span>${t.hours}</span>
+      </div>
+      <div class="profile-bio">${t.bio}</div>
+      <div class="profile-tags">
+        ${t.tags.map(tag => `<span class="profile-tag">${tag}</span>`).join('')}
+      </div>
+      <div class="profile-actions">
+        <button class="btn btn-primary" onclick="bookTenant()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Book with ${t.name.split(' ')[0]}
+        </button>
+        <button class="btn btn-secondary ${isSaved ? 'saved' : ''}" onclick="toggleSave('${t.id}')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        </button>
+      </div>
+      <div class="pair-with">
+        <h3>Pair it</h3>
+        <div class="sub">Often paired with visits to ${t.name}</div>
+        <div class="pair-scroll">
+          ${pairs.map(p => `
+            <div class="pair-card" onclick="openTenant('${p.id}')">
+              <div class="pair-avatar ${p.theme}">${p.avatar}</div>
+              <div class="pair-name">${p.name}</div>
+              <div class="pair-service">${p.service.split('&')[0].split(',')[0].trim()}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('sheet').classList.add('open');
+  document.getElementById('sheetBackdrop').classList.add('open');
+}
+
+function closeSheet() {
+  document.getElementById('sheet').classList.remove('open');
+  document.getElementById('sheetBackdrop').classList.remove('open');
+  currentTenant = null;
+}
+
+function toggleSave(id) {
+  if (savedIds.has(id)) {
+    savedIds.delete(id);
+    showToast('Removed from saved');
+  } else {
+    savedIds.add(id);
+    showToast('Saved');
+  }
+  updateSavedBadge();
+  if (currentTenant && currentTenant.id === id) openTenant(id);
+}
+
+function bookTenant() {
+  showToast('Booking flow — coming in v2');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+// FILTER LISTENERS
+document.querySelectorAll('#filterRow .chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('#filterRow .chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    activeFilter = chip.dataset.filter;
+    renderDirectory();
+  });
+});
+
+// SEARCH LISTENER
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchTerm = e.target.value;
+  renderDirectory();
+});
+
+// INIT
+renderDYK();
+renderFeatured();
+renderDirectory();
+updateSavedBadge();
+</script>
+</body>
+</html>

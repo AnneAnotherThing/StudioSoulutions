@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="kiosk">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#F5EDE0" />
+<title>Studio Soulutions — Salon Plus Studio Suites · Lobby</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- tokens.css inlined into this file so the kiosk works standalone (double-click or served) -->
+<style>
+  /* ---------- Kiosk shell — pitch-mockup aesthetic blended with Studio Soulutions earthy palette ---------- */
+  :root {
+    /* Light, neutral, taupe + sage — beauty-industry-appropriate */
+    --bg:            #F5EDE0;       /* warm sand cream — primary surface */
+    --bg-2:          #EFE4D2;       /* slightly deeper */
+    --bg-3:          #E5D9C3;       /* warm tan */
+    --surface:       #FBF6EE;
+    --surface-2:     #FFFBF4;       /* lightest */
+    --ink:           #3D3530;       /* primary text */
+    --ink-soft:      #6B6357;
+    --ink-faint:     #8B7E70;
+    --ink-ghost:     #B8AB9C;
+    --sage:          #8B9A7E;
+    --sage-deep:     #6B7A5F;
+    --sage-soft:     #C5D0B8;
+    --taupe:         #B5A795;
+    --taupe-deep:    #8B7E6A;
+    --taupe-soft:    #D9CBB8;
+    --clay:          #C97B5A;
+    --clay-deep:     #A8593E;
+    --clay-soft:     #E8C8B5;
+    --line:          #E5D9C3;
+    --line-2:        #D4C4A8;
+    /* Glass on cream — subtle ink wash */
+    --glass-04:      rgba(61,53,48,0.04);
+    --glass-06:      rgba(61,53,48,0.05);
+    --glass-08:      rgba(61,53,48,0.07);
+    --glass-line:    rgba(61,53,48,0.10);
+    --glass-line-2:  rgba(61,53,48,0.16);
+    /* Legacy aliases — bumped alphas so cards/buttons have clear contrast on cream */
+    --bg-dark:       var(--bg);
+    --bg-dark-2:     var(--bg-2);
+    --bg-dark-3:     var(--bg-3);
+    --cream-on-dark: var(--ink);
+    --cream-04:      rgba(61,53,48,0.05);
+    --cream-06:      rgba(61,53,48,0.07);
+    --cream-08:      rgba(61,53,48,0.09);
+    --cream-10:      rgba(61,53,48,0.11);
+    --cream-15:      rgba(61,53,48,0.15);
+    --cream-20:      rgba(61,53,48,0.20);
+    --cream-50:      rgba(61,53,48,0.58);
+    --cream-70:      rgba(61,53,48,0.80);
+    --line-dark:     var(--glass-line);
+  }
+
+  /* Lift treatment for kiosk's clickable surfaces */
+  .menu-btn, .tenant-card, .qr-card, .right-panel {
+    box-shadow: 0 2px 4px rgba(61,53,48,0.10), 0 10px 28px rgba(61,53,48,0.18);
+  }
+  .menu-btn:active, .tenant-card:active {
+    box-shadow: 0 6px 18px rgba(61,53,48,0.20), 0 24px 48px rgba(61,53,48,0.24);
+  }
+  /* Header lift on the kiosk top strip + footer strip */
+  .kiosk-header, .kiosk-foot {
+    background: rgba(245,237,224,0.55);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 20px;
+    padding-left: 1.4rem; padding-right: 1.4rem;
+    box-shadow: 0 2px 4px rgba(61,53,48,0.10), 0 10px 28px rgba(61,53,48,0.16);
+  }
+
+  html, body { height: 100%; overflow: hidden; background: var(--bg-dark); color: var(--cream-on-dark); }
+  body { font-family: 'Inter', -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+
+  .serif { font-family: 'Fraunces', Georgia, serif; font-weight: 500; letter-spacing: -0.02em; }
+  .serif-it { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-weight: 400; }
+  .eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--cream-50);
+  }
+
+  /* ---------- Attract loop (idle) ---------- */
+  #attract {
+    position: fixed; inset: 0;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+    pointer-events: none;
+    background: var(--bg-dark);
+  }
+  #attract.is-on { opacity: 1; pointer-events: auto; }
+  .attract-slide {
+    position: absolute; inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 2s ease;
+  }
+  .attract-slide.is-on { opacity: 1; }
+  .attract-overlay {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(120% 80% at 80% 20%, rgba(139,154,126,0.14) 0%, transparent 55%),
+      linear-gradient(180deg, rgba(245,237,224,0.28) 0%, rgba(245,237,224,0.70) 55%, rgba(245,237,224,0.96) 100%);
+    z-index: 2;
+  }
+  .attract-mark {
+    position: absolute; left: 0; right: 0; bottom: 16vh;
+    z-index: 3;
+    text-align: center;
+    color: var(--cream-on-dark);
+  }
+  .attract-mark .eyebrow { margin-bottom: 1.6rem; font-size: 0.85rem; letter-spacing: 0.4em; }
+  .attract-mark .wordmark {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 6.5rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .attract-mark .wordmark em {
+    font-style: italic; font-weight: 400; color: var(--taupe-deep);
+  }
+  .attract-mark .tap-hint {
+    margin-top: 3rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    animation: tappulse 2.4s ease-in-out infinite;
+  }
+  @keyframes tappulse {
+    0%, 100% { opacity: 0.35 }
+    50%      { opacity: 0.85 }
+  }
+
+  /* ---------- Active app ---------- */
+  #app {
+    position: fixed; inset: 0;
+    overflow: hidden;
+    background: var(--bg-dark);
+    color: var(--cream-on-dark);
+  }
+
+  /* Photo backdrop */
+  #app::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url('assets/photos/1000040457.jpg');
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+  }
+  #app::after {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(80% 60% at 80% 0%, rgba(139,154,126,0.12) 0%, transparent 60%),
+      linear-gradient(180deg, rgba(245,237,224,0.55) 0%, rgba(245,237,224,0.82) 60%, rgba(245,237,224,0.96) 100%);
+    z-index: 1;
+  }
+
+  .kiosk-shell {
+    position: relative; z-index: 2;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 2.4rem 3rem;
+    gap: 2rem;
+  }
+
+  /* Header */
+  .kiosk-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 2rem;
+  }
+  .brand { display: flex; align-items: center; gap: 1rem; }
+  .brand-mark {
+    width: 56px; height: 56px;
+    background: var(--ink); color: var(--surface-2);
+    border-radius: 14px;
+    display: grid; place-items: center;
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 1.7rem;
+  }
+  .brand-name {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .brand-name em {
+    font-style: italic; font-weight: 400; color: var(--taupe-deep);
+    font-family: 'Fraunces', serif;
+  }
+  .brand-sub {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--cream-50);
+    margin-top: 4px;
+  }
+
+  /* QR card */
+  .qr-card {
+    background: var(--cream-10);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid var(--cream-20);
+    border-radius: 22px;
+    padding: 14px 16px;
+    text-align: center;
+    min-width: 160px;
+  }
+  .qr-grid {
+    width: 90px; height: 90px; margin: 0 auto;
+    background: var(--surface-2);
+    background-image:
+      linear-gradient(var(--ink) 1.5px, transparent 1.5px),
+      linear-gradient(90deg, var(--ink) 1.5px, transparent 1.5px);
+    background-size: 9px 9px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+  }
+  .qr-card .lbl {
+    margin-top: 8px;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--cream-on-dark);
+    font-weight: 600;
+  }
+  .qr-card .sub { font-size: 0.62rem; color: var(--cream-50); letter-spacing: 0.08em; margin-top: 2px; }
+
+  /* Hero (welcome) */
+  .welcome {
+    align-self: end;
+    max-width: 70%;
+  }
+  .welcome .eyebrow { margin-bottom: 0.8rem; }
+  .welcome h1 {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 4.4rem; line-height: 1; letter-spacing: -0.02em;
+    color: var(--cream-on-dark);
+  }
+  .welcome h1 em {
+    font-style: italic; font-weight: 400; color: var(--taupe-deep);
+    font-family: 'Fraunces', serif;
+  }
+  .welcome p {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: var(--cream-70);
+    max-width: 32em;
+  }
+
+  /* Main grid: welcome+menu / featured */
+  .kiosk-main {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 2.4rem;
+    align-items: stretch;
+    overflow: hidden;
+  }
+
+  /* Menu (left) */
+  .menu-stack {
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.8rem;
+  }
+  .menu-btn {
+    background: var(--cream-10);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--cream-20);
+    border-radius: 22px;
+    padding: 18px 22px;
+    color: var(--cream-on-dark);
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    text-align: left;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1.5rem;
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+  .menu-btn:active { transform: scale(0.985); background: var(--cream-15); }
+  .menu-btn.is-active { background: var(--cream-15); border-color: var(--cream-20); }
+  .menu-btn .label {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.45rem;
+    letter-spacing: -0.01em;
+  }
+  .menu-btn .meta {
+    font-size: 0.78rem; color: var(--cream-50);
+    text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600;
+    display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+  }
+  .menu-btn .meta.open { color: var(--sage-deep); }
+  .open-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--sage-deep); position: relative;
+  }
+  .open-dot::after {
+    content: ''; position: absolute; inset: -4px; border-radius: 50%;
+    background: var(--sage-deep); opacity: 0.3;
+    animation: opdot 2s ease-out infinite;
+  }
+  @keyframes opdot { 0% { transform: scale(1); opacity: 0.3 } 100% { transform: scale(2.4); opacity: 0 } }
+
+  /* Right panel — featured / view content */
+  .right-panel {
+    background: var(--cream-04);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--cream-10);
+    border-radius: 28px;
+    padding: 1.8rem;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    min-height: 0;
+  }
+  .panel-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.2rem;
+  }
+  .panel-head h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* Tenant grid for Directory view */
+  .tenant-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 4px;
+    align-content: start;
+    scrollbar-width: thin;
+    scrollbar-color: var(--cream-15) transparent;
+  }
+  .tenant-grid::-webkit-scrollbar { width: 6px; }
+  .tenant-grid::-webkit-scrollbar-thumb { background: var(--cream-15); border-radius: 3px; }
+  .tenant-card {
+    background: var(--cream-06);
+    border: 1px solid var(--cream-10);
+    border-radius: 18px;
+    padding: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+    display: flex; flex-direction: column; gap: 0.7rem;
+  }
+  .tenant-card:active { transform: scale(0.985); background: var(--cream-10); }
+  .tenant-photo {
+    aspect-ratio: 16/10;
+    border-radius: 12px;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--bg-dark-3);
+    position: relative;
+    overflow: hidden;
+  }
+  /* Concept / test data pill — unconfirmed tenants */
+  .test-pill {
+    position: absolute; right: 8px; top: 8px;
+    background: rgba(245,237,224,0.85);
+    backdrop-filter: blur(8px);
+    border: 1px dashed var(--taupe-deep);
+    color: var(--taupe-deep);
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+  .tenant-photo .status {
+    position: absolute; left: 8px; bottom: 8px;
+    background: rgba(245,237,224,0.55);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--cream-20);
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-weight: 700;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .tenant-photo .status.open  { color: var(--sage-deep); }
+  .tenant-photo .status.closed{ color: var(--ink-faint); }
+  .tenant-photo .status .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+  /* Light earthy gradient placeholders for tenants without photos yet */
+  .tenant-photo.av-sage  { background: linear-gradient(135deg, #C5D0B8 0%, #8B9A7E 100%); color: var(--ink); }
+  .tenant-photo.av-clay  { background: linear-gradient(135deg, #E8C8B5 0%, #C97B5A 100%); color: var(--ink); }
+  .tenant-photo.av-sand  { background: linear-gradient(135deg, #E5D9C3 0%, #B5A795 100%); color: var(--ink); }
+  .tenant-photo.av-rose  { background: linear-gradient(135deg, #E2C5C0 0%, #B89090 100%); color: var(--ink); }
+  .tenant-photo.av-moss  { background: linear-gradient(135deg, #B5C5A5 0%, #6B7A5F 100%); color: var(--ink); }
+  .tenant-photo.av-rust  { background: linear-gradient(135deg, #D4A693 0%, #A8593E 100%); color: var(--ink); }
+  .tenant-photo.av-stone { background: linear-gradient(135deg, #D4C4A8 0%, #8B7E70 100%); color: var(--ink); }
+  .tenant-photo.av-fern  { background: linear-gradient(135deg, #B5C5A5 0%, #5E7558 100%); color: var(--ink); }
+  .tenant-photo.av-amber { background: linear-gradient(135deg, #E8D5A5 0%, #B59055 100%); color: var(--ink); }
+  .tenant-photo.av-bone  { background: linear-gradient(135deg, #F0E8D8 0%, #B8AB9C 100%); color: var(--ink); }
+  .tenant-name { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.05rem; letter-spacing: -0.01em; }
+  .tenant-service { font-size: 0.72rem; color: var(--cream-70); margin-top: 1px; }
+  .tenant-meta { font-size: 0.6rem; color: var(--cream-50); text-transform: uppercase; letter-spacing: 0.14em; font-weight: 600; }
+
+  /* Featured single card variant */
+  .featured-card {
+    background: var(--cream-06);
+    border: 1px solid var(--cream-10);
+    border-radius: 22px;
+    padding: 1rem;
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+  .featured-card .feat-photo {
+    aspect-ratio: 16/10;
+    border-radius: 16px;
+    background-size: cover;
+    background-position: center;
+  }
+  .featured-card h3 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.4rem; letter-spacing: -0.01em; }
+
+  /* From-the-owner view */
+  .owner-note {
+    background: var(--cream-06);
+    border: 1px solid var(--cream-10);
+    border-radius: 18px;
+    padding: 1.5rem;
+    line-height: 1.6;
+    color: var(--cream-70);
+    font-size: 0.95rem;
+    flex: 1;
+    overflow-y: auto;
+  }
+  .owner-sig {
+    margin-top: 1.2rem;
+    font-family: 'Fraunces', serif; font-style: italic;
+    color: var(--cream-on-dark);
+    font-size: 1.05rem;
+  }
+
+  /* Suite map placeholder */
+  .map-canvas {
+    position: relative;
+    flex: 1;
+    background: var(--cream-04);
+    border: 1px dashed var(--cream-15);
+    border-radius: 18px;
+    min-height: 240px;
+    display: grid; place-items: center;
+  }
+  .map-canvas p { color: var(--cream-50); font-family: 'Fraunces', serif; font-style: italic; }
+
+  /* Footer / nav bar */
+  .kiosk-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    color: var(--cream-50);
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .kiosk-foot .clock { color: var(--cream-on-dark); font-family: 'Fraunces', serif; letter-spacing: -0.01em; text-transform: none; font-size: 1.05rem; font-weight: 500; }
+
+  /* Hidden helper */
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+  <!-- Back to walkthrough -->
+  <a href="../../../Laura-Walkthrough-v1.html" style="
+      position: fixed; top: 14px; left: 14px; z-index: 200;
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(245,237,224,0.94);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(61,53,48,0.12);
+      color: #6B6357;
+      padding: 7px 14px 7px 11px;
+      border-radius: 999px;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
+      text-decoration: none;
+      box-shadow: 0 2px 6px rgba(61,53,48,0.10), 0 10px 28px rgba(61,53,48,0.14);
+    ">
+    ← Walkthrough
+  </a>
+
+  <!-- WELCOME (static — corridor / hallway view only, no wake-on-touch) -->
+  <div id="attract" class="is-on" aria-hidden="true">
+    <div class="attract-slide is-on" style="background-image: url('assets/photos/1000040457.jpg');"></div>
+    <div class="attract-overlay"></div>
+    <div class="attract-mark">
+      <div class="eyebrow">Welcome to Salon Plus Studio Suites</div>
+      <div class="wordmark">Studio Soul<em>utions</em></div>
+    </div>
+  </div>
+
+  <!-- ACTIVE APP -->
+  <div id="app" hidden>
+    <div class="kiosk-shell">
+
+      <!-- Header -->
+      <header class="kiosk-header">
+        <div class="brand">
+          <div class="brand-mark">s</div>
+          <div>
+            <div class="brand-name">Studio Soul<em>utions</em></div>
+            <div class="brand-sub">Salon Plus Studio Suites</div>
+          </div>
+        </div>
+        <div class="qr-card" aria-label="Scan to continue on your phone">
+          <div class="qr-grid" aria-hidden="true"></div>
+          <div class="lbl">Scan</div>
+          <div class="sub">Take it with you</div>
+        </div>
+      </header>
+
+      <!-- Main: left = welcome + menu, right = view content -->
+      <main class="kiosk-main">
+
+        <!-- LEFT — welcome + glassmorphic menu -->
+        <section class="menu-stack">
+          <div class="welcome">
+            <div class="eyebrow">You're inside</div>
+            <h1>Salon Plus<br/><em>Studio Suites</em></h1>
+            <p>Independent studios under one roof. Tap a card to see who's here, what they offer, and who's open right now.</p>
+          </div>
+
+          <button class="menu-btn is-active" data-view="directory" type="button">
+            <span class="label">Directory</span>
+            <span class="meta"><span id="dir-count">—</span> studios</span>
+          </button>
+          <button class="menu-btn" data-view="now" type="button">
+            <span class="label">Open right now</span>
+            <span class="meta open"><span class="open-dot"></span><span id="now-count">—</span> open</span>
+          </button>
+          <button class="menu-btn" data-view="map" type="button">
+            <span class="label">Suite map</span>
+            <span class="meta">You are here</span>
+          </button>
+          <button class="menu-btn" data-view="owner" type="button">
+            <span class="label">From the owner</span>
+            <span class="meta">— Laura</span>
+          </button>
+        </section>
+
+        <!-- RIGHT — view content -->
+        <section class="right-panel">
+
+          <!-- DIRECTORY VIEW -->
+          <div class="view" id="view-directory">
+            <div class="panel-head">
+              <h2>All studios</h2>
+              <div class="eyebrow">Tap any to see more</div>
+            </div>
+            <div class="tenant-grid" id="tenantGrid"></div>
+          </div>
+
+          <!-- OPEN-NOW VIEW -->
+          <div class="view" id="view-now" hidden>
+            <div class="panel-head">
+              <h2>Open right now</h2>
+              <div class="eyebrow"><span class="open-dot" style="display:inline-block; margin-right:6px; vertical-align:-1px;"></span>Live</div>
+            </div>
+            <div class="tenant-grid" id="nowGrid"></div>
+          </div>
+
+          <!-- SUITE MAP VIEW -->
+          <div class="view" id="view-map" hidden>
+            <div class="panel-head">
+              <h2>Suite map</h2>
+              <div class="eyebrow">You are here</div>
+            </div>
+            <div class="map-canvas">
+              <p>Interactive floor plan — coming with the kiosk install.</p>
+            </div>
+          </div>
+
+          <!-- FROM-THE-OWNER VIEW -->
+          <div class="view" id="view-owner" hidden>
+            <div class="panel-head">
+              <h2>From the owner</h2>
+              <div class="eyebrow">A note from Laura</div>
+            </div>
+            <div class="owner-note" id="ownerNote">
+              <p>Salon Plus Studio Suites is home to a careful group of independent artists — color, nails, lash, wellness, skin. Each one runs their own room, their own brand, their own way.</p>
+              <p style="margin-top: 0.9rem;">This screen exists so that everyone who walks in finds the studio that fits them — not just the one closest to the door.</p>
+              <div class="owner-sig">— Laura</div>
+            </div>
+          </div>
+
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer class="kiosk-foot">
+        <span>Salon Plus · Lobby</span>
+        <span class="clock" id="clock">—</span>
+        <span>Tap anywhere to explore</span>
+      </footer>
+
+    </div>
+  </div>
+
+<script>
+  /* ---------- Inline data layer (mock-mode) ----------
+     Reads from localStorage 'ss_tenants_v1' if the admin has saved tenants;
+     otherwise falls back to a seed list. Replaces the prior ES-module
+     data.js dependency so the kiosk works standalone — double-click or served. */
+  const SEED_TENANTS = [
+    { id: 't1', business_name: 'Dueces Nail Studio',    suite_number: 'Sage Suite', services: ['Gel','Pedicure','Nail Art'],  hero_photo_url: 'assets/photos/1000040455.jpg', bio: 'Sage-walled and softly lit — quiet, careful nail work.', status: 'active', open: true, theme: 'av-sage', avatar: 'D', is_concept: false },
+    { id: 't2', business_name: 'Suite 2 — placeholder', suite_number: '—',          services: ['Pedicure','Manicure','Lash'], hero_photo_url: '',                              bio: 'Placeholder card while Laura confirms the tenant lineup.', status: 'active', open: true, theme: 'av-clay', avatar: 'W', is_concept: true },
+    { id: 't3', business_name: 'Suite 3 — placeholder', suite_number: '—',          services: ['Pedicure','Spa'],             hero_photo_url: '',                              bio: 'Placeholder card while Laura confirms the tenant lineup.', status: 'active', open: true, theme: 'av-sand', avatar: 'S', is_concept: true }
+  ];
+  function readLocalTenants() {
+    try {
+      const raw = localStorage.getItem('ss_tenants_v1');
+      if (!raw) return null;
+      const arr = JSON.parse(raw);
+      if (!Array.isArray(arr) || !arr.length) return null;
+      // Admin shape → kiosk renderer shape
+      return arr.filter(t => t.status !== 'archived').map(t => ({
+        id: t.id,
+        business_name: t.name,
+        suite_number: (t.suite || '').replace(/^Suite\s+/i, ''),
+        services: t.services || [],
+        hero_photo_url: t.photo || '',
+        bio: t.bio || '',
+        status: t.status || 'active',
+        open: t.open !== false,
+        theme: t.theme || 'av-stone',
+        avatar: t.avatar || (t.name || '?')[0],
+        is_concept: !!t.is_concept
+      }));
+    } catch { return null; }
+  }
+  function getTenants() { return Promise.resolve(readLocalTenants() || SEED_TENANTS); }
+  function getStudio()  { return Promise.resolve({ owner_note: '— Laura', about_text: 'Salon Plus Studio Suites — independent studios under one roof.' }); }
+
+  /* ---------- Static welcome (no crossfade, no wake-on-touch) ----------
+     The kiosk is intentionally locked on the corridor / hallway view per Anne.
+     The wake / sleep / view-routing scaffolding below is left in place so we
+     can re-enable interaction later by uncommenting the listeners. */
+  // Photo crossfade disabled — only the corridor photo shows.
+  // const slides = document.querySelectorAll('#attract .attract-slide');
+  // let slideIdx = 0;
+  // setInterval(() => {
+  //   slides[slideIdx].classList.remove('is-on');
+  //   slideIdx = (slideIdx + 1) % slides.length;
+  //   slides[slideIdx].classList.add('is-on');
+  // }, 6500);
+
+  // Wake / sleep listeners disabled — touching the screen does nothing.
+  // const attract = document.getElementById('attract');
+  // const app = document.getElementById('app');
+  // attract.addEventListener('click', wake);
+  // attract.addEventListener('touchstart', wake, { passive: true });
+
+  /* ---------- Clock ---------- */
+  function tickClock() {
+    const d = new Date();
+    document.getElementById('clock').textContent =
+      d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  }
+  tickClock();
+  setInterval(tickClock, 30_000);
+
+  /* ---------- View routing ---------- */
+  function showView(v) {
+    document.querySelectorAll('.view').forEach(el => el.hidden = (el.id !== 'view-' + v));
+    document.querySelectorAll('.menu-btn').forEach(b => b.classList.toggle('is-active', b.dataset.view === v));
+  }
+  document.querySelectorAll('.menu-btn').forEach(btn => {
+    btn.addEventListener('click', () => showView(btn.dataset.view));
+  });
+
+  /* ---------- Render tenants from data layer ---------- */
+  function tenantCard(t) {
+    const open = t.status === 'active' || t.open === true;
+    const photo = t.hero_photo_url || t.photo || '';
+    const name = t.business_name || t.name || 'Studio';
+    const monogram = (t.avatar || name).trim()[0]?.toUpperCase() || '?';
+    const themeClass = t.theme || 'av-stone';
+    const services = (t.services || t.tags || []).slice(0,2).join(' · ');
+    const suite = t.suite_number ? `Suite ${t.suite_number}` : (t.suite || '');
+
+    const testPill = t.is_concept ? `<span class="test-pill">Test</span>` : '';
+
+    const visual = photo
+      ? `<div class="tenant-photo" style="background-image: url('${photo}');">`
+      : `<div class="tenant-photo ${themeClass}" style="display:grid; place-items:center; color: var(--cream-on-dark); font-family: 'Fraunces', serif; font-size: 2.4rem; letter-spacing: -0.02em;">${monogram}`;
+
+    return `
+      <div class="tenant-card" role="button" tabindex="0">
+        ${visual}
+          <span class="status ${open ? 'open' : 'closed'}">
+            <span class="dot"></span>${open ? 'Open' : 'Closed'}
+          </span>
+          ${testPill}
+        </div>
+        <div>
+          <div class="tenant-name">${name}</div>
+          <div class="tenant-service">${services}</div>
+          ${suite ? `<div class="tenant-meta" style="margin-top:6px;">${suite}</div>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  getTenants().then(tenants => {
+    const grid = document.getElementById('tenantGrid');
+    const nowGrid = document.getElementById('nowGrid');
+    const dirCount = document.getElementById('dir-count');
+    const nowCount = document.getElementById('now-count');
+
+    if (!tenants || tenants.length === 0) {
+      grid.innerHTML = `<div style="color:var(--cream-50);font-family:'Fraunces',serif;font-style:italic;">Tenants will populate from the data layer.</div>`;
+      return;
+    }
+
+    grid.innerHTML = tenants.map(tenantCard).join('');
+    const open = tenants.filter(t => (t.status === 'active' || t.open === true));
+    nowGrid.innerHTML = open.length
+      ? open.map(tenantCard).join('')
+      : `<div style="color:var(--cream-50);font-family:'Fraunces',serif;font-style:italic;">No studios are open right now.</div>`;
+    dirCount.textContent = tenants.length;
+    nowCount.textContent = open.length;
+  }).catch(() => {
+    document.getElementById('tenantGrid').innerHTML =
+      `<div style="color:var(--cream-50);font-family:'Fraunces',serif;font-style:italic;">Couldn't load tenants. Check Supabase config.</div>`;
+  });
+
+  getStudio().then(s => {
+    if (s && s.owner_note) {
+      document.getElementById('ownerNote').innerHTML = `
+        <p>${s.about_text || 'Salon Plus Studio Suites is home to a careful group of independent artists.'}</p>
+        <div class="owner-sig">${s.owner_note}</div>
+      `;
+    }
+  }).catch(() => {});
+</script>
+
+</body>
+</html>

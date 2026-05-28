@@ -4,36 +4,78 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
+<<<<<<< Updated upstream
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 <meta name="theme-color" content="#F5EDE0" />
 <title>Studio Soulutions — Cedar Lane Suites</title>
+=======
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="theme-color" content="#0e0c0a" />
+<title>Studio Soulutions — Salon Plus Studio Suites</title>
+>>>>>>> Stashed changes
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+/* =====================================================================
+   Studio Soulutions — Mobile (light, neutral, taupe + sage)
+   ===================================================================== */
 :root {
-  --bg: #F5EDE0;
-  --surface: #FBF6EE;
-  --surface-2: #EFE4D2;
-  --cream: #FFFBF4;
-  --ink: #3D3530;
-  --ink-muted: #8B7E70;
-  --ink-soft: #B8AB9C;
-  --sage: #8B9A7E;
-  --sage-deep: #6B7A5F;
-  --sage-soft: #C5D0B8;
-  --clay: #C97B5A;
-  --clay-deep: #A8593E;
-  --clay-soft: #E8C8B5;
-  --sand: #D4C4A8;
-  --line: #E5D9C3;
-  --shadow: 0 1px 2px rgba(61, 53, 48, 0.04), 0 4px 16px rgba(61, 53, 48, 0.06);
-  --shadow-lift: 0 4px 12px rgba(61, 53, 48, 0.08), 0 12px 32px rgba(61, 53, 48, 0.10);
+  /* Surfaces */
+  --bg:           #F5EDE0;       /* warm sand cream — primary surface */
+  --bg-2:         #EFE4D2;
+  --bg-3:         #E5D9C3;
+  --surface:      #FBF6EE;
+  --surface-2:    #FFFBF4;
+  /* Text */
+  --ink:          #3D3530;
+  --ink-soft:     #6B6357;
+  --ink-faint:    #8B7E70;
+  --ink-ghost:    #B8AB9C;
+  /* Accents */
+  --sage:         #8B9A7E;
+  --sage-deep:    #6B7A5F;
+  --sage-soft:    #C5D0B8;
+  --taupe:        #B5A795;
+  --taupe-deep:   #8B7E6A;
+  --taupe-soft:   #D9CBB8;
+  --clay:         #C97B5A;
+  --clay-deep:    #A8593E;
+  --clay-soft:    #E8C8B5;
+  /* Lines */
+  --line:         #E5D9C3;
+  --line-2:       #D4C4A8;
+  /* Legacy aliases — let existing markup auto-lighten. Bumped alphas so cards
+     and buttons have clear contrast against the cream bg. */
+  --cream:        var(--ink);
+  --cream-soft:   var(--surface);
+  --ink-on-cream: var(--surface-2);
+  --cream-04: rgba(61,53,48,0.05);
+  --cream-06: rgba(61,53,48,0.07);
+  --cream-10: rgba(61,53,48,0.11);
+  --cream-15: rgba(61,53,48,0.15);
+  --cream-20: rgba(61,53,48,0.20);
+  --cream-40: rgba(61,53,48,0.48);
+  --cream-50: rgba(61,53,48,0.58);
+  --cream-70: rgba(61,53,48,0.80);
+
+  --shadow:       0 2px 4px rgba(61,53,48,0.10), 0 10px 28px rgba(61,53,48,0.16);
+  --shadow-lift:  0 6px 18px rgba(61,53,48,0.18), 0 24px 48px rgba(61,53,48,0.22);
 }
+
+/* Lift treatment for the key clickable surfaces so they stand off the cream bg */
+.menu-card, .tenant-card, .directory-row, .dyk-card, .now-strip, .pair-card {
+  box-shadow: var(--shadow);
+}
+.menu-card:active, .tenant-card:active, .directory-row:active {
+  box-shadow: var(--shadow-lift);
+}
+/* Header lift so the top nav reads as elevated from the page */
+.app-header, .bottom-nav { box-shadow: var(--shadow); }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 html, body {
   background: var(--bg);
-  color: var(--ink);
+  color: var(--cream);
   font-family: 'Inter', -apple-system, system-ui, sans-serif;
   font-size: 15px;
   line-height: 1.5;
@@ -45,63 +87,71 @@ body {
   max-width: 440px;
   margin: 0 auto;
   min-height: 100vh;
-  padding-bottom: 88px;
+  padding-bottom: 92px;
   position: relative;
+  background: var(--bg);
+  /* faint sage wash at the top edge — calming, natural */
+  background-image:
+    radial-gradient(90% 30% at 80% 0%, rgba(139,154,126,0.08) 0%, transparent 70%);
+  background-attachment: fixed;
 }
 
-.serif { font-family: 'Fraunces', Georgia, serif; font-weight: 500; letter-spacing: -0.01em; }
+.serif    { font-family: 'Fraunces', Georgia, serif; font-weight: 500; letter-spacing: -0.01em; }
+.serif-it { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-weight: 400; }
+.eyebrow {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 600;
+  color: var(--cream-50);
+}
 
 /* HEADER */
 .app-header {
   position: sticky;
   top: 0;
-  background: rgba(245, 237, 224, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(245,237,224,0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   padding: 14px 20px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   z-index: 50;
-  border-bottom: 1px solid rgba(229, 217, 195, 0.6);
+  border-bottom: 1px solid var(--line);
 }
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+.brand { display: flex; align-items: center; gap: 10px; }
 .brand-mark {
   width: 32px; height: 32px;
-  background: var(--ink);
-  color: var(--cream);
+  background: var(--cream);
+  color: var(--ink-on-cream);
   border-radius: 10px;
   display: grid; place-items: center;
-  font-family: 'Fraunces', serif;
-  font-weight: 600;
+  font-family: 'Fraunces', serif; font-weight: 600;
   font-size: 16px;
 }
 .brand-name {
   font-family: 'Fraunces', serif;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 17px;
-  color: var(--ink);
+  color: var(--cream);
   letter-spacing: -0.01em;
 }
 .brand-name em {
-  font-style: italic;
-  font-weight: 400;
-  color: var(--clay-deep);
+  font-style: italic; font-weight: 400;
+  color: var(--taupe-deep);
 }
 .header-action {
   width: 38px; height: 38px;
-  background: var(--surface);
-  border: 1px solid var(--line);
+  background: var(--cream-10);
+  border: 1px solid var(--line-2);
   border-radius: 12px;
   display: grid; place-items: center;
-  color: var(--ink);
+  color: var(--cream);
   font-size: 16px;
   position: relative;
   cursor: pointer;
+  backdrop-filter: blur(10px);
 }
 .header-action .badge {
   position: absolute;
@@ -109,7 +159,7 @@ body {
   background: var(--clay);
   color: var(--cream);
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   min-width: 16px; height: 16px;
   padding: 0 4px;
   border-radius: 8px;
@@ -117,52 +167,150 @@ body {
 }
 
 /* VIEWS */
-.view { display: none; padding: 20px 20px 32px; }
+.view { display: none; padding: 16px 20px 32px; }
 .view.active { display: block; animation: fade 0.25s ease; }
 @keyframes fade {
   from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* DISCOVER — WELCOME */
-.welcome {
-  background: linear-gradient(135deg, #EFE4D2 0%, #E5D5B8 100%);
-  border-radius: 20px;
-  padding: 22px;
-  margin-bottom: 28px;
+/* DISCOVER — MENU CARDS (kiosk-style, mobile-shaped) */
+.menu-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.menu-card {
   position: relative;
+  background: var(--cream-06);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  color: var(--cream);
+  font-family: inherit;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
   overflow: hidden;
 }
-.welcome::before {
+.menu-card:active { transform: scale(0.985); background: var(--cream-10); }
+.menu-card::after {
   content: '';
-  position: absolute;
-  top: -40px; right: -40px;
-  width: 140px; height: 140px;
-  background: radial-gradient(circle, rgba(139, 154, 126, 0.25) 0%, transparent 70%);
-  border-radius: 50%;
+  position: absolute; right: 18px; top: 50%;
+  transform: translateY(-50%);
+  width: 6px; height: 6px;
+  border-right: 1.5px solid var(--cream-40);
+  border-top: 1.5px solid var(--cream-40);
+  transform: translateY(-50%) rotate(45deg);
 }
-.welcome-eyebrow {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--sage-deep);
-  font-weight: 600;
-  margin-bottom: 8px;
+.menu-card .mc-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: var(--cream-06);
+  border: 1px solid var(--line);
+  display: grid; place-items: center;
+  color: var(--cream);
+  flex-shrink: 0;
 }
-.welcome h1 {
+.menu-card.with-photo .mc-icon {
+  background-size: cover;
+  background-position: center;
+  border-color: var(--line-2);
+}
+.menu-card .mc-body { flex: 1; min-width: 0; padding-right: 16px; }
+.menu-card .mc-label {
   font-family: 'Fraunces', serif;
   font-weight: 500;
-  font-size: 26px;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  color: var(--cream);
   line-height: 1.15;
-  color: var(--ink);
-  letter-spacing: -0.02em;
-  margin-bottom: 6px;
+}
+.menu-card .mc-meta {
+  margin-top: 3px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  color: var(--cream-50);
+  display: flex; align-items: center; gap: 6px;
+}
+.menu-card .mc-meta.open { color: var(--sage-deep); }
+.menu-card .mc-meta .pulse-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--sage-deep); position: relative;
+}
+.menu-card .mc-meta .pulse-dot::after {
+  content: '';
+  position: absolute; inset: -3px;
+  border-radius: 50%;
+  background: var(--sage-deep); opacity: 0.3;
+  animation: pulse 2s ease-out infinite;
+}
+.menu-card.is-clay   { background: linear-gradient(180deg, rgba(216,182,158,0.18) 0%, rgba(245,237,224,0.50) 100%); }
+.menu-card.is-sage   { background: linear-gradient(180deg, rgba(197,208,184,0.10) 0%, rgba(245,237,224,0.06) 100%); }
+
+/* DISCOVER — section divider */
+.discover-divider {
+  margin: 28px -20px 16px;
+  padding: 0 20px;
+  display: flex; align-items: center; gap: 14px;
+}
+.discover-divider .line {
+  flex: 1; height: 1px;
+  background: var(--line);
+}
+.discover-divider .lbl {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-weight: 700;
+  color: var(--cream-50);
+}
+
+/* DISCOVER — WELCOME (corridor photo, dark wash) */
+.welcome {
   position: relative;
+  min-height: 240px;
+  padding: 96px 20px 22px;
+  margin: -16px -20px 18px;
+  border-radius: 0 0 28px 28px;
+  overflow: hidden;
+  /* Light wash so the photo breathes — calming, beauty-industry-appropriate */
+  background-image:
+    radial-gradient(90% 60% at 80% 10%, rgba(139,154,126,0.15) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(245,237,224,0.12) 0%, rgba(245,237,224,0.65) 60%, rgba(245,237,224,0.96) 100%),
+    url('assets/photos/1000040457.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.welcome .eyebrow {
+  color: var(--cream-50);
+  letter-spacing: 0.22em;
+  margin-bottom: 10px;
+}
+.welcome h1 {
+  font-family: 'Fraunces', serif; font-weight: 500;
+  font-size: 30px; line-height: 1.05;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+}
+.welcome h1 em {
+  font-style: italic; font-weight: 400; color: var(--taupe-deep);
 }
 .welcome p {
+  margin-top: 10px;
   font-size: 14px;
-  color: var(--ink-muted);
-  position: relative;
+  color: var(--cream-70);
 }
 
 /* SECTION HEADERS */
@@ -170,31 +318,29 @@ body {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin: 28px 0 14px;
+  margin: 24px 0 12px;
 }
 .section-head h2 {
-  font-family: 'Fraunces', serif;
-  font-weight: 500;
-  font-size: 18px;
-  color: var(--ink);
+  font-family: 'Fraunces', serif; font-weight: 500;
+  font-size: 19px; color: var(--cream);
   letter-spacing: -0.01em;
 }
 .section-head .link {
   font-size: 13px;
   color: var(--sage-deep);
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
 }
 .section-eyebrow {
   font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--ink-soft);
+  letter-spacing: 0.18em;
+  color: var(--cream-50);
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
-/* DID YOU KNOW CAROUSEL */
+/* DID YOU KNOW — horizontal carousel, glassy cards */
 .dyk-scroll {
   display: flex;
   gap: 12px;
@@ -210,32 +356,46 @@ body {
 .dyk-card {
   flex: 0 0 78%;
   scroll-snap-align: start;
-  background: var(--cream);
-  border-radius: 18px;
-  padding: 18px;
+  background: var(--cream-06);
   border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 18px;
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(10px);
 }
-.dyk-card[data-theme="sage"] { background: linear-gradient(160deg, #DAE4CC 0%, #C5D0B8 100%); }
-.dyk-card[data-theme="clay"] { background: linear-gradient(160deg, #F0D5C2 0%, #E8C8B5 100%); }
-.dyk-card[data-theme="sand"] { background: linear-gradient(160deg, #EFE4D2 0%, #DCC9A8 100%); }
+.dyk-card[data-theme="sage"]::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(80% 60% at 0% 0%, rgba(197,208,184,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.dyk-card[data-theme="clay"]::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(80% 60% at 100% 0%, rgba(181,167,149,0.20) 0%, transparent 70%);
+  pointer-events: none;
+}
+.dyk-card[data-theme="sand"]::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(70% 60% at 50% 0%, rgba(212,196,168,0.10) 0%, transparent 70%);
+  pointer-events: none;
+}
 .dyk-eyebrow {
   font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.20em;
   font-weight: 700;
-  color: var(--ink);
-  opacity: 0.5;
+  color: var(--cream-50);
   margin-bottom: 10px;
+  position: relative;
 }
 .dyk-card p {
-  font-family: 'Fraunces', serif;
-  font-weight: 400;
-  font-size: 17px;
-  line-height: 1.35;
-  color: var(--ink);
-  letter-spacing: -0.01em;
+  font-family: 'Fraunces', serif; font-weight: 400;
+  font-size: 17px; line-height: 1.35;
+  color: var(--cream); letter-spacing: -0.01em;
+  position: relative;
 }
 .dyk-card .dyk-link {
   display: inline-flex;
@@ -244,29 +404,80 @@ body {
   margin-top: 12px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--ink);
+  color: var(--clay-deep);
   text-decoration: underline;
-  text-decoration-color: rgba(61, 53, 48, 0.3);
+  text-decoration-color: rgba(168,89,62,0.30);
   text-underline-offset: 3px;
+  position: relative;
 }
 
-/* TENANT CARDS — FEATURED */
+/* TENANT CARDS — FEATURED (glassy, with photo) */
 .featured-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 .tenant-card {
-  background: var(--cream);
-  border-radius: 16px;
+  background: var(--cream-06);
   border: 1px solid var(--line);
+  border-radius: 18px;
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease, background 0.2s ease;
+  backdrop-filter: blur(10px);
 }
-.tenant-card:active { transform: scale(0.98); box-shadow: var(--shadow-lift); }
+.tenant-card:active { transform: scale(0.985); background: var(--cream-10); }
+.tenant-photo {
+  aspect-ratio: 4 / 3;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--bg-3);
+  position: relative;
+}
+/* Concept / test data pill — appears on every surface so the unconfirmed
+   tenants read as placeholders, not real bookings. */
+.test-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px dashed var(--taupe-deep);
+  background: rgba(217,203,184,0.45);
+  color: var(--taupe-deep);
+  white-space: nowrap;
+}
+.test-pill.on-photo {
+  position: absolute; right: 8px; top: 8px;
+  background: rgba(245,237,224,0.85);
+  backdrop-filter: blur(8px);
+}
+.tenant-photo .status-pill {
+  position: absolute; left: 8px; bottom: 8px;
+  background: rgba(245,237,224,0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--cream-20);
+  color: var(--cream);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 999px;
+  display: flex; align-items: center; gap: 4px;
+}
+.tenant-photo .status-pill.open  { color: var(--sage-deep); }
+.tenant-photo .status-pill.closed{ color: var(--cream-50); }
+.tenant-photo .status-pill .dot {
+  width: 5px; height: 5px; border-radius: 50%; background: currentColor;
+}
 .tenant-avatar {
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   display: grid;
   place-items: center;
   font-family: 'Fraunces', serif;
@@ -276,53 +487,47 @@ body {
   color: var(--cream);
   position: relative;
 }
-.tenant-card-body {
-  padding: 12px 14px 14px;
-}
+.tenant-card-body { padding: 12px 14px 14px; }
 .tenant-name {
-  font-family: 'Fraunces', serif;
-  font-weight: 500;
-  font-size: 15px;
-  color: var(--ink);
+  font-family: 'Fraunces', serif; font-weight: 500;
+  font-size: 15px; color: var(--cream);
   letter-spacing: -0.01em;
   margin-bottom: 2px;
 }
-.tenant-service {
-  font-size: 12px;
-  color: var(--ink-muted);
-}
+.tenant-service { font-size: 12px; color: var(--cream-70); }
 .tenant-suite {
-  font-size: 11px;
-  color: var(--ink-soft);
-  margin-top: 4px;
-  font-weight: 500;
+  font-size: 10px; color: var(--cream-50);
+  margin-top: 5px;
+  font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-/* AVATAR COLOR THEMES — earthy gradients with monogram */
-.av-sage { background: linear-gradient(135deg, #9CAB91 0%, #6B7A5F 100%); }
-.av-clay { background: linear-gradient(135deg, #D08C6B 0%, #A8593E 100%); }
-.av-sand { background: linear-gradient(135deg, #C9B68F 0%, #9A8866 100%); }
-.av-rose { background: linear-gradient(135deg, #C99B95 0%, #A07570 100%); }
-.av-moss { background: linear-gradient(135deg, #7A8A6B 0%, #4F5C44 100%); }
-.av-rust { background: linear-gradient(135deg, #B86A4F 0%, #8B4732 100%); }
-.av-bone { background: linear-gradient(135deg, #D5C5A8 0%, #A89578 100%); color: var(--ink) !important; }
-.av-stone { background: linear-gradient(135deg, #9C9489 0%, #6B645A 100%); }
-.av-fern { background: linear-gradient(135deg, #8FA888 0%, #5E7558 100%); }
-.av-amber { background: linear-gradient(135deg, #C9A66B 0%, #97783D 100%); }
+/* Earthy gradient placeholders for tenants without photos (dark-toned) */
+.av-sage  { background: linear-gradient(135deg, #C5D0B8 0%, #8B9A7E 100%); color: var(--ink); }
+.av-clay  { background: linear-gradient(135deg, #E8C8B5 0%, #C97B5A 100%); color: var(--ink); }
+.av-sand  { background: linear-gradient(135deg, #E5D9C3 0%, #B5A795 100%); color: var(--ink); }
+.av-rose  { background: linear-gradient(135deg, #E2C5C0 0%, #B89090 100%); color: var(--ink); }
+.av-moss  { background: linear-gradient(135deg, #B5C5A5 0%, #6B7A5F 100%); color: var(--ink); }
+.av-rust  { background: linear-gradient(135deg, #D4A693 0%, #A8593E 100%); color: var(--ink); }
+.av-stone { background: linear-gradient(135deg, #D4C4A8 0%, #8B7E70 100%); color: var(--ink); }
+.av-fern  { background: linear-gradient(135deg, #B5C5A5 0%, #5E7558 100%); color: var(--ink); }
+.av-amber { background: linear-gradient(135deg, #E8D5A5 0%, #B59055 100%); color: var(--ink); }
+.av-bone  { background: linear-gradient(135deg, #F0E8D8 0%, #B8AB9C 100%); color: var(--ink); }
 
 /* CURRENTLY HERE */
 .now-strip {
-  background: var(--cream);
+  background: var(--cream-06);
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 14px 16px;
   display: flex;
   align-items: center;
   gap: 12px;
+  backdrop-filter: blur(10px);
 }
 .now-dot {
   width: 8px; height: 8px;
-  background: var(--sage);
+  background: var(--sage-deep);
   border-radius: 50%;
   position: relative;
   flex-shrink: 0;
@@ -332,21 +537,17 @@ body {
   position: absolute;
   inset: -4px;
   border-radius: 50%;
-  background: var(--sage);
+  background: var(--sage-deep);
   opacity: 0.3;
   animation: pulse 2s ease-out infinite;
 }
 @keyframes pulse {
-  0% { transform: scale(1); opacity: 0.3; }
-  100% { transform: scale(2.2); opacity: 0; }
+  0%   { transform: scale(1);   opacity: 0.3; }
+  100% { transform: scale(2.4); opacity: 0;   }
 }
-.now-text {
-  flex: 1;
-  font-size: 13px;
-  color: var(--ink);
-}
+.now-text { flex: 1; font-size: 13px; color: var(--cream); }
 .now-text strong { font-weight: 600; }
-.now-text small { color: var(--ink-muted); font-size: 12px; }
+.now-text small  { color: var(--cream-50); font-size: 12px; }
 
 /* DIRECTORY VIEW */
 .search-wrap {
@@ -355,23 +556,24 @@ body {
 }
 .search-input {
   width: 100%;
-  background: var(--surface);
+  background: var(--cream-06);
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: 13px 16px 13px 42px;
   font-size: 14px;
   font-family: inherit;
-  color: var(--ink);
+  color: var(--cream);
   outline: none;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, background 0.2s ease;
+  backdrop-filter: blur(10px);
 }
-.search-input:focus { border-color: var(--sage); }
-.search-input::placeholder { color: var(--ink-soft); }
+.search-input:focus { border-color: var(--clay-soft); background: var(--cream-10); }
+.search-input::placeholder { color: var(--cream-40); }
 .search-icon {
   position: absolute;
   left: 14px; top: 50%;
   transform: translateY(-50%);
-  color: var(--ink-soft);
+  color: var(--cream-40);
   pointer-events: none;
 }
 
@@ -387,20 +589,21 @@ body {
 .chip {
   flex-shrink: 0;
   padding: 8px 14px;
-  background: var(--surface);
+  background: var(--cream-06);
   border: 1px solid var(--line);
   border-radius: 999px;
   font-size: 13px;
   font-weight: 500;
-  color: var(--ink-muted);
+  color: var(--cream-70);
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
+  backdrop-filter: blur(10px);
 }
 .chip.active {
-  background: var(--ink);
-  color: var(--cream);
-  border-color: var(--ink);
+  background: var(--cream);
+  color: var(--ink-on-cream);
+  border-color: var(--cream);
 }
 
 /* DIRECTORY LIST */
@@ -410,19 +613,20 @@ body {
   gap: 10px;
 }
 .directory-row {
-  background: var(--cream);
+  background: var(--cream-06);
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 12px;
   display: flex;
   align-items: center;
   gap: 14px;
   cursor: pointer;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, background 0.2s ease;
+  backdrop-filter: blur(10px);
 }
-.directory-row:active { transform: scale(0.99); }
+.directory-row:active { transform: scale(0.99); background: var(--cream-10); }
 .row-avatar {
-  width: 56px; height: 56px;
+  width: 60px; height: 60px;
   border-radius: 14px;
   display: grid;
   place-items: center;
@@ -432,52 +636,55 @@ body {
   color: var(--cream);
   flex-shrink: 0;
   letter-spacing: -0.02em;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  position: relative;
 }
+.row-avatar.has-photo { font-size: 0; }
 .row-meta { flex: 1; min-width: 0; }
 .row-meta .tenant-name { font-size: 15px; }
 .row-meta .row-tags {
-  display: flex;
-  gap: 6px;
-  margin-top: 4px;
+  display: flex; gap: 6px;
+  margin-top: 5px;
   flex-wrap: wrap;
 }
 .row-tag {
   font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-weight: 600;
-  color: var(--ink-muted);
-  background: var(--surface-2);
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--cream-50);
+  background: var(--cream-04);
+  border: 1px solid var(--line);
   padding: 3px 7px;
   border-radius: 4px;
 }
 .row-status {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--sage-deep);
-  font-weight: 600;
+  font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
 }
-.row-status.away { color: var(--ink-soft); }
+.row-status.away { color: var(--cream-40); }
 .row-status .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
 /* SAVED */
 .empty-state {
   text-align: center;
   padding: 60px 20px;
-  color: var(--ink-muted);
+  color: var(--cream-50);
 }
-.empty-state .em-icon {
-  font-size: 36px;
-  margin-bottom: 12px;
-  opacity: 0.5;
-}
+.empty-state .em-icon { font-size: 36px; margin-bottom: 12px; opacity: 0.5; }
 .empty-state .em-title {
   font-family: 'Fraunces', serif;
   font-size: 17px;
-  color: var(--ink);
+  color: var(--cream);
   margin-bottom: 6px;
 }
 .empty-state p { font-size: 13px; }
@@ -489,9 +696,9 @@ body {
   transform: translateX(-50%);
   width: 100%;
   max-width: 440px;
-  background: rgba(251, 246, 238, 0.96);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(245,237,224,0.88);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   border-top: 1px solid var(--line);
   display: flex;
   padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
@@ -507,22 +714,22 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--ink-soft);
+  color: var(--cream-40);
   font-family: inherit;
   font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-weight: 700;
+  letter-spacing: 0.10em;
   text-transform: uppercase;
   transition: color 0.15s ease;
 }
-.nav-item.active { color: var(--ink); }
+.nav-item.active { color: var(--cream); }
 .nav-item svg { width: 22px; height: 22px; }
 
 /* TENANT PROFILE SHEET */
 .sheet-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(61, 53, 48, 0.4);
+  background: rgba(61,53,48,0.35);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
@@ -538,7 +745,8 @@ body {
   max-width: 440px;
   max-height: 92vh;
   background: var(--bg);
-  border-radius: 24px 24px 0 0;
+  border-top: 1px solid var(--line);
+  border-radius: 28px 28px 0 0;
   z-index: 201;
   transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
   overflow-y: auto;
@@ -549,7 +757,7 @@ body {
 .sheet-handle {
   position: sticky;
   top: 0;
-  background: var(--bg);
+  background: linear-gradient(180deg, var(--bg) 60%, transparent 100%);
   padding: 10px 0 6px;
   display: grid;
   place-items: center;
@@ -558,28 +766,28 @@ body {
 .sheet-handle::before {
   content: '';
   width: 38px; height: 4px;
-  background: var(--ink-soft);
+  background: var(--cream-40);
   border-radius: 2px;
-  opacity: 0.4;
 }
 .sheet-close {
   position: absolute;
   top: 10px; right: 16px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  width: 32px; height: 32px;
+  background: var(--cream-10);
+  border: 1px solid var(--line-2);
+  width: 34px; height: 34px;
   border-radius: 50%;
   display: grid; place-items: center;
   cursor: pointer;
-  color: var(--ink);
+  color: var(--cream);
   font-size: 16px;
   z-index: 3;
+  backdrop-filter: blur(10px);
 }
 
 .profile-hero {
   margin: 0 20px;
-  height: 180px;
-  border-radius: 20px;
+  height: 230px;
+  border-radius: 22px;
   display: grid;
   place-items: center;
   font-family: 'Fraunces', serif;
@@ -589,26 +797,47 @@ body {
   letter-spacing: -0.02em;
   position: relative;
   overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--line);
 }
+.profile-hero.has-photo { font-size: 0; }
 .profile-hero::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.12) 100%);
+  background: linear-gradient(to bottom, transparent 40%, rgba(61,53,48,0.12) 100%);
 }
+.profile-hero .photo-tag {
+  position: absolute; left: 14px; bottom: 14px;
+  background: rgba(245,237,224,0.88);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--cream-20);
+  color: var(--cream);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 999px;
+  z-index: 2;
+  display: flex; align-items: center; gap: 6px;
+}
+.profile-hero .photo-tag.open   { color: var(--sage-deep); }
+.profile-hero .photo-tag.closed { color: var(--cream-40); }
+.profile-hero .photo-tag .dot   { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 
 .profile-body { padding: 22px 20px 40px; }
 .profile-name {
-  font-family: 'Fraunces', serif;
-  font-weight: 500;
-  font-size: 26px;
+  font-family: 'Fraunces', serif; font-weight: 500;
+  font-size: 28px;
   letter-spacing: -0.02em;
-  color: var(--ink);
-  margin-bottom: 4px;
+  color: var(--cream);
+  margin-bottom: 6px;
 }
 .profile-service {
   font-size: 14px;
-  color: var(--ink-muted);
+  color: var(--cream-70);
   margin-bottom: 14px;
 }
 .profile-meta {
@@ -616,22 +845,21 @@ body {
   gap: 16px;
   margin-bottom: 18px;
   font-size: 13px;
-  color: var(--ink);
+  color: var(--cream);
 }
-.profile-meta span {
-  display: flex; align-items: center; gap: 5px;
-}
-.profile-meta strong { color: var(--ink); font-weight: 600; }
+.profile-meta span { display: flex; align-items: center; gap: 5px; }
+.profile-meta strong { color: var(--cream); font-weight: 600; }
 
 .profile-bio {
-  background: var(--cream);
+  background: var(--cream-06);
   border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 14px 16px;
+  border-radius: 16px;
+  padding: 16px;
   font-size: 14px;
-  line-height: 1.55;
-  color: var(--ink);
+  line-height: 1.6;
+  color: var(--cream-70);
   margin-bottom: 18px;
+  backdrop-filter: blur(10px);
 }
 
 .profile-tags {
@@ -639,8 +867,9 @@ body {
   margin-bottom: 22px;
 }
 .profile-tag {
-  background: var(--surface-2);
-  color: var(--ink);
+  background: var(--cream-06);
+  border: 1px solid var(--line);
+  color: var(--cream);
   font-size: 12px;
   font-weight: 500;
   padding: 6px 11px;
@@ -665,32 +894,37 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, background 0.2s ease;
 }
-.btn:active { transform: scale(0.98); }
-.btn-primary { background: var(--ink); color: var(--cream); }
-.btn-secondary {
+.btn:active { transform: scale(0.985); }
+.btn-primary {
   background: var(--cream);
-  color: var(--ink);
-  border: 1px solid var(--line);
-  width: 52px;
+  color: var(--ink-on-cream);
+}
+.btn-secondary {
+  background: var(--cream-10);
+  color: var(--cream);
+  border: 1px solid var(--line-2);
+  width: 54px;
   padding: 15px;
+  backdrop-filter: blur(10px);
 }
-.btn-secondary.saved { background: var(--clay); color: var(--cream); border-color: var(--clay); }
+.btn-secondary.saved {
+  background: var(--clay);
+  color: var(--cream);
+  border-color: var(--clay);
+}
 
-.pair-with {
-  margin-top: 8px;
-}
+.pair-with { margin-top: 8px; }
 .pair-with h3 {
-  font-family: 'Fraunces', serif;
-  font-weight: 500;
-  font-size: 16px;
+  font-family: 'Fraunces', serif; font-weight: 500;
+  font-size: 17px;
   margin-bottom: 4px;
-  color: var(--ink);
+  color: var(--cream);
 }
 .pair-with .sub {
   font-size: 12px;
-  color: var(--ink-muted);
+  color: var(--cream-50);
   margin-bottom: 12px;
 }
 .pair-scroll {
@@ -703,34 +937,38 @@ body {
 }
 .pair-scroll::-webkit-scrollbar { display: none; }
 .pair-card {
-  flex: 0 0 130px;
-  background: var(--cream);
+  flex: 0 0 134px;
+  background: var(--cream-06);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 10px;
   cursor: pointer;
+  backdrop-filter: blur(10px);
 }
 .pair-card .pair-avatar {
   aspect-ratio: 1 / 1;
-  border-radius: 10px;
+  border-radius: 12px;
   display: grid;
   place-items: center;
   font-family: 'Fraunces', serif;
   font-size: 22px;
   color: var(--cream);
   margin-bottom: 8px;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
 }
+.pair-card .pair-avatar.has-photo { font-size: 0; }
 .pair-card .pair-name {
-  font-family: 'Fraunces', serif;
+  font-family: 'Fraunces', serif; font-weight: 500;
   font-size: 13px;
-  font-weight: 500;
-  color: var(--ink);
+  color: var(--cream);
   line-height: 1.2;
 }
 .pair-card .pair-service {
   font-size: 11px;
-  color: var(--ink-muted);
-  margin-top: 2px;
+  color: var(--cream-50);
+  margin-top: 3px;
 }
 
 /* TOAST */
@@ -739,38 +977,57 @@ body {
   bottom: 110px;
   left: 50%;
   transform: translateX(-50%) translateY(20px);
-  background: var(--ink);
-  color: var(--cream);
+  background: var(--cream);
+  color: var(--ink-on-cream);
   padding: 10px 16px;
   border-radius: 999px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   opacity: 0;
   pointer-events: none;
   transition: all 0.25s ease;
   z-index: 300;
   white-space: nowrap;
+  box-shadow: var(--shadow-lift);
 }
 .toast.show {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
 
-/* FOOTER NOTE — prototype only */
+/* PROTO NOTE */
 .proto-note {
   margin-top: 24px;
   padding: 14px 16px;
-  background: rgba(139, 154, 126, 0.12);
-  border: 1px dashed var(--sage);
-  border-radius: 12px;
+  background: var(--cream-04);
+  border: 1px dashed var(--cream-20);
+  border-radius: 14px;
   font-size: 12px;
-  color: var(--sage-deep);
-  line-height: 1.5;
+  color: var(--cream-70);
+  line-height: 1.55;
 }
-.proto-note strong { color: var(--ink); }
+.proto-note strong { color: var(--cream); }
 </style>
 </head>
 <body>
+
+<!-- Back to walkthrough -->
+<a href="../../../Laura-Walkthrough-v1.html" style="
+    position: fixed; top: 14px; left: 14px; z-index: 200;
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(245,237,224,0.94);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(61,53,48,0.12);
+    color: #6B6357;
+    padding: 6px 12px 6px 10px;
+    border-radius: 999px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(61,53,48,0.10), 0 10px 28px rgba(61,53,48,0.14);
+  ">
+  ← Walkthrough
+</a>
 
 <header class="app-header">
   <div class="brand">
@@ -785,35 +1042,168 @@ body {
   </div>
 </header>
 
-<!-- DISCOVER VIEW -->
+<!-- DISCOVER VIEW — card-led splash, mirrors the kiosk menu -->
 <section class="view active" id="view-discover">
   <div class="welcome">
+<<<<<<< Updated upstream
     <div class="welcome-eyebrow">You're inside</div>
     <h1 class="serif">Cedar Lane Suites</h1>
     <p>10 independent studios under one roof. Tap any to learn more.</p>
+=======
+    <div class="eyebrow">You're inside</div>
+    <h1>Salon Plus<br/><em>Studio Suites</em></h1>
+    <p>Independent studios under one roof. Pick a way in.</p>
   </div>
 
-  <div class="section-eyebrow">Did you know?</div>
-  <div class="dyk-scroll" id="dykScroll">
-    <!-- populated by JS -->
+  <div class="menu-stack">
+
+    <!-- Directory -->
+    <button class="menu-card" type="button" onclick="switchView('directory')">
+      <div class="mc-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      </div>
+      <div class="mc-body">
+        <div class="mc-label">Directory</div>
+        <div class="mc-meta"><span id="mc-dir-count">—</span> studios in the building</div>
+      </div>
+    </button>
+
+    <!-- Open right now -->
+    <button class="menu-card is-sage" type="button" onclick="goRightNow()">
+      <div class="mc-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <div class="mc-body">
+        <div class="mc-label">Open right now</div>
+        <div class="mc-meta open"><span class="pulse-dot"></span><span id="mc-now-count">—</span> open · live</div>
+      </div>
+    </button>
+
+    <!-- Available suites (vacancies for lease) -->
+    <button class="menu-card" type="button" onclick="switchView('vacancies')">
+      <div class="mc-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7.5"/><path d="M12 3L3 9.5h18L12 3z"/><path d="M9 22V13h6v9"/></svg>
+      </div>
+      <div class="mc-body">
+        <div class="mc-label">Available suites</div>
+        <div class="mc-meta"><span id="mc-vacancy-count">—</span> open for lease</div>
+      </div>
+    </button>
+
+    <!-- Featured today (rotating tenant) -->
+    <button class="menu-card with-photo is-clay" type="button" id="mcFeatured" onclick="openFeatured()">
+      <div class="mc-icon" id="mcFeaturedIcon"></div>
+      <div class="mc-body">
+        <div class="mc-label" id="mcFeaturedLabel">Featured today</div>
+        <div class="mc-meta" id="mcFeaturedMeta">—</div>
+      </div>
+    </button>
+
+    <!-- Suite map -->
+    <button class="menu-card" type="button" onclick="switchView('map')">
+      <div class="mc-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+      </div>
+      <div class="mc-body">
+        <div class="mc-label">Suite map</div>
+        <div class="mc-meta">You are here</div>
+      </div>
+    </button>
+
+    <!-- From the owner -->
+    <button class="menu-card" type="button" onclick="switchView('owner')">
+      <div class="mc-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <div class="mc-body">
+        <div class="mc-label">From the owner</div>
+        <div class="mc-meta">A note from Laura</div>
+      </div>
+    </button>
+
+    <!-- Saved studios -->
+    <button class="menu-card" type="button" onclick="switchView('saved')">
+      <div class="mc-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="mc-body">
+        <div class="mc-label">Saved studios</div>
+        <div class="mc-meta"><span id="mc-saved-count">0</span> bookmarked</div>
+      </div>
+    </button>
+
   </div>
 
-  <div class="section-head" style="margin-top: 24px;">
-    <h2>Featured today</h2>
-    <span class="link" onclick="switchView('directory')">See all</span>
-  </div>
-  <div class="featured-grid" id="featuredGrid"></div>
+  <!-- Did you know? — ambient content below the menu -->
+  <div class="discover-divider"><div class="line"></div><span class="lbl">Did you know?</span><div class="line"></div></div>
+  <div class="dyk-scroll" id="dykScroll"></div>
+</section>
 
-  <div class="section-head">
-    <h2>Right now</h2>
+<!-- SUITE MAP VIEW -->
+<section class="view" id="view-map">
+  <div class="welcome" style="min-height: 180px; padding-top: 70px;">
+    <div class="eyebrow">Suite map</div>
+    <h1 style="font-size: 26px;">You are <em>here</em></h1>
+    <p>Tap a suite to see who's inside.</p>
   </div>
-  <div class="now-strip">
-    <div class="now-dot"></div>
-    <div class="now-text">
-      <strong>4 studios</strong> have availability in the next hour<br>
-      <small>Tap "Right now" in the directory to filter</small>
-    </div>
+  <div style="
+    margin-top: 18px;
+    background: var(--cream-04);
+    border: 1px dashed var(--line-2);
+    border-radius: 18px;
+    min-height: 380px;
+    display: grid; place-items: center;
+    text-align: center;
+    color: var(--cream-50);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    padding: 20px;
+  ">
+    Interactive floor plan — coming with the kiosk install.<br>
+    For now, browse the Directory for a full list.
+>>>>>>> Stashed changes
   </div>
+</section>
+
+<!-- FROM THE OWNER VIEW -->
+<section class="view" id="view-owner">
+  <div class="welcome" style="
+    min-height: 200px;
+    padding-top: 80px;
+    background-image:
+      radial-gradient(90% 60% at 80% 10%, rgba(139,154,126,0.15) 0%, transparent 60%),
+      linear-gradient(180deg, rgba(245,237,224,0.12) 0%, rgba(245,237,224,0.65) 60%, rgba(245,237,224,0.96) 100%),
+      url('assets/photos/1000040456.jpg');
+  ">
+    <div class="eyebrow">From the owner</div>
+    <h1 style="font-size: 26px;">A note from <em>Laura</em></h1>
+  </div>
+  <div style="
+    margin-top: 18px;
+    background: var(--cream-06);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 18px 20px;
+    color: var(--cream-70);
+    font-size: 14px;
+    line-height: 1.65;
+    backdrop-filter: blur(10px);
+  ">
+    <p>Salon Plus Studio Suites is home to a careful group of independent artists — color, nails, lash, wellness, skin. Each one runs their own room, their own brand, their own way.</p>
+    <p style="margin-top: 12px;">This app exists so that everyone who walks in finds the studio that fits them — not just the one closest to the door.</p>
+    <div style="margin-top: 18px; font-family: 'Fraunces', serif; font-style: italic; color: var(--cream); font-size: 16px;">— Laura</div>
+  </div>
+</section>
+
+<!-- AVAILABLE SUITES VIEW (vacancies for lease) -->
+<section class="view" id="view-vacancies">
+  <div class="welcome" style="min-height: 200px; padding-top: 80px;">
+    <div class="eyebrow">Now leasing</div>
+    <h1 style="font-size: 28px;">Available <em>suites</em></h1>
+    <p>Open rooms in this building. Tap one to see details, then reach out to tour.</p>
+  </div>
+  <div id="vacancyList" class="directory-list" style="margin-top: 12px;"></div>
 </section>
 
 <!-- DIRECTORY VIEW -->
@@ -831,7 +1221,7 @@ body {
     <div class="chip" data-filter="hair">Hair</div>
     <div class="chip" data-filter="skin">Skin</div>
     <div class="chip" data-filter="nails">Nails</div>
-    <div class="chip" data-filter="brows">Brows & Lashes</div>
+    <div class="chip" data-filter="brows">Brows &amp; Lashes</div>
     <div class="chip" data-filter="wellness">Wellness</div>
     <div class="chip" data-filter="makeup">Makeup</div>
   </div>
@@ -854,7 +1244,7 @@ body {
   </div>
 
   <div class="proto-note">
-    <strong>A note on this preview:</strong> everything here is placeholder — the building, the studios, the photos, the "Did You Know?" copy. "Studio Soulutions" and the earthy palette are working ideas, fully swappable once we land on the real ones. Booking, real-time availability, and tenant signup all come next.
+    <strong>A note on this preview:</strong> the lobby corridor and the Dueces Nail Studio card are real Salon Plus content. Every other tenant is a concept placeholder until Laura confirms the lineup and shares photos. "Did you know?" copy is illustrative for now. Booking, real-time availability, and tenant signup all come next.
   </div>
 </section>
 
@@ -887,45 +1277,100 @@ body {
 
 <script>
 // ============ DATA ============
+// Photos with `photo` are real Salon Plus tenants/suites; others use dark earthy gradient placeholders.
 const tenants = [
-  { id: 't1', name: 'Indigo & Oak', service: 'Color & Balayage Specialist', category: 'hair', suite: 'Suite 204', avatar: 'IO', theme: 'av-moss', open: true,
+  // Only Dueces is confirmed real — everyone else is is_concept: true (shows a "Test" pill)
+  { id: 't1', name: 'Dueces Nail Studio', service: 'Manicure · Pedicure · Nail Art', category: 'nails', suite: 'Sage Suite', avatar: 'D', theme: 'av-sage', open: true,
+    is_concept: false,
+    photo: 'assets/photos/1000040455.jpg',
+    bio: 'Sage-walled and softly lit — a quiet, careful place for nails done with intention. Gel, pedicures, nail art. Eight years of practice. Appointments preferred, walk-ins welcome when the chair is open.',
+    tags: ['Gel', 'Pedicure', 'Nail Art', 'Structured Mani'], hours: 'Tue–Sat 10–6' },
+  { id: 't2', name: 'Suite 2 — placeholder', service: 'Pedicure · Lash', category: 'nails', suite: 'Suite (placeholder)', avatar: 'W', theme: 'av-clay', open: true, is_concept: true,
+    photo: 'assets/photos/nails1.png',
+    bio: 'A warm-neutral suite with a hydraulic pedicure chair and full mani bar. Placeholder card while Laura confirms the tenant lineup.',
+    tags: ['Pedicure', 'Manicure', 'Lash'], hours: 'Tue–Sat 10–7' },
+  { id: 't3', name: 'Suite 3 — placeholder', service: 'Pedicure · Spa', category: 'nails', suite: 'Suite (placeholder)', avatar: 'S', theme: 'av-sand', open: true, is_concept: true,
+    photo: 'assets/photos/nails2.png',
+    bio: 'Spa-style pedicure and quick mani service. Placeholder card while Laura confirms the tenant lineup.',
+    tags: ['Pedicure', 'Spa', 'Quick Mani'], hours: 'Tue–Sat 10–6' },
+  { id: 't4', name: 'Indigo & Oak', service: 'Color & Balayage Specialist', category: 'hair', suite: 'Suite 204', avatar: 'IO', theme: 'av-moss', open: true, is_concept: true,
+    photo: 'assets/photos/hair1.png',
     bio: 'Lived-in color, hand-painted balayage, and dimensional brunettes. Specializing in low-maintenance grow-outs for busy clients.',
     tags: ['Balayage', 'Color', 'Cuts', 'Toners', 'Gloss'], hours: 'Tue–Sat 9–6' },
-  { id: 't2', name: 'Verdant Skin Studio', service: 'Facials & Skincare', category: 'skin', suite: 'Suite 212', avatar: 'V', theme: 'av-sage', open: true,
+  { id: 't5', name: 'Verdant Skin Studio', service: 'Facials & Skincare', category: 'skin', suite: 'Suite 212', avatar: 'V', theme: 'av-sage', open: true, is_concept: true,
+    photo: 'assets/photos/facial.png',
     bio: 'Holistic facials with medical-grade results. Custom protocols for acne, hyperpigmentation, and aging skin. Licensed esthetician.',
     tags: ['Facials', 'Dermaplane', 'Chemical Peels', 'LED Therapy'], hours: 'Wed–Sun 10–7' },
-  { id: 't3', name: 'The Lash Loft', service: 'Lash Extensions & Lifts', category: 'brows', suite: 'Suite 210', avatar: 'LL', theme: 'av-rose', open: true,
+  { id: 't6', name: 'The Lash Loft', service: 'Lash Extensions & Lifts', category: 'brows', suite: 'Suite 210', avatar: 'LL', theme: 'av-rose', open: true, is_concept: true,
+    photo: 'assets/photos/lash1.png',
     bio: 'Custom lash sets designed to your eye shape. Classic, hybrid, and volume — plus lifts and tints for low-maintenance days.',
     tags: ['Extensions', 'Lifts', 'Tints', 'Removals'], hours: 'Mon–Sat 9–7' },
-  { id: 't4', name: 'Quiet Hands', service: 'Therapeutic Massage', category: 'wellness', suite: 'Suite 218', avatar: 'Q', theme: 'av-stone', open: false,
-    bio: 'Deep tissue, Swedish, and prenatal massage by a licensed RMT. Quiet space, warm towels, no upselling.',
-    tags: ['Deep Tissue', 'Swedish', 'Prenatal', 'Sports Recovery'], hours: 'Tue–Sat 11–8' },
-  { id: 't5', name: 'Bloom Brow Bar', service: 'Brows, Lamination & Microblading', category: 'brows', suite: 'Suite 206', avatar: 'B', theme: 'av-clay', open: true,
+  { id: 't7', name: 'Bloom Brow Bar', service: 'Brows, Lamination & Microblading', category: 'brows', suite: 'Suite 206', avatar: 'B', theme: 'av-clay', open: true, is_concept: true,
+    photo: 'assets/photos/lash2.png',
     bio: 'Brow shaping done right. Lamination, tinting, henna, and certified microblading. Walk-ins welcome for shaping.',
     tags: ['Shaping', 'Lamination', 'Tinting', 'Microblading'], hours: 'Tue–Sat 10–6' },
-  { id: 't6', name: 'Saltwater Nails', service: 'Manicures, Pedicures, Gel', category: 'nails', suite: 'Suite 220', avatar: 'S', theme: 'av-bone', open: true,
-    bio: 'Clean, gentle nail care. Non-toxic polishes, gel, and structured manicures. Sanitization protocols you can actually see.',
-    tags: ['Gel', 'Structured Mani', 'Pedicure', 'Nail Art'], hours: 'Wed–Sun 10–7' },
-  { id: 't7', name: 'Rooted Wellness', service: 'Reiki & Acupuncture', category: 'wellness', suite: 'Suite 222', avatar: 'R', theme: 'av-fern', open: false,
-    bio: 'Licensed acupuncturist offering treatments for stress, sleep, fertility, and chronic pain. Reiki sessions by appointment.',
-    tags: ['Acupuncture', 'Reiki', 'Cupping', 'Herbs'], hours: 'Mon, Wed, Fri 9–5' },
-  { id: 't8', name: 'Tilde Cosmetics', service: 'Bridal Makeup & Lessons', category: 'makeup', suite: 'Suite 208', avatar: 'T', theme: 'av-rust', open: true,
+  { id: 't8', name: 'Quiet Hands', service: 'Therapeutic Massage', category: 'wellness', suite: 'Suite 218', avatar: 'Q', theme: 'av-stone', open: false, is_concept: true,
+    photo: 'assets/photos/massage1.png',
+    bio: 'Deep tissue, Swedish, and prenatal massage by a licensed RMT. Quiet space, warm towels, no upselling.',
+    tags: ['Deep Tissue', 'Swedish', 'Prenatal', 'Sports Recovery'], hours: 'Tue–Sat 11–8' },
+  { id: 't9', name: 'Tilde Cosmetics', service: 'Bridal Makeup & Lessons', category: 'makeup', suite: 'Suite 208', avatar: 'T', theme: 'av-rust', open: true, is_concept: true,
+    photo: 'assets/photos/makeup.png',
     bio: 'Editorial-trained makeup artist specializing in bridal, special event, and 1:1 personal makeup lessons.',
     tags: ['Bridal', 'Events', 'Lessons', 'Airbrush'], hours: 'By appointment' },
-  { id: 't9', name: 'Finch Hair Studio', service: 'Precision Cuts & Men\'s Grooming', category: 'hair', suite: 'Suite 202', avatar: 'F', theme: 'av-sand', open: true,
+  { id: 't10', name: 'Finch Hair Studio', service: 'Precision Cuts & Men\'s Grooming', category: 'hair', suite: 'Suite 202', avatar: 'F', theme: 'av-sand', open: true, is_concept: true,
+    photo: 'assets/photos/hair2.png',
     bio: 'Sharp cuts for all genders. Men\'s grooming, beard work, and that one good textured cut that grows out beautifully.',
     tags: ['Cuts', 'Men\'s Grooming', 'Beards', 'Styling'], hours: 'Tue–Sat 10–7' },
-  { id: 't10', name: 'Amaranth Aesthetics', service: 'Botox, Fillers & Medspa', category: 'wellness', suite: 'Suite 216', avatar: 'A', theme: 'av-amber', open: false,
+  { id: 't11', name: 'Rooted Wellness', service: 'Reiki & Acupuncture', category: 'wellness', suite: 'Suite 222', avatar: 'R', theme: 'av-fern', open: false, is_concept: true,
+    photo: 'assets/photos/massage2.png',
+    bio: 'Licensed acupuncturist offering treatments for stress, sleep, fertility, and chronic pain. Reiki sessions by appointment.',
+    tags: ['Acupuncture', 'Reiki', 'Cupping', 'Herbs'], hours: 'Mon, Wed, Fri 9–5' },
+  { id: 't12', name: 'Amaranth Aesthetics', service: 'Botox, Fillers & Medspa', category: 'wellness', suite: 'Suite 216', avatar: 'A', theme: 'av-amber', open: false, is_concept: true,
+    photo: 'assets/photos/massage3.png',
     bio: 'Board-certified nurse injector. Conservative, natural-looking results. Botox, dermal fillers, and skin boosters.',
     tags: ['Botox', 'Fillers', 'Skin Boosters', 'Consults'], hours: 'Thu–Sat 11–6' }
 ];
 
+// If the owner admin has saved tenants to localStorage, use those instead of the seed.
+// Admin writes to STORAGE_KEY = 'ss_tenants_v1' — see admin.html.
+(function syncFromAdmin() {
+  try {
+    const stored = JSON.parse(localStorage.getItem('ss_tenants_v1') || 'null');
+    if (Array.isArray(stored) && stored.length) {
+      // Replace the seed array in place so all downstream references see it
+      tenants.splice(0, tenants.length, ...stored);
+    }
+  } catch (e) { /* fall back to seed */ }
+})();
+
+// Vacancies — concept seed for the Available Suites view. Same admin sync.
+let vacancies = [
+  { id: 'v1', suite_number: '108', sqft: 110, monthly_rent: 875,  photo: '', description: 'Front-facing single-station suite. Two large windows. Plumbing for a shampoo station.', available_from: 'July 2026',   contact_note: 'Email the building owner to tour', is_concept: true },
+  { id: 'v2', suite_number: '116', sqft: 140, monthly_rent: 1050, photo: '', description: 'Corner double suite with private storage. Recently renovated walls + flooring.',   available_from: 'August 2026', contact_note: 'Email the building owner to tour', is_concept: true }
+];
+(function syncVacanciesFromAdmin() {
+  try {
+    const stored = JSON.parse(localStorage.getItem('ss_vacancies_v1') || 'null');
+    if (Array.isArray(stored)) {
+      vacancies.splice(0, vacancies.length, ...stored);
+    }
+  } catch (e) { /* fall back to seed */ }
+})();
+
 const didYouKnow = [
+<<<<<<< Updated upstream
   { theme: 'sage', eyebrow: 'Did you know?', text: 'There\'s a licensed massage therapist two doors down from your color appointment.', link: 'See Quiet Hands', linkId: 't4' },
   { theme: 'clay', eyebrow: 'Pair it', text: 'A facial at Verdant + a brow shape at Bloom — both on the 2nd floor, easy walk between.', link: 'See the pairing', linkId: 't2' },
   { theme: 'sand', eyebrow: 'Local secret', text: 'Tilde does 1:1 makeup lessons — perfect for the morning of a wedding day in the building.', link: 'See Tilde', linkId: 't8' },
   { theme: 'sage', eyebrow: 'New here', text: 'Amaranth Aesthetics joined Cedar Lane last month. Botox & fillers from a board-certified RN.', link: 'See Amaranth', linkId: 't10' },
   { theme: 'clay', eyebrow: 'Walk-ins', text: 'Bloom Brow Bar takes walk-ins for brow shaping — usually 15 minutes, no appointment needed.', link: 'See Bloom', linkId: 't5' }
+=======
+  { theme: 'sage', eyebrow: 'Welcome', text: 'Dueces Nail Studio is our newest sage-walled suite — quiet, careful, by appointment.', link: 'See Dueces', linkId: 't1' },
+  { theme: 'clay', eyebrow: 'Pair it', text: 'A facial at Verdant + a brow shape at Bloom — both on the 2nd floor, easy walk between.', link: 'See the pairing', linkId: 't5' },
+  { theme: 'sand', eyebrow: 'Local secret', text: 'Tilde does 1:1 makeup lessons — perfect for the morning of a wedding day in the building.', link: 'See Tilde', linkId: 't9' },
+  { theme: 'sage', eyebrow: 'Did you know?', text: 'There\'s a licensed massage therapist two doors down from your color appointment.', link: 'See Quiet Hands', linkId: 't8' },
+  { theme: 'clay', eyebrow: 'Walk-ins', text: 'Bloom Brow Bar takes walk-ins for brow shaping — usually 15 minutes, no appointment needed.', link: 'See Bloom', linkId: 't7' }
+>>>>>>> Stashed changes
 ];
 
 // ============ STATE ============
@@ -933,6 +1378,43 @@ let savedIds = new Set();
 let activeFilter = 'all';
 let searchTerm = '';
 let currentTenant = null;
+
+// ============ HELPERS ============
+function testPillHTML(t, variant) {
+  if (!t.is_concept) return '';
+  // variant === 'on-photo' floats the pill over a photo or gradient
+  return variant === 'on-photo'
+    ? `<span class="test-pill on-photo">Test</span>`
+    : `<span class="test-pill">Test</span>`;
+}
+
+function avatarHTML(t, size) {
+  // size === 'row' uses .row-avatar, size === 'pair' uses .pair-avatar
+  if (size === 'row') {
+    return t.photo
+      ? `<div class="row-avatar has-photo" style="background-image: url('${t.photo}');"></div>`
+      : `<div class="row-avatar ${t.theme}">${t.avatar}</div>`;
+  }
+  if (size === 'pair') {
+    return t.photo
+      ? `<div class="pair-avatar has-photo" style="background-image: url('${t.photo}');"></div>`
+      : `<div class="pair-avatar ${t.theme}">${t.avatar}</div>`;
+  }
+  // card visual — featured tile
+  const open = isOpenNow(t);
+  if (t.photo) {
+    return `<div class="tenant-photo" style="background-image: url('${t.photo}');">
+              <span class="status-pill ${open ? 'open' : 'closed'}">
+                <span class="dot"></span>${open ? 'Open' : 'Closed'}
+              </span>
+              ${testPillHTML(t, 'on-photo')}
+            </div>`;
+  }
+  return `<div class="tenant-avatar ${t.theme}" style="position:relative;">
+            ${t.avatar}
+            ${testPillHTML(t, 'on-photo')}
+          </div>`;
+}
 
 // ============ RENDER ============
 function renderDYK() {
@@ -946,24 +1428,126 @@ function renderDYK() {
   `).join('');
 }
 
-function renderFeatured() {
-  const featured = [tenants[0], tenants[2], tenants[4], tenants[8]];
-  document.getElementById('featuredGrid').innerHTML = featured.map(t => `
-    <div class="tenant-card" onclick="openTenant('${t.id}')">
-      <div class="tenant-avatar ${t.theme}">${t.avatar}</div>
-      <div class="tenant-card-body">
-        <div class="tenant-name">${t.name}</div>
-        <div class="tenant-service">${t.service.split('&')[0].split(',')[0].trim()}</div>
-        <div class="tenant-suite">${t.suite}</div>
+// Pick a featured tenant — prefer one with a real photo
+function pickFeaturedTenant() {
+  const candidates = tenants.filter(t => t.photo && isAvailableNow(t));
+  if (candidates.length > 0) {
+    // rotate daily so it doesn't feel static
+    const dayIdx = Math.floor(Date.now() / 86_400_000) % candidates.length;
+    return candidates[dayIdx];
+  }
+  return tenants[0];
+}
+
+function renderDiscoverCards() {
+  // Directory count (right-now card shows real-and-open count, excluding test placeholders)
+  const openCount = tenants.filter(t => isAvailableNow(t)).length;
+  const elDir = document.getElementById('mc-dir-count');
+  const elNow = document.getElementById('mc-now-count');
+  if (elDir) elDir.textContent = tenants.length;
+  if (elNow) elNow.textContent = openCount;
+
+  // Featured today card
+  const featured = pickFeaturedTenant();
+  const iconEl = document.getElementById('mcFeaturedIcon');
+  const labelEl = document.getElementById('mcFeaturedLabel');
+  const metaEl = document.getElementById('mcFeaturedMeta');
+  if (iconEl && labelEl && metaEl) {
+    if (featured.photo) {
+      iconEl.style.backgroundImage = `url('${featured.photo}')`;
+      iconEl.innerHTML = '';
+    } else {
+      iconEl.classList.add(featured.theme);
+      iconEl.innerHTML = `<span class="serif" style="font-size:18px;">${featured.avatar}</span>`;
+    }
+    labelEl.textContent = featured.name;
+    metaEl.textContent = `Featured today · ${featured.service.split('·')[0].split('&')[0].split(',')[0].trim()}`;
+  }
+
+  // Saved count card
+  const elSaved = document.getElementById('mc-saved-count');
+  if (elSaved) elSaved.textContent = savedIds.size;
+
+  // Available suites count card
+  const elVacancy = document.getElementById('mc-vacancy-count');
+  if (elVacancy) elVacancy.textContent = vacancies.length;
+}
+
+function renderVacancies() {
+  const list = document.getElementById('vacancyList');
+  if (!list) return;
+  if (!vacancies.length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="em-title serif">No suites listed</div>
+        <p>Check back soon — the owner adds open rooms here.</p>
+      </div>`;
+    return;
+  }
+  list.innerHTML = vacancies.map(v => {
+    const visual = v.photo
+      ? `<div class="row-avatar has-photo" style="background-image: url('${v.photo}');"></div>`
+      : `<div class="row-avatar av-bone" style="font-size:18px;">${v.suite_number || '·'}</div>`;
+    return `
+      <div class="directory-row" onclick="openVacancyContact('${v.id}')">
+        ${visual}
+        <div class="row-meta">
+          <div class="tenant-name" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+            <span>Suite ${v.suite_number || '—'}</span>
+            ${v.is_concept ? '<span class="test-pill">Test</span>' : ''}
+          </div>
+          <div class="tenant-service">${v.sqft ? v.sqft + ' sq ft · ' : ''}${v.monthly_rent ? '$' + Number(v.monthly_rent).toLocaleString() + '/mo' : 'Rent on request'}</div>
+          <div class="row-tags">
+            <span class="row-tag">Available ${v.available_from || 'soon'}</span>
+          </div>
+        </div>
+        <div class="row-status" style="color: var(--sage-deep);">
+          <span class="dot"></span>For lease
+        </div>
       </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
+}
+
+function openVacancyContact(id) {
+  const v = vacancies.find(x => x.id === id);
+  if (!v) return;
+  showToast(`${v.contact_note || 'Contact the owner to tour'} · Suite ${v.suite_number}`);
+}
+
+function openFeatured() {
+  const t = pickFeaturedTenant();
+  openTenant(t.id);
+}
+
+function goRightNow() {
+  switchView('directory');
+  // Apply the right-now filter on the directory
+  document.querySelectorAll('#filterRow .chip').forEach(c => c.classList.toggle('active', c.dataset.filter === 'now'));
+  activeFilter = 'now';
+  renderDirectory();
+  // Small toast so it's visible that the filter took effect
+  const openCount = tenants.filter(t => isAvailableNow(t)).length;
+  showToast(`Showing ${openCount} open right now`);
+}
+
+// Whether a tenant is considered "open" (used for the status pill on cards/profile).
+// Defensive about missing fields: if open isn't set, derive from status === 'active'.
+function isOpenNow(t) {
+  if (t.open === true)  return true;
+  if (t.open === false) return false;
+  return (t.status || 'active') === 'active';
+}
+// Whether a tenant is real-and-open — used by the "Open right now" filter.
+// Concept/test placeholders are excluded since they aren't real tenants yet.
+function isAvailableNow(t) {
+  return !t.is_concept && isOpenNow(t);
 }
 
 function renderDirectory() {
   const list = document.getElementById('directoryList');
   const filtered = tenants.filter(t => {
-    if (activeFilter === 'now' && !t.open) return false;
+    if (activeFilter === 'now' && !isAvailableNow(t)) return false;
     if (activeFilter !== 'all' && activeFilter !== 'now' && t.category !== activeFilter) return false;
     if (searchTerm) {
       const q = searchTerm.toLowerCase();
@@ -979,22 +1563,27 @@ function renderDirectory() {
     return;
   }
 
-  list.innerHTML = filtered.map(t => `
+  list.innerHTML = filtered.map(t => {
+    const open = isOpenNow(t);
+    return `
     <div class="directory-row" onclick="openTenant('${t.id}')">
-      <div class="row-avatar ${t.theme}">${t.avatar}</div>
+      ${avatarHTML(t, 'row')}
       <div class="row-meta">
-        <div class="tenant-name">${t.name}</div>
+        <div class="tenant-name" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <span>${t.name}</span>${testPillHTML(t)}
+        </div>
         <div class="tenant-service">${t.service}</div>
         <div class="row-tags">
           <span class="row-tag">${t.tags[0]}</span>
           <span class="row-tag">${t.tags[1]}</span>
         </div>
       </div>
-      <div class="row-status ${t.open ? '' : 'away'}">
-        <span class="dot"></span>${t.open ? 'Open' : 'Closed'}
+      <div class="row-status ${open ? '' : 'away'}">
+        <span class="dot"></span>${open ? 'Open' : 'Closed'}
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 function renderSaved() {
@@ -1009,18 +1598,23 @@ function renderSaved() {
   }
   list.style.display = 'flex';
   empty.style.display = 'none';
-  list.innerHTML = saved.map(t => `
+  list.innerHTML = saved.map(t => {
+    const open = isOpenNow(t);
+    return `
     <div class="directory-row" onclick="openTenant('${t.id}')">
-      <div class="row-avatar ${t.theme}">${t.avatar}</div>
+      ${avatarHTML(t, 'row')}
       <div class="row-meta">
-        <div class="tenant-name">${t.name}</div>
+        <div class="tenant-name" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <span>${t.name}</span>${testPillHTML(t)}
+        </div>
         <div class="tenant-service">${t.service}</div>
       </div>
-      <div class="row-status ${t.open ? '' : 'away'}">
-        <span class="dot"></span>${t.open ? 'Open' : 'Closed'}
+      <div class="row-status ${open ? '' : 'away'}">
+        <span class="dot"></span>${open ? 'Open' : 'Closed'}
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 function updateSavedBadge() {
@@ -1031,14 +1625,21 @@ function updateSavedBadge() {
   } else {
     badge.style.display = 'none';
   }
+  const splashCount = document.getElementById('mc-saved-count');
+  if (splashCount) splashCount.textContent = savedIds.size;
 }
 
 // ============ INTERACTIONS ============
 function switchView(view) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById(`view-${view}`).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.view === view));
+  // Bottom-nav only highlights the three primary tabs; map/owner show "Discover" as the active parent
+  const primaryViews = ['discover', 'directory', 'saved'];
+  const parent = primaryViews.includes(view) ? view : 'discover';
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.view === parent));
   if (view === 'saved') renderSaved();
+  if (view === 'discover') renderDiscoverCards();
+  if (view === 'vacancies') renderVacancies();
   window.scrollTo(0, 0);
 }
 
@@ -1049,14 +1650,24 @@ function openTenant(id) {
   const isSaved = savedIds.has(t.id);
   const pairs = tenants.filter(p => p.id !== t.id && p.category !== t.category).slice(0, 4);
 
+  const open = isOpenNow(t);
+  const heroVisual = t.photo
+    ? `<div class="profile-hero has-photo" style="background-image: url('${t.photo}');">
+         <span class="photo-tag ${open ? 'open' : 'closed'}">
+           <span class="dot"></span>${open ? 'Open now' : 'Closed'}
+         </span>
+         ${testPillHTML(t, 'on-photo')}
+       </div>`
+    : `<div class="profile-hero ${t.theme}" style="position:relative;">${t.avatar}${testPillHTML(t, 'on-photo')}</div>`;
+
   document.getElementById('sheetContent').innerHTML = `
-    <div class="profile-hero ${t.theme}">${t.avatar}</div>
+    ${heroVisual}
     <div class="profile-body">
       <div class="profile-name">${t.name}</div>
       <div class="profile-service">${t.service}</div>
       <div class="profile-meta">
         <span><strong>${t.suite}</strong></span>
-        <span style="color: var(--ink-soft)">•</span>
+        <span style="color: var(--cream-40)">•</span>
         <span>${t.hours}</span>
       </div>
       <div class="profile-bio">${t.bio}</div>
@@ -1078,9 +1689,9 @@ function openTenant(id) {
         <div class="pair-scroll">
           ${pairs.map(p => `
             <div class="pair-card" onclick="openTenant('${p.id}')">
-              <div class="pair-avatar ${p.theme}">${p.avatar}</div>
+              ${avatarHTML(p, 'pair')}
               <div class="pair-name">${p.name}</div>
-              <div class="pair-service">${p.service.split('&')[0].split(',')[0].trim()}</div>
+              <div class="pair-service">${p.service.split('·')[0].split('&')[0].split(',')[0].trim()}</div>
             </div>
           `).join('')}
         </div>
@@ -1139,8 +1750,9 @@ document.getElementById('searchInput').addEventListener('input', e => {
 
 // INIT
 renderDYK();
-renderFeatured();
+renderDiscoverCards();
 renderDirectory();
+renderVacancies();
 updateSavedBadge();
 </script>
 </body>
