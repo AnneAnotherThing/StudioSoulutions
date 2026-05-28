@@ -171,12 +171,128 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* DISCOVER — MENU CARDS (kiosk-style, mobile-shaped) */
-.menu-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+/* Kiosk-style search — same hero as the lobby touchscreen, sized for a phone */
+.kiosk-search { margin: -4px 0 18px; }
+.ks-shell { position: relative; }
+.ks-icon {
+  position: absolute; top: 50%; left: 18px; width: 18px; height: 18px;
+  transform: translateY(-50%); color: var(--ink-faint);
+  pointer-events: none;
 }
+.ks-input {
+  width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  padding: 14px 20px 14px 46px;
+  font-size: 16px;          /* iOS won't zoom into focused inputs at 16px+ */
+  font-family: inherit;
+  color: var(--ink);
+  box-shadow: 0 2px 8px rgba(61,53,48,0.08), 0 12px 32px rgba(61,53,48,0.10);
+}
+.ks-input::placeholder { color: var(--ink-faint); }
+.ks-input:focus { outline: none; border-color: var(--taupe-deep); }
+.ks-results {
+  margin-top: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  max-height: 260px;
+  overflow-y: auto;
+  box-shadow: 0 10px 28px rgba(61,53,48,0.12);
+}
+.ks-result {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+}
+.ks-result:last-child { border-bottom: 0; }
+.ks-result-mark {
+  width: 36px; height: 36px; border-radius: 9px;
+  background: var(--bg-2); color: var(--ink);
+  display: grid; place-items: center;
+  font-family: 'Fraunces', serif; font-size: 14px;
+  flex-shrink: 0;
+}
+.ks-result-mark.has-photo { background-size: cover; background-position: center; }
+.ks-result-body { flex: 1; min-width: 0; }
+.ks-result-name { font-family: 'Fraunces', serif; font-size: 15px; color: var(--ink); }
+.ks-result-meta { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); margin-top: 2px; }
+.ks-result-suite { font-size: 12px; color: var(--ink-soft); margin-left: 6px; flex-shrink: 0; }
+.ks-hint {
+  color: var(--ink-faint);
+  font-size: 12px;
+  margin-top: 12px;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+/* DISCOVER — MENU CARDS (kiosk-style, mobile-shaped) */
+.menu-stack { display: flex; flex-direction: column; gap: 10px; }
+.primary-menu { display: flex; flex-direction: column; gap: 10px; }
+.byway-eyebrow {
+  margin: 22px 0 10px;
+  display: flex; align-items: center; gap: 12px;
+}
+.byway-eyebrow::before, .byway-eyebrow::after {
+  content: ''; flex: 1; height: 1px; background: var(--line);
+}
+.byway-eyebrow span {
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  font-weight: 700; color: var(--cream-50);
+}
+.byway-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.byway-card {
+  background: var(--cream-06);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: flex; align-items: center; gap: 10px;
+  cursor: pointer; text-align: left;
+  width: 100%; color: var(--cream);
+  font-family: inherit;
+  backdrop-filter: blur(10px);
+  transition: background 0.18s ease, transform 0.15s ease;
+  overflow: hidden;
+}
+.byway-card:active { transform: scale(0.985); background: var(--cream-10); }
+.byway-card .mc-icon {
+  width: 32px; height: 32px;
+  border-radius: 9px;
+  background: var(--cream-06);
+  border: 1px solid var(--line);
+  display: grid; place-items: center;
+  color: var(--cream); flex-shrink: 0;
+}
+.byway-card.with-photo .mc-icon {
+  background-size: cover;
+  background-position: center;
+  border-color: var(--line-2);
+}
+.byway-card .mc-body { flex: 1; min-width: 0; }
+.byway-card .mc-label {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+  color: var(--cream);
+  line-height: 1.15;
+}
+.byway-card .mc-meta {
+  margin-top: 2px;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  color: var(--cream-50);
+}
+.byway-card.is-clay { background: linear-gradient(180deg, rgba(216,182,158,0.18) 0%, rgba(245,237,224,0.50) 100%); }
+
 .menu-card {
   position: relative;
   background: var(--cream-06);
@@ -1009,17 +1125,17 @@ body {
 <body>
 
 <!-- Back to walkthrough -->
-<a href="../../../Laura-Walkthrough-v1.html" style="
-    position: fixed; top: 14px; left: 14px; z-index: 200;
+<a href="Laura-Walkthrough-v1.html" style="
+    position: fixed; top: 14px; right: 14px; z-index: 200;
     display: inline-flex; align-items: center; gap: 6px;
     background: rgba(245,237,224,0.94);
     backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     border: 1px solid rgba(61,53,48,0.12);
     color: #6B6357;
-    padding: 6px 12px 6px 10px;
+    padding: 7px 14px 7px 11px;
     border-radius: 999px;
     font-family: 'Inter', system-ui, sans-serif;
-    font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
     text-decoration: none;
     box-shadow: 0 2px 6px rgba(61,53,48,0.10), 0 10px 28px rgba(61,53,48,0.14);
   ">
@@ -1042,15 +1158,26 @@ body {
 <!-- DISCOVER VIEW — card-led splash, mirrors the kiosk menu -->
 <section class="view active" id="view-discover">
   <div class="welcome">
-    <div class="eyebrow">You're inside</div>
-    <h1>Salon Plus<br/><em>Studio Suites</em></h1>
-    <p>Independent studios under one roof. Pick a way in.</p>
+    <div class="eyebrow">Welcome inside</div>
+    <h1>Who are you<br/><em>here to see?</em></h1>
+    <p>Salon Plus Studio Suites · Lobby</p>
   </div>
 
-  <div class="menu-stack">
+  <!-- Kiosk-style hero search — mirrors the lobby touchscreen -->
+  <div class="kiosk-search">
+    <div class="ks-shell">
+      <svg class="ks-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="kioskSearchInput" class="ks-input" type="text" placeholder="Type a name, studio, or service…" autocomplete="off" />
+    </div>
+    <div class="ks-results" id="kioskSearchResults" hidden></div>
+    <p class="ks-hint">Or browse below — see who's here, who's open, where to go.</p>
+  </div>
+
+  <!-- Primary navigation — mirrors the kiosk's three tabs -->
+  <div class="primary-menu">
 
     <!-- Directory -->
-    <button class="menu-card" type="button" onclick="switchView('directory')">
+    <button class="menu-card primary-card" type="button" onclick="switchView('directory')">
       <div class="mc-icon">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
       </div>
@@ -1061,7 +1188,7 @@ body {
     </button>
 
     <!-- Open right now -->
-    <button class="menu-card is-sage" type="button" onclick="goRightNow()">
+    <button class="menu-card primary-card is-sage" type="button" onclick="goRightNow()">
       <div class="mc-icon">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
       </div>
@@ -1071,28 +1198,8 @@ body {
       </div>
     </button>
 
-    <!-- Available suites (vacancies for lease) -->
-    <button class="menu-card" type="button" onclick="switchView('vacancies')">
-      <div class="mc-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7.5"/><path d="M12 3L3 9.5h18L12 3z"/><path d="M9 22V13h6v9"/></svg>
-      </div>
-      <div class="mc-body">
-        <div class="mc-label">Available suites</div>
-        <div class="mc-meta"><span id="mc-vacancy-count">—</span> open for lease</div>
-      </div>
-    </button>
-
-    <!-- Featured today (rotating tenant) -->
-    <button class="menu-card with-photo is-clay" type="button" id="mcFeatured" onclick="openFeatured()">
-      <div class="mc-icon" id="mcFeaturedIcon"></div>
-      <div class="mc-body">
-        <div class="mc-label" id="mcFeaturedLabel">Featured today</div>
-        <div class="mc-meta" id="mcFeaturedMeta">—</div>
-      </div>
-    </button>
-
     <!-- Suite map -->
-    <button class="menu-card" type="button" onclick="switchView('map')">
+    <button class="menu-card primary-card" type="button" onclick="switchView('map')">
       <div class="mc-icon">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
       </div>
@@ -1102,10 +1209,36 @@ body {
       </div>
     </button>
 
-    <!-- From the owner -->
-    <button class="menu-card" type="button" onclick="switchView('owner')">
+  </div>
+
+  <!-- "By the way" strip — mirrors the kiosk's bottom row -->
+  <div class="byway-eyebrow"><span>By the way</span></div>
+  <div class="byway-strip">
+
+    <!-- Featured today (rotating tenant) -->
+    <button class="byway-card with-photo is-clay" type="button" id="mcFeatured" onclick="openFeatured()">
+      <div class="mc-icon" id="mcFeaturedIcon"></div>
+      <div class="mc-body">
+        <div class="mc-label" id="mcFeaturedLabel">Featured today</div>
+        <div class="mc-meta" id="mcFeaturedMeta">—</div>
+      </div>
+    </button>
+
+    <!-- Available suites (vacancies for lease) -->
+    <button class="byway-card" type="button" onclick="switchView('vacancies')">
       <div class="mc-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7.5"/><path d="M12 3L3 9.5h18L12 3z"/><path d="M9 22V13h6v9"/></svg>
+      </div>
+      <div class="mc-body">
+        <div class="mc-label">Available suites</div>
+        <div class="mc-meta"><span id="mc-vacancy-count">—</span> open for lease</div>
+      </div>
+    </button>
+
+    <!-- From the owner -->
+    <button class="byway-card" type="button" onclick="switchView('owner')">
+      <div class="mc-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
       </div>
       <div class="mc-body">
         <div class="mc-label">From the owner</div>
@@ -1114,9 +1247,9 @@ body {
     </button>
 
     <!-- Saved studios -->
-    <button class="menu-card" type="button" onclick="switchView('saved')">
+    <button class="byway-card" type="button" onclick="switchView('saved')">
       <div class="mc-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
       </div>
       <div class="mc-body">
         <div class="mc-label">Saved studios</div>
@@ -1737,6 +1870,48 @@ renderDiscoverCards();
 renderDirectory();
 renderVacancies();
 updateSavedBadge();
+
+/* Kiosk-style hero search on the Discover view — mirrors kiosk.html */
+(function wireKioskSearch() {
+  const input = document.getElementById('kioskSearchInput');
+  const results = document.getElementById('kioskSearchResults');
+  if (!input || !results) return;
+  input.addEventListener('input', function() {
+    const q = input.value.trim().toLowerCase();
+    if (!q) { results.hidden = true; results.innerHTML = ''; return; }
+    const matches = tenants.filter(function(t) {
+      const services = (t.services || t.tags || []).join(' ').toLowerCase();
+      return (t.name || '').toLowerCase().indexOf(q) > -1
+        || (t.service || '').toLowerCase().indexOf(q) > -1
+        || services.indexOf(q) > -1
+        || (t.suite || '').toLowerCase().indexOf(q) > -1;
+    }).slice(0, 6);
+    results.hidden = false;
+    if (!matches.length) {
+      results.innerHTML = '<div class="ks-result" style="opacity:.7;cursor:default;">No match — try a service like "lash" or "color".</div>';
+      return;
+    }
+    results.innerHTML = matches.map(function(t) {
+      const mark = t.photo
+        ? '<div class="ks-result-mark has-photo" style="background-image:url(\'' + t.photo + '\');"></div>'
+        : '<div class="ks-result-mark">' + (t.avatar || (t.name || '?')[0]) + '</div>';
+      return '<div class="ks-result" onclick="openTenant(\'' + t.id + '\')">' +
+        mark +
+        '<div class="ks-result-body">' +
+          '<div class="ks-result-name">' + (t.name || '') + '</div>' +
+          '<div class="ks-result-meta">' + (t.service || '').slice(0, 40) + '</div>' +
+        '</div>' +
+        '<div class="ks-result-suite">' + (t.suite || '') + '</div>' +
+      '</div>';
+    }).join('');
+  });
+  // Dismiss results when tapping outside
+  document.addEventListener('click', function(e) {
+    if (!results.hidden && !results.contains(e.target) && e.target !== input) {
+      results.hidden = true;
+    }
+  });
+})();
 </script>
 </body>
 </html>

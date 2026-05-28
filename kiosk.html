@@ -340,33 +340,70 @@
   }
 
   /* By the way */
-  .byway { padding-top: 1rem; border-top: 1px solid var(--cream-10); }
-  .byway-eyebrow { font-size: 0.65rem; letter-spacing: 0.32em; text-transform: uppercase; font-weight: 700; color: var(--cream-50); margin-bottom: 0.7rem; }
-  .byway-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; }
+  /* Filter chips — let visitors discover by what they want */
+  .filter-chips {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+    margin: 0.2rem 0 0.7rem;
+  }
+  .filter-chip {
+    background: rgba(245,237,224,0.55);
+    border: 1px solid var(--cream-10);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  .filter-chip:hover { color: var(--ink); }
+  .filter-chip.is-active {
+    background: var(--ink);
+    color: var(--surface-2);
+    border-color: var(--ink);
+  }
+
+  /* By the way — slimmed down strip so the directory has room to breathe */
+  .byway { padding-top: 0.55rem; border-top: 1px solid var(--cream-10); }
+  .byway-eyebrow { font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase; font-weight: 700; color: var(--cream-50); margin-bottom: 0.4rem; }
+  .byway-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.55rem; }
   .byway-card {
     background: rgba(255,251,244,0.85);
     border: 1px solid var(--cream-10);
-    border-radius: 14px;
-    padding: 0.9rem 1rem;
+    border-radius: 11px;
+    padding: 0.5rem 0.7rem;
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    box-shadow: 0 2px 4px rgba(61,53,48,0.06), 0 12px 28px rgba(61,53,48,0.08);
+    box-shadow: 0 1px 3px rgba(61,53,48,0.05), 0 6px 14px rgba(61,53,48,0.06);
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
+    text-align: left;
+    font-family: inherit;
+    color: inherit;
   }
-  .byway-card h3 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 0.95rem; color: var(--ink); margin-bottom: 0.3rem; }
-  .byway-card p { font-size: 0.78rem; color: var(--ink-soft); line-height: 1.4; }
-  .byway-card.qr { text-align: center; }
+  .byway-card:hover {
+    background: rgba(255,251,244,0.95);
+    box-shadow: 0 2px 6px rgba(61,53,48,0.08), 0 12px 24px rgba(61,53,48,0.10);
+  }
+  .byway-card:active { transform: scale(0.985); }
+  .byway-card h3 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 0.78rem; color: var(--ink); margin-bottom: 0.15rem; line-height: 1.15; }
+  .byway-card p { font-size: 0.66rem; color: var(--ink-soft); line-height: 1.35; }
+  .byway-card.qr { text-align: center; cursor: default; }
+  .byway-card.qr:hover { background: rgba(255,251,224,0.85); transform: none; }
   .byway-card.qr .qr-grid {
-    width: 64px; height: 64px; margin: 0 auto 6px;
+    width: 38px; height: 38px; margin: 0 auto 3px;
     background: var(--surface-2);
     background-image:
-      linear-gradient(var(--ink) 1.5px, transparent 1.5px),
-      linear-gradient(90deg, var(--ink) 1.5px, transparent 1.5px);
-    background-size: 8px 8px;
-    border-radius: 6px;
+      linear-gradient(var(--ink) 1.2px, transparent 1.2px),
+      linear-gradient(90deg, var(--ink) 1.2px, transparent 1.2px);
+    background-size: 6px 6px;
+    border-radius: 4px;
     border: 1px solid var(--line);
   }
-  .byway-card.qr .lbl { font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); font-weight: 600; }
-  .byway-card.qr .sub { font-size: 0.6rem; color: var(--cream-50); }
+  .byway-card.qr .lbl { font-size: 0.55rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); font-weight: 600; }
+  .byway-card.qr .sub { font-size: 0.52rem; color: var(--cream-50); }
 
   @media (max-width: 900px) {
     .browse-content .tenant-grid { grid-template-columns: repeat(2, 1fr); }
@@ -498,7 +535,7 @@
       <section class="browse">
         <div class="browse-tabs">
           <button class="tab is-active" data-tab="all" type="button">
-            All studios
+            Directory
             <span class="tab-meta"><span id="dir-count">&mdash;</span></span>
           </button>
           <button class="tab" data-tab="now" type="button">
@@ -508,6 +545,16 @@
           <button class="tab" data-tab="map" type="button">Suite map</button>
         </div>
         <div class="browse-content">
+          <!-- Discovery filter chips — visible when the Directory tab is active -->
+          <div class="filter-chips" id="filterChips" data-tab="all">
+            <button class="filter-chip is-active" data-cat="all" type="button">All</button>
+            <button class="filter-chip" data-cat="hair" type="button">Hair</button>
+            <button class="filter-chip" data-cat="skin" type="button">Skin</button>
+            <button class="filter-chip" data-cat="nails" type="button">Nails</button>
+            <button class="filter-chip" data-cat="brows" type="button">Brows &amp; Lashes</button>
+            <button class="filter-chip" data-cat="wellness" type="button">Wellness</button>
+            <button class="filter-chip" data-cat="makeup" type="button">Makeup</button>
+          </div>
           <div class="tenant-grid" id="tenantGrid" data-tab="all"></div>
           <div class="tenant-grid" id="nowGrid" data-tab="now" hidden></div>
           <div class="map-canvas" id="mapCanvas" data-tab="map" hidden>
@@ -577,18 +624,18 @@
       <section class="byway">
         <div class="byway-eyebrow">By the way</div>
         <div class="byway-grid">
-          <div class="byway-card">
+          <button class="byway-card" type="button" data-action="vacancies">
             <h3>Available suites</h3>
             <p id="bywayVacancy">Talk to Laura if you'd like to tour a room.</p>
-          </div>
-          <div class="byway-card">
+          </button>
+          <button class="byway-card" type="button" data-action="owner">
             <h3>From the owner</h3>
             <p id="ownerNote">&mdash; Laura</p>
-          </div>
-          <div class="byway-card">
-            <h3>Building info</h3>
+          </button>
+          <button class="byway-card" type="button" data-action="map">
+            <h3>Suite map</h3>
             <p>Salon Plus Studio Suites &middot; Lobby</p>
-          </div>
+          </button>
           <div class="byway-card qr">
             <div class="qr-grid" aria-hidden="true"></div>
             <div class="lbl">Scan</div>
@@ -654,14 +701,20 @@
       '</div>';
   }
 
+  let activeCategory = 'all';
+
   function render() {
     const tenants = loadTenants();
     const grid = document.getElementById('tenantGrid');
     const nowGrid = document.getElementById('nowGrid');
-    if (grid) grid.innerHTML = tenants.map(tenantCard).join('');
-    if (nowGrid) nowGrid.innerHTML = tenants.filter(t => t.open).map(tenantCard).join('');
+    const inCat = function(t) { return activeCategory === 'all' || (t.category || '').toLowerCase() === activeCategory; };
+    const filtered = tenants.filter(inCat);
+    if (grid) grid.innerHTML = filtered.length
+      ? filtered.map(tenantCard).join('')
+      : '<div style="padding:1.4rem;color:var(--ink-faint);font-style:italic;">No studios in this category yet.</div>';
+    if (nowGrid) nowGrid.innerHTML = tenants.filter(function(t) { return t.open && inCat(t); }).map(tenantCard).join('');
     const dc = document.getElementById('dir-count'); if (dc) dc.textContent = tenants.length;
-    const nc = document.getElementById('now-count'); if (nc) nc.textContent = tenants.filter(t => t.open).length + ' open';
+    const nc = document.getElementById('now-count'); if (nc) nc.textContent = tenants.filter(function(t) { return t.open; }).length + ' open';
 
     try {
       const s = JSON.parse(localStorage.getItem('ss_studio_v1') || 'null');
@@ -789,8 +842,61 @@
       document.querySelectorAll('.browse-content [data-tab]').forEach(function(p) {
         p.hidden = (p.dataset.tab !== tab);
       });
+      // Filter chips only make sense on the Directory tab — hide on Open right now / Suite map
+      const chips = document.getElementById('filterChips');
+      if (chips) chips.style.display = (tab === 'all') ? '' : 'none';
     });
   });
+
+  /* Filter chips */
+  document.querySelectorAll('#filterChips .filter-chip').forEach(function(c) {
+    c.addEventListener('click', function() {
+      document.querySelectorAll('#filterChips .filter-chip').forEach(function(x) { x.classList.remove('is-active'); });
+      c.classList.add('is-active');
+      activeCategory = c.dataset.cat;
+      render();
+    });
+  });
+
+  /* Byway buttons — let visitors jump straight to vacancies / owner note / map */
+  document.querySelectorAll('.byway-card[data-action]').forEach(function(b) {
+    b.addEventListener('click', function() {
+      const action = b.dataset.action;
+      if (action === 'map') {
+        // Switch the Browse tab to Suite map
+        const mapTab = document.querySelector('.browse-tabs .tab[data-tab="map"]');
+        if (mapTab) mapTab.click();
+        document.querySelector('.browse')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else if (action === 'vacancies') {
+        // Switch to Directory + show clay-toned vacancy summary in detail (simplest: just toast it)
+        showByawayDetail('Available suites', document.getElementById('bywayVacancy').textContent + ' Email salonplusss@gmail.com to tour.');
+      } else if (action === 'owner') {
+        showByawayDetail('From the owner', document.getElementById('ownerNote').textContent || '— Laura');
+      }
+    });
+  });
+
+  function showByawayDetail(title, body) {
+    // Reuse the map-detail panel if present, otherwise a tiny toast
+    let el = document.getElementById('mapDetail');
+    if (!el) {
+      el = document.createElement('div');
+      el.className = 'map-detail';
+      el.id = 'mapDetail';
+      document.body.appendChild(el);
+      el.style.position = 'fixed';
+      el.style.right = '20px';
+      el.style.bottom = '20px';
+      el.style.zIndex = '300';
+    }
+    el.hidden = false;
+    el.innerHTML =
+      '<button class="md-close" type="button" aria-label="Close">&times;</button>' +
+      '<div class="md-suite">' + title + '</div>' +
+      '<div class="md-service" style="margin-top:8px;">' + body + '</div>';
+    const closeBtn = el.querySelector('.md-close');
+    if (closeBtn) closeBtn.addEventListener('click', function() { el.hidden = true; });
+  }
 
   /* Clock */
   function tickClock() {

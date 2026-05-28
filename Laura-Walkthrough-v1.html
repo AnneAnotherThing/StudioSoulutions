@@ -220,6 +220,103 @@ main { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
   flex-direction: column;
   gap: 8px;
 }
+/* "Heads up — what's still rough" callout, sits between the hero and the pitch tool card */
+.caveat {
+  margin: 26px 0 22px;
+  padding: 26px 28px 30px;
+  background: linear-gradient(180deg, rgba(216,196,168,0.18) 0%, rgba(245,237,224,0.55) 100%);
+  border: 1px dashed var(--clay-deep);
+  border-radius: 22px;
+  box-shadow: 0 2px 6px rgba(61,53,48,0.06), 0 14px 32px rgba(61,53,48,0.08);
+  position: relative;
+}
+.caveat-eyebrow {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--clay-deep);
+  background: rgba(245,237,224,0.85);
+  border: 1px solid var(--clay-deep);
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+.caveat-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-top: 14px;
+}
+.caveat-title em { font-style: italic; font-weight: 400; color: var(--clay-deep); }
+.caveat-lead {
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  margin-top: 12px;
+  max-width: 720px;
+}
+.caveat-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px;
+  margin-top: 22px;
+}
+@media (min-width: 780px) {
+  .caveat-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+}
+.caveat-col h3 {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.caveat-col h3 em { font-style: italic; font-weight: 400; color: var(--clay-deep); }
+.caveat-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 0;
+}
+.caveat-list li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.caveat-list li strong { color: var(--ink); font-weight: 600; }
+.caveat-list li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0.65em;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--clay-deep);
+}
+.caveat-aside {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: rgba(255,251,244,0.7);
+  border-left: 3px solid var(--clay-deep);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+@media (max-width: 720px) {
+  .caveat { padding: 22px 18px 24px; border-radius: 18px; }
+  .caveat-title { font-size: 22px; }
+  .caveat-lead { font-size: 14px; }
+  .caveat-list li { font-size: 13px; }
+}
+
 /* Bulleted list — use absolute-positioned dot so inline children (<strong>, <code>, etc.)
    stay in the natural text flow. Earlier grid version broke any bullet with multiple
    child nodes — second child got auto-placed into the 14px dot column, wrapping per word. */
@@ -479,6 +576,46 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
     <div class="signoff">— Anne · Hive-Rise</div>
   </section>
 
+  <!-- ===================== HEADS UP — what's rough, what's not real, what's untested ===================== -->
+  <section class="caveat" aria-label="Heads up — what's still rough">
+    <div class="caveat-eyebrow">Heads up · this is a working prototype</div>
+    <h2 class="caveat-title">Some of it is real. Some of it isn't yet. <em>Here's what to watch for.</em></h2>
+    <p class="caveat-lead">
+      Everything below clicks and reacts, but a few pieces are placeholders or stubs while we shape the design. None of it is "production live" yet — think of this as a working sketch you can walk through.
+    </p>
+
+    <div class="caveat-grid">
+      <div class="caveat-col">
+        <h3>What we <em>know</em> doesn't fully work yet</h3>
+        <ul class="caveat-list">
+          <li><strong>AI bio generator</strong> — returns three nicely written sample tones, but it's not calling Claude live. The wiring is there; flipping it on needs an API key in the deployment.</li>
+          <li><strong>Data is browser-only</strong> — anything you add in the admin lives in <em>this</em> browser. Open it on your phone or another laptop and you'll see seed data, not your edits. Real sync comes with the backend.</li>
+          <li><strong>Suite map is stylized</strong> — the floor plan is a generic two-corridor layout I drew to demonstrate interactivity. It doesn't match the actual Salon Plus building yet. (Send me a photo or sketch and I'll trace it.)</li>
+          <li><strong>Most tenants are marked "Test"</strong> — only Dueces is confirmed. The rest are placeholder names, photos, and bios so the kiosk doesn't look empty.</li>
+          <li><strong>Vacancies are example data</strong> — suites 108 / 110 / 112 / etc. are placeholders, not real available rooms.</li>
+          <li><strong>"Book with…" buttons</strong> — placeholders. They don't connect to a real booking system yet.</li>
+          <li><strong>Kiosk on a phone</strong> — shows a miniature, non-interactive preview by design. Use a desktop browser (or the real touchscreen later) to actually click around.</li>
+          <li><strong>Logo</strong> — placeholder. You've seen the alternatives on the Logo card below.</li>
+        </ul>
+      </div>
+
+      <div class="caveat-col">
+        <h3>What we <em>haven't tested</em> (so probably has rough edges)</h3>
+        <ul class="caveat-list">
+          <li>Real touchscreen behavior — only mouse + keyboard so far.</li>
+          <li>Different screen sizes — should adapt, but a weird phone or tablet might surprise us.</li>
+          <li>Photos at much higher counts (we have ~10 tenants seeded; 30+ may need layout tweaks).</li>
+          <li>Slow networks — image loading hasn't been optimized.</li>
+          <li>Accessibility — basic structure is there, but no full screen-reader pass yet.</li>
+          <li>Older browsers (anything that isn't current Chrome / Safari / Firefox / Edge).</li>
+        </ul>
+        <p class="caveat-aside">
+          If you click something and it does the wrong thing — or nothing — that's almost certainly on me, not on you. Tell me what you tapped and I'll fix it.
+        </p>
+      </div>
+    </div>
+  </section>
+
   <!-- ===================== PITCH ===================== -->
   <section class="tool" id="pitch">
     <div class="tool-body">
@@ -493,7 +630,6 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
         <li>Mockups of the kiosk and phone — both reflect what's now actually shipping.</li>
         <li>Section on AI-written tenant bios with three sample tones.</li>
         <li>Roadmap: what ships first vs. what comes later.</li>
-        <li>Closing call-to-action and ways to reach Anne directly.</li>
       </ul>
       <div class="actions">
         <a class="btn btn-primary" href="Studio-Soulutions-Pitch-v1.html">Open the pitch →</a>
@@ -517,7 +653,9 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
       <h3>Highlights</h3>
       <ul>
         <li>Big "Salon Plus Studio Suites" welcome over the actual corridor photo.</li>
-        <li>Four glassy menu cards: Directory, Open right now, Suite map, From the owner.</li>
+        <li>Three browse tabs — Directory (every studio), Open right now (live), and an interactive Suite map.</li>
+        <li>Big search at the top: "Who are you here to see?" — type a name, service, or suite.</li>
+        <li>A "By the way" strip at the bottom: Available suites, From the owner, building info, and the QR code to take it on their phone.</li>
         <li>QR card top-right so guests can take the experience with them.</li>
         <li>Real-photo tenant tiles (Dueces is the only confirmed one; others are marked "Test").</li>
         <li>Attract loop with photo crossfade and a 60-second idle-to-sleep timer.</li>
