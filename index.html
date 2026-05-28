@@ -1028,17 +1028,24 @@ body {
   border-color: var(--clay);
 }
 
-.pair-with { margin-top: 8px; }
+.pair-with {
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--cream-10);
+}
 .pair-with h3 {
   font-family: 'Fraunces', serif; font-weight: 500;
-  font-size: 17px;
-  margin-bottom: 4px;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
   color: var(--cream);
 }
+.pair-with h3 em { font-style: italic; font-weight: 400; color: var(--clay-deep); }
 .pair-with .sub {
-  font-size: 12px;
+  font-size: 12.5px;
   color: var(--cream-50);
-  margin-bottom: 12px;
+  line-height: 1.45;
+  margin-bottom: 14px;
 }
 .pair-scroll {
   display: flex;
@@ -1174,9 +1181,9 @@ body {
 <!-- DISCOVER VIEW — card-led splash, mirrors the kiosk menu -->
 <section class="view active" id="view-discover">
   <div class="welcome">
-    <div class="eyebrow">Welcome inside</div>
-    <h1>Who are you<br/><em>here to see?</em></h1>
-    <p>Salon Plus Studio Suites · Lobby</p>
+    <div class="eyebrow">More than you came for</div>
+    <h1><span id="welcomeCount">—</span> studios.<br/><em>One roof.</em></h1>
+    <p><span id="welcomeOpen">—</span> open right now · take it with you, decide later.</p>
   </div>
 
   <!-- Kiosk-style hero search — mirrors the lobby touchscreen -->
@@ -1579,6 +1586,13 @@ function renderDiscoverCards() {
   if (elDir) elDir.textContent = tenants.length;
   if (elNow) elNow.textContent = openCount;
 
+  // Welcome hero — spell the count for warmth ("Eight studios. One roof.")
+  const NUMBER_WORDS = ['Zero','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen','Twenty'];
+  const welcomeCount = document.getElementById('welcomeCount');
+  const welcomeOpen = document.getElementById('welcomeOpen');
+  if (welcomeCount) welcomeCount.textContent = tenants.length < NUMBER_WORDS.length ? NUMBER_WORDS[tenants.length] : String(tenants.length);
+  if (welcomeOpen) welcomeOpen.textContent = openCount;
+
   // Featured today card
   const featured = pickFeaturedTenant();
   const iconEl = document.getElementById('mcFeaturedIcon');
@@ -1780,7 +1794,13 @@ function openTenant(id) {
   if (!t) return;
   currentTenant = t;
   const isSaved = savedIds.has(t.id);
-  const pairs = tenants.filter(p => p.id !== t.id && p.category !== t.category).slice(0, 4);
+  // "While you're here" — prefer other studios that are OPEN RIGHT NOW and in a different category.
+  // This is the cross-pollination moment: someone came for one thing, here are alternatives a few doors down.
+  const openOthers = tenants.filter(p => p.id !== t.id && isOpenNow(p) && p.category !== t.category);
+  const sameCatOthers = tenants.filter(p => p.id !== t.id && isOpenNow(p) && p.category === t.category);
+  const pairs = openOthers.length >= 3
+    ? openOthers.slice(0, 4)
+    : openOthers.concat(sameCatOthers).slice(0, 4);
 
   const open = isOpenNow(t);
   const heroVisual = t.photo
@@ -1816,14 +1836,18 @@ function openTenant(id) {
         </button>
       </div>
       <div class="pair-with">
-        <h3>Pair it</h3>
-        <div class="sub">Often paired with visits to ${t.name}</div>
+        <h3>While you're at <em>${t.name.split(' ')[0]}</em>…</h3>
+        <div class="sub">Other studios in the building, open right now. Walk over after — or save them for next time.</div>
         <div class="pair-scroll">
           ${pairs.map(p => `
             <div class="pair-card" onclick="openTenant('${p.id}')">
               ${avatarHTML(p, 'pair')}
               <div class="pair-name">${p.name}</div>
               <div class="pair-service">${p.service.split('·')[0].split('&')[0].split(',')[0].trim()}</div>
+              <div class="pair-meta" style="font-size:10px;color:var(--sage-deep);letter-spacing:0.1em;text-transform:uppercase;font-weight:600;margin-top:3px;display:flex;align-items:center;gap:4px;">
+                <span style="width:5px;height:5px;border-radius:50%;background:var(--sage-deep);display:inline-block;"></span>
+                Open · ${p.suite}
+              </div>
             </div>
           `).join('')}
         </div>

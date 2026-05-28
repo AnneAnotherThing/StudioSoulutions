@@ -115,7 +115,35 @@
 
   /* Hero search */
   .hero-search { padding: 0.4rem 0.2rem; }
-  .hero-search .eyebrow { margin-bottom: 0.8rem; }
+  .hero-search .eyebrow { margin-bottom: 0.6rem; color: var(--clay-deep); }
+  .hero-search .hero-sub {
+    color: var(--ink-soft);
+    font-size: 1rem;
+    margin: 0.75rem 0 1rem;
+    max-width: 38em;
+  }
+  .hero-search .hero-sub span { color: var(--ink); font-weight: 600; }
+  /* Pair-rotator — quietly cycles "while you're at X, walk to Y" pairings */
+  .pair-rotator {
+    margin-top: 0.6rem;
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(216, 196, 168, 0.20);
+    border: 1px solid var(--clay-soft);
+    border-radius: 999px;
+    padding: 6px 14px 6px 11px;
+    color: var(--clay-deep);
+    font-size: 0.82rem;
+    line-height: 1.3;
+    transition: opacity 0.35s ease;
+  }
+  .pair-rotator .pair-eyebrow {
+    font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase;
+    font-weight: 700; color: var(--clay-deep);
+    background: rgba(245,237,224,0.7);
+    padding: 2px 8px; border-radius: 999px;
+  }
+  .pair-rotator .pair-text { color: var(--ink); font-weight: 500; }
+  .pair-rotator.is-fading { opacity: 0; }
   .hero-search h1 {
     font-family: 'Fraunces', serif; font-weight: 500;
     font-size: 3.2rem; line-height: 1.05; letter-spacing: -0.02em;
@@ -313,6 +341,116 @@
   @keyframes youAreHerePulse {
     0%   { transform: scale(0.6); opacity: 0.45; }
     100% { transform: scale(2.2); opacity: 0; }
+  }
+
+  /* Cross-pollination tenant detail panel — slides in from the right when a tenant card is tapped */
+  .tenant-panel {
+    position: fixed; inset: 0;
+    z-index: 280;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .tenant-panel.is-on { opacity: 1; pointer-events: auto; }
+  .tenant-panel .tp-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(61, 53, 48, 0.45);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  .tenant-panel .tp-card {
+    position: absolute; top: 0; right: 0; bottom: 0;
+    width: min(460px, 92vw);
+    background: var(--surface-2);
+    overflow-y: auto;
+    box-shadow: -16px 0 60px -10px rgba(61,53,48,0.40);
+    transform: translateX(100%);
+    transition: transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+    z-index: 2;
+  }
+  .tenant-panel.is-on .tp-card { transform: translateX(0); }
+  .tp-close {
+    position: absolute; top: 12px; right: 14px;
+    z-index: 3;
+    background: rgba(255,251,244,0.92);
+    border: 0; border-radius: 999px;
+    width: 36px; height: 36px;
+    font-size: 22px; line-height: 1; color: var(--ink);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(61,53,48,0.18);
+  }
+  .tp-hero {
+    width: 100%; aspect-ratio: 5/3;
+    background-size: cover; background-position: center;
+    background-color: var(--bg-2);
+  }
+  .tp-hero--avatar { display: grid; place-items: center; }
+  .tp-hero--avatar span {
+    font-family: 'Fraunces', serif; font-size: 4rem; color: var(--ink-soft);
+  }
+  .tp-body { padding: 22px 24px 32px; }
+  .tp-suite {
+    font-size: 0.65rem; letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 700;
+  }
+  .tp-name {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 1.6rem; color: var(--ink);
+    margin-top: 6px; letter-spacing: -0.01em;
+  }
+  .tp-service { color: var(--ink-soft); margin-top: 6px; font-size: 0.95rem; }
+  .tp-status {
+    margin-top: 12px;
+    font-size: 0.78rem; letter-spacing: 0.06em;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .tp-pairs {
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid var(--cream-10);
+  }
+  .tp-pairs-eyebrow {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 400;
+    font-size: 1.1rem; color: var(--taupe-deep);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .tp-pairs-grid { display: flex; flex-direction: column; gap: 10px; }
+  .tp-pair {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 10px;
+    display: grid; grid-template-columns: 56px minmax(0,1fr); gap: 12px;
+    align-items: center;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .tp-pair:hover { background: var(--surface-2); transform: translateY(-1px); }
+  .tp-pair-photo {
+    width: 56px; height: 56px;
+    background-size: cover; background-position: center;
+    background-color: var(--bg-3);
+    border-radius: 10px;
+  }
+  .tp-pair-photo--avatar {
+    display: grid; place-items: center;
+    font-family: 'Fraunces', serif; font-size: 1.2rem;
+    color: var(--ink);
+  }
+  .tp-pair-body { min-width: 0; }
+  .tp-pair-name { font-family: 'Fraunces', serif; font-size: 0.95rem; color: var(--ink); }
+  .tp-pair-service { color: var(--ink-soft); font-size: 0.78rem; margin-top: 1px; }
+  .tp-pair-meta {
+    margin-top: 3px;
+    font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .tp-pairs-hint {
+    color: var(--ink-faint); font-size: 0.78rem;
+    margin-top: 12px; line-height: 1.4;
   }
 
   /* Detail panel that appears over the map when a suite is tapped */
@@ -555,14 +693,19 @@
       </header>
 
       <section class="hero-search">
-        <div class="eyebrow">Welcome inside</div>
-        <h1>Who are you <em>here to see?</em></h1>
+        <div class="eyebrow">More than you came for</div>
+        <h1><span id="heroCount">—</span> studios. <em>One roof.</em></h1>
+        <p class="hero-sub"><span id="heroOpen">—</span> open right now &middot; browse below, or search if you have someone in mind.</p>
+        <!-- Rotating cross-pollination pair: "While you're at X, walk to Y" -->
+        <div class="pair-rotator" id="pairRotator" aria-live="polite" hidden>
+          <span class="pair-eyebrow">Did you know</span>
+          <span class="pair-text" id="pairText"></span>
+        </div>
         <div class="search-shell">
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input id="searchInput" class="search-input" type="text" placeholder="Type a name, studio, or service&hellip;" autocomplete="off" />
+          <input id="searchInput" class="search-input" type="text" placeholder="Search by name, studio, or service&hellip;" autocomplete="off" />
         </div>
         <div class="search-results" id="searchResults" hidden></div>
-        <p class="search-hint">Or browse below &mdash; see who's here, who's open, where to go.</p>
       </section>
 
       <section class="browse">
@@ -684,28 +827,28 @@
 <script>
   const SEED_TENANTS = [
     { id:'t1', name:'Dueces Nail Studio', suite:'Sage Suite', service:'Manicure · Pedicure · Nail Art',
-      services:['Gel','Pedicure','Nail Art','Structured Mani'], open:true, status:'active',
+      services:['Gel','Pedicure','Nail Art','Structured Mani'], category:'nails', open:true, status:'active',
       photo:'assets/photos/1000040455.jpg', avatar:'D', is_concept:false },
     { id:'t4', name:'Indigo & Oak', suite:'Suite 204', service:'Color & Balayage Specialist',
-      services:['Balayage','Color','Cuts'], open:true, status:'active',
+      services:['Balayage','Color','Cuts'], category:'hair', open:true, status:'active',
       photo:'assets/photos/hair1.png', avatar:'IO', is_concept:true },
     { id:'t5', name:'Verdant Skin Studio', suite:'Suite 212', service:'Facials & Skincare',
-      services:['Facials','Peels','LED'], open:true, status:'active',
+      services:['Facials','Peels','LED'], category:'skin', open:true, status:'active',
       photo:'assets/photos/facial.png', avatar:'V', is_concept:true },
     { id:'t6', name:'The Lash Loft', suite:'Suite 210', service:'Lash Extensions & Lifts',
-      services:['Extensions','Lifts','Tints'], open:true, status:'active',
+      services:['Extensions','Lifts','Tints'], category:'brows', open:true, status:'active',
       photo:'assets/photos/lash1.png', avatar:'LL', is_concept:true },
     { id:'t7', name:'Bloom Brow Bar', suite:'Suite 206', service:'Brows, Lamination & Microblading',
-      services:['Shaping','Lamination','Tinting'], open:true, status:'active',
+      services:['Shaping','Lamination','Tinting'], category:'brows', open:true, status:'active',
       photo:'assets/photos/lash2.png', avatar:'B', is_concept:true },
     { id:'t8', name:'Quiet Hands', suite:'Suite 218', service:'Therapeutic Massage',
-      services:['Deep Tissue','Swedish','Prenatal'], open:false, status:'active',
+      services:['Deep Tissue','Swedish','Prenatal'], category:'wellness', open:false, status:'active',
       photo:'assets/photos/massage1.png', avatar:'Q', is_concept:true },
     { id:'t9', name:'Tilde Cosmetics', suite:'Suite 208', service:'Bridal Makeup & Lessons',
-      services:['Bridal','Events','Lessons'], open:true, status:'active',
+      services:['Bridal','Events','Lessons'], category:'makeup', open:true, status:'active',
       photo:'assets/photos/makeup.png', avatar:'T', is_concept:true },
     { id:'t10', name:'Finch Hair Studio', suite:'Suite 202', service:"Precision Cuts & Men's Grooming",
-      services:['Cuts',"Men's Grooming",'Beards'], open:true, status:'active',
+      services:['Cuts',"Men's Grooming",'Beards'], category:'hair', open:true, status:'active',
       photo:'assets/photos/hair2.png', avatar:'F', is_concept:true }
   ];
 
@@ -725,7 +868,7 @@
       ? '<span class="open-dot"></span><span style="color:var(--sage-deep);">Open</span>'
       : '<span style="color:var(--ink-faint);">Closed</span>';
     return '' +
-      '<div class="tenant-card">' +
+      '<div class="tenant-card" data-tenant-id="' + (t.id || '') + '" style="cursor:pointer;">' +
         photo +
         '<div class="tenant-body">' +
           '<div class="tenant-name">' + (t.name || 'Studio') + (t.is_concept ? ' <span class="test-pill">Test</span>' : '') + '</div>' +
@@ -736,6 +879,12 @@
   }
 
   let activeCategory = 'all';
+
+  // Spell small counts to give the hero a more human feel ("Eight studios. One roof.")
+  function numberToWord(n) {
+    const words = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty'];
+    return (n >= 0 && n < words.length) ? words[n].charAt(0).toUpperCase() + words[n].slice(1) : String(n);
+  }
 
   function render() {
     const tenants = loadTenants();
@@ -749,6 +898,9 @@
     if (nowGrid) nowGrid.innerHTML = tenants.filter(function(t) { return t.open && inCat(t); }).map(tenantCard).join('');
     const dc = document.getElementById('dir-count'); if (dc) dc.textContent = tenants.length;
     const nc = document.getElementById('now-count'); if (nc) nc.textContent = tenants.filter(function(t) { return t.open; }).length + ' open';
+    // Hero discovery counts — "X studios. One roof." and "X open right now"
+    const heroCountEl = document.getElementById('heroCount'); if (heroCountEl) heroCountEl.textContent = numberToWord(tenants.length);
+    const heroOpenEl = document.getElementById('heroOpen'); if (heroOpenEl) heroOpenEl.textContent = tenants.filter(function(t) { return t.open; }).length;
 
     try {
       const s = JSON.parse(localStorage.getItem('ss_studio_v1') || 'null');
@@ -765,6 +917,92 @@
         vb.textContent = v.length + ' suite' + (v.length === 1 ? '' : 's') + ' open — ask the owner for a tour.';
       }
     } catch (e) {}
+
+    // Wire tenant card clicks to the cross-pollination detail panel
+    document.querySelectorAll('.tenant-card[data-tenant-id]').forEach(function(card) {
+      card.addEventListener('click', function() {
+        const id = card.dataset.tenantId;
+        const t = loadTenants().find(function(x) { return x.id === id; });
+        if (t) openTenantPanel(t);
+      });
+    });
+  }
+
+  /* ----- Cross-pollination: tenant detail panel ----- */
+  function openTenantPanel(t) {
+    const all = loadTenants();
+    // "While you're here" — surface 3 OTHER studios that are open right now and in a different category.
+    // This is the moment of cross-pollination: someone came for one thing, here are seven more.
+    const sameCat = function(x) { return (x.category || '').toLowerCase() === (t.category || '').toLowerCase(); };
+    const openOthers = all.filter(function(x) { return x.id !== t.id && x.open && !sameCat(x); });
+    // Fallback: if not enough, allow same-category neighbors
+    const others = openOthers.length >= 3 ? openOthers.slice(0, 3)
+      : openOthers.concat(all.filter(function(x) { return x.id !== t.id && x.open && sameCat(x); })).slice(0, 3);
+
+    const heroPhoto = t.photo
+      ? '<div class="tp-hero" style="background-image:url(\'' + t.photo + '\');"></div>'
+      : '<div class="tp-hero tp-hero--avatar"><span>' + (t.avatar || (t.name || '?')[0]) + '</span></div>';
+    const statusHtml = t.open
+      ? '<span style="color:var(--sage-deep);"><span class="open-dot"></span> Open right now</span>'
+      : '<span style="color:var(--ink-faint);">&#9711; Closed today</span>';
+    const pairsHtml = others.length
+      ? '<div class="tp-pairs">' +
+          '<div class="tp-pairs-eyebrow">While you\'re at ' + (t.name || 'this studio') + '&hellip;</div>' +
+          '<div class="tp-pairs-grid">' +
+            others.map(function(o) {
+              const pp = o.photo
+                ? '<div class="tp-pair-photo" style="background-image:url(\'' + o.photo + '\');"></div>'
+                : '<div class="tp-pair-photo tp-pair-photo--avatar">' + (o.avatar || (o.name || '?')[0]) + '</div>';
+              return '<button type="button" class="tp-pair" data-pair-id="' + o.id + '">' +
+                pp +
+                '<div class="tp-pair-body">' +
+                  '<div class="tp-pair-name">' + (o.name || '') + '</div>' +
+                  '<div class="tp-pair-service">' + ((o.service || '').split('·')[0].split(',')[0].trim()) + '</div>' +
+                  '<div class="tp-pair-meta">' + (o.suite || '') + ' &middot; <span style="color:var(--sage-deep);">Open</span></div>' +
+                '</div>' +
+              '</button>';
+            }).join('') +
+          '</div>' +
+          '<p class="tp-pairs-hint">Built into the building. Walk to any of them while you\'re here.</p>' +
+        '</div>'
+      : '';
+
+    let panel = document.getElementById('tenantPanel');
+    if (!panel) {
+      panel = document.createElement('div');
+      panel.id = 'tenantPanel';
+      panel.className = 'tenant-panel';
+      document.body.appendChild(panel);
+    }
+    panel.innerHTML =
+      '<div class="tp-card">' +
+        '<button class="tp-close" type="button" aria-label="Close">&times;</button>' +
+        heroPhoto +
+        '<div class="tp-body">' +
+          '<div class="tp-suite">Suite ' + (t.suite || '—') + '</div>' +
+          '<h3 class="tp-name">' + (t.name || '') + (t.is_concept ? ' <span class="test-pill">Test</span>' : '') + '</h3>' +
+          '<p class="tp-service">' + (t.service || '') + '</p>' +
+          '<div class="tp-status">' + statusHtml + '</div>' +
+          pairsHtml +
+        '</div>' +
+      '</div>' +
+      '<div class="tp-backdrop"></div>';
+    panel.classList.add('is-on');
+    // Close handlers
+    panel.querySelector('.tp-close').addEventListener('click', closeTenantPanel);
+    panel.querySelector('.tp-backdrop').addEventListener('click', closeTenantPanel);
+    // Pair clicks → open that tenant (cross-pollination chain)
+    panel.querySelectorAll('.tp-pair').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const id = btn.dataset.pairId;
+        const next = loadTenants().find(function(x) { return x.id === id; });
+        if (next) openTenantPanel(next);
+      });
+    });
+  }
+  function closeTenantPanel() {
+    const panel = document.getElementById('tenantPanel');
+    if (panel) panel.classList.remove('is-on');
   }
 
   /* Search */
@@ -948,6 +1186,42 @@
 
   render();
   renderMap();
+
+  /* Ambient cross-pollination — rotate "while you're at X, walk to Y" pairs in the hero */
+  (function pairRotator() {
+    const rotator = document.getElementById('pairRotator');
+    const textEl = document.getElementById('pairText');
+    if (!rotator || !textEl) return;
+    const tenants = loadTenants().filter(function(t) { return t.open; });
+    if (tenants.length < 2) return;
+
+    // Build complementary pairs — same-category pairs aren't cross-pollination
+    const pairs = [];
+    for (let i = 0; i < tenants.length; i++) {
+      for (let j = 0; j < tenants.length; j++) {
+        if (i === j) continue;
+        const a = tenants[i], b = tenants[j];
+        if ((a.category || 'x') === (b.category || 'y')) continue;
+        const aShort = a.name.replace(/(studio|salon|bar|loft|hands).*/i, '').trim();
+        const bShort = b.name.replace(/(studio|salon|bar|loft|hands).*/i, '').trim();
+        const bService = (b.service || '').split('·')[0].split(',')[0].trim().toLowerCase();
+        pairs.push("While you're at " + aShort + ", walk to " + bShort + " for " + bService + ".");
+      }
+    }
+    if (!pairs.length) return;
+
+    rotator.hidden = false;
+    let idx = Math.floor(Math.random() * pairs.length);
+    textEl.textContent = pairs[idx];
+    setInterval(function() {
+      rotator.classList.add('is-fading');
+      setTimeout(function() {
+        idx = (idx + 1) % pairs.length;
+        textEl.textContent = pairs[idx];
+        rotator.classList.remove('is-fading');
+      }, 350);
+    }, 6000);
+  })();
 
   /* Mobile preview scaling — CSS calc with vw units can't feed scale() directly,
      so we measure the bezel and set the transform in JS. Same pattern the pitch deck uses. */
