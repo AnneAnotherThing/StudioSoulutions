@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Studio Soulutions — Lobby Kiosk + Mobile + AI Branding</title>
+<title>Studio Soulutions — Lobby Kiosk + Mobile Companion</title>
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
 <link rel="apple-touch-icon" href="assets/favicon-192.png">
@@ -143,7 +143,6 @@
     <div class="hidden md:flex items-center gap-7 text-sm font-semibold" style="color: var(--ink-soft);">
       <a href="#kiosk" class="hover:text-[var(--ink)] transition">Kiosk</a>
       <a href="#mobile" class="hover:text-[var(--ink)] transition">Mobile</a>
-      <a href="#ai" class="hover:text-[var(--ink)] transition">AI Bios</a>
     </div>
   </div>
 </header>
@@ -175,7 +174,7 @@
         One lobby. <span class="serif-it text-[var(--taupe-deep)]">Every</span> studio<br/>under one roof.
       </h1>
       <p class="mt-7 text-lg sm:text-xl max-w-2xl leading-relaxed text-[var(--ink-soft)]">
-        A lobby kiosk, a mobile companion, and AI-written tenant bios — purpose-built for salon-suite buildings. Designed so every studio inside gets discovered, not just the ones with a sign on the door.
+        A lobby kiosk and a mobile companion — purpose-built for salon-suite buildings. Designed so every studio inside gets discovered, not just the ones with a sign on the door.
       </p>
 
       <div class="flex flex-wrap gap-3 mt-9">
@@ -185,7 +184,7 @@
       </div>
 
       <!-- factlets row -->
-      <div class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-5 max-w-2xl pt-6" style="border-top: 1px solid rgba(61,53,48,0.10);">
+      <div class="mt-12 grid grid-cols-3 gap-5 max-w-2xl pt-6" style="border-top: 1px solid rgba(61,53,48,0.10);">
         <div>
           <div class="serif text-3xl text-[var(--ink)]">10+</div>
           <div class="text-xs eyebrow mt-1" style="color: var(--ink-faint);">Suites per building</div>
@@ -197,10 +196,6 @@
         <div>
           <div class="serif text-3xl text-[var(--ink)]">QR</div>
           <div class="text-xs eyebrow mt-1" style="color: var(--ink-faint);">From lobby to phone</div>
-        </div>
-        <div>
-          <div class="serif text-3xl text-[var(--ink)]">AI</div>
-          <div class="text-xs eyebrow mt-1" style="color: var(--ink-faint);">Bios in every tenant's voice</div>
         </div>
       </div>
     </div>
@@ -225,7 +220,7 @@
       </p>
     </div>
 
-    <div class="grid lg:grid-cols-3 gap-5">
+    <div class="grid md:grid-cols-2 gap-5">
       <div class="card-dark rounded-3xl p-7">
         <div class="w-10 h-10 rounded-xl bg-cream-10 grid place-items-center mb-5">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="text-[var(--sage-deep)]"><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
@@ -239,13 +234,6 @@
         </div>
         <h3 class="serif text-2xl">Mobile companion</h3>
         <p class="mt-2 text-cream-70 leading-relaxed">Scan the QR. The lobby experience continues on their phone — book, save, and find them later.</p>
-      </div>
-      <div class="card-dark rounded-3xl p-7">
-        <div class="w-10 h-10 rounded-xl bg-cream-10 grid place-items-center mb-5">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="text-[var(--cream)]"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-        </div>
-        <h3 class="serif text-2xl">AI-written bios</h3>
-        <p class="mt-2 text-cream-70 leading-relaxed">Tenants speak a sentence, drop a link, or paste rough notes. Studio Soulutions writes the polished version.</p>
       </div>
     </div>
   </div>
@@ -516,102 +504,10 @@
           </div>
         </div>
 
-<!-- ===================== AI BIOS ===================== -->
-<section id="ai" class="relative py-24 lg:py-32" style="background: linear-gradient(180deg, #F5EDE0 0%, #EFE4D2 100%);">
-  <div class="max-w-7xl mx-auto px-6 lg:px-12">
-    <div class="text-center max-w-3xl mx-auto mb-16">
-      <div class="eyebrow text-cream-50">03 · AI Branding</div>
-      <h2 class="serif text-4xl lg:text-6xl mt-3">Tenant bios, written <span class="serif-it text-[var(--sage-deep)]">in their own voice</span>.</h2>
-      <p class="mt-6 text-lg text-cream-70 leading-relaxed">
-        Most suite tenants don't have time — or interest — in writing a bio. So they don't. Studio Soulutions takes a voice memo, a few notes, or an Instagram link, and writes the polished version they'd never sit down to write themselves.
-      </p>
-    </div>
+<!-- AI Branding section intentionally removed from public marketing.
+     It's a behind-the-scenes owner-only tool that lives in admin.html — not
+     a feature we lead with publicly. -->
 
-    <div class="grid lg:grid-cols-2 gap-6 max-w-5xl mx-auto">
-      <!-- TENANT INPUT -->
-      <div class="card-dark rounded-3xl p-7">
-        <div class="flex items-center justify-between mb-4">
-          <div class="eyebrow text-cream-50">Tenant input</div>
-          <div class="text-[10px] eyebrow text-cream-40">Dueces Nail Studio · pasted notes</div>
-        </div>
-        <div class="rounded-2xl p-5 bg-cream-04 border-cream-10 text-cream-70 leading-relaxed">
-          "i do nails — gel, pedicures, nail art. sage green room. quiet, no rush. love color but also clean & simple. been doing nails 8 years. work by appointment mostly but walk-ins ok if i'm not booked."
-        </div>
-        <div class="mt-5 flex flex-wrap gap-2">
-          <div class="rounded-full bg-cream-06 border-cream-10 px-3 py-1.5 text-xs text-cream-70 flex items-center gap-1.5">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M5 8a7 7 0 0 1 14 0v3a7 7 0 1 1-14 0z" /></svg>
-            Voice memo
-          </div>
-          <div class="rounded-full bg-cream-06 border-cream-10 px-3 py-1.5 text-xs text-cream-70 flex items-center gap-1.5">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
-            Paste notes
-          </div>
-          <div class="rounded-full bg-cream-06 border-cream-10 px-3 py-1.5 text-xs text-cream-70 flex items-center gap-1.5">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg>
-            Instagram import
-          </div>
-        </div>
-      </div>
-
-      <!-- AI OUTPUT -->
-      <div class="rounded-3xl p-7 glow-sage" style="background: linear-gradient(180deg, rgba(139,154,126,0.08) 0%, rgba(245,237,224,0.55) 100%);">
-        <div class="flex items-center justify-between mb-4">
-          <div class="eyebrow text-cream-50">Generated · Three voices</div>
-          <div class="text-[10px] eyebrow text-[var(--sage-deep)]">Choose · refine · publish</div>
-        </div>
-
-        <div class="space-y-3">
-          <div class="rounded-2xl p-5 bg-cream-04 border-cream-10">
-            <div class="flex items-center justify-between mb-2">
-              <span class="serif text-base">Warm & welcoming</span>
-              <span class="text-[10px] eyebrow text-cream-40">Recommended for Studio Soulutions</span>
-            </div>
-            <p class="text-cream-70 leading-relaxed text-[15px]">
-              A sage-walled, softly lit studio for nails done with intention. Gel, pedicures, and quiet color work — eight years in. By appointment, walk-ins welcome when the chair is open.
-            </p>
-          </div>
-          <div class="rounded-2xl p-5 bg-cream-04 border-cream-10">
-            <div class="flex items-center justify-between mb-2">
-              <span class="serif text-base">Editorial / minimal</span>
-            </div>
-            <p class="text-cream-70 leading-relaxed text-[15px]">
-              Quiet, considered nail work in a sage green suite. Gel, pedicures, and nail art. Eight years of practice. Appointments preferred.
-            </p>
-          </div>
-          <div class="rounded-2xl p-5 bg-cream-04 border-cream-10">
-            <div class="flex items-center justify-between mb-2">
-              <span class="serif text-base">Friendly & approachable</span>
-            </div>
-            <p class="text-cream-70 leading-relaxed text-[15px]">
-              Hi — I've been doing nails for eight years and I love a calm, no-rush appointment. Sage green room, gel and pedis, plus nail art when you want to play. Book in or walk in if I'm not booked.
-            </p>
-          </div>
-        </div>
-
-        <div class="mt-5 flex flex-wrap gap-2">
-          <button class="rounded-full bg-cream-10 border-cream-20 px-3 py-1.5 text-xs hover:bg-cream-15 text-[var(--cream)]">Shorten</button>
-          <button class="rounded-full bg-cream-10 border-cream-20 px-3 py-1.5 text-xs hover:bg-cream-15 text-[var(--cream)]">Add services</button>
-          <button class="rounded-full bg-cream-10 border-cream-20 px-3 py-1.5 text-xs hover:bg-cream-15 text-[var(--cream)]">More luxurious</button>
-          <button class="rounded-full bg-cream-10 border-cream-20 px-3 py-1.5 text-xs hover:bg-cream-15 text-[var(--cream)]">Match house voice</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- consistency band -->
-    <div class="mt-12 max-w-5xl mx-auto rounded-3xl card-dark p-6 lg:p-8 flex flex-wrap items-center gap-6 justify-between">
-      <div class="max-w-xl">
-        <div class="serif text-2xl">The whole building, one voice.</div>
-        <p class="text-cream-70 mt-2">Every generated bio is tuned to Studio Soulutions' house voice — so the building reads as one place even though it holds ten different artists.</p>
-      </div>
-      <div class="flex items-center gap-3 text-xs eyebrow text-cream-50">
-        <span class="rounded-full bg-cream-06 border-cream-10 px-3 py-2">Warm</span>
-        <span class="rounded-full bg-cream-06 border-cream-10 px-3 py-2">Earthy</span>
-        <span class="rounded-full bg-cream-06 border-cream-10 px-3 py-2">Considered</span>
-        <span class="rounded-full bg-cream-06 border-cream-10 px-3 py-2">Never pushy</span>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ===================== WHAT WE'VE BUILT VS PITCH ===================== -->
 <section class="relative py-24 lg:py-28" style="background: var(--bg);">
@@ -628,7 +524,7 @@
       <div class="card-dark rounded-3xl p-7">
         <div class="eyebrow text-cream-50">This page</div>
         <h3 class="serif text-2xl mt-2">Pitch deck (vision)</h3>
-        <p class="text-cream-70 mt-3 leading-relaxed">For building owners and landlords. Shows what the whole experience becomes once the kiosk + AI sit on top of the working mobile app.</p>
+        <p class="text-cream-70 mt-3 leading-relaxed">For building owners and landlords. Shows what the whole experience becomes once the kiosk sits on top of the working mobile app.</p>
         <div class="text-[11px] eyebrow text-cream-40 mt-5">File · Studio-Soulutions-Pitch-v1.html</div>
       </div>
       <div class="card-dark rounded-3xl p-7 relative overflow-hidden">
@@ -662,6 +558,22 @@
     <div class="mt-9 flex flex-wrap justify-center gap-3">
       <a href="mailto:salonplusss@gmail.com?subject=Studio%20Soulutions" class="rounded-full bg-[var(--ink)] text-[var(--surface-2)] px-7 py-3.5 text-sm font-semibold">Email salonplusss@gmail.com</a>
       <a href="index.html" class="rounded-full border-cream-20 bg-cream-10 backdrop-blur px-7 py-3.5 text-sm font-semibold text-[var(--cream)]">Open the live prototype</a>
+    </div>
+
+    <!-- Interest QR — scan to tell us you want in -->
+    <div class="mt-14 flex flex-col items-center gap-4 max-w-md mx-auto">
+      <div class="eyebrow text-cream-50">Or scan &middot; tell us you're curious</div>
+      <a href="https://www.hive-rise.com/interest-studiosoulutions" target="_blank" rel="noopener"
+         class="block rounded-2xl p-4 bg-[var(--surface-2)] border border-[var(--line)]"
+         style="box-shadow: 0 2px 6px rgba(61,53,48,0.10), 0 24px 60px -10px rgba(61,53,48,0.18);">
+        <img src="assets/qr-studiosoulutions-interest.png"
+             alt="QR code to www.hive-rise.com/interest-studiosoulutions"
+             width="200" height="200"
+             style="width: 200px; height: 200px; display: block;" />
+      </a>
+      <p class="text-xs eyebrow text-cream-40 text-center">
+        hive-rise.com/interest-studiosoulutions
+      </p>
     </div>
   </div>
 </section>
