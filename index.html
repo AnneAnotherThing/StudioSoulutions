@@ -86,29 +86,14 @@ body {
   min-height: 100vh;
   padding-bottom: 92px;
   position: relative;
-  background: var(--bg);
-}
-/* Photo backdrop — same treatment as the kiosk, so the mobile app reads as a continuation
-   of the lobby touchscreen. Corridor photo + sage radial + cream wash from top to bottom. */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  margin: 0 auto; max-width: 440px;
-  background-image: url('assets/photos/1000040457.jpg');
-  background-size: cover;
-  background-position: center;
-  z-index: -2;
-  pointer-events: none;
-}
-body::after {
-  content: '';
-  position: fixed; inset: 0;
-  margin: 0 auto; max-width: 440px;
+  /* Photo backdrop — corridor photo with sage radial + cream wash on top, same as kiosk.
+     Layered directly on body so it always shows through; no z-index gymnastics. */
   background:
     radial-gradient(90% 60% at 80% 0%, rgba(139,154,126,0.14) 0%, transparent 60%),
-    linear-gradient(180deg, rgba(245,237,224,0.55) 0%, rgba(245,237,224,0.82) 55%, rgba(245,237,224,0.96) 100%);
-  z-index: -1;
-  pointer-events: none;
+    linear-gradient(180deg, rgba(245,237,224,0.55) 0%, rgba(245,237,224,0.82) 55%, rgba(245,237,224,0.96) 100%),
+    url('assets/photos/1000040457.jpg') center / cover no-repeat;
+  background-attachment: fixed, fixed, fixed;
+  background-color: var(--bg);
 }
 
 .serif    { font-family: 'Fraunces', Georgia, serif; font-weight: 500; letter-spacing: -0.01em; }
