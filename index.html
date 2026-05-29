@@ -87,10 +87,28 @@ body {
   padding-bottom: 92px;
   position: relative;
   background: var(--bg);
-  /* faint sage wash at the top edge — calming, natural */
-  background-image:
-    radial-gradient(90% 30% at 80% 0%, rgba(139,154,126,0.08) 0%, transparent 70%);
-  background-attachment: fixed;
+}
+/* Photo backdrop — same treatment as the kiosk, so the mobile app reads as a continuation
+   of the lobby touchscreen. Corridor photo + sage radial + cream wash from top to bottom. */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  margin: 0 auto; max-width: 440px;
+  background-image: url('assets/photos/1000040457.jpg');
+  background-size: cover;
+  background-position: center;
+  z-index: -2;
+  pointer-events: none;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  margin: 0 auto; max-width: 440px;
+  background:
+    radial-gradient(90% 60% at 80% 0%, rgba(139,154,126,0.14) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(245,237,224,0.55) 0%, rgba(245,237,224,0.82) 55%, rgba(245,237,224,0.96) 100%);
+  z-index: -1;
+  pointer-events: none;
 }
 
 .serif    { font-family: 'Fraunces', Georgia, serif; font-weight: 500; letter-spacing: -0.01em; }
@@ -387,21 +405,16 @@ body {
   color: var(--cream-50);
 }
 
-/* DISCOVER — WELCOME (corridor photo, dark wash) */
+/* WELCOME — sits transparently over the body-level photo backdrop (same as kiosk treatment).
+   No per-view background here; the body::before/::after layers paint the corridor + wash for
+   every screen, so the app reads as one continuous space. */
 .welcome {
   position: relative;
-  min-height: 240px;
-  padding: 96px 20px 22px;
+  min-height: 220px;
+  padding: 84px 20px 18px;
   margin: -16px -20px 18px;
   border-radius: 0 0 28px 28px;
   overflow: hidden;
-  /* Light wash so the photo breathes — calming, beauty-industry-appropriate */
-  background-image:
-    radial-gradient(90% 60% at 80% 10%, rgba(139,154,126,0.15) 0%, transparent 60%),
-    linear-gradient(180deg, rgba(245,237,224,0.12) 0%, rgba(245,237,224,0.65) 60%, rgba(245,237,224,0.96) 100%),
-    url('assets/photos/1000040457.jpg');
-  background-size: cover;
-  background-position: center;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -1315,14 +1328,7 @@ body {
 
 <!-- FROM THE OWNER VIEW -->
 <section class="view" id="view-owner">
-  <div class="welcome" style="
-    min-height: 200px;
-    padding-top: 80px;
-    background-image:
-      radial-gradient(90% 60% at 80% 10%, rgba(139,154,126,0.15) 0%, transparent 60%),
-      linear-gradient(180deg, rgba(245,237,224,0.12) 0%, rgba(245,237,224,0.65) 60%, rgba(245,237,224,0.96) 100%),
-      url('assets/photos/1000040456.jpg');
-  ">
+  <div class="welcome" style="min-height: 200px; padding-top: 80px;">
     <div class="eyebrow">From the owner</div>
     <h1 style="font-size: 26px;">A note from <em>the owner</em></h1>
   </div>
