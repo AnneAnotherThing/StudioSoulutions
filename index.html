@@ -91,7 +91,7 @@ body {
   background:
     radial-gradient(90% 60% at 80% 0%, rgba(139,154,126,0.14) 0%, transparent 60%),
     linear-gradient(180deg, rgba(245,237,224,0.55) 0%, rgba(245,237,224,0.82) 55%, rgba(245,237,224,0.96) 100%),
-    url('assets/photos/1000040457.jpg') center / cover no-repeat;
+    url('assets/photos/corridor-bg.jpg') center / cover no-repeat;
   background-attachment: fixed, fixed, fixed;
   background-color: var(--bg);
 }
@@ -988,8 +988,8 @@ body {
 }
 
 .profile-actions {
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
   margin-bottom: 28px;
 }
@@ -1006,6 +1006,7 @@ body {
   justify-content: center;
   gap: 8px;
   transition: transform 0.15s ease, background 0.2s ease;
+  text-decoration: none;
 }
 .btn:active { transform: scale(0.985); }
 .btn-primary {
@@ -1089,6 +1090,166 @@ body {
   margin-top: 3px;
 }
 
+/* Three-way status pill: available (sage), busy (clay), closed (faint).
+   Legacy .away class kept as an alias for closed. */
+.row-status.is-available { color: var(--sage-deep); }
+.row-status.is-busy      { color: var(--clay-deep); }
+.row-status.is-closed    { color: var(--cream-40); }
+.row-status.away         { color: var(--cream-40); }
+.row-status.is-available .dot { box-shadow: 0 0 0 0 rgba(107,122,95,0.55); animation: statusPulse 1.8s ease-out infinite; }
+@keyframes statusPulse {
+  0%   { box-shadow: 0 0 0 0   rgba(107,122,95,0.55); }
+  100% { box-shadow: 0 0 0 6px rgba(107,122,95,0); }
+}
+.tenant-photo .status-pill.is-available { color: var(--sage-deep); }
+.tenant-photo .status-pill.is-busy      { color: var(--clay-deep); }
+.tenant-photo .status-pill.is-closed    { color: var(--cream-50); }
+.profile-hero .photo-tag.busy           { color: var(--clay-deep); }
+
+/* Profile actions stack vertically; the first row is grid (primary + heart). */
+.profile-actions-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+.btn-outline {
+  background: var(--cream-10);
+  color: var(--cream);
+  border: 1px solid var(--line-2);
+  backdrop-filter: blur(10px);
+}
+
+/* ============ FLOOR-PLAN MAP ============================================ */
+.map-stage {
+  position: relative;
+  margin: 14px -20px 0;
+  background: var(--surface-2);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 20px 16px 24px;
+  min-height: 60vh;
+}
+.map-stage .map-photo {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, rgba(255,251,244,1) 0%, rgba(245,237,224,0.85) 70%, rgba(232,222,202,0.7) 100%);
+  pointer-events: none;
+}
+.map-svg {
+  position: relative; z-index: 1;
+  width: 100%; height: auto;
+  display: block;
+  max-height: 70vh;
+}
+.map-svg .suite rect {
+  fill: rgba(255,251,244,0.92);
+  stroke: rgba(61,53,48,0.30);
+  stroke-width: 1.5;
+  transition: fill 0.25s ease, stroke 0.25s ease;
+  cursor: pointer;
+}
+.map-svg .suite text {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 18px;
+  fill: var(--ink-faint);
+  pointer-events: none;
+}
+.map-svg .suite:hover rect { fill: rgba(245,237,224,1); stroke: var(--ink-soft); }
+.map-svg .suite.is-occupied rect { fill: rgba(139,154,126,0.22); stroke: var(--sage-deep); }
+.map-svg .suite.is-occupied text { fill: var(--ink-on-cream); }
+.map-svg .suite.is-occupied.is-open rect { fill: rgba(139,154,126,0.40); }
+.map-svg .suite.is-vacant rect {
+  fill: rgba(201,123,90,0.16);
+  stroke: var(--clay-deep);
+  stroke-dasharray: 4 3;
+}
+.map-svg .suite.is-vacant text { fill: var(--clay-deep); }
+.map-svg .suite.is-target rect {
+  fill: var(--sage-deep);
+  stroke: var(--sage-deep);
+  filter: drop-shadow(0 4px 14px rgba(107,122,95,0.45));
+  animation: suiteTargetPulse 1.8s ease-in-out infinite;
+}
+.map-svg .suite.is-target text { fill: var(--surface-2); font-weight: 700; }
+@keyframes suiteTargetPulse {
+  0%, 100% { stroke-width: 1.5; }
+  50%      { stroke-width: 6; }
+}
+.map-svg .you-are-here circle:first-child {
+  animation: yahPulse 2.4s ease-out infinite;
+  transform-origin: center;
+}
+@keyframes yahPulse {
+  0%   { transform: scale(0.6); opacity: 0.55; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+.map-svg .you-are-here .yah-label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: 1.6px;
+  fill: var(--clay-deep);
+}
+.map-svg .route-line {
+  fill: none;
+  stroke: var(--sage-deep);
+  stroke-width: 5;
+  stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 10 8;
+  animation: routeMarch 1.4s linear infinite;
+  filter: drop-shadow(0 1px 2px rgba(107,122,95,0.25));
+}
+@keyframes routeMarch { to { stroke-dashoffset: -36; } }
+.map-svg .route-glow {
+  fill: none;
+  stroke: var(--sage-deep);
+  stroke-width: 14;
+  stroke-linecap: round; stroke-linejoin: round;
+  opacity: 0.10;
+}
+.map-route-card {
+  position: relative; z-index: 2;
+  margin: 0 4px 14px;
+  background: var(--surface-2);
+  color: var(--ink-on-cream);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  box-shadow: 0 8px 22px rgba(61,53,48,0.10);
+}
+.map-route-card .mrc-avatar {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: grid; place-items: center;
+  font-family: 'Fraunces', serif;
+  color: var(--surface-2);
+  font-size: 18px;
+  background-size: cover; background-position: center;
+}
+.map-route-card .mrc-name { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 500; }
+.map-route-card .mrc-sub  { font-size: 11.5px; color: var(--ink-soft); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 2px; font-weight: 600; }
+.map-route-card .mrc-clear {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink-soft);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  cursor: pointer;
+}
+.map-route-card .mrc-clear:hover { color: var(--ink-on-cream); border-color: var(--ink-soft); }
+.map-hint {
+  position: relative; z-index: 1;
+  margin-top: 12px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--cream-60);
+  font-style: italic;
+}
+
+
 /* TOAST */
 .toast {
   position: fixed;
@@ -1158,7 +1319,7 @@ body {
 <body>
 
 <!-- Back to walkthrough -->
-<a href="Laura-Walkthrough-v1.html" class="back-to-walkthrough back-to-walkthrough--right">
+<a href="Laura-Walkthrough.html" class="back-to-walkthrough back-to-walkthrough--right">
   <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l-6 6 6 6"/></svg>
   <span>Walkthrough</span>
 </a>
@@ -1181,7 +1342,7 @@ body {
   <div class="welcome">
     <div class="eyebrow">More than you came for</div>
     <h1><span id="welcomeCount">—</span> studios.<br/><em>One roof.</em></h1>
-    <p><span id="welcomeOpen">—</span> open right now · take it with you, decide later.</p>
+    <p><span id="welcomeOpen">—</span> open · <span id="welcomeAvail">—</span> can take you right now.</p>
   </div>
 
   <!-- Kiosk-style hero search — mirrors the lobby touchscreen -->
@@ -1215,7 +1376,7 @@ body {
       </div>
       <div class="mc-body">
         <div class="mc-label">Open right now</div>
-        <div class="mc-meta open"><span class="pulse-dot"></span><span id="mc-now-count">—</span> open · live</div>
+        <div class="mc-meta open"><span class="pulse-dot"></span><span id="mc-now-count">—</span> open · <span id="mc-avail-count">—</span> can take you now</div>
       </div>
     </button>
 
@@ -1286,29 +1447,59 @@ body {
 </section>
 
 <!-- SUITE MAP VIEW -->
+<!-- Two modes: browse (default) and route (entered via "Show me the way" on
+     a profile). Route mode dynamically rewrites the SVG viewBox to zoom in on
+     the slice containing the lobby pin + destination suite. -->
 <section class="view" id="view-map">
-  <div class="welcome" style="min-height: 180px; padding-top: 70px;">
-    <div class="eyebrow">Suite map</div>
-    <h1 style="font-size: 26px;">You are <em>here</em></h1>
-    <p>Tap a suite to see who's inside.</p>
+  <div class="welcome" style="min-height: 160px; padding-top: 60px;">
+    <div class="eyebrow" id="mapEyebrow">Suite map</div>
+    <h1 style="font-size: 26px;" id="mapHeadline">You are <em>here</em></h1>
+    <p id="mapSubline">Tap a suite to see who's inside.</p>
   </div>
-  <div style="
-    margin-top: 18px;
-    background: var(--cream-04);
-    border: 1px dashed var(--line-2);
-    border-radius: 18px;
-    min-height: 380px;
-    display: grid; place-items: center;
-    text-align: center;
-    color: var(--cream-50);
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-size: 14px;
-    padding: 20px;
-  ">
-    Interactive floor plan — coming with the kiosk install.<br>
-    For now, browse the Directory for a full list.
+  <div class="map-route-card" id="mapRouteCard" hidden>
+    <div class="mrc-avatar" id="mrcAvatar"></div>
+    <div>
+      <div class="mrc-name" id="mrcName"></div>
+      <div class="mrc-sub" id="mrcSub"></div>
+    </div>
+    <button class="mrc-clear" type="button" onclick="clearRoute()">Clear</button>
   </div>
+  <div class="map-stage">
+    <div class="map-photo" aria-hidden="true"></div>
+    <svg class="map-svg" id="phoneMapSvg" viewBox="0 0 1200 520" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Suite map">
+      <rect x="20" y="20" width="1160" height="480" rx="14" fill="rgba(255,251,244,0.85)" stroke="rgba(61,53,48,0.18)" stroke-width="2"/>
+      <rect x="60" y="170" width="1080" height="58" fill="rgba(245,237,224,0.85)" stroke="rgba(61,53,48,0.10)"/>
+      <rect x="60" y="294" width="1080" height="58" fill="rgba(245,237,224,0.85)" stroke="rgba(61,53,48,0.10)"/>
+      <g id="routeLayer"></g>
+      <g class="you-are-here" transform="translate(80, 260)">
+        <circle r="14" fill="#C97B5A" opacity="0.20"/>
+        <circle r="7"  fill="#C97B5A"/>
+        <text class="yah-label" y="-24" text-anchor="middle">YOU ARE HERE</text>
+      </g>
+      <g class="suites" id="phoneMapSuites">
+        <g class="suite" data-suite="202"><rect x="160" y="60"  width="120" height="100" rx="10"/><text x="220" y="115" text-anchor="middle">202</text></g>
+        <g class="suite" data-suite="204"><rect x="290" y="60"  width="120" height="100" rx="10"/><text x="350" y="115" text-anchor="middle">204</text></g>
+        <g class="suite" data-suite="206"><rect x="420" y="60"  width="120" height="100" rx="10"/><text x="480" y="115" text-anchor="middle">206</text></g>
+        <g class="suite" data-suite="208"><rect x="550" y="60"  width="120" height="100" rx="10"/><text x="610" y="115" text-anchor="middle">208</text></g>
+        <g class="suite" data-suite="210"><rect x="680" y="60"  width="120" height="100" rx="10"/><text x="740" y="115" text-anchor="middle">210</text></g>
+        <g class="suite" data-suite="212"><rect x="810" y="60"  width="120" height="100" rx="10"/><text x="870" y="115" text-anchor="middle">212</text></g>
+        <g class="suite" data-suite="214"><rect x="940" y="60"  width="120" height="100" rx="10"/><text x="1000" y="115" text-anchor="middle">214</text></g>
+        <g class="suite" data-suite="Sage Suite"><rect x="160" y="240" width="120" height="48" rx="10"/><text x="220" y="270" text-anchor="middle" font-size="14">Sage</text></g>
+        <g class="suite" data-suite="216"><rect x="290" y="240" width="120" height="48" rx="10"/><text x="350" y="270" text-anchor="middle" font-size="14">216</text></g>
+        <g class="suite" data-suite="218"><rect x="420" y="240" width="120" height="48" rx="10"/><text x="480" y="270" text-anchor="middle" font-size="14">218</text></g>
+        <g class="suite" data-suite="220"><rect x="550" y="240" width="120" height="48" rx="10"/><text x="610" y="270" text-anchor="middle" font-size="14">220</text></g>
+        <g class="suite" data-suite="222"><rect x="680" y="240" width="120" height="48" rx="10"/><text x="740" y="270" text-anchor="middle" font-size="14">222</text></g>
+        <g class="suite" data-suite="108"><rect x="160" y="358" width="120" height="100" rx="10"/><text x="220" y="413" text-anchor="middle">108</text></g>
+        <g class="suite" data-suite="110"><rect x="290" y="358" width="120" height="100" rx="10"/><text x="350" y="413" text-anchor="middle">110</text></g>
+        <g class="suite" data-suite="112"><rect x="420" y="358" width="120" height="100" rx="10"/><text x="480" y="413" text-anchor="middle">112</text></g>
+        <g class="suite" data-suite="114"><rect x="550" y="358" width="120" height="100" rx="10"/><text x="610" y="413" text-anchor="middle">114</text></g>
+        <g class="suite" data-suite="116"><rect x="680" y="358" width="120" height="100" rx="10"/><text x="740" y="413" text-anchor="middle">116</text></g>
+        <g class="suite" data-suite="118"><rect x="810" y="358" width="120" height="100" rx="10"/><text x="870" y="413" text-anchor="middle">118</text></g>
+        <g class="suite" data-suite="120"><rect x="940" y="358" width="120" height="100" rx="10"/><text x="1000" y="413" text-anchor="middle">120</text></g>
+      </g>
+    </svg>
+  </div>
+  <div class="map-hint">Tap any suite to see who's inside.</div>
 </section>
 
 <!-- FROM THE OWNER VIEW -->
@@ -1355,7 +1546,8 @@ body {
 
   <div class="filter-row" id="filterRow">
     <div class="chip active" data-filter="all">All</div>
-    <div class="chip" data-filter="now">Right now</div>
+    <div class="chip" data-filter="open">Open now</div>
+    <div class="chip" data-filter="available">Available now</div>
     <div class="chip" data-filter="hair">Hair</div>
     <div class="chip" data-filter="skin">Skin</div>
     <div class="chip" data-filter="nails">Nails</div>
@@ -1431,42 +1623,51 @@ const tenants = [
     photo: 'assets/photos/nails2.png',
     bio: 'Spa-style pedicure and quick mani service. Placeholder card while the building owner confirms the tenant lineup.',
     tags: ['Pedicure', 'Spa', 'Quick Mani'], hours: 'Tue–Sat 10–6' },
-  { id: 't4', name: 'Indigo & Oak', service: 'Color & Balayage Specialist', category: 'hair', suite: 'Suite 204', avatar: 'IO', theme: 'av-moss', open: true, is_concept: true,
+  { id: 't4', name: 'Indigo & Oak', service: 'Color & Balayage Specialist', category: 'hair', suite: 'Suite 204', avatar: 'IO', theme: 'av-moss', open: true, available: false, is_concept: true,
     photo: 'assets/photos/hair1.png',
     bio: 'Lived-in color, hand-painted balayage, and dimensional brunettes. Specializing in low-maintenance grow-outs for busy clients.',
-    tags: ['Balayage', 'Color', 'Cuts', 'Toners', 'Gloss'], hours: 'Tue–Sat 9–6' },
+    tags: ['Balayage', 'Color', 'Cuts', 'Toners', 'Gloss'], hours: 'Tue–Sat 9–6',
+    book: 'https://indigoandoak.glossgenius.com', call: '555-204-0190', text: '555-204-0190', bookLabel: 'GlossGenius' },
   { id: 't5', name: 'Verdant Skin Studio', service: 'Facials & Skincare', category: 'skin', suite: 'Suite 212', avatar: 'V', theme: 'av-sage', open: true, is_concept: true,
     photo: 'assets/photos/facial.png',
     bio: 'Holistic facials with medical-grade results. Custom protocols for acne, hyperpigmentation, and aging skin. Licensed esthetician.',
-    tags: ['Facials', 'Dermaplane', 'Chemical Peels', 'LED Therapy'], hours: 'Wed–Sun 10–7' },
-  { id: 't6', name: 'The Lash Loft', service: 'Lash Extensions & Lifts', category: 'brows', suite: 'Suite 210', avatar: 'LL', theme: 'av-rose', open: true, is_concept: true,
+    tags: ['Facials', 'Dermaplane', 'Chemical Peels', 'LED Therapy'], hours: 'Wed–Sun 10–7',
+    book: 'https://verdantskin.vagaro.com', text: '555-212-0488', bookLabel: 'Vagaro' },
+  { id: 't6', name: 'The Lash Loft', service: 'Lash Extensions & Lifts', category: 'brows', suite: 'Suite 210', avatar: 'LL', theme: 'av-rose', open: true, available: false, is_concept: true,
     photo: 'assets/photos/lash1.png',
     bio: 'Custom lash sets designed to your eye shape. Classic, hybrid, and volume — plus lifts and tints for low-maintenance days.',
-    tags: ['Extensions', 'Lifts', 'Tints', 'Removals'], hours: 'Mon–Sat 9–7' },
+    tags: ['Extensions', 'Lifts', 'Tints', 'Removals'], hours: 'Mon–Sat 9–7',
+    book: 'https://thelashloft.booksy.com', bookLabel: 'Booksy' },
   { id: 't7', name: 'Bloom Brow Bar', service: 'Brows, Lamination & Microblading', category: 'brows', suite: 'Suite 206', avatar: 'B', theme: 'av-clay', open: true, is_concept: true,
     photo: 'assets/photos/lash2.png',
     bio: 'Brow shaping done right. Lamination, tinting, henna, and certified microblading. Walk-ins welcome for shaping.',
-    tags: ['Shaping', 'Lamination', 'Tinting', 'Microblading'], hours: 'Tue–Sat 10–6' },
+    tags: ['Shaping', 'Lamination', 'Tinting', 'Microblading'], hours: 'Tue–Sat 10–6',
+    book: 'https://bloombrowbar.square.site', call: '555-206-1141', bookLabel: 'Square' },
   { id: 't8', name: 'Quiet Hands', service: 'Therapeutic Massage', category: 'wellness', suite: 'Suite 218', avatar: 'Q', theme: 'av-stone', open: false, is_concept: true,
     photo: 'assets/photos/massage1.png',
     bio: 'Deep tissue, Swedish, and prenatal massage by a licensed RMT. Quiet space, warm towels, no upselling.',
-    tags: ['Deep Tissue', 'Swedish', 'Prenatal', 'Sports Recovery'], hours: 'Tue–Sat 11–8' },
+    tags: ['Deep Tissue', 'Swedish', 'Prenatal', 'Sports Recovery'], hours: 'Tue–Sat 11–8',
+    call: '555-218-7720', text: '555-218-7720' },
   { id: 't9', name: 'Tilde Cosmetics', service: 'Bridal Makeup & Lessons', category: 'makeup', suite: 'Suite 208', avatar: 'T', theme: 'av-rust', open: true, is_concept: true,
     photo: 'assets/photos/makeup.png',
     bio: 'Editorial-trained makeup artist specializing in bridal, special event, and 1:1 personal makeup lessons.',
-    tags: ['Bridal', 'Events', 'Lessons', 'Airbrush'], hours: 'By appointment' },
+    tags: ['Bridal', 'Events', 'Lessons', 'Airbrush'], hours: 'By appointment',
+    book: 'https://tildecosmetics.honeybook.com', text: '555-208-9914', bookLabel: 'HoneyBook' },
   { id: 't10', name: 'Finch Hair Studio', service: 'Precision Cuts & Men\'s Grooming', category: 'hair', suite: 'Suite 202', avatar: 'F', theme: 'av-sand', open: true, is_concept: true,
     photo: 'assets/photos/hair2.png',
     bio: 'Sharp cuts for all genders. Men\'s grooming, beard work, and that one good textured cut that grows out beautifully.',
-    tags: ['Cuts', 'Men\'s Grooming', 'Beards', 'Styling'], hours: 'Tue–Sat 10–7' },
+    tags: ['Cuts', 'Men\'s Grooming', 'Beards', 'Styling'], hours: 'Tue–Sat 10–7',
+    book: 'https://finchhair.booksy.com', call: '555-202-4408', text: '555-202-4408', bookLabel: 'Booksy' },
   { id: 't11', name: 'Rooted Wellness', service: 'Reiki & Acupuncture', category: 'wellness', suite: 'Suite 222', avatar: 'R', theme: 'av-fern', open: false, is_concept: true,
     photo: 'assets/photos/massage2.png',
     bio: 'Licensed acupuncturist offering treatments for stress, sleep, fertility, and chronic pain. Reiki sessions by appointment.',
-    tags: ['Acupuncture', 'Reiki', 'Cupping', 'Herbs'], hours: 'Mon, Wed, Fri 9–5' },
+    tags: ['Acupuncture', 'Reiki', 'Cupping', 'Herbs'], hours: 'Mon, Wed, Fri 9–5',
+    call: '555-222-5050' },
   { id: 't12', name: 'Amaranth Aesthetics', service: 'Botox, Fillers & Medspa', category: 'wellness', suite: 'Suite 216', avatar: 'A', theme: 'av-amber', open: false, is_concept: true,
     photo: 'assets/photos/massage3.png',
     bio: 'Board-certified nurse injector. Conservative, natural-looking results. Botox, dermal fillers, and skin boosters.',
-    tags: ['Botox', 'Fillers', 'Skin Boosters', 'Consults'], hours: 'Thu–Sat 11–6' }
+    tags: ['Botox', 'Fillers', 'Skin Boosters', 'Consults'], hours: 'Thu–Sat 11–6',
+    book: 'https://amaranthaesthetics.acuityscheduling.com', bookLabel: 'Acuity' }
 ];
 
 // If the owner admin has saved tenants to localStorage, use those instead of the seed.
@@ -1530,12 +1731,15 @@ function avatarHTML(t, size) {
       ? `<div class="pair-avatar has-photo" style="background-image: url('${t.photo}');"></div>`
       : `<div class="pair-avatar ${t.theme}">${t.avatar}</div>`;
   }
-  // card visual — featured tile
-  const open = isOpenNow(t);
+  // card visual — featured tile. Three-state: Available / With a client / Closed.
+  const s = statusInfo(t);
+  const shortLabel = s.state === 'available' ? 'Available'
+                   : s.state === 'busy'      ? 'With a client'
+                   :                           'Closed';
   if (t.photo) {
     return `<div class="tenant-photo" style="background-image: url('${t.photo}');">
-              <span class="status-pill ${open ? 'open' : 'closed'}">
-                <span class="dot"></span>${open ? 'Open' : 'Closed'}
+              <span class="status-pill is-${s.state}">
+                <span class="dot"></span>${shortLabel}
               </span>
               ${testPillHTML(t, 'on-photo')}
             </div>`;
@@ -1570,19 +1774,24 @@ function pickFeaturedTenant() {
 }
 
 function renderDiscoverCards() {
-  // Directory count (right-now card shows real-and-open count, excluding test placeholders)
-  const openCount = tenants.filter(t => isAvailableNow(t)).length;
-  const elDir = document.getElementById('mc-dir-count');
-  const elNow = document.getElementById('mc-now-count');
-  if (elDir) elDir.textContent = tenants.length;
-  if (elNow) elNow.textContent = openCount;
+  // Two counts. "Open" = doors are open. "Available" = open AND can take you now.
+  const openCount  = tenants.filter(t => isRealAndOpen(t)).length;
+  const availCount = tenants.filter(t => isAvailableNow(t)).length;
+  const elDir   = document.getElementById('mc-dir-count');
+  const elNow   = document.getElementById('mc-now-count');
+  const elAvail = document.getElementById('mc-avail-count');
+  if (elDir)   elDir.textContent = tenants.length;
+  if (elNow)   elNow.textContent = openCount;
+  if (elAvail) elAvail.textContent = availCount;
 
-  // Welcome hero — spell the count for warmth ("Eight studios. One roof.")
+  // Welcome hero — spell the studio count for warmth ("Eight studios. One roof.")
   const NUMBER_WORDS = ['Zero','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen','Twenty'];
   const welcomeCount = document.getElementById('welcomeCount');
-  const welcomeOpen = document.getElementById('welcomeOpen');
+  const welcomeOpen  = document.getElementById('welcomeOpen');
+  const welcomeAvail = document.getElementById('welcomeAvail');
   if (welcomeCount) welcomeCount.textContent = tenants.length < NUMBER_WORDS.length ? NUMBER_WORDS[tenants.length] : String(tenants.length);
-  if (welcomeOpen) welcomeOpen.textContent = openCount;
+  if (welcomeOpen)  welcomeOpen.textContent  = openCount;
+  if (welcomeAvail) welcomeAvail.textContent = availCount;
 
   // Featured today card
   const featured = pickFeaturedTenant();
@@ -1659,13 +1868,14 @@ function openFeatured() {
 
 function goRightNow() {
   switchView('directory');
-  // Apply the right-now filter on the directory
-  document.querySelectorAll('#filterRow .chip').forEach(c => c.classList.toggle('active', c.dataset.filter === 'now'));
-  activeFilter = 'now';
+  // "Open right now" lands on the Open-now filter (anyone whose doors are open).
+  // Use the Available chip to narrow to tenants who can take you this minute.
+  document.querySelectorAll('#filterRow .chip').forEach(c => c.classList.toggle('active', c.dataset.filter === 'open'));
+  activeFilter = 'open';
   renderDirectory();
-  // Small toast so it's visible that the filter took effect
-  const openCount = tenants.filter(t => isAvailableNow(t)).length;
-  showToast(`Showing ${openCount} open right now`);
+  const openCount = tenants.filter(t => isRealAndOpen(t)).length;
+  const availCount = tenants.filter(t => isAvailableNow(t)).length;
+  showToast(`${openCount} open · ${availCount} can take you now`);
 }
 
 // Whether a tenant is considered "open" (used for the status pill on cards/profile).
@@ -1675,17 +1885,27 @@ function isOpenNow(t) {
   if (t.open === false) return false;
   return (t.status || 'active') === 'active';
 }
-// Whether a tenant is real-and-open — used by the "Open right now" filter.
-// Concept/test placeholders are excluded since they aren't real tenants yet.
-function isAvailableNow(t) {
+// Real-and-open (any availability state) — used wherever we mean "real,
+// currently-open tenants" regardless of whether they're with a client.
+function isRealAndOpen(t) {
   return !t.is_concept && isOpenNow(t);
+}
+// Available = open AND tenant hasn't marked themselves "with a client".
+// Default-true when unset so we don't surprise tenants who haven't opted in.
+function isAvailableNow(t) {
+  if (t.is_concept) return false;
+  if (!isOpenNow(t)) return false;
+  return t.available !== false;
 }
 
 function renderDirectory() {
   const list = document.getElementById('directoryList');
   const filtered = tenants.filter(t => {
-    if (activeFilter === 'now' && !isAvailableNow(t)) return false;
-    if (activeFilter !== 'all' && activeFilter !== 'now' && t.category !== activeFilter) return false;
+    // "Open now" = doors open (may be with a client). "Available now" = open + free.
+    if (activeFilter === 'open' && !isRealAndOpen(t)) return false;
+    if (activeFilter === 'available' && !isAvailableNow(t)) return false;
+    const isCategoryFilter = activeFilter !== 'all' && activeFilter !== 'open' && activeFilter !== 'available';
+    if (isCategoryFilter && t.category !== activeFilter) return false;
     if (searchTerm) {
       const q = searchTerm.toLowerCase();
       return t.name.toLowerCase().includes(q) ||
@@ -1715,9 +1935,7 @@ function renderDirectory() {
           <span class="row-tag">${t.tags[1]}</span>
         </div>
       </div>
-      <div class="row-status ${open ? '' : 'away'}">
-        <span class="dot"></span>${open ? 'Open' : 'Closed'}
-      </div>
+${statusPillHTML(t)}
     </div>
   `;
   }).join('');
@@ -1746,9 +1964,7 @@ function renderSaved() {
         </div>
         <div class="tenant-service">${t.service}</div>
       </div>
-      <div class="row-status ${open ? '' : 'away'}">
-        <span class="dot"></span>${open ? 'Open' : 'Closed'}
-      </div>
+${statusPillHTML(t)}
     </div>
   `;
   }).join('');
@@ -1777,6 +1993,7 @@ function switchView(view) {
   if (view === 'saved') renderSaved();
   if (view === 'discover') renderDiscoverCards();
   if (view === 'vacancies') renderVacancies();
+  if (view === 'map') renderMap();
   window.scrollTo(0, 0);
 }
 
@@ -1793,11 +2010,16 @@ function openTenant(id) {
     ? openOthers.slice(0, 4)
     : openOthers.concat(sameCatOthers).slice(0, 4);
 
-  const open = isOpenNow(t);
+  // Three-state hero pill: Open · Available / Open · With a client / Closed.
+  const s = statusInfo(t);
+  const pillClass = s.state === 'available' ? 'open' : (s.state === 'busy' ? 'busy' : 'closed');
+  const pillLabel = s.state === 'available' ? 'Open · Available'
+                  : s.state === 'busy'      ? 'Open · With a client'
+                  :                           'Closed';
   const heroVisual = t.photo
     ? `<div class="profile-hero has-photo" style="background-image: url('${t.photo}');">
-         <span class="photo-tag ${open ? 'open' : 'closed'}">
-           <span class="dot"></span>${open ? 'Open now' : 'Closed'}
+         <span class="photo-tag ${pillClass}">
+           <span class="dot"></span>${pillLabel}
          </span>
          ${testPillHTML(t, 'on-photo')}
        </div>`
@@ -1818,13 +2040,7 @@ function openTenant(id) {
         ${t.tags.map(tag => `<span class="profile-tag">${tag}</span>`).join('')}
       </div>
       <div class="profile-actions">
-        <button class="btn btn-primary" onclick="bookTenant()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          Book with ${t.name.split(' ')[0]}
-        </button>
-        <button class="btn btn-secondary ${isSaved ? 'saved' : ''}" onclick="toggleSave('${t.id}')">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-        </button>
+        ${renderContactActions(t, isSaved)}
       </div>
       <div class="pair-with">
         <h3>While you're at <em>${t.name.split(' ')[0]}</em>…</h3>
@@ -1867,9 +2083,228 @@ function toggleSave(id) {
   if (currentTenant && currentTenant.id === id) openTenant(id);
 }
 
-function bookTenant() {
-  showToast('Booking flow — coming in v2');
+/* ============ CONTACT BUTTONS ============================================
+   Each tenant chooses which contact methods to surface (book / call / text).
+   Buttons render only for what they\'ve set, in priority order book → call → text.
+   First method is the primary CTA next to the Save heart; the rest stack as
+   outline buttons. "Show me the way" follows when the tenant has a real suite. */
+function renderContactActions(t, isSaved) {
+  const ICONS = {
+    book: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    call: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
+    text: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+    map:  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>'
+  };
+  const first = t.name.split(' ')[0];
+  const methods = [];
+  if (t.book) methods.push({ key:'book', href:t.book, target:'_blank', rel:'noopener noreferrer',
+    label: t.bookLabel ? `Book on ${t.bookLabel}` : `Book online with ${first}` });
+  if (t.call) methods.push({ key:'call', href:`tel:${t.call.replace(/[^0-9+]/g, '')}`, label:`Call ${t.call}` });
+  if (t.text) methods.push({ key:'text', href:`sms:${t.text.replace(/[^0-9+]/g, '')}`, label:`Text ${t.text}` });
+
+  const saveBtn = `
+    <button class="btn btn-secondary ${isSaved ? 'saved' : ''}" onclick="toggleSave('${t.id}')" aria-label="${isSaved ? 'Unsave' : 'Save'}">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    </button>`;
+
+  const suiteKey = getSuiteKey(t);
+  const directionsHtml = suiteKey
+    ? `<button class="btn btn-outline" type="button" onclick="showRouteTo('${t.id}')">
+         ${ICONS.map} Show me the way · ${escapeHtml(t.suite)}
+       </button>`
+    : '';
+
+  if (methods.length === 0) {
+    return `
+      <div class="profile-actions-row">
+        <button class="btn btn-primary" disabled style="opacity:.55; cursor:default;">No contact method listed yet</button>
+        ${saveBtn}
+      </div>
+      ${directionsHtml}`;
+  }
+  const [primary, ...rest] = methods;
+  const primaryHtml = `
+    <a class="btn btn-primary" href="${primary.href}"${primary.target ? ` target="${primary.target}" rel="${primary.rel}"` : ''}>
+      ${ICONS[primary.key]} ${primary.label}
+    </a>`;
+  const restHtml = rest.map(m => `
+    <a class="btn btn-outline" href="${m.href}"${m.target ? ` target="${m.target}" rel="${m.rel}"` : ''}>
+      ${ICONS[m.key]} ${m.label}
+    </a>`).join('');
+  return `
+    <div class="profile-actions-row">
+      ${primaryHtml}
+      ${saveBtn}
+    </div>
+    ${restHtml}
+    ${directionsHtml}
+  `;
 }
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+}
+
+/* Three-way status helper. */
+function statusInfo(t) {
+  if (!isOpenNow(t))         return { state:'closed',    label:'Closed' };
+  if (t.is_concept)          return { state:'available', label:'Available' };
+  if (t.available !== false) return { state:'available', label:'Available' };
+  return                            { state:'busy',      label:'With a client' };
+}
+function statusPillHTML(t) {
+  const s = statusInfo(t);
+  return `<div class="row-status is-${s.state}"><span class="dot"></span>${s.label}</div>`;
+}
+
+/* ============ FLOOR-PLAN MAP ============================================
+   Browse mode = full building. Route mode = entered via "Show me the way",
+   zooms the SVG viewBox onto the route and draws a sage dashed walking line. */
+const YAH = { x: 80, y: 260 };
+const NORTH_CORRIDOR_Y = 199;
+const SOUTH_CORRIDOR_Y = 323;
+let routeTarget = null;
+let mapInitialized = false;
+
+function getSuiteKey(t) {
+  const s = (t && t.suite ? String(t.suite) : '').trim();
+  if (!s) return null;
+  if (/sage/i.test(s)) return 'Sage Suite';
+  const m = s.match(/\d+/);
+  return m ? m[0] : null;
+}
+function cssEscape(s) {
+  return (typeof CSS !== 'undefined' && CSS.escape) ? CSS.escape(s) : String(s).replace(/(["\\])/g, '\\$1');
+}
+function getSuiteCenter(suiteKey) {
+  const g = document.querySelector(`#phoneMapSuites .suite[data-suite="${cssEscape(suiteKey)}"]`);
+  if (!g) return null;
+  const r = g.querySelector('rect');
+  const x = parseFloat(r.getAttribute('x'));
+  const y = parseFloat(r.getAttribute('y'));
+  const w = parseFloat(r.getAttribute('width'));
+  const h = parseFloat(r.getAttribute('height'));
+  return { x: x + w/2, y: y + h/2, top: y, bottom: y + h, left: x, right: x + w };
+}
+function buildRoutePoints(suiteKey) {
+  const c = getSuiteCenter(suiteKey);
+  if (!c) return null;
+  const sx = c.x;
+  const points = [{ x: YAH.x, y: YAH.y }];
+  if (c.bottom <= 170) {
+    points.push({ x: YAH.x, y: NORTH_CORRIDOR_Y });
+    points.push({ x: sx,    y: NORTH_CORRIDOR_Y });
+    points.push({ x: sx,    y: c.bottom });
+  } else if (c.top >= 358) {
+    points.push({ x: YAH.x, y: SOUTH_CORRIDOR_Y });
+    points.push({ x: sx,    y: SOUTH_CORRIDOR_Y });
+    points.push({ x: sx,    y: c.top });
+  } else {
+    points.push({ x: YAH.x, y: SOUTH_CORRIDOR_Y });
+    points.push({ x: sx,    y: SOUTH_CORRIDOR_Y });
+    points.push({ x: sx,    y: c.bottom });
+  }
+  return points;
+}
+function pointsToPath(points) {
+  return points.map((p, i) => (i === 0 ? 'M' : 'L') + p.x + ',' + p.y).join(' ');
+}
+function computeRouteViewBox(points) {
+  const xs = points.map(p => p.x), ys = points.map(p => p.y);
+  const PAD = 70;
+  let x = Math.min(...xs) - PAD, y = Math.min(...ys) - PAD;
+  let w = (Math.max(...xs) - Math.min(...xs)) + PAD * 2;
+  let h = (Math.max(...ys) - Math.min(...ys)) + PAD * 2;
+  const desiredAspect = 1.05;
+  if (w / h < desiredAspect) { const nw = h * desiredAspect; x -= (nw - w) / 2; w = nw; }
+  else if (w / h > 2.4)      { const nh = w / 2.4;          y -= (nh - h) / 2; h = nh; }
+  x = Math.max(0, x); y = Math.max(0, y);
+  w = Math.min(1200 - x, w); h = Math.min(520 - y, h);
+  return `${x} ${y} ${w} ${h}`;
+}
+function paintSuiteStates() {
+  const byKey = {};
+  tenants.forEach(t => { const k = getSuiteKey(t); if (k) byKey[k] = t; });
+  document.querySelectorAll('#phoneMapSuites .suite').forEach(g => {
+    const key = g.getAttribute('data-suite');
+    g.classList.remove('is-occupied', 'is-open', 'is-vacant', 'is-target');
+    const t = byKey[key];
+    if (t) {
+      g.classList.add('is-occupied');
+      if (isOpenNow(t)) g.classList.add('is-open');
+    } else if (/^1\d\d$/.test(key)) {
+      g.classList.add('is-vacant');
+    }
+  });
+}
+function initMap() {
+  if (mapInitialized) return;
+  const byKey = {};
+  tenants.forEach(t => { const k = getSuiteKey(t); if (k) byKey[k] = t; });
+  document.querySelectorAll('#phoneMapSuites .suite').forEach(g => {
+    g.addEventListener('click', () => {
+      const key = g.getAttribute('data-suite');
+      const t = byKey[key];
+      if (t) openTenant(t.id);
+      else showToast('No tenant here yet');
+    });
+  });
+  mapInitialized = true;
+}
+function renderMap() {
+  initMap();
+  paintSuiteStates();
+  const svg = document.getElementById('phoneMapSvg');
+  const routeLayer = document.getElementById('routeLayer');
+  const card = document.getElementById('mapRouteCard');
+  const eyebrow = document.getElementById('mapEyebrow');
+  const headline = document.getElementById('mapHeadline');
+  const subline = document.getElementById('mapSubline');
+  if (!svg || !routeLayer) return;
+  document.querySelectorAll('#phoneMapSuites .suite.is-target').forEach(s => s.classList.remove('is-target'));
+  routeLayer.innerHTML = '';
+  if (!routeTarget) {
+    svg.setAttribute('viewBox', '0 0 1200 520');
+    if (card) card.hidden = true;
+    if (eyebrow)  eyebrow.textContent = 'Suite map';
+    if (headline) headline.innerHTML = 'You are <em>here</em>';
+    if (subline)  subline.textContent = "Tap a suite to see who's inside.";
+    return;
+  }
+  const t = tenants.find(x => x.id === routeTarget);
+  const suiteKey = t ? getSuiteKey(t) : null;
+  const points = suiteKey ? buildRoutePoints(suiteKey) : null;
+  if (!t || !points) { routeTarget = null; return renderMap(); }
+  const pathD = pointsToPath(points);
+  routeLayer.innerHTML =
+    `<path class="route-glow" d="${pathD}"/>` +
+    `<path class="route-line" d="${pathD}"/>`;
+  const targetSuite = document.querySelector(`#phoneMapSuites .suite[data-suite="${cssEscape(suiteKey)}"]`);
+  if (targetSuite) targetSuite.classList.add('is-target');
+  svg.setAttribute('viewBox', computeRouteViewBox(points));
+  if (card) {
+    card.hidden = false;
+    const av = document.getElementById('mrcAvatar');
+    if (av) {
+      if (t.photo) { av.style.backgroundImage = `url('${t.photo}')`; av.textContent = ''; }
+      else { av.style.backgroundImage = ''; av.style.background = themeBg(t.theme); av.textContent = t.avatar || (t.name || '?')[0]; }
+    }
+    const nm = document.getElementById('mrcName'); if (nm) nm.textContent = t.name;
+    const sb = document.getElementById('mrcSub');  if (sb) sb.textContent = `${t.suite} · follow the line`;
+  }
+  if (eyebrow)  eyebrow.textContent = 'On your way to';
+  if (headline) headline.innerHTML = `<em>${escapeHtml(t.name)}</em>`;
+  if (subline)  subline.textContent = `${t.suite} · the sage line shows the walking route from the lobby.`;
+}
+function themeBg(theme) {
+  const map = {'av-sage':'#8B9A7E','av-moss':'#6B7A5F','av-clay':'#C97B5A','av-rose':'#C9928C',
+    'av-stone':'#8B7E70','av-sand':'#C9B89A','av-rust':'#A8593E','av-fern':'#7A8B6F',
+    'av-bone':'#E8DECA','av-amber':'#D4A574'};
+  return map[theme] || '#8B7E70';
+}
+function showRouteTo(tenantId) { routeTarget = tenantId; closeSheet(); switchView('map'); }
+function clearRoute() { routeTarget = null; renderMap(); }
+
 
 function showToast(msg) {
   const t = document.getElementById('toast');

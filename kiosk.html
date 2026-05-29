@@ -194,9 +194,35 @@
   .sr-suite { font-size: 0.85rem; color: var(--ink-soft); margin-left: 8px; }
   .search-hint { color: var(--ink-faint); font-size: 0.85rem; margin-top: 0.9rem; }
 
-  /* Browse */
-  .browse { display: flex; flex-direction: column; gap: 0.9rem; min-height: 0; }
-  .browse-tabs { display: flex; gap: 0.6rem; }
+  /* Browse — two-column on landscape so the map fills the width AND the
+     "by the way" cards live in a vertical sidebar instead of the footer.
+     Collapses to single-column on narrow screens via the existing breakpoint. */
+  .browse {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    grid-template-areas: "tabs side" "main side";
+    column-gap: 1.1rem;
+    row-gap: 0.9rem;
+    min-height: 0;
+  }
+  .browse-main { display: flex; flex-direction: column; gap: 0.9rem; min-height: 0; grid-area: main; }
+  .browse-tabs { display: flex; gap: 0.6rem; grid-area: tabs; align-self: end; }
+  .browse-side {
+    grid-area: side;
+    display: flex; flex-direction: column; gap: 0.7rem;
+    min-height: 0;
+  }
+  .browse-side .byway-eyebrow {
+    font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase;
+    font-weight: 700; color: var(--cream-50); margin-bottom: 0;
+  }
+  /* Sidebar byway cards stack vertically and fill the column. */
+  .browse-side .byway-card {
+    width: 100%;
+    text-align: left;
+    flex: 0 0 auto;
+  }
+  .browse-side .byway-card.qr { text-align: center; }
   .tab {
     background: rgba(245,237,224,0.5);
     border: 1px solid var(--cream-10);
@@ -270,7 +296,7 @@
     position: relative;
     width: 100%;
     height: 100%;
-    min-height: 320px;
+    min-height: 460px;          /* taller now that the byway sidebar gives back vertical room */
     background: rgba(255,251,244,0.55);
     border-radius: 16px;
     overflow: hidden;
@@ -470,6 +496,7 @@
   .map-detail .md-name { font-family: 'Fraunces', serif; font-size: 1.2rem; color: var(--ink); margin-top: 4px; }
   .map-detail .md-service { color: var(--ink-soft); font-size: 0.9rem; margin-top: 4px; }
   .map-detail .md-status { display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; margin-top: 10px; }
+  .map-detail .md-contact { color: var(--ink-soft); font-size: 0.82rem; margin-top: 10px; font-weight: 600; letter-spacing: 0.01em; }
   .map-detail .md-close {
     position: absolute; top: 8px; right: 10px;
     background: transparent; border: 0; cursor: pointer;
@@ -546,6 +573,13 @@
   @media (max-width: 900px) {
     .browse-content .tenant-grid { grid-template-columns: repeat(2, 1fr); }
     .byway-grid { grid-template-columns: repeat(2, 1fr); }
+    /* On narrow (phone-form) the sidebar drops below the main column. */
+    .browse {
+      grid-template-columns: 1fr;
+      grid-template-areas: "tabs" "main" "side";
+    }
+    .browse-side { flex-direction: row; flex-wrap: wrap; }
+    .browse-side .byway-card { flex: 1 1 calc(50% - 0.35rem); }
     .hero-search h1 { font-size: 2.4rem; }
     .kiosk-shell-v2 { padding: 1rem 1.2rem; }
   }
@@ -666,7 +700,7 @@
 <body>
 
   <!-- Back to walkthrough -->
-  <a href="Laura-Walkthrough-v1.html" class="back-to-walkthrough">
+  <a href="Laura-Walkthrough.html" class="back-to-walkthrough">
     <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l-6 6 6 6"/></svg>
     <span>Walkthrough</span>
   </a>
@@ -720,6 +754,27 @@
           </button>
           <button class="tab" data-tab="map" type="button">Suite map</button>
         </div>
+
+        <!-- Sidebar — replaces the old bottom "By the way" row. Lives in the
+             gutter to the right of the tabs + content. -->
+        <aside class="browse-side">
+          <div class="byway-eyebrow">By the way</div>
+          <button class="byway-card" type="button" data-action="owner">
+            <h3>From the owner</h3>
+            <p id="ownerNote">&mdash; The owner</p>
+          </button>
+          <button class="byway-card" type="button" data-action="vacancies">
+            <h3>Available suites</h3>
+            <p id="bywayVacancy">Talk to the building owner if you'd like to tour a room.</p>
+          </button>
+          <div class="byway-card qr">
+            <div class="qr-grid" aria-hidden="true"></div>
+            <div class="lbl">Scan</div>
+            <div class="sub">Take it with you</div>
+          </div>
+        </aside>
+
+        <div class="browse-main">
         <div class="browse-content">
           <!-- Discovery filter chips — visible when the Directory tab is active -->
           <div class="filter-chips" id="filterChips" data-tab="all">
@@ -795,29 +850,7 @@
             </div>
           </div>
         </div>
-      </section>
-
-      <section class="byway">
-        <div class="byway-eyebrow">By the way</div>
-        <div class="byway-grid">
-          <button class="byway-card" type="button" data-action="vacancies">
-            <h3>Available suites</h3>
-            <p id="bywayVacancy">Talk to the building owner if you'd like to tour a room.</p>
-          </button>
-          <button class="byway-card" type="button" data-action="owner">
-            <h3>From the owner</h3>
-            <p id="ownerNote">&mdash; The owner</p>
-          </button>
-          <button class="byway-card" type="button" data-action="map">
-            <h3>Suite map</h3>
-            <p>Salon Plus Studio Suites &middot; Lobby</p>
-          </button>
-          <div class="byway-card qr">
-            <div class="qr-grid" aria-hidden="true"></div>
-            <div class="lbl">Scan</div>
-            <div class="sub">Take it with you</div>
-          </div>
-        </div>
+        </div><!-- /.browse-main -->
       </section>
 
     </div>
@@ -825,31 +858,40 @@
   </div><!-- /.kiosk-device-bezel (mobile only; ignored on desktop where the bezel has no styles) -->
 
 <script>
+  // Kiosk shows tenants' personal contact (call/text) — booking is intentionally
+  // phone-app-only, since the kiosk is read-only and people will scan the QR to
+  // act. `call` / `text` are the same shape used by index.html.
   const SEED_TENANTS = [
     { id:'t1', name:'Dueces Nail Studio', suite:'Sage Suite', service:'Manicure · Pedicure · Nail Art',
       services:['Gel','Pedicure','Nail Art','Structured Mani'], category:'nails', open:true, status:'active',
       photo:'assets/photos/1000040455.jpg', avatar:'D', is_concept:false },
     { id:'t4', name:'Indigo & Oak', suite:'Suite 204', service:'Color & Balayage Specialist',
       services:['Balayage','Color','Cuts'], category:'hair', open:true, status:'active',
-      photo:'assets/photos/hair1.png', avatar:'IO', is_concept:true },
+      photo:'assets/photos/hair1.png', avatar:'IO', is_concept:true,
+      call:'555-204-0190', text:'555-204-0190' },
     { id:'t5', name:'Verdant Skin Studio', suite:'Suite 212', service:'Facials & Skincare',
       services:['Facials','Peels','LED'], category:'skin', open:true, status:'active',
-      photo:'assets/photos/facial.png', avatar:'V', is_concept:true },
+      photo:'assets/photos/facial.png', avatar:'V', is_concept:true,
+      text:'555-212-0488' },
     { id:'t6', name:'The Lash Loft', suite:'Suite 210', service:'Lash Extensions & Lifts',
       services:['Extensions','Lifts','Tints'], category:'brows', open:true, status:'active',
       photo:'assets/photos/lash1.png', avatar:'LL', is_concept:true },
     { id:'t7', name:'Bloom Brow Bar', suite:'Suite 206', service:'Brows, Lamination & Microblading',
       services:['Shaping','Lamination','Tinting'], category:'brows', open:true, status:'active',
-      photo:'assets/photos/lash2.png', avatar:'B', is_concept:true },
+      photo:'assets/photos/lash2.png', avatar:'B', is_concept:true,
+      call:'555-206-1141' },
     { id:'t8', name:'Quiet Hands', suite:'Suite 218', service:'Therapeutic Massage',
       services:['Deep Tissue','Swedish','Prenatal'], category:'wellness', open:false, status:'active',
-      photo:'assets/photos/massage1.png', avatar:'Q', is_concept:true },
+      photo:'assets/photos/massage1.png', avatar:'Q', is_concept:true,
+      call:'555-218-7720', text:'555-218-7720' },
     { id:'t9', name:'Tilde Cosmetics', suite:'Suite 208', service:'Bridal Makeup & Lessons',
       services:['Bridal','Events','Lessons'], category:'makeup', open:true, status:'active',
-      photo:'assets/photos/makeup.png', avatar:'T', is_concept:true },
+      photo:'assets/photos/makeup.png', avatar:'T', is_concept:true,
+      text:'555-208-9914' },
     { id:'t10', name:'Finch Hair Studio', suite:'Suite 202', service:"Precision Cuts & Men's Grooming",
       services:['Cuts',"Men's Grooming",'Beards'], category:'hair', open:true, status:'active',
-      photo:'assets/photos/hair2.png', avatar:'F', is_concept:true }
+      photo:'assets/photos/hair2.png', avatar:'F', is_concept:true,
+      call:'555-202-4408', text:'555-202-4408' }
   ];
 
   function loadTenants() {
@@ -864,9 +906,14 @@
     const photo = t.photo
       ? '<div class="tenant-photo" style="background-image:url(\'' + t.photo + '\');"></div>'
       : '<div class="tenant-photo" style="display:grid;place-items:center;color:var(--ink);font-family:\'Fraunces\',serif;font-size:1.6rem;">' + (t.avatar || (t.name || '?')[0]) + '</div>';
-    const openHtml = t.open
-      ? '<span class="open-dot"></span><span style="color:var(--sage-deep);">Open</span>'
-      : '<span style="color:var(--ink-faint);">Closed</span>';
+    // Three-way pill: Available (sage) / With a client (clay) / Closed (faint).
+    const isOpen = t.open !== false;
+    const isAvail = t.available !== false;
+    const openHtml = !isOpen
+      ? '<span style="color:var(--ink-faint);">Closed</span>'
+      : (isAvail
+          ? '<span class="open-dot"></span><span style="color:var(--sage-deep);">Available</span>'
+          : '<span class="open-dot" style="background:var(--clay-deep);"></span><span style="color:var(--clay-deep);">With a client</span>');
     return '' +
       '<div class="tenant-card" data-tenant-id="' + (t.id || '') + '" style="cursor:pointer;">' +
         photo +
@@ -1075,14 +1122,36 @@
     if (!el) return;
     el.hidden = false;
     if (tenant) {
-      const open = tenant.open
-        ? '<span style="color:var(--sage-deep);">&#11044; Open now</span>'
-        : '<span style="color:var(--ink-faint);">&#9711; Closed</span>';
+      // Three states: Open · Available (sage), Open · With a client (clay), Closed (faint).
+      // `available` defaults to true when missing, so older records read as
+      // available rather than mysteriously "with a client".
+      const isOpen = tenant.open !== false;
+      const isAvail = tenant.available !== false;
+      const open = !isOpen
+        ? '<span style="color:var(--ink-faint);">&#9711; Closed</span>'
+        : (isAvail
+            ? '<span style="color:var(--sage-deep);">&#11044; Open · Available</span>'
+            : '<span style="color:var(--clay-deep);">&#11044; Open · With a client</span>');
+      // Personal contact line — kiosk is read-only (no tappable buttons), just
+      // tells you how to reach the tenant. Booking lives in the phone app.
+      let contactHtml = '';
+      const call = tenant.call || '';
+      const text = tenant.text || '';
+      if (call && text && call === text) {
+        contactHtml = '<div class="md-contact">Call or text ' + call + '</div>';
+      } else if (call && text) {
+        contactHtml = '<div class="md-contact">Call ' + call + ' &middot; Text ' + text + '</div>';
+      } else if (call) {
+        contactHtml = '<div class="md-contact">Call ' + call + '</div>';
+      } else if (text) {
+        contactHtml = '<div class="md-contact">Text ' + text + '</div>';
+      }
       el.innerHTML =
         '<button class="md-close" type="button" aria-label="Close">&times;</button>' +
         '<div class="md-suite">Suite ' + suiteKey + '</div>' +
         '<div class="md-name">' + (tenant.name || '') + (tenant.is_concept ? ' <span class="test-pill">Test</span>' : '') + '</div>' +
         '<div class="md-service">' + (tenant.service || '') + '</div>' +
+        contactHtml +
         '<div class="md-status">' + open + '</div>';
     } else if (vacancy) {
       el.innerHTML =
@@ -1214,41 +1283,3 @@
     let idx = Math.floor(Math.random() * pairs.length);
     textEl.textContent = pairs[idx];
     setInterval(function() {
-      rotator.classList.add('is-fading');
-      setTimeout(function() {
-        idx = (idx + 1) % pairs.length;
-        textEl.textContent = pairs[idx];
-        rotator.classList.remove('is-fading');
-      }, 350);
-    }, 6000);
-  })();
-
-  /* Mobile preview scaling — CSS calc with vw units can't feed scale() directly,
-     so we measure the bezel and set the transform in JS. Same pattern the pitch deck uses. */
-  (function syncKioskPreviewScale() {
-    const KIOSK_NATIVE_W = 1280;
-    const shell = document.querySelector('.kiosk-shell-v2');
-    const bezel = document.querySelector('.kiosk-device-bezel');
-    if (!shell) return;
-    function apply() {
-      if (window.matchMedia('(min-width: 601px)').matches) {
-        // Desktop: clear any inline transform so the shell renders full-screen.
-        shell.style.transform = '';
-        return;
-      }
-      const frame = bezel ? bezel.querySelector('#app') : null;
-      const target = frame || bezel;
-      if (!target) return;
-      const w = target.getBoundingClientRect().width;
-      if (!w) return;
-      shell.style.transform = 'scale(' + (w / KIOSK_NATIVE_W) + ')';
-      shell.style.transformOrigin = 'top left';
-    }
-    apply();
-    window.addEventListener('load', apply);
-    window.addEventListener('resize', apply);
-  })();
-</script>
-
-</body>
-</html>

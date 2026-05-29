@@ -939,7 +939,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 18px 0; }
 <body>
 
 <!-- Back to walkthrough -->
-<a href="Laura-Walkthrough-v1.html" class="back-to-walkthrough">
+<a href="Laura-Walkthrough.html" class="back-to-walkthrough">
   <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l-6 6 6 6"/></svg>
   <span>Walkthrough</span>
 </a>
@@ -1210,10 +1210,33 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 18px 0; }
       <div>
         <label>Phone</label>
         <input type="tel" id="t_phone" placeholder="(555) 555-1234" />
+        <!-- Choose which contact options to surface on the phone-app profile.
+             Each checkbox = a separate button in the visitor's app. -->
+        <div style="display:flex; gap:14px; margin-top:8px; font-size:12px; color:var(--cream-60); font-weight:500;">
+          <label style="display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
+            <input type="checkbox" id="t_allow_call" /> Allow calls
+          </label>
+          <label style="display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
+            <input type="checkbox" id="t_allow_text" /> Allow texts
+          </label>
+        </div>
       </div>
       <div>
         <label>Email</label>
         <input type="email" id="t_email" placeholder="hello@dueces.com" />
+      </div>
+    </div>
+    <!-- Online booking — tenant pastes the link to their existing booking
+         site (GlossGenius, Vagaro, Booksy, Square, etc.). If filled in, the
+         phone-app profile gets a "Book on <platform>" button that links out. -->
+    <div class="field row-2">
+      <div>
+        <label>Online booking link</label>
+        <input type="url" id="t_booking_url" placeholder="https://yourname.glossgenius.com" />
+      </div>
+      <div>
+        <label>Booking platform <span style="color:var(--cream-50); font-weight:500;">(optional)</span></label>
+        <input type="text" id="t_booking_label" placeholder="GlossGenius, Vagaro, Booksy…" />
       </div>
     </div>
     <div class="field row-2">
@@ -1249,6 +1272,21 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 18px 0; }
           <option value="archived">Archived</option>
         </select>
       </div>
+    </div>
+
+    <hr class="sep" />
+
+    <!-- Live availability — separate from "Open". A tenant can be open (within
+         hours, doors unlocked) AND with a client (not currently free). This
+         toggle lets them flip themselves between Available / With a client. -->
+    <div class="field">
+      <label for="t_available" class="field-toggle" data-sync-probe="1">
+        <input type="checkbox" id="t_available" />
+        <div class="toggle-meta">
+          <div class="ttl">Available right now</div>
+          <div class="des">Different from "Open." Open = within business hours. Available = open AND can take a walk-in this minute. Untick when you're with a client and the kiosk/phone will say "With a client" instead of "Available."</div>
+        </div>
+      </label>
     </div>
 
     <hr class="sep" />
@@ -1646,8 +1684,17 @@ function openTenantEditor(id) {
   setVal('t_business_name', t.name || '');
   setVal('t_owner_name', t.owner_name || '');
   setVal('t_suite_number', t.suite || '');
-  setVal('t_phone', t.phone || '');
+  // Phone field shows whichever of call/text/phone is on file (they're the
+  // same number when both are allowed). Checkboxes reflect what the tenant
+  // opted into. Default-on for new tenants — most opt to allow both.
+  const phoneOnFile = t.call || t.text || t.phone || '';
+  setVal('t_phone', phoneOnFile);
+  document.getElementById('t_allow_call').checked = isNew ? true : !!t.call;
+  document.getElementById('t_allow_text').checked = isNew ? true : !!t.text;
   setVal('t_email', t.email || '');
+  // Online booking link the tenant pastes from their existing platform.
+  setVal('t_booking_url', t.book || '');
+  setVal('t_booking_label', t.bookLabel || '');
   setVal('t_instagram', t.instagram || '');
   setVal('t_website', t.website || '');
   setVal('t_hours', t.hours || '');
@@ -1657,6 +1704,11 @@ function openTenantEditor(id) {
   // New tenants default to "test/concept" ON so Anne doesn't have to remember to flag them;
   // editing existing reflects the saved value.
   document.getElementById('t_is_concept').checked = isNew ? true : !!t.is_concept;
+  // Default-on for "Available" — most tenants are free more often than not.
+  // Tenants who haven't been edited since this field was added (no `available`
+  // key on the record) also default to available so they don't suddenly read
+  // "With a client" for no reason.
+  document.getElementById('t_available').checked = isNew ? true : (t.available !== false);
 
   // Photo
   const pz = document.getElementById('photoZone');
@@ -1857,13 +1909,26 @@ function saveTenant() {
   const photo = document.getElementById('photoZone').dataset.photo || '';
   const category = inferCategory(services);
 
+  const phoneVal = getVal('t_phone');
+  const allowCall = document.getElementById('t_allow_call').checked;
+  const allowText = document.getElementById('t_allow_text').checked;
+  const bookingUrl = getVal('t_booking_url');
+  const bookingLabel = getVal('t_booking_label');
+
   const data = {
     id: editing ? editing.id : 't' + (Date.now()),
     name,
     owner_name:  getVal('t_owner_name'),
     suite:       getVal('t_suite_number'),
-    phone:       getVal('t_phone'),
+    phone:       phoneVal,
+    // call / text drive the phone-app buttons. Each is the phone number only
+    // if the tenant has opted into that contact method.
+    call:        (allowCall && phoneVal) ? phoneVal : '',
+    text:        (allowText && phoneVal) ? phoneVal : '',
     email:       getVal('t_email'),
+    // book / bookLabel drive the "Book on <platform>" button in the phone app.
+    book:        bookingUrl,
+    bookLabel:   bookingLabel,
     instagram:   getVal('t_instagram'),
     website:     getVal('t_website'),
     services,
@@ -1874,6 +1939,9 @@ function saveTenant() {
     photo,
     category,
     open:        (getVal('t_status') === 'active'),
+    // Live availability — controls the "Available" vs "With a client" pill
+    // on the kiosk and phone profile. Independent from `open` / `status`.
+    available:   document.getElementById('t_available').checked,
     avatar:      (name[0] || '?').toUpperCase(),
     theme:       editing?.theme || 'av-stone',
     is_concept:  document.getElementById('t_is_concept').checked
@@ -2134,6 +2202,3 @@ if (typeof window !== 'undefined' && window.SS_ENV && window.SS_ENV.SUPABASE_URL
   if (lmb) lmb.innerHTML = '<span class="dot"></span> Live mode · connected to Supabase';
 }
 </script>
-
-</body>
-</html>

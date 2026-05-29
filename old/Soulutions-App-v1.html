@@ -651,10 +651,15 @@ body {
 }
 
 .profile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.profile-actions-row {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 10px;
-  margin-bottom: 28px;
 }
 .btn {
   border: none;
@@ -669,9 +674,15 @@ body {
   justify-content: center;
   gap: 8px;
   transition: transform 0.15s ease;
+  text-decoration: none;
 }
 .btn:active { transform: scale(0.98); }
 .btn-primary { background: var(--ink); color: var(--cream); }
+.btn-outline {
+  background: var(--cream);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
 .btn-secondary {
   background: var(--cream);
   color: var(--ink);
@@ -890,37 +901,50 @@ body {
 
 <script>
 // ============ DATA ============
+// Each tenant chooses which contact methods to surface. Any of
+// `book` (online booking link), `call` (phone), and `text` (sms)
+// may be present — buttons render only for what's set.
 const tenants = [
   { id: 't1', name: 'Indigo & Oak', service: 'Color & Balayage Specialist', category: 'hair', suite: 'Suite 204', avatar: 'IO', theme: 'av-moss', open: true,
     bio: 'Lived-in color, hand-painted balayage, and dimensional brunettes. Specializing in low-maintenance grow-outs for busy clients.',
-    tags: ['Balayage', 'Color', 'Cuts', 'Toners', 'Gloss'], hours: 'Tue–Sat 9–6' },
+    tags: ['Balayage', 'Color', 'Cuts', 'Toners', 'Gloss'], hours: 'Tue–Sat 9–6',
+    book: 'https://indigoandoak.glossgenius.com', call: '555-204-0190', text: '555-204-0190', bookLabel: 'GlossGenius' },
   { id: 't2', name: 'Verdant Skin Studio', service: 'Facials & Skincare', category: 'skin', suite: 'Suite 212', avatar: 'V', theme: 'av-sage', open: true,
     bio: 'Holistic facials with medical-grade results. Custom protocols for acne, hyperpigmentation, and aging skin. Licensed esthetician.',
-    tags: ['Facials', 'Dermaplane', 'Chemical Peels', 'LED Therapy'], hours: 'Wed–Sun 10–7' },
+    tags: ['Facials', 'Dermaplane', 'Chemical Peels', 'LED Therapy'], hours: 'Wed–Sun 10–7',
+    book: 'https://verdantskin.vagaro.com', text: '555-212-0488', bookLabel: 'Vagaro' },
   { id: 't3', name: 'The Lash Loft', service: 'Lash Extensions & Lifts', category: 'brows', suite: 'Suite 210', avatar: 'LL', theme: 'av-rose', open: true,
     bio: 'Custom lash sets designed to your eye shape. Classic, hybrid, and volume — plus lifts and tints for low-maintenance days.',
-    tags: ['Extensions', 'Lifts', 'Tints', 'Removals'], hours: 'Mon–Sat 9–7' },
+    tags: ['Extensions', 'Lifts', 'Tints', 'Removals'], hours: 'Mon–Sat 9–7',
+    book: 'https://thelashloft.booksy.com', bookLabel: 'Booksy' },
   { id: 't4', name: 'Quiet Hands', service: 'Therapeutic Massage', category: 'wellness', suite: 'Suite 218', avatar: 'Q', theme: 'av-stone', open: false,
     bio: 'Deep tissue, Swedish, and prenatal massage by a licensed RMT. Quiet space, warm towels, no upselling.',
-    tags: ['Deep Tissue', 'Swedish', 'Prenatal', 'Sports Recovery'], hours: 'Tue–Sat 11–8' },
+    tags: ['Deep Tissue', 'Swedish', 'Prenatal', 'Sports Recovery'], hours: 'Tue–Sat 11–8',
+    call: '555-218-7720', text: '555-218-7720' },
   { id: 't5', name: 'Bloom Brow Bar', service: 'Brows, Lamination & Microblading', category: 'brows', suite: 'Suite 206', avatar: 'B', theme: 'av-clay', open: true,
     bio: 'Brow shaping done right. Lamination, tinting, henna, and certified microblading. Walk-ins welcome for shaping.',
-    tags: ['Shaping', 'Lamination', 'Tinting', 'Microblading'], hours: 'Tue–Sat 10–6' },
+    tags: ['Shaping', 'Lamination', 'Tinting', 'Microblading'], hours: 'Tue–Sat 10–6',
+    book: 'https://bloombrowbar.square.site', call: '555-206-1141', bookLabel: 'Square' },
   { id: 't6', name: 'Saltwater Nails', service: 'Manicures, Pedicures, Gel', category: 'nails', suite: 'Suite 220', avatar: 'S', theme: 'av-bone', open: true,
     bio: 'Clean, gentle nail care. Non-toxic polishes, gel, and structured manicures. Sanitization protocols you can actually see.',
-    tags: ['Gel', 'Structured Mani', 'Pedicure', 'Nail Art'], hours: 'Wed–Sun 10–7' },
+    tags: ['Gel', 'Structured Mani', 'Pedicure', 'Nail Art'], hours: 'Wed–Sun 10–7',
+    book: 'https://saltwaternails.vagaro.com', text: '555-220-3322', bookLabel: 'Vagaro' },
   { id: 't7', name: 'Rooted Wellness', service: 'Reiki & Acupuncture', category: 'wellness', suite: 'Suite 222', avatar: 'R', theme: 'av-fern', open: false,
     bio: 'Licensed acupuncturist offering treatments for stress, sleep, fertility, and chronic pain. Reiki sessions by appointment.',
-    tags: ['Acupuncture', 'Reiki', 'Cupping', 'Herbs'], hours: 'Mon, Wed, Fri 9–5' },
+    tags: ['Acupuncture', 'Reiki', 'Cupping', 'Herbs'], hours: 'Mon, Wed, Fri 9–5',
+    call: '555-222-5050' },
   { id: 't8', name: 'Tilde Cosmetics', service: 'Bridal Makeup & Lessons', category: 'makeup', suite: 'Suite 208', avatar: 'T', theme: 'av-rust', open: true,
     bio: 'Editorial-trained makeup artist specializing in bridal, special event, and 1:1 personal makeup lessons.',
-    tags: ['Bridal', 'Events', 'Lessons', 'Airbrush'], hours: 'By appointment' },
+    tags: ['Bridal', 'Events', 'Lessons', 'Airbrush'], hours: 'By appointment',
+    book: 'https://tildecosmetics.honeybook.com', text: '555-208-9914', bookLabel: 'HoneyBook' },
   { id: 't9', name: 'Finch Hair Studio', service: 'Precision Cuts & Men\'s Grooming', category: 'hair', suite: 'Suite 202', avatar: 'F', theme: 'av-sand', open: true,
     bio: 'Sharp cuts for all genders. Men\'s grooming, beard work, and that one good textured cut that grows out beautifully.',
-    tags: ['Cuts', 'Men\'s Grooming', 'Beards', 'Styling'], hours: 'Tue–Sat 10–7' },
+    tags: ['Cuts', 'Men\'s Grooming', 'Beards', 'Styling'], hours: 'Tue–Sat 10–7',
+    book: 'https://finchhair.booksy.com', call: '555-202-4408', text: '555-202-4408', bookLabel: 'Booksy' },
   { id: 't10', name: 'Amaranth Aesthetics', service: 'Botox, Fillers & Medspa', category: 'wellness', suite: 'Suite 216', avatar: 'A', theme: 'av-amber', open: false,
     bio: 'Board-certified nurse injector. Conservative, natural-looking results. Botox, dermal fillers, and skin boosters.',
-    tags: ['Botox', 'Fillers', 'Skin Boosters', 'Consults'], hours: 'Thu–Sat 11–6' }
+    tags: ['Botox', 'Fillers', 'Skin Boosters', 'Consults'], hours: 'Thu–Sat 11–6',
+    book: 'https://amaranthaesthetics.acuityscheduling.com', bookLabel: 'Acuity' }
 ];
 
 const didYouKnow = [
@@ -1067,13 +1091,7 @@ function openTenant(id) {
         ${t.tags.map(tag => `<span class="profile-tag">${tag}</span>`).join('')}
       </div>
       <div class="profile-actions">
-        <button class="btn btn-primary" onclick="bookTenant()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          Book with ${t.name.split(' ')[0]}
-        </button>
-        <button class="btn btn-secondary ${isSaved ? 'saved' : ''}" onclick="toggleSave('${t.id}')">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-        </button>
+        ${renderContactActions(t, isSaved)}
       </div>
       <div class="pair-with">
         <h3>Pair it</h3>
@@ -1112,8 +1130,69 @@ function toggleSave(id) {
   if (currentTenant && currentTenant.id === id) openTenant(id);
 }
 
-function bookTenant() {
-  showToast('Booking flow — coming in v2');
+// Build the contact buttons for a tenant. Renders only the methods
+// the tenant has set (book / call / text), in priority order:
+// online booking → call → text. First button is the primary CTA;
+// the save heart sits next to it. Additional methods stack below.
+function renderContactActions(t, isSaved) {
+  const ICONS = {
+    book: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    call: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
+    text: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>'
+  };
+  const first = t.name.split(' ')[0];
+  // Build in priority order; skip what tenant hasn't set.
+  const methods = [];
+  if (t.book) methods.push({
+    key: 'book',
+    href: t.book,
+    target: '_blank',
+    rel: 'noopener noreferrer',
+    label: t.bookLabel ? `Book on ${t.bookLabel}` : `Book online with ${first}`
+  });
+  if (t.call) methods.push({
+    key: 'call',
+    href: `tel:${t.call.replace(/[^0-9+]/g, '')}`,
+    label: `Call ${t.call}`
+  });
+  if (t.text) methods.push({
+    key: 'text',
+    href: `sms:${t.text.replace(/[^0-9+]/g, '')}`,
+    label: `Text ${t.text}`
+  });
+
+  const saveBtn = `
+    <button class="btn btn-secondary ${isSaved ? 'saved' : ''}" onclick="toggleSave('${t.id}')" aria-label="${isSaved ? 'Unsave' : 'Save'}">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    </button>`;
+
+  if (methods.length === 0) {
+    // Tenant hasn't set any contact method yet — show a soft fallback
+    // alongside the save button so the layout doesn't collapse.
+    return `
+      <div class="profile-actions-row">
+        <button class="btn btn-primary" disabled style="opacity:.55; cursor:default;">No contact method listed</button>
+        ${saveBtn}
+      </div>`;
+  }
+
+  const [primary, ...rest] = methods;
+  const primaryHtml = `
+    <a class="btn btn-primary" href="${primary.href}"${primary.target ? ` target="${primary.target}" rel="${primary.rel}"` : ''}>
+      ${ICONS[primary.key]} ${primary.label}
+    </a>`;
+  const restHtml = rest.map(m => `
+    <a class="btn btn-outline" href="${m.href}"${m.target ? ` target="${m.target}" rel="${m.rel}"` : ''}>
+      ${ICONS[m.key]} ${m.label}
+    </a>`).join('');
+
+  return `
+    <div class="profile-actions-row">
+      ${primaryHtml}
+      ${saveBtn}
+    </div>
+    ${restHtml}
+  `;
 }
 
 function showToast(msg) {
