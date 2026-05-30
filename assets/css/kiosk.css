@@ -271,19 +271,20 @@
     background: var(--surface-2);
     border: 1px solid var(--line);
     border-radius: 12px;
-    padding: 0.45rem;
+    padding: 0.4rem 0.5rem;
     display: grid;
-    grid-template-columns: 44px minmax(0, 1fr);    /* compact photo + text — fits more cards on screen */
-    align-items: start;
-    gap: 0.55rem;
+    grid-template-columns: 40px minmax(0, 1fr);   /* even tighter — fits more cards on screen */
+    align-items: center;                          /* center the body vertically with the photo */
+    gap: 0.5rem;
     box-shadow: 0 2px 4px rgba(61,53,48,0.06), 0 8px 18px rgba(61,53,48,0.07);
     overflow: hidden;
+    min-width: 0;
   }
   .tenant-photo {
-    width: 44px; height: 44px;
+    width: 40px; height: 40px;
     background-size: cover; background-position: center;
     background-color: var(--bg-2);
-    border-radius: 8px;
+    border-radius: 7px;
     flex-shrink: 0;
     overflow: hidden;
   }
@@ -291,27 +292,49 @@
   .tenant-body {
     min-width: 0;
     overflow: hidden;
-    display: flex; flex-direction: column; gap: 2px;
+    display: flex; flex-direction: column; gap: 1px;
   }
-  /* The name + Test pill flow together; wrap to a 2nd line if needed instead of clipping. */
+  /* Name on one line — truncates with ellipsis if too long. Test pill
+     sits inline at the end; if it doesn't fit, it wraps to a 2nd row but
+     that's the only second-row content allowed. */
   .tenant-name {
     font-family: 'Fraunces', serif;
-    font-size: 0.9rem; color: var(--ink); line-height: 1.15;
-    display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
-    word-break: break-word;
+    font-size: 0.82rem;
+    color: var(--ink);
+    line-height: 1.15;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+  }
+  .tenant-name > span:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    flex: 1 1 auto;
   }
   .tenant-name .test-pill { margin-left: 0; }     /* gap handles spacing now */
-  .tenant-service { font-size: 0.72rem; color: var(--ink-soft); line-height: 1.25; }
+  .tenant-service {
+    font-size: 0.66rem;
+    color: var(--ink-soft);
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
   .tenant-meta {
-    font-size: 0.6rem;
-    letter-spacing: 0.06em;
+    font-size: 0.55rem;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
     color: var(--ink-faint);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 6px;
-    margin-top: 4px;
+    gap: 5px;
+    margin-top: 2px;
     flex-wrap: nowrap;
     min-width: 0;
   }
@@ -448,6 +471,53 @@
   .legend-vacant   { fill: rgba(201,123,90,0.20); stroke: var(--clay-deep); stroke-width: 1.2; stroke-dasharray: 3 2; }
   .legend-empty    { fill: rgba(255,251,244,0.92); stroke: rgba(61,53,48,0.30); stroke-width: 1.2; }
 
+  /* Byway dialog — overlay that appears when "From the owner" or
+     "Available suites" is tapped from the sidebar. Body-level so it stays
+     visible regardless of which tab is active. */
+  .byway-dialog {
+    position: fixed;
+    inset: 0;
+    z-index: 350;
+    display: none;
+    background: rgba(20, 18, 16, 0.55);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    padding: 24px;
+    place-items: center;
+  }
+  .byway-dialog.is-on { display: grid; }
+  .byway-dialog-inner {
+    background: var(--surface-2);
+    color: var(--ink);
+    border-radius: 18px;
+    padding: 24px 26px 28px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+    position: relative;
+  }
+  .byway-dialog-eyebrow {
+    font-size: 0.65rem; letter-spacing: 0.24em; text-transform: uppercase;
+    font-weight: 700; color: var(--clay-deep); margin-bottom: 6px;
+  }
+  .byway-dialog-title {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.4rem;
+    margin-bottom: 12px; color: var(--ink);
+  }
+  .byway-dialog-body {
+    color: var(--ink-soft); font-size: 0.95rem; line-height: 1.55;
+  }
+  .byway-dialog-close {
+    position: absolute; top: 12px; right: 14px;
+    background: rgba(61,53,48,0.08);
+    border: 1px solid rgba(61,53,48,0.12);
+    color: var(--ink);
+    border-radius: 999px;
+    width: 32px; height: 32px;
+    display: grid; place-items: center;
+    cursor: pointer; font-size: 1.2rem; line-height: 1;
+  }
+  .byway-dialog-close:hover { background: rgba(61,53,48,0.15); }
+
   /* Map "expand" floating action button — sits over the inline map and opens the modal. */
   .map-fab {
     position: absolute;
@@ -472,27 +542,7 @@
   /* When the .map-wrap is moved into the modal, hide the inline FAB (you're
      already in the modal — no need to expand it again). */
   .map-modal .map-wrap .map-fab { display: none; }
-  /* Reset all button — sidebar action that clears search, filters, panels,
-     and returns the visitor to the Directory tab in a known clean state. */
-  .reset-all-btn {
-    background: rgba(245,237,224,0.55);
-    border: 1px solid var(--cream-10);
-    color: var(--ink);
-    border-radius: 14px;
-    padding: 0.65rem 0.8rem;
-    font-family: inherit;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    backdrop-filter: blur(10px);
-    width: 100%;
-  }
-  .reset-all-btn:hover { background: rgba(245,237,224,0.85); }
-  .reset-all-btn svg { width: 14px; height: 14px; }
-
+  
   /* Fullscreen modal — overlays the entire kiosk-shell. */
   .map-modal {
     position: fixed;
@@ -805,7 +855,6 @@
     .byway-card { padding: 0.65rem 0.75rem; }
     .byway-card h3 { font-size: 0.74rem; }
     .byway-card p { font-size: 0.64rem; }
-    .reset-all-btn { padding: 0.5rem 0.7rem; font-size: 0.68rem; }
   }
 
   @media (max-width: 900px) {

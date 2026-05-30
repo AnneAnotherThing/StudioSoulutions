@@ -34,12 +34,6 @@
       photo:'assets/photos/hair2.png', avatar:'F', is_concept:true,
       call:'555-202-4408', text:'555-202-4408' },
     /* Added to match the phone seed (which is the source of truth). */
-    { id:'t2', name:'Suite 2 — placeholder', suite:'Suite (placeholder)', service:'Pedicure · Lash',
-      services:['Pedicure','Manicure','Lash'], category:'nails', open:true, status:'active',
-      photo:'assets/photos/nails1.png', avatar:'W', is_concept:true },
-    { id:'t3', name:'Suite 3 — placeholder', suite:'Suite (placeholder)', service:'Pedicure · Spa',
-      services:['Pedicure','Spa','Quick Mani'], category:'nails', open:true, status:'active',
-      photo:'assets/photos/nails2.png', avatar:'S', is_concept:true },
     { id:'t11', name:'Rooted Wellness', suite:'Suite 222', service:'Reiki & Acupuncture',
       services:['Acupuncture','Reiki','Cupping'], category:'wellness', open:false, status:'active',
       photo:'assets/photos/massage2.png', avatar:'R', is_concept:true,
@@ -73,7 +67,7 @@
       '<div class="tenant-card" data-tenant-id="' + (t.id || '') + '" style="cursor:pointer;">' +
         photo +
         '<div class="tenant-body">' +
-          '<div class="tenant-name">' + (t.name || 'Studio') + (t.is_concept ? ' <span class="test-pill">Test</span>' : '') + '</div>' +
+          '<div class="tenant-name"><span>' + (t.name || 'Studio') + '</span>' + (t.is_concept ? '<span class="test-pill">Test</span>' : '') + '</div>' +
           '<div class="tenant-service">' + (t.service || '') + '</div>' +
           '<div class="tenant-meta">' + metaSuiteHtml + metaStatusHtml + '</div>' +
         '</div>' +
@@ -462,45 +456,65 @@
     });
   });
 
-  /* Byway buttons — let visitors jump straight to vacancies / owner note / map */
+  /* Byway buttons — open a body-level dialog (not the in-map detail panel,
+     which is nested inside the hidden .map-wrap when the visitor is on a
+     different tab and so renders invisibly). */
+  function ensureByawayDialog() {
+    let dlg = document.getElementById('bywayDialog');
+    if (dlg) return dlg;
+    dlg = document.createElement('div');
+    dlg.id = 'bywayDialog';
+    dlg.className = 'byway-dialog';
+    dlg.setAttribute('role', 'dialog');
+    dlg.setAttribute('aria-hidden', 'true');
+    dlg.innerHTML = ''
+      + '<div class="byway-dialog-inner">'
+      +   '<button type="button" class="byway-dialog-close" aria-label="Close">&times;</button>'
+      +   '<div class="byway-dialog-eyebrow" id="bywayDialogEyebrow">By the way</div>'
+      +   '<h2 class="byway-dialog-title" id="bywayDialogTitle"></h2>'
+      +   '<div class="byway-dialog-body" id="bywayDialogBody"></div>'
+      + '</div>';
+    document.body.appendChild(dlg);
+    dlg.querySelector('.byway-dialog-close').addEventListener('click', closeByawayDialog);
+    dlg.addEventListener('click', function(e) { if (e.target === dlg) closeByawayDialog(); });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && dlg.classList.contains('is-on')) closeByawayDialog();
+    });
+    return dlg;
+  }
+  function showByawayDetail(title, body) {
+    const dlg = ensureByawayDialog();
+    document.getElementById('bywayDialogTitle').textContent = title;
+    document.getElementById('bywayDialogBody').innerHTML = body;
+    dlg.classList.add('is-on');
+    dlg.setAttribute('aria-hidden', 'false');
+  }
+  function closeByawayDialog() {
+    const dlg = document.getElementById('bywayDialog');
+    if (!dlg) return;
+    dlg.classList.remove('is-on');
+    dlg.setAttribute('aria-hidden', 'true');
+  }
+
   document.querySelectorAll('.byway-card[data-action]').forEach(function(b) {
     b.addEventListener('click', function() {
       const action = b.dataset.action;
       if (action === 'map') {
-        // Switch the Browse tab to Suite map
         const mapTab = document.querySelector('.browse-tabs .tab[data-tab="map"]');
         if (mapTab) mapTab.click();
-        document.querySelector('.browse')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else if (action === 'vacancies') {
-        // Switch to Directory + show clay-toned vacancy summary in detail (simplest: just toast it)
-        showByawayDetail('Available suites', document.getElementById('bywayVacancy').textContent + ' Email salonplusss@gmail.com to tour.');
+        const summary = (document.getElementById('bywayVacancy') || {}).textContent || '';
+        showByawayDetail(
+          'Available suites',
+          '<p>' + summary + '</p>' +
+          '<p style="margin-top:12px;">If a room looks like a fit, email <a href="mailto:salonplusss@gmail.com" style="color:var(--clay-deep);font-weight:600;">salonplusss@gmail.com</a> to tour.</p>'
+        );
       } else if (action === 'owner') {
-        showByawayDetail('From the owner', document.getElementById('ownerNote').textContent || '— The owner');
+        const note = (document.getElementById('ownerNote') || {}).textContent || '— The owner';
+        showByawayDetail('From the owner', '<p style="white-space:pre-line;">' + note + '</p>');
       }
     });
   });
-
-  function showByawayDetail(title, body) {
-    // Reuse the map-detail panel if present, otherwise a tiny toast
-    let el = document.getElementById('mapDetail');
-    if (!el) {
-      el = document.createElement('div');
-      el.className = 'map-detail';
-      el.id = 'mapDetail';
-      document.body.appendChild(el);
-      el.style.position = 'fixed';
-      el.style.right = '20px';
-      el.style.bottom = '20px';
-      el.style.zIndex = '300';
-    }
-    el.hidden = false;
-    el.innerHTML =
-      '<button class="md-close" type="button" aria-label="Close">&times;</button>' +
-      '<div class="md-suite">' + title + '</div>' +
-      '<div class="md-service" style="margin-top:8px;">' + body + '</div>';
-    const closeBtn = el.querySelector('.md-close');
-    if (closeBtn) closeBtn.addEventListener('click', function() { el.hidden = true; });
-  }
 
   /* Clock */
   function tickClock() {
@@ -615,35 +629,6 @@
       if (e.key === 'Escape' && modal.classList.contains('is-on')) closeModal();
     });
 
-    // Reset all — clears search, filter, any open detail panel, closes the modal,
-    // and returns the visitor to the Directory tab with the "All" filter.
-    const resetBtn = document.getElementById('resetAllBtn');
-    if (resetBtn) {
-      resetBtn.addEventListener('click', function() {
-        // Close modal if open
-        if (modal.classList.contains('is-on')) closeModal();
-        // Clear search input + dismiss results
-        const si = document.getElementById('searchInput');
-        if (si) { si.value = ''; si.dispatchEvent(new Event('input', { bubbles: true })); }
-        const results = document.getElementById('searchResults');
-        if (results) { results.hidden = true; results.innerHTML = ''; }
-        // Clear filter chips back to "All"
-        document.querySelectorAll('#filterChips .filter-chip').forEach(function(x) { x.classList.remove('is-active'); });
-        const allChip = document.querySelector('#filterChips .filter-chip[data-cat="all"]');
-        if (allChip) allChip.click();
-        // Hide any open detail panel
-        const md = document.getElementById('mapDetail');
-        if (md) { md.hidden = true; md.innerHTML = ''; }
-        // Hide the tenant slide-in panel if it exists
-        document.querySelectorAll('.tenant-panel.is-on').forEach(function(p) { p.classList.remove('is-on'); });
-        // Land on Directory tab
-        const dirTab = document.querySelector('.browse-tabs .tab[data-tab="all"]');
-        if (dirTab) dirTab.click();
-        // Scroll the tenant grid back to the top
-        const grid = document.getElementById('tenantGrid');
-        if (grid) grid.scrollTop = 0;
-      });
-    }
   })();
 
   /* Pair rotator — cycles "Did you know" cross-pollination prompts in the hero.

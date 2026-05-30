@@ -220,6 +220,61 @@ main { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
   flex-direction: column;
   gap: 8px;
 }
+
+/* Logo concept picker — current pick on the left, full grid on the right.
+   Stacks on narrow viewports. */
+.logo-pick {
+  display: grid;
+  grid-template-columns: minmax(220px, 360px) 1fr;
+  gap: 22px;
+  margin-top: 1.4rem;
+  align-items: start;
+}
+.logo-pick-eyebrow,
+.logo-pick-grid-eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--clay-deep, #A8593E);
+  margin-bottom: 10px;
+}
+.logo-pick-current {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.logo-pick-current-img {
+  max-width: 320px;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto 12px;
+  /* No backdrop / box-shadow now that we want the green SS to float on the page. */
+}
+.logo-pick-current-label {
+  font-size: 0.78rem;
+  color: var(--ink-soft, #6B6357);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.logo-pick-grid-img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  display: block;
+  box-shadow: 0 2px 6px rgba(61,53,48,0.10), 0 10px 28px rgba(61,53,48,0.14);
+}
+@media (max-width: 720px) {
+  .logo-pick { grid-template-columns: 1fr; }
+}
+
 /* "What's new" callout — sits between the hero and the caveat, sage-toned
    so it reads as news rather than a warning. */
 .updates {
@@ -688,7 +743,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
 <header class="app-header">
   <div class="row">
     <div class="brand">
-      <img src="assets/logo_placeholder.png" alt="Studio Soulutions" style="height:44px;width:auto;display:block;background:transparent;">
+      <img src="assets/logo_ss_green_v4.png" alt="Studio Soulutions" style="height:44px;width:auto;display:block;background:transparent;">
       <div>
         <div class="brand-name">Studio Soul<em>utions</em></div>
         <div class="brand-sub">A walkthrough for Laura</div>
@@ -699,16 +754,46 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
 
 <main>
 
-  <section class="hero">
-    <div class="eyebrow">Hi Laura</div>
-    <h1>Here's everything <em>we've got</em> so far for Salon Plus Studio Suites.</h1>
-    <p class="lead">
-      Four pieces, all stitched together. The pitch lays out the vision. The kiosk is what your lobby will see. The phone is what your clients carry out the door. The admin is where you run the whole thing. Tap any "Open" button below to walk through them yourself.
+  <!-- ===================== WHAT'S NEW · 2026-05-30 — newest at top ===================== -->
+  <section class="updates" aria-label="What's new — logo concepts">
+    <div class="updates-row">
+      <span class="updates-eyebrow">What's new</span>
+      <span class="updates-date">May 30, 2026</span>
+    </div>
+    <h2 class="updates-title">A logo to live with — <em>or pick a different one.</em></h2>
+    <p class="updates-lead">
+      I dropped a temporary working logo into the kiosk, the phone, the admin, and the QR — the forest-green enamel SS with the brass outline. It's the one that felt closest to your "warm, earthy, but built to last" instinct. If you love it, we keep going. If not, here's the rest of the wall to pick from, or we go back and try something else entirely.
     </p>
-    <div class="signoff">— Anne · Hive-Rise</div>
+
+    <div class="logo-pick">
+      <div class="logo-pick-current">
+        <div class="logo-pick-eyebrow">Currently in use across every surface</div>
+        <img class="logo-pick-current-img" src="assets/logo_ss_green_v4.png" alt="Forest green enamel SS logo currently in use" />
+        <div class="logo-pick-current-label">Forest Green Enamel · with brass outline</div>
+      </div>
+
+      <div class="logo-pick-grid">
+        <div class="logo-pick-grid-eyebrow">Other directions on the wall</div>
+        <img class="logo-pick-grid-img" src="assets/logo-concepts-grid.png" alt="Nine alternate finishes for the Studio Soulutions SS mark — antique gold, oxidized copper, pewter silver, black chrome, antique brass, champagne gold, forest green &amp; brass, walnut engraved, rose gold" />
+      </div>
+    </div>
+
+    <ul class="updates-list" style="margin-top: 1.4rem;">
+      <li>
+        <strong>Pick one and I'll lock it in everywhere.</strong> Same tile, no other changes — just a swap-out so the kiosk and phone carry it.
+      </li>
+      <li>
+        <strong>None of these are quite right?</strong> Tell me what's off — color, weight, finish, the shape of the letterforms — and I'll come back with another round. Easier to iterate than to settle.
+      </li>
+      <li>
+        <strong>The green one is "for now"</strong> — it'll keep showing up across the surfaces until you say otherwise. If you want a different temporary while we wait on the real one, just say which.
+      </li>
+    </ul>
+
+    <p class="updates-foot">No rush — but the sooner you point at one, the sooner the kiosk and the phone start looking like <em>your</em> building instead of mine.</p>
   </section>
 
-  <!-- ===================== WHAT'S NEW — dated changelog at the top so Laura sees fresh updates first ===================== -->
+  <!-- ===================== WHAT'S NEW — always at the top so Laura sees fresh updates first ===================== -->
   <section class="updates" aria-label="What's new">
     <div class="updates-row">
       <span class="updates-eyebrow">What's new</span>
@@ -750,6 +835,15 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
     </div>
 
     <p class="updates-foot">If anything in the new copy or fields doesn't sound right for how you'd want to introduce the building to a future tenant, just tell me — easiest thing in the world to swap.</p>
+  </section>
+
+  <section class="hero">
+    <div class="eyebrow">Hi Laura</div>
+    <h1>Here's everything <em>we've got</em> so far for Salon Plus Studio Suites.</h1>
+    <p class="lead">
+      Four pieces, all stitched together. The pitch lays out the vision. The kiosk is what your lobby will see. The phone is what your clients carry out the door. The admin is where you run the whole thing. Tap any "Open" button below to walk through them yourself.
+    </p>
+    <div class="signoff">— Anne · Hive-Rise</div>
   </section>
 
   <!-- ===================== PLEASE TELL ME WHAT TO CHANGE — comes right after the hero ===================== -->
@@ -867,7 +961,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
 
       <div style="margin: 24px 0 20px;">
         <div class="step" style="margin-bottom: 10px;">My favorite (for now)</div>
-        <img src="assets/logo_placeholder.png" alt="Working placeholder mark — flowing S with keyhole, clay and sage." style="height: 140px; width: auto; display: block; background: transparent;" />
+        <img src="assets/logo_ss_green_v4.png" alt="Working placeholder mark — flowing S with keyhole, clay and sage." style="height: 140px; width: auto; display: block; background: transparent;" />
         <p class="muted" style="font-size: 12px; margin-top: 10px; max-width: 520px;">It's an S that doubles as a keyhole — entrance, identity, "inside the building" — in your clay-and-sage palette. Living across the surfaces so you can see how it actually feels in use.</p>
       </div>
 
