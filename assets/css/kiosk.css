@@ -1,0 +1,831 @@
+/* Extracted from kiosk.html on split. */
+  :root {
+    --bg:            #F5EDE0;
+    --bg-2:          #EFE4D2;
+    --bg-3:          #E5D9C3;
+    --surface:       #FBF6EE;
+    --surface-2:     #FFFBF4;
+    --ink:           #3D3530;
+    --ink-soft:      #6B6357;
+    --ink-faint:     #8B7E70;
+    --ink-ghost:    #B8AB9C;
+    --sage:          #8B9A7E;
+    --sage-deep:     #6B7A5F;
+    --sage-soft:     #C5D0B8;
+    --taupe:         #B5A795;
+    --taupe-deep:    #8B7E6A;
+    --taupe-soft:    #D9CBB8;
+    --clay:          #C97B5A;
+    --clay-deep:     #A8593E;
+    --clay-soft:     #E8C8B5;
+    --line:          #E5D9C3;
+    --line-2:        #D4C4A8;
+    --bg-dark:       var(--bg);
+    --cream-on-dark: var(--ink);
+    --cream-04:      rgba(61,53,48,0.05);
+    --cream-06:      rgba(61,53,48,0.07);
+    --cream-08:      rgba(61,53,48,0.09);
+    --cream-10:      rgba(61,53,48,0.11);
+    --cream-15:      rgba(61,53,48,0.15);
+    --cream-20:      rgba(61,53,48,0.20);
+    --cream-40:      rgba(61,53,48,0.48);
+    --cream-50:      rgba(61,53,48,0.58);
+    --cream-70:      rgba(61,53,48,0.80);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overflow: hidden; background: var(--bg-dark); color: var(--cream-on-dark); }
+  body { font-family: 'Inter', -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+
+  .serif    { font-family: 'Fraunces', Georgia, serif; font-weight: 500; letter-spacing: -0.02em; }
+  .serif-it { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-weight: 400; }
+  .eyebrow {
+    font-size: 0.7rem; letter-spacing: 0.32em; text-transform: uppercase;
+    font-weight: 600; color: var(--cream-50);
+  }
+
+  /* ---------- Active app ---------- */
+  #app {
+    position: fixed; inset: 0;
+    overflow: hidden;
+    background: var(--bg-dark);
+    color: var(--cream-on-dark);
+  }
+  #app::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: url('assets/photos/1000040457.jpg');
+    background-size: cover; background-position: center;
+    z-index: 0;
+    pointer-events: none;       /* decorative — must not eat clicks */
+  }
+  #app::after {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(80% 60% at 80% 0%, rgba(139,154,126,0.12) 0%, transparent 60%),
+      linear-gradient(180deg, rgba(245,237,224,0.55) 0%, rgba(245,237,224,0.82) 60%, rgba(245,237,224,0.96) 100%);
+    z-index: 1;
+    pointer-events: none;       /* decorative — must not eat clicks */
+  }
+
+  .kiosk-shell-v2 {
+    position: relative; z-index: 2;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    padding: 1.6rem 2.4rem;
+    gap: 1rem;
+    overflow: hidden;
+  }
+
+  /* Top */
+  .kiosk-top {
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(245,237,224,0.55);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-radius: 20px;
+    padding: 0.8rem 1.4rem;
+    box-shadow: 0 2px 4px rgba(61,53,48,0.10), 0 10px 28px rgba(61,53,48,0.16);
+  }
+  .brand { display: flex; align-items: center; gap: 1rem; }
+  .brand-mark {
+    width: 52px; height: 52px;
+    background: var(--ink); color: var(--surface-2);
+    border-radius: 14px;
+    display: grid; place-items: center;
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.6rem;
+  }
+  .brand-name {
+    font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .brand-name em { font-style: italic; font-weight: 400; color: var(--taupe-deep); font-family: 'Fraunces', serif; }
+  .brand-sub { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--cream-50); margin-top: 4px; }
+  .clock { font-family: 'Fraunces', serif; font-size: 1.4rem; color: var(--ink); }
+
+  /* Hero search */
+  .hero-search { padding: 0.4rem 0.2rem; }
+  .hero-search .eyebrow { margin-bottom: 0.6rem; color: var(--clay-deep); }
+  .hero-search .hero-sub {
+    color: var(--ink-soft);
+    font-size: 1rem;
+    margin: 0.75rem 0 1rem;
+    max-width: 38em;
+  }
+  .hero-search .hero-sub span { color: var(--ink); font-weight: 600; }
+  /* Pair-rotator — quietly cycles "while you're at X, walk to Y" pairings */
+  .pair-rotator {
+    margin-top: 0.6rem;
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(216, 196, 168, 0.20);
+    border: 1px solid var(--clay-soft);
+    border-radius: 999px;
+    padding: 6px 14px 6px 11px;
+    color: var(--clay-deep);
+    font-size: 0.82rem;
+    line-height: 1.3;
+    transition: opacity 0.35s ease;
+  }
+  .pair-rotator .pair-eyebrow {
+    font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase;
+    font-weight: 700; color: var(--clay-deep);
+    background: rgba(245,237,224,0.7);
+    padding: 2px 8px; border-radius: 999px;
+  }
+  .pair-rotator .pair-text { color: var(--ink); font-weight: 500; }
+  .pair-rotator.is-fading { opacity: 0; }
+  .hero-search h1 {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 3.2rem; line-height: 1.05; letter-spacing: -0.02em;
+    color: var(--ink); margin-bottom: 1.2rem;
+  }
+  .hero-search h1 em { font-style: italic; font-weight: 400; color: var(--taupe-deep); }
+  .search-shell { position: relative; }
+  .search-icon {
+    position: absolute; top: 50%; left: 22px; width: 22px; height: 22px;
+    transform: translateY(-50%); color: var(--ink-faint);
+  }
+  .search-input {
+    width: 100%;
+    background: rgba(255,251,244,0.85);
+    border: 1px solid var(--line-2);
+    border-radius: 999px;
+    padding: 18px 24px 18px 58px;
+    font-size: 1.2rem; font-family: inherit;
+    color: var(--ink);
+    box-shadow: 0 2px 8px rgba(61,53,48,0.10), 0 12px 32px rgba(61,53,48,0.12);
+  }
+  .search-input::placeholder { color: var(--ink-faint); }
+  .search-input:focus { outline: none; border-color: var(--taupe-deep); }
+  .search-results {
+    margin-top: 10px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    max-height: 280px;
+    overflow-y: auto;
+    box-shadow: 0 10px 32px rgba(61,53,48,0.12);
+  }
+  .search-result {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .search-result:last-child { border-bottom: 0; }
+  .sr-mark {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--bg-2); color: var(--ink);
+    display: grid; place-items: center;
+    font-family: 'Fraunces', serif; font-size: 1.1rem;
+  }
+  .sr-body { flex: 1; min-width: 0; }
+  .sr-name { font-family: 'Fraunces', serif; font-size: 1.05rem; color: var(--ink); }
+  .sr-meta { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); margin-top: 2px; }
+  .sr-suite { font-size: 0.85rem; color: var(--ink-soft); margin-left: 8px; }
+  .search-hint { color: var(--ink-faint); font-size: 0.85rem; margin-top: 0.9rem; }
+
+  /* Browse — two-column on landscape so the map fills the width AND the
+     "by the way" cards live in a vertical sidebar instead of the footer.
+     Collapses to single-column on narrow screens via the existing breakpoint. */
+  .browse {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    grid-template-rows: auto 1fr;                /* tabs auto, main fills remaining height */
+    grid-template-areas: "tabs side" "main side";
+    column-gap: 1.1rem;
+    row-gap: 0.9rem;
+    min-height: 0;
+    height: 100%;                                /* anchor to the kiosk-shell row */
+  }
+  .browse-main { display: flex; flex-direction: column; gap: 0.9rem; min-height: 0; grid-area: main; height: 100%; overflow: hidden; }
+  .browse-tabs { display: flex; gap: 0.6rem; grid-area: tabs; align-self: end; }
+  .browse-side {
+    grid-area: side;
+    display: flex; flex-direction: column; gap: 0.7rem;
+    min-height: 0;
+  }
+  .browse-side .byway-eyebrow {
+    font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase;
+    font-weight: 700; color: var(--cream-50); margin-bottom: 0;
+  }
+  /* Sidebar byway cards stack vertically and fill the column. */
+  .browse-side .byway-card {
+    width: 100%;
+    text-align: left;
+    flex: 0 0 auto;
+  }
+  .browse-side .byway-card.qr { text-align: center; }
+  .tab {
+    background: rgba(245,237,224,0.5);
+    border: 1px solid var(--cream-10);
+    border-radius: 999px;
+    padding: 9px 18px;
+    font-family: inherit; font-size: 0.85rem; font-weight: 600;
+    color: var(--ink-soft); cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+    backdrop-filter: blur(10px);
+  }
+  .tab.is-active { background: var(--ink); color: var(--surface-2); border-color: var(--ink); }
+  .tab-meta { font-size: 0.7rem; letter-spacing: 0.06em; opacity: 0.85; display: inline-flex; align-items: center; gap: 6px; }
+  .tab-meta.open { color: var(--sage-deep); }
+  .tab.is-active .tab-meta.open { color: var(--sage-soft); }
+  .open-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--sage-deep); display: inline-block; }
+  .browse-content {
+    background: rgba(255,251,244,0.65);
+    border: 1px solid var(--cream-10);
+    border-radius: 22px;
+    padding: 1.1rem;
+    min-height: 0;
+    flex: 1 1 auto;                              /* fill the browse-main column so tenant-grid scroll has a reference height */
+    overflow: hidden;                            /* clip; inner tenant-grid handles scroll */
+    backdrop-filter: blur(14px);
+    box-shadow: 0 2px 6px rgba(61,53,48,0.06), 0 16px 40px rgba(61,53,48,0.08);
+  }
+  .browse-content .tenant-grid {
+    display: grid;
+    /* Auto-fit responsive columns — packs as many ~220px cards as fit, scrolls vertically when there are more. */
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.7rem;
+    height: 100%;
+    overflow-y: auto;
+    align-content: start;
+    padding-right: 4px;
+  }
+  /* The HTML `hidden` attribute must beat `display: grid` above */
+  .browse-content [hidden] { display: none !important; }
+  .tenant-card {
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 0.6rem;
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);   /* small photo on the LEFT, text fills the rest */
+    align-items: start;                            /* top-align so variable-height bodies don't push the photo around */
+    gap: 0.7rem;
+    box-shadow: 0 2px 4px rgba(61,53,48,0.06), 0 10px 24px rgba(61,53,48,0.08);
+    overflow: hidden;                              /* defensive — keep anything inside the card border */
+  }
+  .tenant-photo {
+    width: 64px; height: 64px;
+    background-size: cover; background-position: center;
+    background-color: var(--bg-2);
+    border-radius: 10px;
+    flex-shrink: 0;
+    overflow: hidden;                              /* defensive — background can't escape */
+  }
+  /* Body is a flex column; min-width:0 lets the text wrap rather than overflow. */
+  .tenant-body {
+    min-width: 0;
+    overflow: hidden;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  /* The name + Test pill flow together; wrap to a 2nd line if needed instead of clipping. */
+  .tenant-name {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem; color: var(--ink); line-height: 1.2;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+    word-break: break-word;
+  }
+  .tenant-name .test-pill { margin-left: 0; }     /* gap handles spacing now */
+  .tenant-service { font-size: 0.78rem; color: var(--ink-soft); }
+  .tenant-meta { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); display: flex; align-items: center; gap: 6px; }
+  .test-pill {
+    display: inline-block;
+    background: var(--clay-soft); color: var(--clay-deep);
+    padding: 2px 8px; border-radius: 999px;
+    font-size: 0.55rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;
+    margin-left: 6px;
+  }
+  .map-canvas {
+    padding: 0;
+    color: var(--ink-soft);
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .map-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 280px;          /* enough to read suite numbers; full map always fits via SVG aspect-fit */
+    background: rgba(255,251,244,0.55);
+    border-radius: 16px;
+    overflow: hidden;
+    display: grid; place-items: center;   /* center the SVG inside */
+  }
+  /* When Laura drops her photo at assets/floor-plan.jpg this will fade in behind the SVG. */
+  .map-photo {
+    position: absolute; inset: 0;
+    background-image: url('assets/floor-plan.jpg');
+    background-size: cover; background-position: center;
+    opacity: 0.18;
+    pointer-events: none;
+  }
+  .map-svg {
+    position: relative; z-index: 1;
+    /* width:100% height:auto = scale by viewBox aspect so the FULL building always shows.
+       max-height keeps it from blowing past the wrap on very wide containers. */
+    width: 100%;
+    height: auto;
+    max-height: 100%;
+    display: block;
+  }
+  /* Suite rooms */
+  .suite rect {
+    fill: rgba(255,251,244,0.92);
+    stroke: rgba(61,53,48,0.30);
+    stroke-width: 1.5;
+    transition: fill 0.2s ease, stroke 0.2s ease, transform 0.2s ease;
+    cursor: pointer;
+  }
+  .suite text {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 18px;
+    fill: var(--ink-faint);
+    pointer-events: none;
+    transition: fill 0.2s ease;
+  }
+  .suite:hover rect {
+    fill: rgba(245,237,224,1);
+    stroke: var(--taupe-deep);
+  }
+  /* Occupied suites — colored by the JS that knows which tenants exist */
+  .suite.is-occupied rect {
+    fill: rgba(139,154,126,0.22);     /* sage tint */
+    stroke: var(--sage-deep);
+  }
+  .suite.is-occupied text { fill: var(--ink); }
+  .suite.is-occupied.is-open rect { fill: rgba(139,154,126,0.40); }
+  /* Vacancies — clay tint */
+  .suite.is-vacant rect {
+    fill: rgba(201,123,90,0.16);
+    stroke: var(--clay-deep);
+    stroke-dasharray: 4 3;
+  }
+  .suite.is-vacant text { fill: var(--clay-deep); }
+  /* Currently selected suite */
+  .suite.is-active rect {
+    fill: var(--ink);
+    stroke: var(--ink);
+  }
+  .suite.is-active text { fill: var(--surface-2); }
+
+  /* Legend swatches */
+  .legend-occupied { fill: rgba(139,154,126,0.40); stroke: var(--sage-deep); stroke-width: 1.2; }
+  .legend-vacant   { fill: rgba(201,123,90,0.20); stroke: var(--clay-deep); stroke-width: 1.2; stroke-dasharray: 3 2; }
+  .legend-empty    { fill: rgba(255,251,244,0.92); stroke: rgba(61,53,48,0.30); stroke-width: 1.2; }
+
+  /* Map "expand" floating action button — sits over the inline map and opens the modal. */
+  .map-fab {
+    position: absolute;
+    bottom: 12px; right: 12px;
+    z-index: 5;
+    background: var(--ink);
+    color: var(--surface-2);
+    border: 0;
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+    box-shadow: 0 6px 18px rgba(61,53,48,0.25);
+  }
+  .map-fab:hover { background: var(--taupe-deep); }
+  .map-fab svg { width: 14px; height: 14px; }
+
+  /* When the .map-wrap is moved into the modal, hide the inline FAB (you're
+     already in the modal — no need to expand it again). */
+  .map-modal .map-wrap .map-fab { display: none; }
+  /* Reset all button — sidebar action that clears search, filters, panels,
+     and returns the visitor to the Directory tab in a known clean state. */
+  .reset-all-btn {
+    background: rgba(245,237,224,0.55);
+    border: 1px solid var(--cream-10);
+    color: var(--ink);
+    border-radius: 14px;
+    padding: 0.65rem 0.8rem;
+    font-family: inherit;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    backdrop-filter: blur(10px);
+    width: 100%;
+  }
+  .reset-all-btn:hover { background: rgba(245,237,224,0.85); }
+  .reset-all-btn svg { width: 14px; height: 14px; }
+
+  /* Fullscreen modal — overlays the entire kiosk-shell. */
+  .map-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    display: none;
+    background: rgba(20, 18, 16, 0.78);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    padding: 32px;
+    overflow: hidden;
+  }
+  .map-modal.is-on { display: grid; place-items: center; }
+  .map-modal-inner {
+    position: relative;
+    width: 100%; height: 100%;
+    background: var(--surface-2);
+    border-radius: 22px;
+    padding: 28px 32px 36px;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 18px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.45);
+  }
+  .map-modal-head {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 14px;
+  }
+  .map-modal-head h2 {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 1.4rem; color: var(--ink); margin: 0;
+  }
+  .map-modal-head .sub {
+    font-size: 0.75rem; color: var(--ink-soft);
+    letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;
+    margin-top: 4px;
+  }
+  .map-modal-close {
+    background: rgba(61,53,48,0.08);
+    border: 1px solid rgba(61,53,48,0.12);
+    color: var(--ink);
+    border-radius: 999px;
+    width: 44px; height: 44px;
+    display: grid; place-items: center;
+    cursor: pointer;
+    font-size: 1.4rem; line-height: 1;
+  }
+  .map-modal-close:hover { background: rgba(61,53,48,0.15); }
+  .map-modal-body {
+    position: relative;
+    width: 100%; height: 100%;
+    background: rgba(255,251,244,0.55);
+    border-radius: 16px;
+    overflow: hidden;
+    display: grid; place-items: center;
+  }
+  /* SVG inside the modal — scale to the modal body. The kiosk's existing .map-svg
+     styles apply, just inside a bigger container, so the map gets bigger automatically. */
+  .map-modal-body .map-svg {
+    width: 100%; height: 100%;
+    max-width: 100%; max-height: 100%;
+  }
+
+  /* "You are here" pulse */
+  .you-are-here circle:first-child {
+    animation: youAreHerePulse 2.4s ease-out infinite;
+    transform-box: fill-box;       /* anchor origin to the circle's own box, not the SVG viewport */
+    transform-origin: center;
+  }
+  @keyframes youAreHerePulse {
+    0%   { transform: scale(0.6); opacity: 0.45; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+
+  /* Cross-pollination tenant detail panel — slides in from the right when a tenant card is tapped */
+  .tenant-panel {
+    position: fixed; inset: 0;
+    z-index: 280;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .tenant-panel.is-on { opacity: 1; pointer-events: auto; }
+  .tenant-panel .tp-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(61, 53, 48, 0.45);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  .tenant-panel .tp-card {
+    position: absolute; top: 0; right: 0; bottom: 0;
+    width: min(460px, 92vw);
+    background: var(--surface-2);
+    overflow-y: auto;
+    box-shadow: -16px 0 60px -10px rgba(61,53,48,0.40);
+    transform: translateX(100%);
+    transition: transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+    z-index: 2;
+  }
+  .tenant-panel.is-on .tp-card { transform: translateX(0); }
+  .tp-close {
+    position: absolute; top: 12px; right: 14px;
+    z-index: 3;
+    background: rgba(255,251,244,0.92);
+    border: 0; border-radius: 999px;
+    width: 36px; height: 36px;
+    font-size: 22px; line-height: 1; color: var(--ink);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(61,53,48,0.18);
+  }
+  .tp-hero {
+    width: 100%; aspect-ratio: 5/3;
+    background-size: cover; background-position: center;
+    background-color: var(--bg-2);
+  }
+  .tp-hero--avatar { display: grid; place-items: center; }
+  .tp-hero--avatar span {
+    font-family: 'Fraunces', serif; font-size: 4rem; color: var(--ink-soft);
+  }
+  .tp-body { padding: 22px 24px 32px; }
+  .tp-suite {
+    font-size: 0.65rem; letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 700;
+  }
+  .tp-name {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 1.6rem; color: var(--ink);
+    margin-top: 6px; letter-spacing: -0.01em;
+  }
+  .tp-service { color: var(--ink-soft); margin-top: 6px; font-size: 0.95rem; }
+  .tp-status {
+    margin-top: 12px;
+    font-size: 0.78rem; letter-spacing: 0.06em;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .tp-pairs {
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid var(--cream-10);
+  }
+  .tp-pairs-eyebrow {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 400;
+    font-size: 1.1rem; color: var(--taupe-deep);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .tp-pairs-grid { display: flex; flex-direction: column; gap: 10px; }
+  .tp-pair {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 10px;
+    display: grid; grid-template-columns: 56px minmax(0,1fr); gap: 12px;
+    align-items: center;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .tp-pair:hover { background: var(--surface-2); transform: translateY(-1px); }
+  .tp-pair-photo {
+    width: 56px; height: 56px;
+    background-size: cover; background-position: center;
+    background-color: var(--bg-3);
+    border-radius: 10px;
+  }
+  .tp-pair-photo--avatar {
+    display: grid; place-items: center;
+    font-family: 'Fraunces', serif; font-size: 1.2rem;
+    color: var(--ink);
+  }
+  .tp-pair-body { min-width: 0; }
+  .tp-pair-name { font-family: 'Fraunces', serif; font-size: 0.95rem; color: var(--ink); }
+  .tp-pair-service { color: var(--ink-soft); font-size: 0.78rem; margin-top: 1px; }
+  .tp-pair-meta {
+    margin-top: 3px;
+    font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .tp-pairs-hint {
+    color: var(--ink-faint); font-size: 0.78rem;
+    margin-top: 12px; line-height: 1.4;
+  }
+
+  /* Detail panel that appears over the map when a suite is tapped */
+  .map-detail {
+    position: absolute;
+    right: 18px; bottom: 18px;
+    z-index: 3;
+    width: 320px;
+    max-width: calc(100% - 36px);
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px 18px;
+    box-shadow: 0 6px 20px rgba(61,53,48,0.18), 0 24px 60px rgba(61,53,48,0.18);
+  }
+  .map-detail .md-suite { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-faint); font-weight: 700; }
+  .map-detail .md-name { font-family: 'Fraunces', serif; font-size: 1.2rem; color: var(--ink); margin-top: 4px; }
+  .map-detail .md-service { color: var(--ink-soft); font-size: 0.9rem; margin-top: 4px; }
+  .map-detail .md-status { display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; margin-top: 10px; }
+  .map-detail .md-contact { color: var(--ink-soft); font-size: 0.82rem; margin-top: 10px; font-weight: 600; letter-spacing: 0.01em; }
+  .map-detail .md-close {
+    position: absolute; top: 8px; right: 10px;
+    background: transparent; border: 0; cursor: pointer;
+    font-size: 18px; color: var(--ink-faint); line-height: 1;
+    padding: 4px 8px;
+  }
+
+  /* By the way */
+  /* Filter chips — let visitors discover by what they want */
+  .filter-chips {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+    margin: 0.2rem 0 0.7rem;
+  }
+  .filter-chip {
+    background: rgba(245,237,224,0.55);
+    border: 1px solid var(--cream-10);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  .filter-chip:hover { color: var(--ink); }
+  .filter-chip.is-active {
+    background: var(--ink);
+    color: var(--surface-2);
+    border-color: var(--ink);
+  }
+
+  /* By the way — slimmed down strip so the directory has room to breathe */
+  .byway { padding-top: 0.55rem; border-top: 1px solid var(--cream-10); }
+  .byway-eyebrow { font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase; font-weight: 700; color: var(--cream-50); margin-bottom: 0.4rem; }
+  .byway-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.55rem; }
+  .byway-card {
+    background: rgba(255,251,244,0.85);
+    border: 1px solid var(--cream-10);
+    border-radius: 11px;
+    padding: 0.5rem 0.7rem;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 1px 3px rgba(61,53,48,0.05), 0 6px 14px rgba(61,53,48,0.06);
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
+    text-align: left;
+    font-family: inherit;
+    color: inherit;
+  }
+  .byway-card:hover {
+    background: rgba(255,251,244,0.95);
+    box-shadow: 0 2px 6px rgba(61,53,48,0.08), 0 12px 24px rgba(61,53,48,0.10);
+  }
+  .byway-card:active { transform: scale(0.985); }
+  .byway-card h3 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 0.78rem; color: var(--ink); margin-bottom: 0.15rem; line-height: 1.15; }
+  .byway-card p { font-size: 0.66rem; color: var(--ink-soft); line-height: 1.35; }
+  .byway-card.qr { text-align: center; cursor: default; }
+  .byway-card.qr:hover { background: rgba(255,251,224,0.85); transform: none; }
+  .byway-card.qr .qr-grid {  /* kept for backward compat if reused elsewhere */
+    width: 38px; height: 38px; margin: 0 auto 3px;
+    background: var(--surface-2);
+    background-image:
+      linear-gradient(var(--ink) 1.2px, transparent 1.2px),
+      linear-gradient(90deg, var(--ink) 1.2px, transparent 1.2px);
+    background-size: 6px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--line);
+  }
+  /* Real QR image: scales with the sidebar card so the codes stay scannable. */
+  .byway-card.qr .qr-img {
+    display: block;
+    width: 100%;
+    max-width: 180px;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto 6px;
+    border-radius: 8px;
+    background: var(--surface-2);
+  }
+  .byway-card.qr .lbl { font-size: 0.55rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); font-weight: 600; }
+  .byway-card.qr .sub { font-size: 0.52rem; color: var(--cream-50); }
+
+  @media (max-width: 900px) {
+    .browse-content .tenant-grid { grid-template-columns: repeat(2, 1fr); }
+    .byway-grid { grid-template-columns: repeat(2, 1fr); }
+    /* On narrow (phone-form) the sidebar drops below the main column. */
+    .browse {
+      grid-template-columns: 1fr;
+      grid-template-areas: "tabs" "main" "side";
+    }
+    .browse-side { flex-direction: row; flex-wrap: wrap; }
+    .browse-side .byway-card { flex: 1 1 calc(50% - 0.35rem); }
+    .hero-search h1 { font-size: 2.4rem; }
+    .kiosk-shell-v2 { padding: 1rem 1.2rem; }
+  }
+
+  /* Phone-only apology banner */
+  .mobile-apology {
+    display: none;
+    margin: 0 auto 0.9rem;
+    padding: 0.85rem 1rem;
+    max-width: 360px;
+    background: rgba(245,237,224,0.85);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px dashed var(--taupe);
+    border-radius: 14px;
+    color: var(--cream-70);
+    font-size: 0.78rem;
+    line-height: 1.45;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(61,53,48,0.08), 0 12px 32px rgba(61,53,48,0.10);
+  }
+  .mobile-apology strong {
+    color: var(--cream-on-dark);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.2rem;
+    font-family: 'Fraunces', serif;
+    font-size: 0.95rem;
+  }
+
+  /* ---------- True phone breakpoint: render the kiosk as a miniature ---------- */
+  @media (max-width: 600px) {
+    html, body { overflow: auto; height: auto; min-height: 100%; background: var(--bg-dark); }
+
+    body > .mobile-apology { display: block; position: relative; margin: 64px auto 14px; z-index: 10; }
+    #app .mobile-apology { display: none; }
+
+    /* The kiosk "device frame" that holds the scaled-down kiosk —
+       same treatment the pitch deck uses, so the kiosk on a phone reads
+       like a miniature of the real lobby touchscreen. */
+    .kiosk-device-bezel {
+      width: 94vw;
+      max-width: 560px;
+      margin: 0 auto 28px;
+      padding: 10px;
+      background: linear-gradient(180deg, #8B7E6A 0%, #6B6357 100%);
+      border-radius: 28px;
+      box-shadow:
+        0 4px 10px rgba(61,53,48,0.14),
+        0 40px 80px -10px rgba(61,53,48,0.30),
+        0 0 0 1px rgba(61,53,48,0.10);
+    }
+    #app {
+      position: relative; inset: auto;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    #app::before, #app::after { z-index: 0; }
+
+    /* Scale the full kiosk to fit the device frame — JS overrides this with the
+       exact frame width on load, so the preview always fills the bezel cleanly. */
+    .kiosk-shell-v2 {
+      position: absolute; top: 0; left: 0;
+      width: 1280px;
+      height: 800px;
+      transform-origin: top left;
+      transform: scale(calc((94vw - 20px) / 1280));
+      padding: 1.6rem 2.4rem;
+      gap: 1rem;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    /* Cap at the bezel's max-width so it doesn't blow past the frame */
+    @supports (width: min(1px, 1px)) {
+      .kiosk-shell-v2 {
+        transform: scale(min(calc((94vw - 20px) / 1280), calc(540px / 1280)));
+      }
+    }
+
+    .back-to-walkthrough {
+      top: 12px !important;
+      left: 12px !important;
+      padding: 5px 11px 5px 9px !important;
+      font-size: 11px !important;
+    }
+  }
+
+  /* Walkthrough back-pill — clean, subtle, on-brand */
+  .back-to-walkthrough {
+    position: fixed;
+    top: 18px; left: 18px;
+    z-index: 250;
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(61, 53, 48, 0.78);
+    backdrop-filter: blur(14px) saturate(120%);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    color: rgba(255, 251, 244, 0.92);
+    padding: 7px 14px 7px 11px;
+    border-radius: 999px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.10), 0 10px 24px rgba(61,53,48,0.18);
+    transition: background 0.18s ease, transform 0.15s ease;
+  }
+  .back-to-walkthrough:hover {
+    background: rgba(61, 53, 48, 0.92);
+    transform: translateY(-1px);
+  }
+  .back-to-walkthrough svg { width: 13px; height: 13px; opacity: 0.85; }
+  .back-to-walkthrough span { line-height: 1; }
+  .back-to-walkthrough--right { left: auto; right: 18px; }
