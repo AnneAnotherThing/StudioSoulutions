@@ -78,7 +78,7 @@ body {
   background:
     radial-gradient(90% 60% at 80% 0%, rgba(139,154,126,0.14) 0%, transparent 60%),
     linear-gradient(180deg, rgba(245,237,224,0.55) 0%, rgba(245,237,224,0.82) 55%, rgba(245,237,224,0.96) 100%),
-    url('assets/photos/corridor-bg.jpg') center / cover no-repeat;
+    url('../photos/corridor-bg.jpg') center / cover no-repeat;
   background-attachment: fixed, fixed, fixed;
   background-color: var(--bg);
 }

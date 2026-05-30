@@ -3,7 +3,7 @@
 // Photos with `photo` are real Salon Plus tenants/suites; others use dark earthy gradient placeholders.
 const tenants = [
   // Only Dueces is confirmed real — everyone else is is_concept: true (shows a "Test" pill)
-  { id: 't1', name: 'Dueces Nail Studio', service: 'Manicure · Pedicure · Nail Art', category: 'nails', suite: 'Sage Suite', avatar: 'D', theme: 'av-sage', open: true,
+  { id: 't1', name: 'Dueces Nail Studio', service: 'Manicure · Pedicure · Nail Art', category: 'nails', suite: 'Suite 200', avatar: 'D', theme: 'av-sage', open: true,
     is_concept: false,
     photo: 'assets/photos/1000040455.jpg',
     bio: 'Sage-walled and softly lit — a quiet, careful place for nails done with intention. Gel, pedicures, nail art. Eight years of practice. Appointments preferred, walk-ins welcome when the chair is open.',
@@ -570,7 +570,6 @@ let mapInitialized = false;
 function getSuiteKey(t) {
   const s = (t && t.suite ? String(t.suite) : '').trim();
   if (!s) return null;
-  if (/sage/i.test(s)) return 'Sage Suite';
   const m = s.match(/\d+/);
   return m ? m[0] : null;
 }

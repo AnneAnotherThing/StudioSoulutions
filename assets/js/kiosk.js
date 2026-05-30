@@ -3,10 +3,10 @@
   // phone-app-only, since the kiosk is read-only and people will scan the QR to
   // act. `call` / `text` are the same shape used by index.html.
   const SEED_TENANTS = [
-    { id:'t1', name:'Dueces Nail Studio', suite:'Sage Suite', service:'Manicure · Pedicure · Nail Art',
+    { id:'t1', name:'Dueces Nail Studio', suite:'Suite 200', service:'Manicure · Pedicure · Nail Art',
       services:['Gel','Pedicure','Nail Art','Structured Mani'], category:'nails', open:true, status:'active',
       photo:'assets/photos/1000040455.jpg', avatar:'D', is_concept:false },
-    { id:'t4', name:'Indigo & Oak', suite:'Suite 204', service:'Color & Balayage Specialist',
+    { id:'t4', available:false, name:'Indigo & Oak', suite:'Suite 204', service:'Color & Balayage Specialist',
       services:['Balayage','Color','Cuts'], category:'hair', open:true, status:'active',
       photo:'assets/photos/hair1.png', avatar:'IO', is_concept:true,
       call:'555-204-0190', text:'555-204-0190' },
@@ -14,10 +14,10 @@
       services:['Facials','Peels','LED'], category:'skin', open:true, status:'active',
       photo:'assets/photos/facial.png', avatar:'V', is_concept:true,
       text:'555-212-0488' },
-    { id:'t6', name:'The Lash Loft', suite:'Suite 210', service:'Lash Extensions & Lifts',
+    { id:'t6', available:false, name:'The Lash Loft', suite:'Suite 210', service:'Lash Extensions & Lifts',
       services:['Extensions','Lifts','Tints'], category:'brows', open:true, status:'active',
       photo:'assets/photos/lash1.png', avatar:'LL', is_concept:true },
-    { id:'t7', name:'Bloom Brow Bar', suite:'Suite 206', service:'Brows, Lamination & Microblading',
+    { id:'t7', available:false, name:'Bloom Brow Bar', suite:'Suite 206', service:'Brows, Lamination & Microblading',
       services:['Shaping','Lamination','Tinting'], category:'brows', open:true, status:'active',
       photo:'assets/photos/lash2.png', avatar:'B', is_concept:true,
       call:'555-206-1141' },
@@ -29,7 +29,7 @@
       services:['Bridal','Events','Lessons'], category:'makeup', open:true, status:'active',
       photo:'assets/photos/makeup.png', avatar:'T', is_concept:true,
       text:'555-208-9914' },
-    { id:'t10', name:'Finch Hair Studio', suite:'Suite 202', service:"Precision Cuts & Men's Grooming",
+    { id:'t10', available:false, name:'Finch Hair Studio', suite:'Suite 202', service:"Precision Cuts & Men's Grooming",
       services:['Cuts',"Men's Grooming",'Beards'], category:'hair', open:true, status:'active',
       photo:'assets/photos/hair2.png', avatar:'F', is_concept:true,
       call:'555-202-4408', text:'555-202-4408' },
@@ -61,21 +61,21 @@
     const photo = t.photo
       ? '<div class="tenant-photo" style="background-image:url(\'' + t.photo + '\');"></div>'
       : '<div class="tenant-photo" style="display:grid;place-items:center;color:var(--ink);font-family:\'Fraunces\',serif;font-size:1.6rem;">' + (t.avatar || (t.name || '?')[0]) + '</div>';
-    // Three-way pill: Available (sage) / With a client (clay) / Closed (faint).
+    // Three-way pill: Available (sage) / Busy (clay) / Closed (faint).
+    // Short labels keep the card from getting cramped.
     const isOpen = t.open !== false;
     const isAvail = t.available !== false;
-    const openHtml = !isOpen
-      ? '<span style="color:var(--ink-faint);">Closed</span>'
-      : (isAvail
-          ? '<span class="open-dot"></span><span style="color:var(--sage-deep);">Available</span>'
-          : '<span class="open-dot" style="background:var(--clay-deep);"></span><span style="color:var(--clay-deep);">With a client</span>');
+    const statusState = !isOpen ? 'closed' : (isAvail ? 'available' : 'busy');
+    const statusLabel = !isOpen ? 'Closed' : (isAvail ? 'Free' : 'Busy');
+    const metaSuiteHtml = '<span class="meta-suite">' + (t.suite || '') + '</span>';
+    const metaStatusHtml = '<span class="meta-status is-' + statusState + '"><span class="dot"></span>' + statusLabel + '</span>';
     return '' +
       '<div class="tenant-card" data-tenant-id="' + (t.id || '') + '" style="cursor:pointer;">' +
         photo +
         '<div class="tenant-body">' +
           '<div class="tenant-name">' + (t.name || 'Studio') + (t.is_concept ? ' <span class="test-pill">Test</span>' : '') + '</div>' +
           '<div class="tenant-service">' + (t.service || '') + '</div>' +
-          '<div class="tenant-meta">' + (t.suite || '') + ' &middot; ' + openHtml + '</div>' +
+          '<div class="tenant-meta">' + metaSuiteHtml + metaStatusHtml + '</div>' +
         '</div>' +
       '</div>';
   }
@@ -97,21 +97,21 @@
     if (grid) grid.innerHTML = filtered.length
       ? filtered.map(tenantCard).join('')
       : '<div style="padding:1.4rem;color:var(--ink-faint);font-style:italic;">No studios in this category yet.</div>';
-    // "Available right now" = doors open AND not with a client. Open-but-booked
-    // doesn't help a lobby visitor, so we hide those.
+    // "Available right now" = real tenant + open + can take a walk-in.
+    // Excludes concept placeholders so the demo cards don't pad the list.
     if (nowGrid) nowGrid.innerHTML = tenants.filter(function(t) {
-      return (t.open !== false) && (t.available !== false) && inCat(t);
+      return !t.is_concept && (t.open !== false) && (t.available !== false) && inCat(t);
     }).map(tenantCard).join('');
     const dc = document.getElementById('dir-count'); if (dc) dc.textContent = tenants.length;
     const nc = document.getElementById('now-count');
     if (nc) nc.textContent = tenants.filter(function(t) {
-      return (t.open !== false) && (t.available !== false);
+      return !t.is_concept && (t.open !== false) && (t.available !== false);
     }).length + ' available';
     // Hero discovery counts — "X studios. One roof." and "X open right now"
     const heroCountEl = document.getElementById('heroCount'); if (heroCountEl) heroCountEl.textContent = numberToWord(tenants.length);
     const heroOpenEl = document.getElementById('heroOpen');
     if (heroOpenEl) heroOpenEl.textContent = tenants.filter(function(t) {
-      return (t.open !== false) && (t.available !== false);
+      return !t.is_concept && (t.open !== false) && (t.available !== false);
     }).length;
 
     try {
@@ -130,12 +130,27 @@
       }
     } catch (e) {}
 
-    // Wire tenant card clicks to the cross-pollination detail panel
+    // Wire tenant card clicks → open the profile AND the map in one shot.
+    // The map modal shows the building with the suite highlighted, and the
+    // map-detail panel populates with tenant info inside the modal.
     document.querySelectorAll('.tenant-card[data-tenant-id]').forEach(function(card) {
       card.addEventListener('click', function() {
         const id = card.dataset.tenantId;
         const t = loadTenants().find(function(x) { return x.id === id; });
-        if (t) openTenantPanel(t);
+        if (!t) return;
+        // Extract the suite key from the tenant's suite string (e.g. "204", "200").
+        const raw = (t.suite || '').trim();
+        let key = null;
+        const m = raw.match(/\d+/); if (m) key = m[0];
+        // No mappable suite (placeholders) — fall back to the slide-in panel.
+        if (!key) { openTenantPanel(t); return; }
+        // Click the matching suite to populate the detail panel + highlight it.
+        const suiteEl = document.querySelector('#mapSuites .suite[data-suite="' + key.replace(/"/g, '\\"') + '"]');
+        if (suiteEl) suiteEl.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        // Open the map modal — its open handler moves .map-wrap (with the now-
+        // populated #mapDetail) into the modal so both are visible together.
+        const fab = document.getElementById('mapExpandFab');
+        if (fab) fab.click();
       });
     });
   }
@@ -287,6 +302,65 @@
     });
   }
 
+  /* Suite callout — SVG label that comes out of the active suite. Cleared
+     whenever a new suite is picked or the detail panel closes. */
+  function clearSuiteCallout() {
+    const svg = document.querySelector('.map-svg');
+    if (!svg) return;
+    svg.querySelectorAll('.suite-callout').forEach(function(n) { n.remove(); });
+  }
+  function drawSuiteCallout(suiteKey, label) {
+    clearSuiteCallout();
+    const svg = document.querySelector('.map-svg');
+    if (!svg || !label) return;
+    const suite = svg.querySelector('.suite[data-suite="' + suiteKey.replace(/"/g, '\\"') + '"]');
+    if (!suite) return;
+    const rect = suite.querySelector('rect');
+    if (!rect) return;
+    const sx = parseFloat(rect.getAttribute('x'));
+    const sy = parseFloat(rect.getAttribute('y'));
+    const sw = parseFloat(rect.getAttribute('width'));
+    const sh = parseFloat(rect.getAttribute('height'));
+    const cx = sx + sw / 2;
+    const cy = sy + sh / 2;
+    // Place the callout either above or below the suite — above for north
+    // and middle rows, below for the lower row so it stays inside the viewBox.
+    const isLower = sy >= 358;
+    const labelY = isLower ? sy + sh + 36 : sy - 36;
+    const lineY1 = isLower ? sy + sh + 6 : sy - 6;
+    const lineY2 = isLower ? sy + sh + 26 : sy - 26;
+    // Measure label width approximately (Fraunces ~10px per char at font-size:18).
+    const textW = Math.max(80, label.length * 11 + 24);
+    const boxX = cx - textW / 2;
+    const boxY = isLower ? labelY - 16 : labelY - 22;
+    const xmlns = 'http://www.w3.org/2000/svg';
+    const g = document.createElementNS(xmlns, 'g');
+    g.setAttribute('class', 'suite-callout');
+    // Connector line — dashed marching pointer from the suite to the label
+    const line = document.createElementNS(xmlns, 'path');
+    line.setAttribute('class', 'callout-line');
+    line.setAttribute('d', 'M ' + cx + ' ' + lineY1 + ' L ' + cx + ' ' + lineY2);
+    g.appendChild(line);
+    // Background pill behind the label so it's readable over the building
+    const bg = document.createElementNS(xmlns, 'rect');
+    bg.setAttribute('class', 'callout-bg');
+    bg.setAttribute('x', boxX);
+    bg.setAttribute('y', boxY);
+    bg.setAttribute('width', textW);
+    bg.setAttribute('height', 32);
+    bg.setAttribute('rx', 16);
+    g.appendChild(bg);
+    // Tenant name label
+    const text = document.createElementNS(xmlns, 'text');
+    text.setAttribute('x', cx);
+    text.setAttribute('y', boxY + 21);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('font-size', '14');
+    text.textContent = label;
+    g.appendChild(text);
+    svg.appendChild(g);
+  }
+
   function showMapDetail(suiteKey, tenant, vacancy) {
     const el = document.getElementById('mapDetail');
     if (!el) return;
@@ -316,8 +390,18 @@
       } else if (text) {
         contactHtml = '<div class="md-contact">Text ' + text + '</div>';
       }
+      // Draw a callout label on the SVG pointing at the active suite so
+      // the visitor sees "this is where Indigo & Oak lives" right on the floor
+      // plan, not just in the side panel.
+      drawSuiteCallout(suiteKey, tenant.name || '');
+      // Enrich the detail panel with the tenant photo so the modal shows
+      // a recognizable mini-profile (image + name + suite + status + contact).
+      const photoHtml = tenant.photo
+        ? '<div class="md-photo" style="background-image:url(\'' + tenant.photo + '\');"></div>'
+        : '';
       el.innerHTML =
         '<button class="md-close" type="button" aria-label="Close">&times;</button>' +
+        photoHtml +
         '<div class="md-suite">Suite ' + suiteKey + '</div>' +
         '<div class="md-name">' + (tenant.name || '') + (tenant.is_concept ? ' <span class="test-pill">Test</span>' : '') + '</div>' +
         '<div class="md-service">' + (tenant.service || '') + '</div>' +
@@ -341,6 +425,7 @@
     if (closeBtn) closeBtn.addEventListener('click', function() {
       el.hidden = true;
       document.querySelectorAll('#mapSuites .suite').forEach(function(x) { x.classList.remove('is-active'); });
+      clearSuiteCallout();
     });
   }
 
@@ -511,6 +596,8 @@
       const md = document.getElementById('mapDetail');
       if (md) { md.hidden = true; md.innerHTML = ''; }
       document.querySelectorAll('#mapSuites .suite.is-active').forEach(function(x) { x.classList.remove('is-active'); });
+      // Clear any suite callout label so the next visitor lands clean.
+      document.querySelectorAll('.map-svg .suite-callout').forEach(function(c) { c.remove(); });
       modal.classList.remove('is-on');
       modal.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
