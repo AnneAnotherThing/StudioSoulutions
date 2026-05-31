@@ -1,6 +1,6 @@
 /* Extracted from index.html on split. */
 // ============ DATA ============
-// Photos with `photo` are real Salon Plus tenants/suites; others use dark earthy gradient placeholders.
+// Photos with `photo` are confirmed real tenants/suites; others use dark earthy gradient placeholders.
 const tenants = [
   // Only Dueces is confirmed real — everyone else is is_concept: true (shows a "Test" pill)
   { id: 't1', name: 'Dueces Nail Studio', service: 'Manicure · Pedicure · Nail Art', category: 'nails', suite: 'Suite 200', avatar: 'D', theme: 'av-sage', open: true,

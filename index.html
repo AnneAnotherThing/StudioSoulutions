@@ -2,323 +2,435 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="theme-color" content="#0e0c0a" />
-<title>Studio Soulutions — Salon Plus Studio Suites</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#F5EDE0" />
+<title>Studio Soulutions — Every studio under one roof, discoverable.</title>
+<meta name="description" content="A lobby kiosk and mobile companion built for salon-suite buildings. Every artist gets discovered — not just the ones with a sign on the door. Fully customizable and white-labeled to your building." />
+
+<meta property="og:title" content="Studio Soulutions — Every studio under one roof, discoverable." />
+<meta property="og:description" content="A lobby kiosk and mobile companion for salon-suite buildings. Fully white-labeled to your brand." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://studiosoulutions.com" />
+<meta property="og:image" content="https://studiosoulutions.com/assets/photos/1000040457.jpg" />
+
+<link rel="canonical" href="https://studiosoulutions.com" />
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
 <link rel="apple-touch-icon" href="assets/favicon-192.png">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/app.css">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root {
+    --bg:         #F5EDE0;
+    --bg-2:       #EFE4D2;
+    --bg-3:       #E5D9C3;
+    --surface:    #FBF6EE;
+    --surface-2:  #FFFBF4;
+    --cream:      #FBF6EE;
+    --ink:        #3D3530;
+    --ink-soft:   #6B6357;
+    --ink-faint:  #8B7E70;
+    --sage:       #8B9A7E;
+    --sage-deep:  #6B7A5F;
+    --sage-soft:  #C5D0B8;
+    --taupe:      #B5A795;
+    --taupe-deep: #8B7E6A;
+    --taupe-soft: #D9CBB8;
+    --clay:       #C97B5A;
+    --clay-deep:  #A8593E;
+    --line:       #E5D9C3;
+    --line-2:     #D4C4A8;
+  }
+  html, body { background: var(--bg); color: var(--ink); }
+  body { font-family: 'Inter', -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  .serif    { font-family: 'Fraunces', Georgia, serif; font-weight: 600; letter-spacing: -0.025em; font-variation-settings: 'opsz' 144; }
+  .serif-it { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-weight: 500; font-variation-settings: 'opsz' 144; }
+  section h1.serif, .hero h1.serif { font-weight: 700; }
+  .eyebrow { font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase; font-weight: 700; color: var(--ink-soft); }
+  .card-dark { background: var(--surface); border: 1px solid var(--line); box-shadow: 0 1px 2px rgba(61,53,48,0.04), 0 6px 18px rgba(61,53,48,0.06); }
+  .card-darker { background: var(--bg-2); border: 1px solid var(--line); }
+  .text-cream-70 { color: rgba(61,53,48,0.82); }
+  .text-cream-50 { color: rgba(61,53,48,0.62); }
+  .text-cream-40 { color: rgba(61,53,48,0.48); }
+  .bg-cream-04 { background: rgba(61,53,48,0.05); }
+  .bg-cream-10 { background: rgba(61,53,48,0.11); }
+  .border-cream-10 { border: 1px solid rgba(61,53,48,0.10); }
+  .border-cream-20 { border: 1px solid rgba(61,53,48,0.16); }
+  /* device frames */
+  .kiosk-frame {
+    background: linear-gradient(180deg, #8B7E6A 0%, #6B6357 100%);
+    border-radius: 36px;
+    padding: 16px;
+    box-shadow: 0 60px 120px -40px rgba(61,53,48,0.32), 0 0 0 1px rgba(61,53,48,0.10);
+  }
+  .phone-frame {
+    background: linear-gradient(180deg, #8B7E6A 0%, #6B6357 100%);
+    border-radius: 44px;
+    padding: 12px;
+    box-shadow: 0 50px 100px -30px rgba(61,53,48,0.32), 0 0 0 1px rgba(61,53,48,0.10);
+  }
+  .phone-notch {
+    width: 110px; height: 26px; background: #4a4339; border-radius: 0 0 16px 16px;
+    position: absolute; left: 50%; top: 0; transform: translateX(-50%);
+    z-index: 5;
+  }
+  .pulse-dot { position: relative; }
+  .pulse-dot::after {
+    content: ''; position: absolute; inset: -4px; border-radius: 50%;
+    background: currentColor; opacity: 0.3; animation: pulse 2s ease-out infinite;
+  }
+  @keyframes pulse { 0% { transform: scale(1); opacity: 0.3 } 100% { transform: scale(2.2); opacity: 0 } }
+  section { scroll-margin-top: 24px; }
+  details > summary { list-style: none; cursor: pointer; }
+  details > summary::-webkit-details-marker { display: none; }
+  details[open] .faq-chev { transform: rotate(180deg); }
+  .faq-chev { transition: transform 0.2s ease; }
+</style>
 </head>
-<body>
+<body class="min-h-screen">
 
-<!-- Back to walkthrough -->
-<a href="Laura-Walkthrough.html" class="back-to-walkthrough back-to-walkthrough--right">
-  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l-6 6 6 6"/></svg>
-  <span>Walkthrough</span>
-</a>
-
-<header class="app-header">
-  <div class="brand">
-    <img src="assets/logo_ss_green_v4.png" alt="Studio Soulutions" width="56" height="42" style="height:42px;width:56px;object-fit:contain;display:block;background:transparent;flex-shrink:0;">
-    <div>
-      <div class="brand-name">Studio Soul<em>utions</em></div>
+<!-- ===================== HEADER ===================== -->
+<header class="fixed top-0 inset-x-0 z-30" style="
+      background: rgba(245,237,224,0.85);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(61,53,48,0.08);
+      box-shadow: 0 2px 4px rgba(61,53,48,0.06), 0 10px 28px rgba(61,53,48,0.10);">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12 py-4 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3">
+      <img src="assets/logo_ss_green_v4.png" alt="Studio Soulutions" style="height:40px;width:auto;display:block;background:transparent;">
+      <div class="serif text-[17px] text-[var(--ink)]">Studio Soul<span class="serif-it text-[var(--taupe-deep)]">utions</span></div>
+    </a>
+    <div class="hidden md:flex items-center gap-7 text-sm font-semibold" style="color: var(--ink-soft);">
+      <a href="#how" class="hover:text-[var(--ink)] transition">How it works</a>
+      <a href="#brand" class="hover:text-[var(--ink)] transition">Your brand</a>
+      <a href="#who" class="hover:text-[var(--ink)] transition">Who it's for</a>
+      <a href="#faq" class="hover:text-[var(--ink)] transition">FAQ</a>
+      <a href="Studio-Soulutions-Pitch-v1.html" class="hover:text-[var(--ink)] transition">See the pitch</a>
     </div>
-  </div>
-  <div class="header-action" id="bookmarkBtn" onclick="switchView('saved')">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-    <span class="badge" id="savedCount" style="display:none">0</span>
+    <a href="#contact" class="rounded-full bg-[var(--ink)] text-[var(--surface-2)] px-5 py-2.5 text-sm font-semibold hover:scale-[1.02] transition">Get in touch</a>
   </div>
 </header>
 
-<!-- DISCOVER VIEW — card-led splash, mirrors the kiosk menu -->
-<section class="view active" id="view-discover">
-  <div class="welcome">
-    <div class="eyebrow">More than you came for</div>
-    <h1><span id="welcomeCount">—</span> studios.<br/><em>One roof.</em></h1>
-    <p><span id="welcomeOpen">—</span> open · <span id="welcomeAvail">—</span> can take you right now.</p>
-  </div>
+<!-- ===================== HERO ===================== -->
+<section class="relative min-h-[100svh] overflow-hidden">
+  <div class="absolute inset-0 bg-cover bg-center"
+       style="background-image: url('assets/photos/1000040457.jpg');"></div>
+  <div class="absolute inset-0" style="background:
+        radial-gradient(120% 80% at 80% 20%, rgba(139,154,126,0.14) 0%, transparent 55%),
+        linear-gradient(180deg, rgba(245,237,224,0.20) 0%, rgba(245,237,224,0.40) 55%, rgba(245,237,224,0.92) 100%);"></div>
 
-  <!-- Kiosk-style hero search — mirrors the lobby touchscreen -->
-  <div class="kiosk-search">
-    <div class="ks-shell">
-      <svg class="ks-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input id="kioskSearchInput" class="ks-input" type="text" placeholder="Type a name, studio, or service…" autocomplete="off" />
+  <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 pt-40 pb-28 lg:pt-48 lg:pb-40">
+    <div class="max-w-3xl rounded-[28px] p-8 sm:p-10 lg:p-12" style="
+          background: rgba(251,246,238,0.86);
+          backdrop-filter: blur(18px);
+          -webkit-backdrop-filter: blur(18px);
+          border: 1px solid rgba(61,53,48,0.08);
+          box-shadow: 0 2px 6px rgba(61,53,48,0.08), 0 24px 60px rgba(61,53,48,0.16);">
+      <div class="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs eyebrow" style="background: rgba(61,53,48,0.06); border: 1px solid rgba(61,53,48,0.10); color: var(--ink-soft);">
+        <span class="w-1.5 h-1.5 rounded-full bg-[var(--sage-deep)] pulse-dot" style="color: var(--sage-deep)"></span>
+        For salon-suite buildings
+      </div>
+
+      <h1 class="serif text-[44px] sm:text-6xl lg:text-7xl leading-[1.02] mt-7 text-[var(--ink)]">
+        Every studio <span class="serif-it text-[var(--taupe-deep)]">discovered</span>.<br/>Not just the ones near the door.
+      </h1>
+      <p class="mt-7 text-lg sm:text-xl max-w-2xl leading-relaxed text-[var(--ink-soft)]">
+        Studio Soulutions is a lobby kiosk and a mobile companion, purpose-built for the way salon-suite buildings actually work. One shared front door. Many independent artists. Finally a way for visitors to meet all of them.
+      </p>
+
+      <div class="flex flex-wrap gap-3 mt-9">
+        <a href="#contact" class="rounded-full bg-[var(--ink)] text-[var(--surface-2)] px-6 py-3 text-sm font-semibold hover:scale-[1.02] transition">Talk to us →</a>
+        <a href="Studio-Soulutions-Pitch-v1.html" class="rounded-full px-6 py-3 text-sm font-semibold transition" style="background: rgba(61,53,48,0.06); border: 1px solid rgba(61,53,48,0.14); color: var(--ink);">See the live demo</a>
+      </div>
+
+      <div class="mt-12 grid grid-cols-3 gap-5 max-w-2xl pt-6" style="border-top: 1px solid rgba(61,53,48,0.10);">
+        <div>
+          <div class="serif text-3xl text-[var(--ink)]">1</div>
+          <div class="text-xs eyebrow mt-1" style="color: var(--ink-faint);">Shared front door</div>
+        </div>
+        <div>
+          <div class="serif text-3xl text-[var(--ink)]">10+</div>
+          <div class="text-xs eyebrow mt-1" style="color: var(--ink-faint);">Studios per building</div>
+        </div>
+        <div>
+          <div class="serif text-3xl text-[var(--ink)]">2</div>
+          <div class="text-xs eyebrow mt-1" style="color: var(--ink-faint);">Screens, one database</div>
+        </div>
+      </div>
     </div>
-    <div class="ks-results" id="kioskSearchResults" hidden></div>
-    <p class="ks-hint">Or browse below — see who's here, who's open, where to go.</p>
   </div>
-
-  <!-- Primary navigation — mirrors the kiosk's three tabs -->
-  <div class="primary-menu">
-
-    <!-- Directory -->
-    <button class="menu-card primary-card" type="button" onclick="switchView('directory')">
-      <div class="mc-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-      </div>
-      <div class="mc-body">
-        <div class="mc-label">Directory</div>
-        <div class="mc-meta"><span id="mc-dir-count">—</span> studios in the building</div>
-      </div>
-    </button>
-
-    <!-- Open right now -->
-    <button class="menu-card primary-card is-sage" type="button" onclick="goRightNow()">
-      <div class="mc-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-      </div>
-      <div class="mc-body">
-        <div class="mc-label">Open right now</div>
-        <div class="mc-meta open"><span class="pulse-dot"></span><span id="mc-now-count">—</span> open · <span id="mc-avail-count">—</span> can take you now</div>
-      </div>
-    </button>
-
-    <!-- Suite map -->
-    <button class="menu-card primary-card" type="button" onclick="switchView('map')">
-      <div class="mc-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
-      </div>
-      <div class="mc-body">
-        <div class="mc-label">Suite map</div>
-        <div class="mc-meta">You are here</div>
-      </div>
-    </button>
-
-  </div>
-
-  <!-- "By the way" strip — mirrors the kiosk's bottom row -->
-  <div class="byway-eyebrow"><span>By the way</span></div>
-  <div class="byway-strip">
-
-    <!-- Featured today (rotating tenant) -->
-    <button class="byway-card with-photo is-clay" type="button" id="mcFeatured" onclick="openFeatured()">
-      <div class="mc-icon" id="mcFeaturedIcon"></div>
-      <div class="mc-body">
-        <div class="mc-label" id="mcFeaturedLabel">Featured today</div>
-        <div class="mc-meta" id="mcFeaturedMeta">—</div>
-      </div>
-    </button>
-
-    <!-- Available suites (vacancies for lease) -->
-    <button class="byway-card" type="button" onclick="switchView('vacancies')">
-      <div class="mc-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7.5"/><path d="M12 3L3 9.5h18L12 3z"/><path d="M9 22V13h6v9"/></svg>
-      </div>
-      <div class="mc-body">
-        <div class="mc-label">Available suites</div>
-        <div class="mc-meta"><span id="mc-vacancy-count">—</span> open for lease</div>
-      </div>
-    </button>
-
-    <!-- From the owner -->
-    <button class="byway-card" type="button" onclick="switchView('owner')">
-      <div class="mc-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      </div>
-      <div class="mc-body">
-        <div class="mc-label">From the owner</div>
-        <div class="mc-meta">A note from the owner</div>
-      </div>
-    </button>
-
-    <!-- Saved studios -->
-    <button class="byway-card" type="button" onclick="switchView('saved')">
-      <div class="mc-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-      </div>
-      <div class="mc-body">
-        <div class="mc-label">Saved studios</div>
-        <div class="mc-meta"><span id="mc-saved-count">0</span> bookmarked</div>
-      </div>
-    </button>
-
-  </div>
-
-  <!-- Did you know? — ambient content below the menu -->
-  <div class="discover-divider"><div class="line"></div><span class="lbl">Did you know?</span><div class="line"></div></div>
-  <div class="dyk-scroll" id="dykScroll"></div>
 </section>
 
-<!-- SUITE MAP VIEW -->
-<!-- Two modes: browse (default) and route (entered via "Show me the way" on
-     a profile). Route mode dynamically rewrites the SVG viewBox to zoom in on
-     the slice containing the lobby pin + destination suite. -->
-<section class="view" id="view-map">
-  <div class="welcome" style="min-height: 160px; padding-top: 60px;">
-    <div class="eyebrow" id="mapEyebrow">Suite map</div>
-    <h1 style="font-size: 26px;" id="mapHeadline">You are <em>here</em></h1>
-    <p id="mapSubline">Tap a suite to see who's inside.</p>
+<!-- ===================== THE PROBLEM ===================== -->
+<section class="relative bg-[var(--bg)] py-20 lg:py-28">
+  <div class="max-w-5xl mx-auto px-6 lg:px-12">
+    <div class="eyebrow text-cream-50">The problem</div>
+    <h2 class="serif text-4xl lg:text-5xl mt-3 max-w-3xl">A building full of artists. A printed directory taped to the wall.</h2>
+    <p class="mt-7 text-cream-70 text-lg leading-relaxed max-w-3xl">
+      Salon-suite buildings have a discovery problem. A guest walks in for a haircut and never finds out about the lash room, the wellness suite, the nail studio two doors down. Each tenant runs their own business — which is the whole point — but the building, as a whole, never gets to introduce itself.
+    </p>
+    <p class="mt-4 text-cream-70 text-lg leading-relaxed max-w-3xl">
+      Studio Soulutions changes that without changing how anyone runs their suite.
+    </p>
   </div>
-  <div class="map-route-card" id="mapRouteCard" hidden>
-    <div class="mrc-avatar" id="mrcAvatar"></div>
-    <div>
-      <div class="mrc-name" id="mrcName"></div>
-      <div class="mrc-sub" id="mrcSub"></div>
+</section>
+
+<!-- ===================== HOW IT WORKS ===================== -->
+<section id="how" class="relative py-24 lg:py-32" style="background: linear-gradient(180deg, #F5EDE0 0%, #EFE4D2 100%);">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="flex items-end justify-between flex-wrap gap-6 mb-14">
+      <div class="max-w-2xl">
+        <div class="eyebrow text-cream-50">How it works</div>
+        <h2 class="serif text-4xl lg:text-6xl mt-3">A kiosk in the lobby. An app in their pocket.</h2>
+      </div>
+      <p class="text-cream-70 max-w-md">
+        Two surfaces. One tenant database. The owner updates a suite once — both screens update everywhere.
+      </p>
     </div>
-    <button class="mrc-clear" type="button" onclick="clearRoute()">Clear</button>
-  </div>
-  <div class="map-stage">
-    <div class="map-photo" aria-hidden="true"></div>
-    <svg class="map-svg" id="phoneMapSvg" viewBox="0 0 1200 520" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Suite map">
-      <rect x="20" y="20" width="1160" height="480" rx="14" fill="rgba(255,251,244,0.85)" stroke="rgba(61,53,48,0.18)" stroke-width="2"/>
-      <rect x="60" y="170" width="1080" height="58" fill="rgba(245,237,224,0.85)" stroke="rgba(61,53,48,0.10)"/>
-      <rect x="60" y="294" width="1080" height="58" fill="rgba(245,237,224,0.85)" stroke="rgba(61,53,48,0.10)"/>
-      <g id="routeLayer"></g>
-      <g class="you-are-here" transform="translate(80, 260)">
-        <circle r="14" fill="#C97B5A" opacity="0.20"/>
-        <circle r="7"  fill="#C97B5A"/>
-        <text class="yah-label" y="-24" text-anchor="middle">YOU ARE HERE</text>
-      </g>
-      <g class="suites" id="phoneMapSuites">
-        <g class="suite" data-suite="202"><rect x="160" y="60"  width="120" height="100" rx="10"/><text x="220" y="115" text-anchor="middle">202</text></g>
-        <g class="suite" data-suite="204"><rect x="290" y="60"  width="120" height="100" rx="10"/><text x="350" y="115" text-anchor="middle">204</text></g>
-        <g class="suite" data-suite="206"><rect x="420" y="60"  width="120" height="100" rx="10"/><text x="480" y="115" text-anchor="middle">206</text></g>
-        <g class="suite" data-suite="208"><rect x="550" y="60"  width="120" height="100" rx="10"/><text x="610" y="115" text-anchor="middle">208</text></g>
-        <g class="suite" data-suite="210"><rect x="680" y="60"  width="120" height="100" rx="10"/><text x="740" y="115" text-anchor="middle">210</text></g>
-        <g class="suite" data-suite="212"><rect x="810" y="60"  width="120" height="100" rx="10"/><text x="870" y="115" text-anchor="middle">212</text></g>
-        <g class="suite" data-suite="214"><rect x="940" y="60"  width="120" height="100" rx="10"/><text x="1000" y="115" text-anchor="middle">214</text></g>
-        <g class="suite" data-suite="200"><rect x="160" y="240" width="120" height="48" rx="10"/><text x="220" y="270" text-anchor="middle">200</text></g>
-        <g class="suite" data-suite="216"><rect x="290" y="240" width="120" height="48" rx="10"/><text x="350" y="270" text-anchor="middle" font-size="14">216</text></g>
-        <g class="suite" data-suite="218"><rect x="420" y="240" width="120" height="48" rx="10"/><text x="480" y="270" text-anchor="middle" font-size="14">218</text></g>
-        <g class="suite" data-suite="220"><rect x="550" y="240" width="120" height="48" rx="10"/><text x="610" y="270" text-anchor="middle" font-size="14">220</text></g>
-        <g class="suite" data-suite="222"><rect x="680" y="240" width="120" height="48" rx="10"/><text x="740" y="270" text-anchor="middle" font-size="14">222</text></g>
-        <g class="suite" data-suite="108"><rect x="160" y="358" width="120" height="100" rx="10"/><text x="220" y="413" text-anchor="middle">108</text></g>
-        <g class="suite" data-suite="110"><rect x="290" y="358" width="120" height="100" rx="10"/><text x="350" y="413" text-anchor="middle">110</text></g>
-        <g class="suite" data-suite="112"><rect x="420" y="358" width="120" height="100" rx="10"/><text x="480" y="413" text-anchor="middle">112</text></g>
-        <g class="suite" data-suite="114"><rect x="550" y="358" width="120" height="100" rx="10"/><text x="610" y="413" text-anchor="middle">114</text></g>
-        <g class="suite" data-suite="116"><rect x="680" y="358" width="120" height="100" rx="10"/><text x="740" y="413" text-anchor="middle">116</text></g>
-        <g class="suite" data-suite="118"><rect x="810" y="358" width="120" height="100" rx="10"/><text x="870" y="413" text-anchor="middle">118</text></g>
-        <g class="suite" data-suite="120"><rect x="940" y="358" width="120" height="100" rx="10"/><text x="1000" y="413" text-anchor="middle">120</text></g>
-      </g>
-    </svg>
-    <!-- Expand to fullscreen modal — covers the case where the inline map is clipped. -->
-    <button type="button" class="map-fab" id="mapExpandFab" aria-label="Expand map">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-      Expand
-    </button>
-  </div>
-  <div class="map-hint">Tap any suite to see who's inside.</div>
-</section>
 
-<!-- FROM THE OWNER VIEW -->
-<section class="view" id="view-owner">
-  <div class="welcome" style="min-height: 200px; padding-top: 80px;">
-    <div class="eyebrow">From the owner</div>
-    <h1 style="font-size: 26px;">A note from <em>the owner</em></h1>
-  </div>
-  <div style="
-    margin-top: 18px;
-    background: var(--cream-06);
-    border: 1px solid var(--line);
-    border-radius: 18px;
-    padding: 18px 20px;
-    color: var(--cream-70);
-    font-size: 14px;
-    line-height: 1.65;
-    backdrop-filter: blur(10px);
-  ">
-    <p>Salon Plus Studio Suites is home to a careful group of independent artists — color, nails, lash, wellness, skin. Each one runs their own room, their own brand, their own way.</p>
-    <p style="margin-top: 12px;">This app exists so that everyone who walks in finds the studio that fits them — not just the one closest to the door.</p>
-    <div style="margin-top: 18px; font-family: 'Fraunces', serif; font-style: italic; color: var(--cream); font-size: 16px;">— The owner</div>
-  </div>
-</section>
+    <div class="grid lg:grid-cols-12 gap-10 items-start">
+      <!-- Kiosk preview -->
+      <div class="lg:col-span-7">
+        <div class="kiosk-frame mx-auto" style="max-width: 700px;">
+          <div class="relative rounded-[24px] overflow-hidden" style="aspect-ratio: 16 / 10;">
+            <iframe src="kiosk.html" title="Live kiosk preview" loading="lazy"
+                    style="position: absolute; top: 0; left: 0; width: 1280px; height: 800px; border: 0; transform-origin: top left; transform: scale(0.5); pointer-events: none;"></iframe>
+          </div>
+        </div>
+        <p class="text-center text-xs eyebrow text-cream-40 mt-4">Live kiosk · <a href="kiosk.html" target="_blank" rel="noopener" class="underline hover:text-[var(--ink)]">open full-screen →</a></p>
+      </div>
 
-<!-- AVAILABLE SUITES VIEW (vacancies for lease) -->
-<section class="view" id="view-vacancies">
-  <div class="welcome" style="min-height: 200px; padding-top: 80px;">
-    <div class="eyebrow">Now leasing</div>
-    <h1 style="font-size: 28px;">Available <em>suites</em></h1>
-    <p>Open rooms in this building. Tap one to see details, then reach out to tour.</p>
-  </div>
-  <div id="vacancyList" class="directory-list" style="margin-top: 12px;"></div>
-</section>
-
-<!-- DIRECTORY VIEW -->
-<section class="view" id="view-directory">
-  <div class="search-wrap">
-    <div class="search-icon">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <div class="lg:col-span-5">
+        <h3 class="serif text-2xl mb-5">01 · Lobby kiosk</h3>
+        <p class="text-cream-70 leading-relaxed mb-5">A touchscreen welcome wall. Visitors arrive, see who's inside, who's open right now, and where to go. Replaces the taped-up directory.</p>
+        <ul class="space-y-2.5 text-cream-70">
+          <li class="flex gap-3"><span class="text-[var(--sage-deep)]">●</span> Interactive directory of every studio</li>
+          <li class="flex gap-3"><span class="text-[var(--sage-deep)]">●</span> Live "open now" indicators</li>
+          <li class="flex gap-3"><span class="text-[var(--sage-deep)]">●</span> Suite map with "you are here"</li>
+          <li class="flex gap-3"><span class="text-[var(--sage-deep)]">●</span> Search by service or artist name</li>
+          <li class="flex gap-3"><span class="text-[var(--sage-deep)]">●</span> QR handoff to the visitor's phone</li>
+          <li class="flex gap-3"><span class="text-[var(--sage-deep)]">●</span> Attract loop with your photography when idle</li>
+        </ul>
+      </div>
     </div>
-    <input type="text" class="search-input" id="searchInput" placeholder="Search studios or services">
-  </div>
 
-  <div class="filter-row" id="filterRow">
-    <div class="chip active" data-filter="all">All</div>
-    <div class="chip" data-filter="open">Open now</div>
-    <div class="chip" data-filter="available">Available now</div>
-    <div class="chip" data-filter="hair">Hair</div>
-    <div class="chip" data-filter="skin">Skin</div>
-    <div class="chip" data-filter="nails">Nails</div>
-    <div class="chip" data-filter="brows">Brows &amp; Lashes</div>
-    <div class="chip" data-filter="wellness">Wellness</div>
-    <div class="chip" data-filter="makeup">Makeup</div>
-  </div>
-
-  <div class="directory-list" id="directoryList"></div>
-</section>
-
-<!-- SAVED VIEW -->
-<section class="view" id="view-saved">
-  <div class="section-head" style="margin-top: 0;">
-    <h2>Saved studios</h2>
-  </div>
-  <div class="directory-list" id="savedList"></div>
-  <div class="empty-state" id="savedEmpty">
-    <div class="em-icon">
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    <div class="grid lg:grid-cols-12 gap-10 items-center mt-24">
+      <div class="lg:col-span-5 order-2 lg:order-1">
+        <h3 class="serif text-2xl mb-5">02 · Mobile companion</h3>
+        <p class="text-cream-70 leading-relaxed mb-5">One scan and the building is on their phone. They walk in for nails and leave knowing about the lash room and the wellness suite they didn't see.</p>
+        <ul class="space-y-2.5 text-cream-70">
+          <li class="flex gap-3"><span class="text-[var(--taupe-deep)]">●</span> Scan a QR from the kiosk, the door, or any suite</li>
+          <li class="flex gap-3"><span class="text-[var(--taupe-deep)]">●</span> Browse Discover, Directory, and Saved</li>
+          <li class="flex gap-3"><span class="text-[var(--taupe-deep)]">●</span> Bookmark studios to come back to</li>
+          <li class="flex gap-3"><span class="text-[var(--taupe-deep)]">●</span> Booking links go straight to the artist</li>
+          <li class="flex gap-3"><span class="text-[var(--taupe-deep)]">●</span> "Did you know?" cross-promo between studios</li>
+        </ul>
+      </div>
+      <div class="lg:col-span-7 order-1 lg:order-2 flex justify-center">
+        <div class="phone-frame relative" style="width: 320px;">
+          <div class="phone-notch"></div>
+          <div class="rounded-[34px] overflow-hidden relative" style="background: #F5EDE0; height: 660px;">
+            <iframe src="app.html" title="Live mobile preview" loading="lazy"
+                    style="position: absolute; top: 0; left: 0; width: 390px; height: 844px; border: 0; transform-origin: top left; transform: scale(0.82); pointer-events: none;"></iframe>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="em-title serif">Nothing saved yet</div>
-    <p>Tap the bookmark on any studio to come back to it later.</p>
-  </div>
-
-  <div class="proto-note">
-    <strong>A note on this preview:</strong> the lobby corridor and the Dueces Nail Studio card are real Salon Plus content. Every other tenant is a concept placeholder until the building owner confirms the lineup and shares photos. "Did you know?" copy is illustrative for now. Booking, real-time availability, and tenant signup all come next.
   </div>
 </section>
 
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-  <button class="nav-item active" data-view="discover" onclick="switchView('discover')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-    Discover
-  </button>
-  <button class="nav-item" data-view="directory" onclick="switchView('directory')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-    Directory
-  </button>
-  <button class="nav-item" data-view="saved" onclick="switchView('saved')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-    Saved
-  </button>
-</nav>
+<!-- ===================== FULLY CUSTOMIZABLE ===================== -->
+<section id="brand" class="relative py-24 lg:py-32" style="background: var(--bg);">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="grid lg:grid-cols-12 gap-12 items-start">
+      <div class="lg:col-span-5">
+        <div class="eyebrow text-cream-50">Your brand · not ours</div>
+        <h2 class="serif text-4xl lg:text-6xl mt-3 leading-[1.04]">
+          Fully <span class="serif-it text-[var(--taupe-deep)]">customizable</span>.
+        </h2>
+        <p class="mt-7 text-lg text-cream-70 leading-relaxed">
+          Studio Soulutions is the platform — your building is the brand. The kiosk in your lobby and the app on every visitor's phone look like they were built for you. Because they were.
+        </p>
+        <p class="mt-4 text-cream-70 leading-relaxed">
+          Same engine underneath. Different face on top of it. Every building keeps its own identity, end to end.
+        </p>
+      </div>
 
-<!-- TENANT PROFILE SHEET -->
-<div class="sheet-backdrop" id="sheetBackdrop" onclick="closeSheet()"></div>
-<div class="sheet" id="sheet">
-  <div class="sheet-handle"></div>
-  <button class="sheet-close" onclick="closeSheet()">×</button>
-  <div id="sheetContent"></div>
-</div>
+      <div class="lg:col-span-7">
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="card-dark rounded-2xl p-6">
+            <div class="w-10 h-10 rounded-xl bg-cream-10 grid place-items-center mb-4">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="text-[var(--sage-deep)]"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <h3 class="serif text-xl">Your name, your mark</h3>
+            <p class="mt-2 text-sm text-cream-70 leading-relaxed">Your logo, wordmark, and favicon — across the kiosk, the app, and every guest's bookmark bar.</p>
+          </div>
+          <div class="card-dark rounded-2xl p-6">
+            <div class="w-10 h-10 rounded-xl bg-cream-10 grid place-items-center mb-4">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="text-[var(--taupe-deep)]"><path d="M3 12a9 9 0 1 0 9-9"/><circle cx="17" cy="7" r="1.5" fill="currentColor"/><circle cx="14" cy="4" r="1.5" fill="currentColor"/></svg>
+            </div>
+            <h3 class="serif text-xl">Your palette</h3>
+            <p class="mt-2 text-sm text-cream-70 leading-relaxed">Swap in your colors — every accent, button, header, and chip updates everywhere. No theme files to edit by hand.</p>
+          </div>
+          <div class="card-dark rounded-2xl p-6">
+            <div class="w-10 h-10 rounded-xl bg-cream-10 grid place-items-center mb-4">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="text-[var(--sage-deep)]"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M7 5v14"/></svg>
+            </div>
+            <h3 class="serif text-xl">Your photography</h3>
+            <p class="mt-2 text-sm text-cream-70 leading-relaxed">Your corridor on the hero. Your lobby in the attract loop. Your suites on the directory. We use your shots, not stock.</p>
+          </div>
+          <div class="card-dark rounded-2xl p-6">
+            <div class="w-10 h-10 rounded-xl bg-cream-10 grid place-items-center mb-4">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="text-[var(--taupe-deep)]"><path d="M4 6h16M4 12h10M4 18h16"/></svg>
+            </div>
+            <h3 class="serif text-xl">Your voice</h3>
+            <p class="mt-2 text-sm text-cream-70 leading-relaxed">From the welcome line to the "from the owner" note. Edit every word in admin — no developer needed.</p>
+          </div>
+          <div class="card-dark rounded-2xl p-6">
+            <div class="w-10 h-10 rounded-xl bg-cream-10 grid place-items-center mb-4">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="text-[var(--sage-deep)]"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 17h6"/></svg>
+            </div>
+            <h3 class="serif text-xl">Your domain</h3>
+            <p class="mt-2 text-sm text-cream-70 leading-relaxed">Point your own URL at the app. Guests see <span style="font-family: ui-monospace, monospace;">app.yourbuilding.com</span>, not a generic SaaS subdomain.</p>
+          </div>
+          <div class="card-dark rounded-2xl p-6">
+            <div class="w-10 h-10 rounded-xl bg-cream-10 grid place-items-center mb-4">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="text-[var(--taupe-deep)]"><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <h3 class="serif text-xl">Your features</h3>
+            <p class="mt-2 text-sm text-cream-70 leading-relaxed">Turn modules on or off — community board, available suites, suite map, "Did you know?" rotator. Show only what fits.</p>
+          </div>
+        </div>
 
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
-
-<script src="assets/js/app.js"></script>
-
-<!-- Fullscreen map modal. Populated on open with a clone of the live SVG. -->
-<div class="map-modal" id="mapModal" aria-hidden="true" role="dialog">
-  <div class="map-modal-inner">
-    <div class="map-modal-head">
-      <h2>Suite map</h2>
-      <button type="button" class="map-modal-close" id="mapModalClose" aria-label="Close map">&times;</button>
+        <div class="mt-6 rounded-2xl p-5 flex items-start gap-4" style="background: rgba(139,154,126,0.10); border: 1px solid rgba(139,154,126,0.30);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="text-[var(--sage-deep)] flex-shrink-0 mt-0.5"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+          <p class="text-sm text-cream-70 leading-relaxed">
+            <span class="font-semibold text-[var(--ink)]">The Studio Soulutions name never has to appear publicly.</span>
+            Run it fully white-labeled — your brand front to back, your guests never see ours.
+          </p>
+        </div>
+      </div>
     </div>
-    <div class="map-modal-body" id="mapModalBody"></div>
   </div>
-</div>
+</section>
+
+<!-- ===================== WHO IT'S FOR ===================== -->
+<section id="who" class="relative py-24 lg:py-32" style="background: linear-gradient(180deg, #EFE4D2 0%, #F5EDE0 100%);">
+  <div class="max-w-6xl mx-auto px-6 lg:px-12">
+    <div class="eyebrow text-cream-50">Who it's for</div>
+    <h2 class="serif text-4xl lg:text-5xl mt-3 max-w-3xl">Built for buildings, not for chains.</h2>
+
+    <div class="grid md:grid-cols-3 gap-5 mt-12">
+      <div class="card-dark rounded-3xl p-7">
+        <div class="eyebrow text-[var(--sage-deep)]">Salon-suite buildings</div>
+        <h3 class="serif text-2xl mt-2">Owner-operators</h3>
+        <p class="text-cream-70 mt-3 leading-relaxed">10+ independent studios under one roof. You want every artist discovered, not just the ones with their own marketing.</p>
+      </div>
+      <div class="card-dark rounded-3xl p-7">
+        <div class="eyebrow text-[var(--taupe-deep)]">Wellness collectives</div>
+        <h3 class="serif text-2xl mt-2">Multi-practitioner spaces</h3>
+        <p class="text-cream-70 mt-3 leading-relaxed">Massage, acupuncture, esthetics, fitness — shared lobby, separate practices. One front door, many doors inside.</p>
+      </div>
+      <div class="card-dark rounded-3xl p-7">
+        <div class="eyebrow text-[var(--clay-deep)]">Mixed-use retail</div>
+        <h3 class="serif text-2xl mt-2">Boutique buildings</h3>
+        <p class="text-cream-70 mt-3 leading-relaxed">Anywhere a guest walks in and meets a directory. Your tenants pay rent — and now they get the foot traffic too.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FAQ ===================== -->
+<section id="faq" class="relative py-24 lg:py-32 bg-[var(--bg)]">
+  <div class="max-w-3xl mx-auto px-6 lg:px-12">
+    <div class="eyebrow text-cream-50">Questions</div>
+    <h2 class="serif text-4xl lg:text-5xl mt-3">The ones we usually get.</h2>
+
+    <div class="mt-12 space-y-3">
+      <details class="card-dark rounded-2xl p-6">
+        <summary class="flex items-center justify-between gap-4">
+          <span class="serif text-lg text-[var(--ink)]">Do my tenants have to do anything?</span>
+          <svg class="faq-chev flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <p class="mt-4 text-cream-70 leading-relaxed">No. The owner runs the directory. Tenants can submit their own photos, bio, and hours through a self-serve link, but they don't have to. You can populate everything yourself if that's how your building works.</p>
+      </details>
+
+      <details class="card-dark rounded-2xl p-6">
+        <summary class="flex items-center justify-between gap-4">
+          <span class="serif text-lg text-[var(--ink)]">What hardware do I need for the kiosk?</span>
+          <svg class="faq-chev flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <p class="mt-4 text-cream-70 leading-relaxed">Any modern touchscreen with a browser. A wall-mounted iPad, a Surface Hub, a 32" portrait display with a mini PC — they all work. We'll help you pick something that fits your lobby.</p>
+      </details>
+
+      <details class="card-dark rounded-2xl p-6">
+        <summary class="flex items-center justify-between gap-4">
+          <span class="serif text-lg text-[var(--ink)]">How customizable is the look?</span>
+          <svg class="faq-chev flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <p class="mt-4 text-cream-70 leading-relaxed">Fully. Logo, wordmark, color palette, photography, copy, even the welcome message from the owner — all yours. The Studio Soulutions name never has to appear publicly. You can run it white-labeled at your own domain.</p>
+      </details>
+
+      <details class="card-dark rounded-2xl p-6">
+        <summary class="flex items-center justify-between gap-4">
+          <span class="serif text-lg text-[var(--ink)]">Does it replace my tenants' booking systems?</span>
+          <svg class="faq-chev flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <p class="mt-4 text-cream-70 leading-relaxed">No. Each tenant keeps using whatever they already use — Vagaro, Square, GlossGenius, a paper book. The "Book" button on their card links straight to their existing system. We're the discovery layer, not the booking layer.</p>
+      </details>
+
+      <details class="card-dark rounded-2xl p-6">
+        <summary class="flex items-center justify-between gap-4">
+          <span class="serif text-lg text-[var(--ink)]">How long does setup take?</span>
+          <svg class="faq-chev flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <p class="mt-4 text-cream-70 leading-relaxed">Once we have your logo, palette, photos, and tenant list, the kiosk and app go live the same week. The first prototype was built and shipped in days — yours won't take much longer.</p>
+      </details>
+
+      <details class="card-dark rounded-2xl p-6">
+        <summary class="flex items-center justify-between gap-4">
+          <span class="serif text-lg text-[var(--ink)]">What does it cost?</span>
+          <svg class="faq-chev flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <p class="mt-4 text-cream-70 leading-relaxed">Pricing depends on building size and feature set. We're working with first buildings right now to get the model right — reach out and let's talk about what fits.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA / CONTACT ===================== -->
+<section id="contact" class="relative py-24 lg:py-32 overflow-hidden">
+  <div class="absolute inset-0 bg-cover bg-center"
+       style="background-image: url('assets/photos/1000040456.jpg');"></div>
+  <div class="absolute inset-0" style="background:
+        radial-gradient(60% 60% at 50% 40%, rgba(139,154,126,0.18) 0%, transparent 60%),
+        linear-gradient(180deg, rgba(245,237,224,0.55) 0%, rgba(245,237,224,0.94) 100%);"></div>
+
+  <div class="relative max-w-3xl mx-auto px-6 lg:px-12 text-center">
+    <div class="eyebrow text-cream-50">Get in touch</div>
+    <h2 class="serif text-4xl lg:text-6xl mt-3 leading-[1.05]">
+      Let your building<br/><span class="serif-it text-[var(--taupe-deep)]">tell its own story.</span>
+    </h2>
+    <p class="mt-6 text-lg text-cream-70 leading-relaxed">
+      Tell us about your space and we'll show you a working version with your brand on it. No commitment — just a clear picture of what's possible.
+    </p>
+    <div class="mt-9 flex flex-wrap justify-center gap-3">
+      <a href="mailto:salonplusss@gmail.com?subject=Studio%20Soulutions%20inquiry" class="rounded-full bg-[var(--ink)] text-[var(--surface-2)] px-7 py-3.5 text-sm font-semibold hover:scale-[1.02] transition">Email salonplusss@gmail.com</a>
+      <a href="Studio-Soulutions-Pitch-v1.html" class="rounded-full bg-cream-10 backdrop-blur px-7 py-3.5 text-sm font-semibold text-[var(--ink)]" style="border: 1px solid rgba(61,53,48,0.16);">See the full pitch</a>
+    </div>
+  </div>
+</section>
+
+<footer class="border-t border-cream-10 py-10 text-center text-xs eyebrow text-cream-40">
+  <div class="max-w-5xl mx-auto px-6 flex flex-col gap-3">
+    <div class="flex items-center justify-center gap-3">
+      <img src="assets/logo_ss_green_v4.png" alt="Studio Soulutions" style="height:24px;width:auto;background:transparent;">
+      <span class="serif text-sm" style="color: var(--ink-soft); letter-spacing: 0;">Studio Soul<span class="serif-it">utions</span></span>
+    </div>
+    <div>Studio Soulutions · A platform for salon-suite buildings · studiosoulutions.com</div>
+  </div>
+</footer>
 
 </body>
 </html>

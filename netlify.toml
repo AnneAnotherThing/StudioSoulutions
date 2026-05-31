@@ -1,5 +1,5 @@
 # Studio Soulutions — Netlify config
-# Hive-Rise · Salon Plus Studio Suites build
+# Studio Soulutions platform build
 
 [build]
   publish = "."
@@ -17,11 +17,18 @@
   to   = "/admin.html"
   status = 200
 
+[[redirects]]
+  from = "/app"
+  to   = "/app.html"
+  status = 200
+
 # SPA-style fallback for the phone view (handles deep links into tenant profiles later)
 [[redirects]]
-  from = "/*"
-  to   = "/index.html"
+  from = "/app/*"
+  to   = "/app.html"
   status = 200
+
+# Everything else falls through to the marketing site (index.html)
 
 # Long cache on hashed assets, short on HTML
 [[headers]]

@@ -9,8 +9,8 @@ import { supabase, STUDIO_SLUG, IS_MOCK } from './supabase-client.js';
 
 /* ----- Mock data (used until Supabase env vars land) ----- */
 const MOCK_STUDIO = {
-  slug: 'salon-plus',
-  studio_name: 'Studio Soulutions — Salon Plus Studio Suites',
+  slug: 'studio-soulutions',
+  studio_name: 'Studio Soulutions',
   tagline: 'A home for the people who make people feel at home.',
   about_text: 'A community of independent stylists, nail artists, and wellness pros — each with their own suite and their own story.',
   owner_note: '— Laura',

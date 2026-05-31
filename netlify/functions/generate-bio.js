@@ -1,6 +1,6 @@
 /* =====================================================================
    Studio Soulutions — AI bio generator (Netlify Function)
-   Hive-Rise · Salon Plus Studio Suites build
+   Studio Soulutions platform build
    ---------------------------------------------------------------------
    Takes a tenant's rough notes + a few structured fields, asks Claude to
    write three polished bio variants in distinct tones (warm, editorial,
