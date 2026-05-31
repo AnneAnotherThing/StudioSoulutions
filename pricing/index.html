@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Studio Soulutions — Pricing v1</title>
+<style>
+  :root{
+    --ink:#2b231d;
+    --muted:#6b5e54;
+    --rule:#d9cfc3;
+    --bg:#faf6f1;
+    --accent:#8a6a4a;
+    --tag:#efe6da;
+    --hi:#fbf3e7;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Georgia,"Iowan Old Style",serif;line-height:1.45}
+  .page{max-width:820px;margin:0 auto;padding:48px 56px}
+  header{border-bottom:1px solid var(--rule);padding-bottom:18px;margin-bottom:26px}
+  h1{font-size:28px;margin:0 0 4px;letter-spacing:-0.01em}
+  .sub{color:var(--muted);font-size:14px;margin:0}
+  h2{font-size:18px;margin:30px 0 4px;border-bottom:1px solid var(--rule);padding-bottom:6px}
+  .h2sub{color:var(--muted);font-size:12px;margin:0 0 14px;text-transform:uppercase;letter-spacing:0.08em}
+  h3{font-size:14px;margin:14px 0 4px;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent)}
+  p{margin:6px 0 10px}
+  ul{margin:6px 0 12px 20px;padding:0}
+  li{margin:4px 0;font-size:13px}
+  .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:10px 0 6px}
+  .card{border:1px solid var(--rule);border-radius:8px;padding:14px 16px;background:#fff;display:flex;flex-direction:column}
+  .card.feature{background:var(--hi);border-color:var(--accent)}
+  .tier{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent);margin:0}
+  .name{font-size:18px;font-weight:700;margin:2px 0 6px}
+  .price{font-size:24px;font-weight:700;margin:0;letter-spacing:-0.01em}
+  .price small{font-size:12px;font-weight:400;color:var(--muted)}
+  .annual{font-size:11px;color:var(--muted);margin:2px 0 10px}
+  .for{font-size:12px;color:var(--muted);font-style:italic;margin:0 0 8px;border-top:1px dashed var(--rule);padding-top:8px}
+  .row{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--rule);border-radius:6px;padding:10px 14px;margin:8px 0;background:#fff}
+  .tag{display:inline-block;background:var(--tag);color:var(--ink);font-size:11px;padding:2px 8px;border-radius:999px;margin-right:6px;text-transform:uppercase;letter-spacing:0.06em}
+  .note{background:#fff;border-left:3px solid var(--accent);padding:10px 14px;margin:14px 0;font-size:13px;color:#3a3128}
+  table{width:100%;border-collapse:collapse;margin:8px 0 14px;font-size:13px;background:#fff}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+  th{background:var(--tag);font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent)}
+  td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+  .addon{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px dashed var(--accent);border-radius:6px;padding:10px 14px;margin:6px 0}
+  .addon .lbl{font-weight:700}
+  .addon .p{font-variant-numeric:tabular-nums}
+  footer{margin-top:32px;border-top:1px solid var(--rule);padding-top:12px;font-size:11px;color:var(--muted);text-align:center}
+  @media print {
+    html,body{background:#fff}
+    .page{padding:0.5in 0.6in;max-width:none}
+    .card,.row,table,.addon{break-inside:avoid;background:#fff}
+    h2{break-after:avoid}
+    h1{font-size:22px}
+    h2{font-size:15px}
+    .name{font-size:15px}
+    .price{font-size:20px}
+    p,li,td,th{font-size:11px}
+    @page{margin:0.5in}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <h1>Studio Soulutions — Pricing v1</h1>
+  <p class="sub">First stab · 2026-05-30 · Software-only (QR/PWA + optional kiosk) · No hardware sold</p>
+</header>
+
+<div class="note">
+<strong>Pricing strategy in one paragraph:</strong> charge the building owner when possible — it's a smaller sales cycle and a higher LTV. When the owner doesn't buy in, let tenants self-serve, with a free tier so the directory still gets populated (the product fails without listings). Kiosk software is the add-on, not the core — it makes the lobby presence real but the QR/PWA does the actual work.
+</div>
+
+<h2>Owner pricing — billed to the building</h2>
+<p class="h2sub">Per building, monthly · 20% off annual · 30-day free trial · all tenants included</p>
+
+<div class="grid">
+  <div class="card">
+    <p class="tier">Tier 1 · Suite</p>
+    <p class="name">Connect</p>
+    <p class="price">$79<small>/mo</small></p>
+    <p class="annual">$759/yr (save $189)</p>
+    <ul>
+      <li>QR/PWA directory</li>
+      <li>Up to <strong>15 suites</strong></li>
+      <li>Tenant profiles + cross-promo</li>
+      <li>Door QR cards (printable)</li>
+      <li>Basic analytics</li>
+      <li>Email support</li>
+    </ul>
+    <p class="for">For boutique buildings &amp; single-floor studios.</p>
+  </div>
+
+  <div class="card feature">
+    <p class="tier">Tier 2 · Studio · most common</p>
+    <p class="name">Connect+</p>
+    <p class="price">$149<small>/mo</small></p>
+    <p class="annual">$1,430/yr (save $358)</p>
+    <ul>
+      <li>Everything in Connect</li>
+      <li>Up to <strong>35 suites</strong></li>
+      <li>Featured tenant rotation</li>
+      <li>Owner announcements board</li>
+      <li>Custom branding (logo, palette)</li>
+      <li>Priority email support</li>
+    </ul>
+    <p class="for">For typical Sola / Phenix / MY SALON Suite locations.</p>
+  </div>
+
+  <div class="card">
+    <p class="tier">Tier 3 · Multi-floor</p>
+    <p class="name">Connect Pro</p>
+    <p class="price">$249<small>/mo</small></p>
+    <p class="annual">$2,390/yr (save $598)</p>
+    <ul>
+      <li>Everything in Connect+</li>
+      <li><strong>Unlimited suites</strong></li>
+      <li>Multi-floor / multi-zone directory</li>
+      <li>Promo scheduling + campaigns</li>
+      <li>Owner-level analytics dashboard</li>
+      <li>Onboarding call + dedicated contact</li>
+    </ul>
+    <p class="for">For large or multi-building operators.</p>
+  </div>
+</div>
+
+<div class="addon">
+  <div>
+    <div class="lbl">+ Kiosk software add-on</div>
+    <div style="font-size:12px;color:var(--muted)">Available on any owner tier · runs on owner-supplied tablet · 1 kiosk URL per location</div>
+  </div>
+  <div class="p"><strong>+$49/mo</strong> &nbsp;·&nbsp; +$39/mo annual</div>
+</div>
+
+<div class="addon">
+  <div>
+    <div class="lbl">+ Additional kiosk</div>
+    <div style="font-size:12px;color:var(--muted)">For larger lobbies / multi-entrance buildings</div>
+  </div>
+  <div class="p"><strong>+$19/mo</strong> each</div>
+</div>
+
+<h2>Tenant pricing — if the owner doesn't participate</h2>
+<p class="h2sub">Individual tenant self-pay · 14-day free trial on paid tiers</p>
+
+<div class="grid">
+  <div class="card">
+    <p class="tier">Tenant · Free</p>
+    <p class="name">Listed</p>
+    <p class="price">$0</p>
+    <p class="annual">Forever free</p>
+    <ul>
+      <li>Basic profile in the directory</li>
+      <li>Personal QR card (1)</li>
+      <li>Appears in cross-promo when other tenants tag you</li>
+      <li>No featured placement</li>
+      <li>Studio Soulutions footer badge on profile</li>
+    </ul>
+    <p class="for">Critical-mass tier — gets the building populated.</p>
+  </div>
+
+  <div class="card feature">
+    <p class="tier">Tenant · Pro · most common</p>
+    <p class="name">Promote</p>
+    <p class="price">$14<small>/mo</small></p>
+    <p class="annual">$144/yr (save $24)</p>
+    <ul>
+      <li>Everything in Listed</li>
+      <li>Cross-promo slots (up to 3 active)</li>
+      <li>Profile analytics (views, scans)</li>
+      <li>Booking link / Linktree-style buttons</li>
+      <li>Custom QR card design</li>
+      <li>No Studio Soulutions footer</li>
+    </ul>
+    <p class="for">For tenants actively trying to grow their book.</p>
+  </div>
+
+  <div class="card">
+    <p class="tier">Tenant · Premium</p>
+    <p class="name">Featured</p>
+    <p class="price">$29<small>/mo</small></p>
+    <p class="annual">$290/yr (save $58)</p>
+    <ul>
+      <li>Everything in Promote</li>
+      <li>Featured rotation in the building directory</li>
+      <li>Priority placement when owner runs no campaign</li>
+      <li>3 active campaigns / promo windows</li>
+      <li>Cross-building visibility (if applicable)</li>
+    </ul>
+    <p class="for">For tenants who want top-of-list visibility.</p>
+  </div>
+</div>
+
+<h2>How the two models interact</h2>
+<table>
+  <thead>
+    <tr><th>Scenario</th><th>What the tenant sees</th><th>What the tenant pays</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Owner is on <strong>Connect / Connect+ / Pro</strong></td>
+      <td>Full profile included automatically. Cross-promo on.</td>
+      <td class="num">$0 — included</td>
+    </tr>
+    <tr>
+      <td>Owner participates, tenant wants extra reach</td>
+      <td>Optional individual Featured upgrade.</td>
+      <td class="num">+$15/mo on top</td>
+    </tr>
+    <tr>
+      <td>Owner doesn't participate — tenant joins solo</td>
+      <td>Building is listed but unbranded; tenant pages live.</td>
+      <td class="num">$0 / $14 / $29 (Listed / Promote / Featured)</td>
+    </tr>
+    <tr>
+      <td>Threshold reached — enough tenants in one building solo-paying</td>
+      <td>Sales trigger: pitch the owner with usage data already in hand.</td>
+      <td class="num">Owner upgrade path</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Setup, trials &amp; one-time fees</h2>
+<div class="row">
+  <div>
+    <p style="margin:0 0 4px"><span class="tag">Setup fee</span> <strong>None for launch.</strong> Reconsider at 50+ buildings live.</p>
+    <p style="margin:0 0 4px"><span class="tag">Trial</span> 30 days free on any owner tier · 14 days free on tenant Promote/Featured · Listed is free forever.</p>
+    <p style="margin:0 0 4px"><span class="tag">Annual discount</span> ~20% off — encourages year-long commitments that smooth churn.</p>
+    <p style="margin:0 0 4px"><span class="tag">Pilot pricing</span> First 3 buildings: free for 6 months in exchange for a quote + case study.</p>
+    <p style="margin:0"><span class="tag">Payments</span> Stripe Payment Links / Stripe Checkout — no custom billing UI in v1.</p>
+  </div>
+</div>
+
+<h2>Why these numbers (the gut check)</h2>
+<ul>
+  <li><strong>$149 lands in "yes, I can expense that" territory</strong> for a salon-suite operator running 25–35 suites. Per-suite, it's $4–6/month — invisible against the $400–700/mo each suite pays in rent.</li>
+  <li><strong>$14 for tenant Promote</strong> sits below the price of a single client no-show — easy mental math for a stylist. Lower than $20 (the next psychological barrier).</li>
+  <li><strong>Free "Listed" tier is non-negotiable.</strong> The directory has no value empty. Free tenants are the inventory that lets you sell to owners later.</li>
+  <li><strong>$49 kiosk add-on</strong> is intentionally cheap as an upsell — its job is to make Studio Soulutions visible to walk-in clients, which sells the next building.</li>
+  <li><strong>Tier 3 has "unlimited" not "+$X/suite"</strong> — usage-based pricing scares property managers; flat fees close deals.</li>
+</ul>
+
+<h2>Open questions before this goes public</h2>
+<ul>
+  <li>Should the kiosk add-on be free on Connect Pro (Tier 3) to make the top tier feel premium?</li>
+  <li>Is there appetite for a one-time "white-glove onboarding" SKU (e.g., $499) for owners who want Anne to set up the building? Could be a meaningful revenue line early.</li>
+  <li>Do we cap tenant Featured slots per building (e.g., max 5 featured at any time) to keep the slot valuable?</li>
+  <li>Cross-building visibility on tenant Featured — premium feature or a way to push owners to subscribe (since their building gets surfaced elsewhere only if they're on a paid tier)?</li>
+  <li>Founding-member pricing for the first 10 paying buildings — lock in 50% off for life? Strong outbound hook.</li>
+</ul>
+
+<footer>
+Studio Soulutions · Internal pricing draft v1 · Not for external distribution
+</footer>
+
+</div>
+</body>
+</html>
