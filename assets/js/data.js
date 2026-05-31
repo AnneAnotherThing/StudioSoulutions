@@ -14,9 +14,9 @@ const MOCK_STUDIO = {
   tagline: 'A home for the people who make people feel at home.',
   about_text: 'A community of independent stylists, nail artists, and wellness pros — each with their own suite and their own story.',
   owner_note: '— Laura',
-  lobby_photo_url: 'assets/photos/1000040457.jpg',
+  lobby_photo_url: 'assets/photos/studio-soulutions-hero.jpg',
   attract_loop_urls: [
-    'assets/photos/1000040457.jpg',
+    'assets/photos/studio-soulutions-hero.jpg',
     'assets/photos/1000040455.jpg',
     'assets/photos/1000040453.jpg',
     'assets/photos/1000040456.jpg',
