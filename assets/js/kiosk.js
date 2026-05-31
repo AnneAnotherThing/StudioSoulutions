@@ -693,6 +693,4 @@
       shell.style.transformOrigin = 'top left';
     }
     apply();
-    window.addEventListener('load', apply);
-    window.addEventListener('resize', apply);
-  })();
+    window.addEventLi
