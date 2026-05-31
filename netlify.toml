@@ -49,4 +49,6 @@
 # Kiosk hardening — keep this tab from being framed elsewhere
 [[headers]]
   for = "/kiosk.html"
-  [header
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "no-referrer"
