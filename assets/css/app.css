@@ -78,7 +78,7 @@ body {
   background:
     radial-gradient(90% 60% at 80% 0%, rgba(139,154,126,0.14) 0%, transparent 60%),
     linear-gradient(180deg, rgba(245,237,224,0.55) 0%, rgba(245,237,224,0.82) 55%, rgba(245,237,224,0.96) 100%),
-    url('../photos/corridor-bg.jpg') center / cover no-repeat;
+    url('../photos/studio-soulutions-hero.jpg') center / cover no-repeat;
   background-attachment: fixed, fixed, fixed;
   background-color: var(--bg);
 }
@@ -1395,4 +1395,4 @@ body {
 }
 .back-to-walkthrough svg { width: 13px; height: 13px; opacity: 0.85; }
 .back-to-walkthrough span { line-height: 1; }
-.back-to-walkthrough--right { left: auto; right: 18px; }
+.back-to-walkthrough--right { left: auto; righ
