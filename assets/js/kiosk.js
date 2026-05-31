@@ -507,7 +507,7 @@
         showByawayDetail(
           'Available suites',
           '<p>' + summary + '</p>' +
-          '<p style="margin-top:12px;">If a room looks like a fit, email <a href="mailto:salonplusss@gmail.com" style="color:var(--clay-deep);font-weight:600;">salonplusss@gmail.com</a> to tour.</p>'
+          '<p style="margin-top:12px;">If a room looks like a fit, <a href="https://hive-rise.com/interest-StudioSoulutions" target="_blank" rel="noopener" style="color:var(--clay-deep);font-weight:600;">drop your details here</a> and we\'ll be in touch to set up a tour.</p>'
         );
       } else if (action === 'owner') {
         const note = (document.getElementById('ownerNote') || {}).textContent || '— The owner';
@@ -693,6 +693,4 @@
       shell.style.transformOrigin = 'top left';
     }
     apply();
-    window.addEventListener('load', apply);
-    window.addEventListener('resize', apply);
-  })();
+    window.addEventLi
