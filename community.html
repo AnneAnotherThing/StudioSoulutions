@@ -143,6 +143,12 @@
 </head>
 <body>
 
+<!-- Back to launch pad -->
+<a href="Laura-Walkthrough.html" style="position: fixed; top: 18px; left: 18px; z-index: 350; display: inline-flex; align-items: center; gap: 7px; background: rgba(61,53,48,0.78); backdrop-filter: blur(14px) saturate(120%); -webkit-backdrop-filter: blur(14px) saturate(120%); color: rgba(255,251,244,0.92); padding: 7px 14px 7px 11px; border-radius: 999px; font-family: 'Inter', system-ui, sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.02em; text-decoration: none; box-shadow: 0 1px 2px rgba(0,0,0,0.10), 0 10px 24px rgba(61,53,48,0.18); transition: background 0.18s ease, transform 0.15s ease;">
+  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width: 13px; height: 13px; opacity: 0.85;"><path d="M12 4l-6 6 6 6"/></svg>
+  <span style="line-height: 1;">Launch pad</span>
+</a>
+
 <header class="site">
   <div class="row">
     <a class="brand" href="/">
@@ -483,22 +489,4 @@ function render() {
 
 function resetFilters() {
   state.q = ''; state.stateF = ''; state.city = ''; state.building = ''; state.business = '';
-  $('#q').value = ''; $('#f-state').value = ''; $('#f-city').value = ''; $('#f-building').value = ''; $('#f-business').value = '';
-  refreshCityFilter();
-  render();
-}
-
-/* ===================== WIRE UP ===================== */
-document.addEventListener('DOMContentLoaded', () => {
-  populateLocationFilters();
-  $('#q').addEventListener('input', (e) => { state.q = e.target.value.trim(); render(); });
-  $('#f-state').addEventListener('change', (e) => { state.stateF = e.target.value; refreshCityFilter(); render(); });
-  $('#f-city').addEventListener('change', (e) => { state.city = e.target.value; render(); });
-  $('#f-building').addEventListener('change', (e) => { state.building = e.target.value; render(); });
-  $('#f-business').addEventListener('change', (e) => { state.business = e.target.value; render(); });
-  document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => { state.tab = t.dataset.tab; render(); }));
-  render();
-});
-</script>
-</body>
-</html>
+  $('#q').value = ''; $('#f-state').value = ''; $('#f-city').value = ''; $('#f-building').value = ''; $('#f-business

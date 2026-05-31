@@ -35,20 +35,15 @@
 
 # Everything else falls through to the marketing site (index.html)
 
-# Long cache on hashed assets, short on HTML
+# Short, revalidate-friendly cache on CSS/JS so edits propagate without manual busting
 [[headers]]
-  for = "/assets/*"
+  for = "/assets/css/*"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    Cache-Control = "public, max-age=300, must-revalidate"
 
 [[headers]]
-  for = "/*.html"
+  for = "/assets/js/*"
   [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
+    Cache-Control = "public, max-age=300, must-revalidate"
 
-# Kiosk hardening — keep this tab from being framed elsewhere
-[[headers]]
-  for = "/kiosk.html"
-  [headers.values]
-    X-Frame-Options = "SAMEORIGIN"
-    Referrer-Policy = "no-referrer"
+# Long immutable cache only on images/photos (filenames 
