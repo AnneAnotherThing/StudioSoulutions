@@ -22,6 +22,11 @@
   to   = "/app.html"
   status = 200
 
+[[redirects]]
+  from = "/community"
+  to   = "/community.html"
+  status = 200
+
 # SPA-style fallback for the phone view (handles deep links into tenant profiles later)
 [[redirects]]
   from = "/app/*"
@@ -44,6 +49,4 @@
 # Kiosk hardening — keep this tab from being framed elsewhere
 [[headers]]
   for = "/kiosk.html"
-  [headers.values]
-    X-Frame-Options = "SAMEORIGIN"
-    Referrer-Policy = "no-referrer"
+  [header
