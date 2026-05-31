@@ -17,9 +17,6 @@ const MOCK_STUDIO = {
   lobby_photo_url: 'assets/photos/studio-soulutions-hero.jpg',
   attract_loop_urls: [
     'assets/photos/studio-soulutions-hero.jpg',
-    'assets/photos/1000040455.jpg',
-    'assets/photos/1000040453.jpg',
-    'assets/photos/1000040456.jpg',
   ],
   you_are_here_x: 50,
   you_are_here_y: 90,
