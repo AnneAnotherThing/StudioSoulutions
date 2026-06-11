@@ -13,11 +13,16 @@
 </head>
 <body>
 
-  <!-- Back to walkthrough -->
-  <a href="Laura-Walkthrough.html" class="back-to-walkthrough">
+  <!-- Back to walkthrough — only shown when opened from the launch pad (?from=pad) -->
+  <a href="Laura-Walkthrough.html" id="launchPadPill" class="back-to-walkthrough" style="display: none;">
     <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l-6 6 6 6"/></svg>
     <span>Launch pad</span>
   </a>
+  <script>
+    if (new URLSearchParams(location.search).get('from') === 'pad' || document.referrer.includes('Laura-Walkthrough')) {
+      document.getElementById('launchPadPill').style.display = 'inline-flex';
+    }
+  </script>
 
   <!-- Phone-only banner -->
   <div class="mobile-apology">
