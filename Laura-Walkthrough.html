@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#F5EDE0" />
-<title>Studio Soulutions — Laura's launch pad</title>
+<title>Studio Soulutions - Laura's launch pad</title>
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
 <link rel="apple-touch-icon" href="assets/favicon-192.png">
@@ -188,7 +188,7 @@ main { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
   display: grid;
   grid-template-columns: 1fr;
 }
-/* Right-side photo previews intentionally hidden on the walkthrough —
+/* Right-side photo previews intentionally hidden on the walkthrough,
    the page is text-only, photos live in the kiosk / mobile / admin themselves. */
 .tool-preview { display: none !important; }
 .tool-body { padding: 30px 30px 28px; }
@@ -231,7 +231,7 @@ main { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
   gap: 8px;
 }
 
-/* Logo concept picker — current pick on the left, full grid on the right.
+/* Logo concept picker, current pick on the left, full grid on the right.
    Stacks on narrow viewports. */
 .logo-pick {
   display: grid;
@@ -285,7 +285,7 @@ main { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
   .logo-pick { grid-template-columns: 1fr; }
 }
 
-/* "What's new" callout — sits between the hero and the caveat, sage-toned
+/* "What's new" callout, sits between the hero and the caveat, sage-toned
    so it reads as news rather than a warning. */
 .updates {
   margin: 26px 0 22px;
@@ -417,7 +417,7 @@ main { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
   margin: 0 0 12px;
 }
 
-/* "Heads up — what's still rough" callout, sits between the hero and the pitch tool card */
+/* "Heads up, what's still rough" callout, sits between the hero and the pitch tool card */
 .caveat {
   margin: 26px 0 22px;
   padding: 26px 28px 30px;
@@ -514,9 +514,9 @@ main { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
   .caveat-list li { font-size: 13px; }
 }
 
-/* Bulleted list — use absolute-positioned dot so inline children (<strong>, <code>, etc.)
+/* Bulleted list, use absolute-positioned dot so inline children (<strong>, <code>, etc.)
    stay in the natural text flow. Earlier grid version broke any bullet with multiple
-   child nodes — second child got auto-placed into the 14px dot column, wrapping per word. */
+   child nodes, second child got auto-placed into the 14px dot column, wrapping per word. */
 .tool li {
   position: relative;
   padding-left: 20px;
@@ -532,7 +532,7 @@ main { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
   border-radius: 50%;
   background: var(--sage-deep);
 }
-/* Inline-code tokens (ANTHROPIC_API_KEY etc.) — shrink to fit phones, stay one whole token. */
+/* Inline-code tokens (ANTHROPIC_API_KEY etc.), shrink to fit phones, stay one whole token. */
 .tool li code {
   font-size: 0.82em;
   background: var(--bg-2);
@@ -573,7 +573,7 @@ main { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
 }
 .btn-ghost:hover { background: var(--bg-3); }
 
-/* Right-side preview panel — now a mini live iframe of the actual tool */
+/* Right-side preview panel, now a mini live iframe of the actual tool */
 .tool-preview {
   background: var(--bg-2);
   border-left: 1px solid var(--line);
@@ -619,7 +619,7 @@ main { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
   transform: scale(var(--mini-scale, 0.36));
 }
 
-/* status pill — hangs cleanly next to the h2 title */
+/* status pill, hangs cleanly next to the h2 title */
 .status {
   display: inline-flex;
   align-items: center;
@@ -642,7 +642,7 @@ main { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
 .status.stub { color: var(--taupe-deep); background: rgba(217,203,184,0.42); border-color: var(--taupe); border-style: dashed; }
 .status .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
-/* Inline helper note that sometimes sits next to an Open button — wrap it
+/* Inline helper note that sometimes sits next to an Open button, wrap it
    so it reads as a deliberate pill, not orphaned copy. */
 .actions .tip {
   display: inline-flex;
@@ -684,12 +684,12 @@ main { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
 hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
 
 /* ==========================================================
-   Phone-friendly overrides — Laura will read this on her phone
+   Phone-friendly overrides, Laura will read this on her phone
    ========================================================== */
 @media (max-width: 720px) {
   main { padding: 20px 12px 56px; }
 
-  /* Header — tighter on mobile so the brand doesn't crowd the edges */
+  /* Header, tighter on mobile so the brand doesn't crowd the edges */
   .app-header .row { padding: 10px 12px; }
   .brand { gap: 9px; min-width: 0; }
   .brand > div { min-width: 0; }
@@ -697,7 +697,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
   .brand-name { font-size: 15px; white-space: nowrap; }
   .brand-sub { font-size: 9px; letter-spacing: 0.12em; white-space: nowrap; }
 
-  /* Hero — softer, smaller, doesn't overwhelm */
+  /* Hero, softer, smaller, doesn't overwhelm */
   .hero {
     padding: 28px 20px;
     border-radius: 18px;
@@ -707,13 +707,13 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
   .hero p.lead { font-size: 15px; margin-top: 14px; }
   .hero .signoff { font-size: 14px; margin-top: 16px; }
 
-  /* Updates / lead capture content — tighten so QR + copy doesn't bust the card */
+  /* Updates / lead capture content, tighten so QR + copy doesn't bust the card */
   .updates { margin: 16px 0; padding: 22px 18px 24px; border-radius: 18px; }
   .updates-title { font-size: 22px; }
   .updates-lead { font-size: 14px; }
   .updates-list li { font-size: 13px; padding-left: 18px; }
 
-  /* QR panel stacks vertically on phones — image above the copy */
+  /* QR panel stacks vertically on phones, image above the copy */
   .qr-panel { flex-direction: column; align-items: stretch; gap: 14px; padding: 14px; }
   .qr-panel img { width: 140px; height: 140px; margin: 0 auto; }
   .qr-panel .qr-copy { min-width: 0; text-align: center; }
@@ -724,7 +724,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
   .actions { flex-wrap: wrap; }
   .actions .btn { flex: 1 1 100%; justify-content: center; text-align: center; }
 
-  /* Tool cards — preview becomes a slim hero photo at the TOP of each card */
+  /* Tool cards, preview becomes a slim hero photo at the TOP of each card */
   .tool {
     border-radius: 18px;
     margin-top: 16px;
@@ -740,7 +740,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
     min-height: 170px;
     height: 170px;
   }
-  /* The bottom cream wash was making images look 'beige boxy' — let them breathe */
+  /* The bottom cream wash was making images look 'beige boxy', let them breathe */
   .tool-preview .photo-overlay {
     background: linear-gradient(180deg, rgba(245,237,224,0.00) 0%, rgba(245,237,224,0.05) 60%, rgba(245,237,224,0.20) 100%);
   }
@@ -762,11 +762,11 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
 
   .foot-note { padding: 14px 16px; font-size: 13px; line-height: 1.55; margin-top: 24px; }
 
-  /* Status pill — shrink so it doesn't push the h2 onto two lines */
+  /* Status pill, shrink so it doesn't push the h2 onto two lines */
   .status { font-size: 9px; padding: 4px 8px; }
 }
 
-/* Very small phones — squeeze a bit more */
+/* Very small phones, squeeze a bit more */
 @media (max-width: 380px) {
   .hero h1 { font-size: 28px; }
   .tool h2 { font-size: 22px; }
@@ -794,17 +794,17 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
 
 <main>
 
-  <!-- ===================== HERO — personal note ===================== -->
+  <!-- ===================== HERO, personal note ===================== -->
   <section class="hero">
     <div class="eyebrow">Hi Laura</div>
     <h1>Studio Soulutions is <em>live.</em></h1>
     <p class="lead">
-      The logo is locked in. The look is locked in. Every piece is wired up and talking to each other. This is your launch pad — bookmark it, come back any time, and every part of the project is one click away.
+      The logo is locked in. The look is locked in. Every piece is wired up and talking to each other. This is your launch pad, bookmark it, come back any time, and every part of the project is one click away.
     </p>
     <p class="lead" style="margin-top: 14px;">
       I'm honestly so excited about where this is. It started as a sketch of one building, and now it's a real platform with a real website, a real pitch, and real screens. I can't wait to see who walks through the door first.
     </p>
-    <div class="signoff">— Anne · Hive-Rise</div>
+    <div class="signoff">, Anne · Hive-Rise</div>
   </section>
 
   <!-- ===================== MARKETING / PUBLIC SITE ===================== -->
@@ -813,14 +813,14 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
       <div class="step">The public face · 01</div>
       <h2>The <em>marketing</em> site<span class="status live"><span class="dot"></span>Live</span></h2>
       <p class="summary">
-        The new public-facing site at <strong>studiosoulutions.com</strong>. It explains what Studio Soulutions <em>is</em> — for the building owners who'd want it in their own lobbies, the stylists curious about a suite, anyone who lands from a Google search or a QR scan. Premium add-on framing for the kiosk, white-glove service section, FAQ, contact.
+        The new public-facing site at <strong>studiosoulutions.com</strong>. It explains what Studio Soulutions <em>is</em>, for the building owners who'd want it in their own lobbies, the stylists curious about a suite, anyone who lands from a Google search or a QR scan. Premium add-on framing for the kiosk, white-glove service section, FAQ, contact.
       </p>
       <h3>Highlights</h3>
       <ul>
         <li>Hero shot of the actual corridor with the SS mark on the wall.</li>
         <li>"How it works" with the mobile app as standard and the kiosk as a premium add-on.</li>
-        <li>White-glove service section — six steps from brand intake to ongoing care.</li>
-        <li>"Fully customizable" pitch — every building keeps its own brand.</li>
+        <li>White-glove service section, six steps from brand intake to ongoing care.</li>
+        <li>"Fully customizable" pitch, every building keeps its own brand.</li>
         <li>Who-it's-for, six-question FAQ, contact CTA.</li>
       </ul>
       <div class="actions">
@@ -841,13 +841,13 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
       <div class="step">In the lobby · 02 · Premium add-on</div>
       <h2>Lobby <em>kiosk</em><span class="status live"><span class="dot"></span>Live</span></h2>
       <p class="summary">
-        A touchscreen welcome wall that lives in the corridor. Visitors arrive, see who's inside, who's open, and where to go — instead of squinting at a printed directory. Boots into an attract loop with the corridor photo so the screen is never dark.
+        A touchscreen welcome wall that lives in the corridor. Visitors arrive, see who's inside, who's open, and where to go, instead of squinting at a printed directory. Boots into an attract loop with the corridor photo so the screen is never dark.
       </p>
       <h3>Highlights</h3>
       <ul>
         <li>Big "Studio Soulutions" welcome over the actual corridor photo.</li>
-        <li>Three browse tabs — Directory (every studio), Open right now (live), and an interactive Suite map.</li>
-        <li>Big search at the top: "Who are you here to see?" — type a name, service, or suite.</li>
+        <li>Three browse tabs, Directory (every studio), Open right now (live), and an interactive Suite map.</li>
+        <li>Big search at the top: "Who are you here to see?", type a name, service, or suite.</li>
         <li>A "By the way" strip at the bottom: Available suites, From the owner, building info, and the QR code to take it on their phone.</li>
         <li>QR card top-right so guests can take the experience with them.</li>
         <li>Real-photo tenant tiles (Dueces is the only confirmed one; others are marked "Test").</li>
@@ -872,14 +872,14 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
       <div class="step">On their phone · 03</div>
       <h2>Mobile <em>companion</em><span class="status live"><span class="dot"></span>Live</span></h2>
       <p class="summary">
-        What happens after a guest scans the QR. The lobby experience continues in their hand — every studio, every artist, who's open, how to book. Same look as the kiosk; built for a phone.
+        What happens after a guest scans the QR. The lobby experience continues in their hand, every studio, every artist, who's open, how to book. Same look as the kiosk; built for a phone.
       </p>
       <h3>Highlights</h3>
       <ul>
         <li>Card-led "Discover" splash that mirrors the kiosk menu.</li>
         <li>Directory with search and category filters (Hair, Skin, Nails, Brows, Wellness, Makeup).</li>
         <li>Tap a studio → full profile sheet with photo, bio, services, hours, booking link.</li>
-        <li>Save bookmark for later — survives the visit.</li>
+        <li>Save bookmark for later, survives the visit.</li>
         <li>"Did you know?" carousel: pairings and discoveries between studios.</li>
         <li>Test-data pills on every concept tenant so guests know it's a demo.</li>
       </ul>
@@ -905,11 +905,11 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
       </p>
       <h3>Highlights</h3>
       <ul>
-        <li>Demo mode — type anything as the email and password to walk in.</li>
+        <li>Demo mode, type anything as the email and password to walk in.</li>
         <li>Tenant CRUD with photo upload, service tags, hours, status, contact info.</li>
         <li>AI bio generator with Warm / Editorial / Friendly tones. Wired to call Claude through a Netlify Function once <code>ANTHROPIC_API_KEY</code> is set; falls back to a smart stub locally.</li>
         <li>"Mark as test/concept" toggle so concept cards stay obviously labeled.</li>
-        <li><strong>Available Suites tab</strong> — list vacant rooms with sqft, rent, and an available-from date. Shows up on the phone as its own splash card.</li>
+        <li><strong>Available Suites tab</strong>, list vacant rooms with sqft, rent, and an available-from date. Shows up on the phone as its own splash card.</li>
         <li>Highlights tab for welcomes and building news that appear on the kiosk.</li>
         <li>Building tab for studio name, tagline, owner note, contact info.</li>
         <li>Adds + edits sync to the kiosk and phone via shared local storage.</li>
@@ -931,14 +931,14 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
       <div class="step">The network · 05</div>
       <h2>The <em>community</em><span class="status live"><span class="dot"></span>Live</span></h2>
       <p class="summary">
-        A shared directory across every building running Studio Soulutions. Members search by state, city, building type, or trade — and find each other for referrals, collaborations, and perks. Broader than just salon suites: medical complexes, professional buildings, and wellness centers are in the network too.
+        A shared directory across every building running Studio Soulutions. Members search by state, city, building type, or trade, and find each other for referrals, collaborations, and perks. Broader than just salon suites: medical complexes, professional buildings, and wellness centers are in the network too.
       </p>
       <h3>Highlights</h3>
       <ul>
         <li>Filter by state, city, building type (Salon suites, Medical, Professional, Wellness, Mixed-use), and trade (Hair, Skin, Medical, Legal, Mental health, Fitness…).</li>
         <li>Four tabs: Buildings, Businesses, Bulletin board, Member specials.</li>
         <li>Bulletin board for collabs, hiring notes, events, asks, and free resources to share.</li>
-        <li>Member specials — each tenant can offer a perk to other members of the network with a redemption code.</li>
+        <li>Member specials, each tenant can offer a perk to other members of the network with a redemption code.</li>
         <li>Seeded with sample buildings across PA, TX, NY, OR, SC, IL so you can see how it'd feel at network scale.</li>
       </ul>
       <div class="actions">
@@ -958,16 +958,16 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
       <div class="step">Catching hand-raisers · 06</div>
       <h2>Lead <em>capture</em> &amp; your private list<span class="status live"><span class="dot"></span>Live</span></h2>
       <p class="summary">
-        Short capture page for two audiences — stylists who'd want a suite in a Studio Soulutions building, and other building owners who'd want the platform in theirs. Plus a private list of every submission, just for you.
+        Short capture page for two audiences, stylists who'd want a suite in a Studio Soulutions building, and other building owners who'd want the platform in theirs. Plus a private list of every submission, just for you.
       </p>
       <h3>Highlights</h3>
       <ul>
         <li>Single page with a toggle: Stylist/Tenant or Suite Owner.</li>
-        <li>Short on purpose — name, email, phone, what they do (or building details), and a free-text "anything else."</li>
+        <li>Short on purpose, name, email, phone, what they do (or building details), and a free-text "anything else."</li>
         <li>Same warm sage-and-taupe palette as the rest of Studio Soulutions.</li>
         <li>Private list with tabs to flip between stylists and owners. Bookmark and come back any time.</li>
         <li>Password to open the list: <span class="updates-key">leads</span></li>
-        <li>Printable QR — drop on a sign in the lobby, a flyer, or a postcard.</li>
+        <li>Printable QR, drop on a sign in the lobby, a flyer, or a postcard.</li>
       </ul>
       <div class="actions">
         <a class="btn btn-primary" href="https://hive-rise.com/interest-StudioSoulutions" target="_blank" rel="noopener">Open the capture page →</a>
@@ -988,7 +988,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 24px 0; }
   <hr class="sep" />
 
   <div class="foot-note">
-    Anything looks off, anything you want me to change — just tell me. — <span class="muted">Anne · <a href="mailto:anne@hive-rise.com" style="color: var(--clay-deep); text-decoration: underline; text-underline-offset: 3px;">anne@hive-rise.com</a></span>
+    Anything looks off, anything you want me to change, just tell me. <span class="muted">Anne · <a href="mailto:anne@hive-rise.com" style="color: var(--clay-deep); text-decoration: underline; text-underline-offset: 3px;">anne@hive-rise.com</a></span>
   </div>
 
 </main>

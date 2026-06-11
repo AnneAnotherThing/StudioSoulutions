@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="theme-color" content="#0e0c0a" />
-<title>Studio Soulutions — Discover the studios under this roof</title>
+<title>Studio Soulutions - Discover the studios under this roof</title>
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
 <link rel="apple-touch-icon" href="assets/favicon-192.png">
@@ -15,7 +15,7 @@
 </head>
 <body>
 
-<!-- Back to walkthrough — only shown when opened from the launch pad (?from=pad) -->
+<!-- Back to walkthrough, only shown when opened from the launch pad (?from=pad) -->
 <a href="Laura-Walkthrough.html" id="launchPadPill" class="back-to-walkthrough back-to-walkthrough--right" style="display: none;">
   <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l-6 6 6 6"/></svg>
   <span>Launch pad</span>
@@ -39,25 +39,25 @@
   </div>
 </header>
 
-<!-- DISCOVER VIEW — card-led splash, mirrors the kiosk menu -->
+<!-- DISCOVER VIEW, card-led splash, mirrors the kiosk menu -->
 <section class="view active" id="view-discover">
   <div class="welcome">
     <div class="eyebrow">More than you came for</div>
-    <h1><span id="welcomeCount">—</span> studios.<br/><em>One roof.</em></h1>
-    <p><span id="welcomeOpen">—</span> open · <span id="welcomeAvail">—</span> can take you right now.</p>
+    <h1><span id="welcomeCount">-</span> studios.<br/><em>One roof.</em></h1>
+    <p><span id="welcomeOpen">-</span> open · <span id="welcomeAvail">-</span> can take you right now.</p>
   </div>
 
-  <!-- Kiosk-style hero search — mirrors the lobby touchscreen -->
+  <!-- Kiosk-style hero search, mirrors the lobby touchscreen -->
   <div class="kiosk-search">
     <div class="ks-shell">
       <svg class="ks-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input id="kioskSearchInput" class="ks-input" type="text" placeholder="Type a name, studio, or service…" autocomplete="off" />
     </div>
     <div class="ks-results" id="kioskSearchResults" hidden></div>
-    <p class="ks-hint">Or browse below — see who's here, who's open, where to go.</p>
+    <p class="ks-hint">Or browse below, see who's here, who's open, where to go.</p>
   </div>
 
-  <!-- Primary navigation — mirrors the kiosk's three tabs -->
+  <!-- Primary navigation, mirrors the kiosk's three tabs -->
   <div class="primary-menu">
 
     <!-- Directory -->
@@ -67,7 +67,7 @@
       </div>
       <div class="mc-body">
         <div class="mc-label">Directory</div>
-        <div class="mc-meta"><span id="mc-dir-count">—</span> studios in the building</div>
+        <div class="mc-meta"><span id="mc-dir-count">-</span> studios in the building</div>
       </div>
     </button>
 
@@ -78,7 +78,7 @@
       </div>
       <div class="mc-body">
         <div class="mc-label">Open right now</div>
-        <div class="mc-meta open"><span class="pulse-dot"></span><span id="mc-now-count">—</span> open · <span id="mc-avail-count">—</span> can take you now</div>
+        <div class="mc-meta open"><span class="pulse-dot"></span><span id="mc-now-count">-</span> open · <span id="mc-avail-count">-</span> can take you now</div>
       </div>
     </button>
 
@@ -95,7 +95,7 @@
 
   </div>
 
-  <!-- "By the way" strip — mirrors the kiosk's bottom row -->
+  <!-- "By the way" strip, mirrors the kiosk's bottom row -->
   <div class="byway-eyebrow"><span>By the way</span></div>
   <div class="byway-strip">
 
@@ -104,7 +104,7 @@
       <div class="mc-icon" id="mcFeaturedIcon"></div>
       <div class="mc-body">
         <div class="mc-label" id="mcFeaturedLabel">Featured today</div>
-        <div class="mc-meta" id="mcFeaturedMeta">—</div>
+        <div class="mc-meta" id="mcFeaturedMeta">-</div>
       </div>
     </button>
 
@@ -115,7 +115,7 @@
       </div>
       <div class="mc-body">
         <div class="mc-label">Available suites</div>
-        <div class="mc-meta"><span id="mc-vacancy-count">—</span> open for lease</div>
+        <div class="mc-meta"><span id="mc-vacancy-count">-</span> open for lease</div>
       </div>
     </button>
 
@@ -143,7 +143,7 @@
 
   </div>
 
-  <!-- Did you know? — ambient content below the menu -->
+  <!-- Did you know? ambient content below the menu -->
   <div class="discover-divider"><div class="line"></div><span class="lbl">Did you know?</span><div class="line"></div></div>
   <div class="dyk-scroll" id="dykScroll"></div>
 </section>
@@ -200,7 +200,7 @@
         <g class="suite" data-suite="120"><rect x="940" y="358" width="120" height="100" rx="10"/><text x="1000" y="413" text-anchor="middle">120</text></g>
       </g>
     </svg>
-    <!-- Expand to fullscreen modal — covers the case where the inline map is clipped. -->
+    <!-- Expand to fullscreen modal, covers the case where the inline map is clipped. -->
     <button type="button" class="map-fab" id="mapExpandFab" aria-label="Expand map">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
       Expand
@@ -226,9 +226,9 @@
     line-height: 1.65;
     backdrop-filter: blur(10px);
   ">
-    <p>Studio Soulutions is home to a careful group of independent artists — color, nails, lash, wellness, skin. Each one runs their own room, their own brand, their own way.</p>
-    <p style="margin-top: 12px;">This app exists so that everyone who walks in finds the studio that fits them — not just the one closest to the door.</p>
-    <div style="margin-top: 18px; font-family: 'Fraunces', serif; font-style: italic; color: var(--cream); font-size: 16px;">— The owner</div>
+    <p>Studio Soulutions is home to a careful group of independent artists, color, nails, lash, wellness, skin. Each one runs their own room, their own brand, their own way.</p>
+    <p style="margin-top: 12px;">This app exists so that everyone who walks in finds the studio that fits them, not just the one closest to the door.</p>
+    <div style="margin-top: 18px; font-family: 'Fraunces', serif; font-style: italic; color: var(--cream); font-size: 16px;">, The owner</div>
   </div>
 </section>
 

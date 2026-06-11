@@ -1,10 +1,10 @@
 /* Extracted from index.html on split. */
 /* =====================================================================
-   Studio Soulutions — Mobile (light, neutral, taupe + sage)
+   Studio Soulutions, Mobile (light, neutral, taupe + sage)
    ===================================================================== */
 :root {
   /* Surfaces */
-  --bg:           #F5EDE0;       /* warm sand cream — primary surface */
+  --bg:           #F5EDE0;       /* warm sand cream, primary surface */
   --bg-2:         #EFE4D2;
   --bg-3:         #E5D9C3;
   --surface:      #FBF6EE;
@@ -27,14 +27,14 @@
   /* Lines */
   --line:         #E5D9C3;
   --line-2:       #D4C4A8;
-  /* Legacy aliases — let existing markup auto-lighten. Bumped alphas so cards
+  /* Legacy aliases, let existing markup auto-lighten. Bumped alphas so cards
      and buttons have clear contrast against the cream bg. */
   --cream:        var(--ink);
   --cream-soft:   var(--surface);
   --ink-on-cream: var(--surface-2);
   --cream-04: rgba(61,53,48,0.05);
-  --cream-06: rgba(61,53,48,0.12);  /* card/button fill — bumped from 0.07 for contrast against cream bg */
-  --cream-10: rgba(61,53,48,0.18);  /* :active states + btn-secondary + header-action — bumped from 0.11 */
+  --cream-06: rgba(61,53,48,0.12);  /* card/button fill, bumped from 0.07 for contrast against cream bg */
+  --cream-10: rgba(61,53,48,0.18);  /* :active states + btn-secondary + header-action, bumped from 0.11 */
   --cream-15: rgba(61,53,48,0.22);  /* nudged up to keep relative spacing */
   --cream-20: rgba(61,53,48,0.20);
   --cream-40: rgba(61,53,48,0.48);
@@ -73,7 +73,7 @@ body {
   min-height: 100vh;
   padding-bottom: 92px;
   position: relative;
-  /* Photo backdrop — corridor photo with sage radial + cream wash on top, same as kiosk.
+  /* Photo backdrop, corridor photo with sage radial + cream wash on top, same as kiosk.
      Layered directly on body so it always shows through; no z-index gymnastics. */
   background:
     radial-gradient(90% 60% at 80% 0%, rgba(139,154,126,0.14) 0%, transparent 60%),
@@ -161,7 +161,7 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Kiosk-style search — same hero as the lobby touchscreen, sized for a phone */
+/* Kiosk-style search, same hero as the lobby touchscreen, sized for a phone */
 .kiosk-search { margin: -4px 0 18px; }
 .ks-shell { position: relative; }
 .ks-icon {
@@ -218,7 +218,7 @@ body {
   letter-spacing: 0.02em;
 }
 
-/* DISCOVER — MENU CARDS (kiosk-style, mobile-shaped) */
+/* DISCOVER, MENU CARDS (kiosk-style, mobile-shaped) */
 .menu-stack { display: flex; flex-direction: column; gap: 10px; }
 .primary-menu { display: flex; flex-direction: column; gap: 10px; }
 .byway-eyebrow {
@@ -359,7 +359,7 @@ body {
 .menu-card.is-clay   { background: linear-gradient(180deg, rgba(216,182,158,0.18) 0%, rgba(245,237,224,0.50) 100%); }
 .menu-card.is-sage   { background: linear-gradient(180deg, rgba(197,208,184,0.10) 0%, rgba(245,237,224,0.06) 100%); }
 
-/* DISCOVER — section divider */
+/* DISCOVER, section divider */
 .discover-divider {
   margin: 28px -20px 16px;
   padding: 0 20px;
@@ -377,7 +377,7 @@ body {
   color: var(--cream-50);
 }
 
-/* WELCOME — sits transparently over the body-level photo backdrop (same as kiosk treatment).
+/* WELCOME, sits transparently over the body-level photo backdrop (same as kiosk treatment).
    No per-view background here; the body::before/::after layers paint the corridor + wash for
    every screen, so the app reads as one continuous space. */
 .welcome {
@@ -438,7 +438,7 @@ body {
   margin-bottom: 10px;
 }
 
-/* DID YOU KNOW — horizontal carousel, glassy cards */
+/* DID YOU KNOW, horizontal carousel, glassy cards */
 .dyk-scroll {
   display: flex;
   gap: 12px;
@@ -509,7 +509,7 @@ body {
   position: relative;
 }
 
-/* TENANT CARDS — FEATURED (glassy, with photo) */
+/* TENANT CARDS, FEATURED (glassy, with photo) */
 .featured-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -532,7 +532,7 @@ body {
   background-color: var(--bg-3);
   position: relative;
 }
-/* Concept / test data pill — appears on every surface so the unconfirmed
+/* Concept / test data pill, appears on every surface so the unconfirmed
    tenants read as placeholders, not real bookings. */
 .test-pill {
   display: inline-flex;
@@ -1161,7 +1161,7 @@ body {
   0%, 100% { stroke-width: 1.5; }
   50%      { stroke-width: 6; }
 }
-/* "You are here" — outer ring pulses softly; the inner core stays put in
+/* "You are here", outer ring pulses softly; the inner core stays put in
    browse mode. In route mode (.has-target on the group), the inner core
    instead "leans" toward the destination once per cycle, like a person about
    to step in that direction. The lean direction is set by --lean-x/y on the
@@ -1181,7 +1181,7 @@ body {
   transform-origin: center;
 }
 @keyframes yahLean {
-  /* Small nudge — just enough to read as a directional cue, not a wandering dot. */
+  /* Small nudge, just enough to read as a directional cue, not a wandering dot. */
   0%, 100% { transform: translate(0, 0); }
   55%      { transform: translate(calc(var(--lean-x, 6px) * 0.55), calc(var(--lean-y, 0) * 0.55)); }
 }
@@ -1201,7 +1201,7 @@ body {
   font-size: 11px; font-weight: 700; letter-spacing: 1.6px;
   fill: var(--clay-deep);
 }
-/* Route line — static dashed sage trail. Used to be marching, but a moving
+/* Route line, static dashed sage trail. Used to be marching, but a moving
    dash looked like a stray animated dot floating across the floor plan. */
 .map-svg .route-line {
   fill: none;
@@ -1369,7 +1369,7 @@ body {
 }
 .proto-note strong { color: var(--cream); }
 
-/* Walkthrough back-pill — clean, subtle, on-brand */
+/* Walkthrough back-pill, clean, subtle, on-brand */
 .back-to-walkthrough {
   position: fixed;
   top: 18px; left: 18px;

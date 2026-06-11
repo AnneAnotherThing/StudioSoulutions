@@ -1,5 +1,5 @@
 /* Extracted from kiosk.html on split. */
-  // Kiosk shows tenants' personal contact (call/text) — booking is intentionally
+  // Kiosk shows tenants' personal contact (call/text), booking is intentionally
   // phone-app-only, since the kiosk is read-only and people will scan the QR to
   // act. `call` / `text` are the same shape used by index.html.
   const SEED_TENANTS = [
@@ -101,7 +101,7 @@
     if (nc) nc.textContent = tenants.filter(function(t) {
       return !t.is_concept && (t.open !== false) && (t.available !== false);
     }).length + ' available';
-    // Hero discovery counts — "X studios. One roof." and "X open right now"
+    // Hero discovery counts, "X studios. One roof." and "X open right now"
     const heroCountEl = document.getElementById('heroCount'); if (heroCountEl) heroCountEl.textContent = numberToWord(tenants.length);
     const heroOpenEl = document.getElementById('heroOpen');
     if (heroOpenEl) heroOpenEl.textContent = tenants.filter(function(t) {
@@ -120,7 +120,7 @@
       const v = JSON.parse(localStorage.getItem('ss_vacancies_v1') || 'null');
       const vb = document.getElementById('bywayVacancy');
       if (vb && Array.isArray(v) && v.length) {
-        vb.textContent = v.length + ' suite' + (v.length === 1 ? '' : 's') + ' open — ask the owner for a tour.';
+        vb.textContent = v.length + ' suite' + (v.length === 1 ? '' : 's') + ' open, ask the owner for a tour.';
       }
     } catch (e) {}
 
@@ -136,12 +136,12 @@
         const raw = (t.suite || '').trim();
         let key = null;
         const m = raw.match(/\d+/); if (m) key = m[0];
-        // No mappable suite (placeholders) — fall back to the slide-in panel.
+        // No mappable suite (placeholders), fall back to the slide-in panel.
         if (!key) { openTenantPanel(t); return; }
         // Click the matching suite to populate the detail panel + highlight it.
         const suiteEl = document.querySelector('#mapSuites .suite[data-suite="' + key.replace(/"/g, '\\"') + '"]');
         if (suiteEl) suiteEl.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-        // Open the map modal — its open handler moves .map-wrap (with the now-
+        // Open the map modal, its open handler moves .map-wrap (with the now-
         // populated #mapDetail) into the modal so both are visible together.
         const fab = document.getElementById('mapExpandFab');
         if (fab) fab.click();
@@ -152,7 +152,7 @@
   /* ----- Cross-pollination: tenant detail panel ----- */
   function openTenantPanel(t) {
     const all = loadTenants();
-    // "While you're here" — surface 3 OTHER studios that are open right now and in a different category.
+    // "While you're here", surface 3 OTHER studios that are open right now and in a different category.
     // This is the moment of cross-pollination: someone came for one thing, here are seven more.
     const sameCat = function(x) { return (x.category || '').toLowerCase() === (t.category || '').toLowerCase(); };
     const openOthers = all.filter(function(x) { return x.id !== t.id && x.open && !sameCat(x); });
@@ -163,7 +163,7 @@
     const heroPhoto = t.photo
       ? '<div class="tp-hero" style="background-image:url(\'' + t.photo + '\');"></div>'
       : '<div class="tp-hero tp-hero--avatar"><span>' + (t.avatar || (t.name || '?')[0]) + '</span></div>';
-    // Three-way panel status — Available / With a client / Closed.
+    // Three-way panel status, Available / With a client / Closed.
     const _isOpen = t.open !== false;
     const _isAvail = t.available !== false;
     const statusHtml = !_isOpen
@@ -205,7 +205,7 @@
         '<button class="tp-close" type="button" aria-label="Close">&times;</button>' +
         heroPhoto +
         '<div class="tp-body">' +
-          '<div class="tp-suite">Suite ' + (t.suite || '—') + '</div>' +
+          '<div class="tp-suite">Suite ' + (t.suite || '-') + '</div>' +
           '<h3 class="tp-name">' + (t.name || '') + (t.is_concept ? ' <span class="test-pill">Test</span>' : '') + '</h3>' +
           '<p class="tp-service">' + (t.service || '') + '</p>' +
           '<div class="tp-status">' + statusHtml + '</div>' +
@@ -247,7 +247,7 @@
       }).slice(0, 6);
       searchResults.hidden = false;
       if (!matches.length) {
-        searchResults.innerHTML = '<div class="search-result" style="opacity:.7;">No match — try a service like "lash" or "color".</div>';
+        searchResults.innerHTML = '<div class="search-result" style="opacity:.7;">No match, try a service like "lash" or "color".</div>';
         return;
       }
       searchResults.innerHTML = matches.map(function(t) {
@@ -266,7 +266,7 @@
   /* Suite map: paint occupancy, wire taps to a detail panel */
   function renderMap() {
     const tenants = loadTenants();
-    // Build a lookup by suite — match on the trailing number OR the literal suite string
+    // Build a lookup by suite, match on the trailing number OR the literal suite string
     const bySuite = {};
     tenants.forEach(function(t) {
       const raw = (t.suite || '').trim();
@@ -296,7 +296,7 @@
     });
   }
 
-  /* Suite callout — SVG label that comes out of the active suite. Cleared
+  /* Suite callout, SVG label that comes out of the active suite. Cleared
      whenever a new suite is picked or the detail panel closes. */
   function clearSuiteCallout() {
     const svg = document.querySelector('.map-svg');
@@ -317,7 +317,7 @@
     const sh = parseFloat(rect.getAttribute('height'));
     const cx = sx + sw / 2;
     const cy = sy + sh / 2;
-    // Place the callout either above or below the suite — above for north
+    // Place the callout either above or below the suite, above for north
     // and middle rows, below for the lower row so it stays inside the viewBox.
     const isLower = sy >= 358;
     const labelY = isLower ? sy + sh + 36 : sy - 36;
@@ -330,7 +330,7 @@
     const xmlns = 'http://www.w3.org/2000/svg';
     const g = document.createElementNS(xmlns, 'g');
     g.setAttribute('class', 'suite-callout');
-    // Connector line — dashed marching pointer from the suite to the label
+    // Connector line, dashed marching pointer from the suite to the label
     const line = document.createElementNS(xmlns, 'path');
     line.setAttribute('class', 'callout-line');
     line.setAttribute('d', 'M ' + cx + ' ' + lineY1 + ' L ' + cx + ' ' + lineY2);
@@ -370,7 +370,7 @@
         : (isAvail
             ? '<span style="color:var(--sage-deep);">&#11044; Open · Available</span>'
             : '<span style="color:var(--clay-deep);">&#11044; Open · With a client</span>');
-      // Personal contact line — kiosk is read-only (no tappable buttons), just
+      // Personal contact line, kiosk is read-only (no tappable buttons), just
       // tells you how to reach the tenant. Booking lives in the phone app.
       let contactHtml = '';
       const call = tenant.call || '';
@@ -432,7 +432,7 @@
       document.querySelectorAll('.browse-content [data-tab]').forEach(function(p) {
         p.hidden = (p.dataset.tab !== tab);
       });
-      // Filter chips only make sense on the Directory tab — hide on Available right now / Suite map
+      // Filter chips only make sense on the Directory tab, hide on Available right now / Suite map
       const chips = document.getElementById('filterChips');
       if (chips) chips.style.display = (tab === 'all') ? '' : 'none';
       // Auto-expand the Suite map tab into the fullscreen modal so the full
@@ -456,7 +456,7 @@
     });
   });
 
-  /* Byway buttons — open a body-level dialog (not the in-map detail panel,
+  /* Byway buttons, open a body-level dialog (not the in-map detail panel,
      which is nested inside the hidden .map-wrap when the visitor is on a
      different tab and so renders invisibly). */
   function ensureByawayDialog() {
@@ -510,7 +510,7 @@
           '<p style="margin-top:12px;">If a room looks like a fit, <a href="https://hive-rise.com/interest-StudioSoulutions" target="_blank" rel="noopener" style="color:var(--clay-deep);font-weight:600;">drop your details here</a> and we\'ll be in touch to set up a tour.</p>'
         );
       } else if (action === 'owner') {
-        const note = (document.getElementById('ownerNote') || {}).textContent || '— The owner';
+        const note = (document.getElementById('ownerNote') || {}).textContent || ', The owner';
         showByawayDetail('From the owner', '<p style="white-space:pre-line;">' + note + '</p>');
       }
     });
@@ -533,7 +533,7 @@
   render();
   renderMap();
 
-  /* Ambient cross-pollination — rotate "while you're at X, walk to Y" pairs in the hero */
+  /* Ambient cross-pollination, rotate "while you're at X, walk to Y" pairs in the hero */
   (function pairRotator() {
     const rotator = document.getElementById('pairRotator');
     const textEl = document.getElementById('pairText');
@@ -541,7 +541,7 @@
     const tenants = loadTenants().filter(function(t) { return t.open; });
     if (tenants.length < 2) return;
 
-    // Build complementary pairs — same-category pairs aren't cross-pollination
+    // Build complementary pairs, same-category pairs aren't cross-pollination
     const pairs = [];
     for (let i = 0; i < tenants.length; i++) {
       for (let j = 0; j < tenants.length; j++) {
@@ -569,7 +569,7 @@
     }, 6000);
   })();
 
-  /* Fullscreen map modal — clones the inline #mapSuites SVG into the modal
+  /* Fullscreen map modal, clones the inline #mapSuites SVG into the modal
      body so the visitor can see the full floor plan without container clipping.
      Tap handlers are wired up after the clone so suite taps still open the
      map-detail panel (we drive it via the inline map and showSuiteDetail). */
@@ -591,7 +591,7 @@
       if (!mapWrap) return;
       mapWrapHome = mapWrap.parentNode;
       mapWrapHomeNext = mapWrap.nextSibling;
-      body.appendChild(mapWrap);     // physically move into modal — same DOM node, same listeners
+      body.appendChild(mapWrap);     // physically move into modal, same DOM node, same listeners
       modal.classList.add('is-on');
       modal.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
@@ -631,9 +631,9 @@
 
   })();
 
-  /* Pair rotator — cycles "Did you know" cross-pollination prompts in the hero.
+  /* Pair rotator, cycles "Did you know" cross-pollination prompts in the hero.
      Placeholder tenants (no real suite, name contains "placeholder") are
-     excluded so the banner never reads "walk to Suite 2 — placeholder for…". */
+     excluded so the banner never reads "walk to Suite 2, placeholder for…". */
   (function startPairRotator() {
     const rotator = document.getElementById('pairRotator');
     const textEl = document.getElementById('pairText');
@@ -672,7 +672,7 @@
     }, 6000);
   })();
 
-  /* Mobile preview scaling — CSS calc with vw units can't feed scale() directly,
+  /* Mobile preview scaling, CSS calc with vw units can't feed scale() directly,
      so we measure the bezel and set the transform in JS. Same pattern the pitch deck uses. */
   (function syncKioskPreviewScale() {
     const KIOSK_NATIVE_W = 1280;

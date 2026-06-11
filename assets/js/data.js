@@ -1,5 +1,5 @@
 /* =====================================================================
-   Studio Soulutions — Data layer
+   Studio Soulutions, Data layer
    All reads go through here so phone, kiosk, and admin stay in sync.
    Falls back to mock data when Supabase isn't configured yet,
    so the UI is buildable before the DB is provisioned.
@@ -12,8 +12,8 @@ const MOCK_STUDIO = {
   slug: 'studio-soulutions',
   studio_name: 'Studio Soulutions',
   tagline: 'A home for the people who make people feel at home.',
-  about_text: 'A community of independent stylists, nail artists, and wellness pros — each with their own suite and their own story.',
-  owner_note: '— Laura',
+  about_text: 'A community of independent stylists, nail artists, and wellness pros, each with their own suite and their own story.',
+  owner_note: ', Laura',
   lobby_photo_url: 'assets/photos/studio-soulutions-hero.jpg',
   attract_loop_urls: [
     'assets/photos/studio-soulutions-hero.jpg',
@@ -25,25 +25,25 @@ const MOCK_STUDIO = {
 const MOCK_TENANTS = [
   {
     id: 'mock-dueces',
-    suite_number: '—',
+    suite_number: '-',
     business_name: 'Dueces Nail Studio',
     owner_name: '',
     phone: '',
     services: ['nails', 'manicure', 'pedicure'],
     hero_photo_url: 'assets/photos/1000040455.jpg',
-    bio: 'Sage-walled and softly lit — a quiet, careful place for nails done with intention.',
+    bio: 'Sage-walled and softly lit, a quiet, careful place for nails done with intention.',
     map_x: 30, map_y: 40,
     status: 'active',
   },
   {
     id: 'mock-pedi-1',
-    suite_number: '—',
+    suite_number: '-',
     business_name: 'Suite (placeholder)',
     owner_name: '',
     phone: '',
     services: ['pedicure', 'lash'],
     hero_photo_url: 'assets/photos/1000040453.jpg',
-    bio: 'Warm neutral suite — placeholder tenant card until Laura confirms the lineup.',
+    bio: 'Warm neutral suite, placeholder tenant card until Laura confirms the lineup.',
     map_x: 60, map_y: 40,
     status: 'active',
   },
@@ -54,7 +54,7 @@ const MOCK_POSTS = [
     id: 'mock-welcome',
     type: 'welcome',
     title: 'Welcome Dueces Nail Studio',
-    body: 'Newly opened in our sage-green suite — stop by and say hi.',
+    body: 'Newly opened in our sage-green suite, stop by and say hi.',
     published_at: new Date().toISOString(),
   },
 ];

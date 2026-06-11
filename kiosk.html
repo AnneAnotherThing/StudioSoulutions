@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta name="theme-color" content="#F5EDE0" />
-<title>Studio Soulutions — Lobby Kiosk</title>
+<title>Studio Soulutions - Lobby Kiosk</title>
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
 <link rel="apple-touch-icon" href="assets/favicon-192.png">
@@ -13,7 +13,7 @@
 </head>
 <body>
 
-  <!-- Back to walkthrough — only shown when opened from the launch pad (?from=pad) -->
+  <!-- Back to walkthrough, only shown when opened from the launch pad (?from=pad) -->
   <a href="Laura-Walkthrough.html" id="launchPadPill" class="back-to-walkthrough" style="display: none;">
     <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l-6 6 6 6"/></svg>
     <span>Launch pad</span>
@@ -42,13 +42,13 @@
             <div class="brand-sub">Studios under one roof</div>
           </div>
         </div>
-        <span class="clock" id="clock">&mdash;</span>
+        <span class="clock" id="clock">, </span>
       </header>
 
       <section class="hero-search">
         <div class="eyebrow">More than you came for</div>
-        <h1><span id="heroCount">—</span> studios. <em>One roof.</em></h1>
-        <p class="hero-sub"><span id="heroOpen">—</span> can take you right now &middot; browse below, or search if you have someone in mind.</p>
+        <h1><span id="heroCount">-</span> studios. <em>One roof.</em></h1>
+        <p class="hero-sub"><span id="heroOpen">-</span> can take you right now &middot; browse below, or search if you have someone in mind.</p>
         <!-- Rotating cross-pollination pair: "While you're at X, walk to Y" -->
         <div class="pair-rotator" id="pairRotator" aria-live="polite" hidden>
           <span class="pair-eyebrow">Did you know</span>
@@ -65,22 +65,22 @@
         <div class="browse-tabs">
           <button class="tab is-active" data-tab="all" type="button">
             Directory
-            <span class="tab-meta"><span id="dir-count">&mdash;</span></span>
+            <span class="tab-meta"><span id="dir-count">, </span></span>
           </button>
           <button class="tab" data-tab="now" type="button">
             Available right now
-            <span class="tab-meta open"><span class="open-dot"></span><span id="now-count">&mdash;</span></span>
+            <span class="tab-meta open"><span class="open-dot"></span><span id="now-count">, </span></span>
           </button>
           <button class="tab" data-tab="map" type="button">Suite map</button>
         </div>
 
-        <!-- Sidebar — replaces the old bottom "By the way" row. Lives in the
+        <!-- Sidebar, replaces the old bottom "By the way" row. Lives in the
              gutter to the right of the tabs + content. -->
         <aside class="browse-side">
           <div class="byway-eyebrow">By the way</div>
           <button class="byway-card" type="button" data-action="owner">
             <h3>From the owner</h3>
-            <p id="ownerNote">&mdash; The owner</p>
+            <p id="ownerNote">, The owner</p>
           </button>
           <button class="byway-card" type="button" data-action="vacancies">
             <h3>Available suites</h3>
@@ -95,7 +95,7 @@
 
         <div class="browse-main">
         <div class="browse-content">
-          <!-- Discovery filter chips — visible when the Directory tab is active -->
+          <!-- Discovery filter chips, visible when the Directory tab is active -->
           <div class="filter-chips" id="filterChips" data-tab="all">
             <button class="filter-chip is-active" data-cat="all" type="button">All</button>
             <button class="filter-chip" data-cat="hair" type="button">Hair</button>
@@ -126,7 +126,7 @@
                   <text y="-22" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700" letter-spacing="1.6" fill="#A8593E">YOU ARE HERE</text>
                 </g>
 
-                <!-- North-row suites (top corridor — 202–214) -->
+                <!-- North-row suites (top corridor, 202–214) -->
                 <g class="suites" id="mapSuites">
                   <g class="suite" data-suite="202"><rect x="160" y="60"  width="120" height="100" rx="10"/><text x="220" y="115" text-anchor="middle">202</text></g>
                   <g class="suite" data-suite="204"><rect x="290" y="60"  width="120" height="100" rx="10"/><text x="350" y="115" text-anchor="middle">204</text></g>
@@ -136,14 +136,14 @@
                   <g class="suite" data-suite="212"><rect x="810" y="60"  width="120" height="100" rx="10"/><text x="870" y="115" text-anchor="middle">212</text></g>
                   <g class="suite" data-suite="214"><rect x="940" y="60"  width="120" height="100" rx="10"/><text x="1000" y="115" text-anchor="middle">214</text></g>
 
-                  <!-- South-row suites (bottom corridor — 200, 216–222) -->
+                  <!-- South-row suites (bottom corridor, 200, 216–222) -->
                   <g class="suite" data-suite="200"><rect x="160" y="240" width="120" height="48" rx="10"/><text x="220" y="270" text-anchor="middle">200</text></g>
                   <g class="suite" data-suite="216"><rect x="290" y="240" width="120" height="48" rx="10"/><text x="350" y="270" text-anchor="middle" font-size="14">216</text></g>
                   <g class="suite" data-suite="218"><rect x="420" y="240" width="120" height="48" rx="10"/><text x="480" y="270" text-anchor="middle" font-size="14">218</text></g>
                   <g class="suite" data-suite="220"><rect x="550" y="240" width="120" height="48" rx="10"/><text x="610" y="270" text-anchor="middle" font-size="14">220</text></g>
                   <g class="suite" data-suite="222"><rect x="680" y="240" width="120" height="48" rx="10"/><text x="740" y="270" text-anchor="middle" font-size="14">222</text></g>
 
-                  <!-- Lower-row suites (south of bottom corridor — 108–116, vacancies) -->
+                  <!-- Lower-row suites (south of bottom corridor, 108–116, vacancies) -->
                   <g class="suite" data-suite="108"><rect x="160" y="358" width="120" height="100" rx="10"/><text x="220" y="413" text-anchor="middle">108</text></g>
                   <g class="suite" data-suite="110"><rect x="290" y="358" width="120" height="100" rx="10"/><text x="350" y="413" text-anchor="middle">110</text></g>
                   <g class="suite" data-suite="112"><rect x="420" y="358" width="120" height="100" rx="10"/><text x="480" y="413" text-anchor="middle">112</text></g>
@@ -164,7 +164,7 @@
                 </g>
               </svg>
 
-              <!-- Expand button — opens the map in a fullscreen modal so the
+              <!-- Expand button, opens the map in a fullscreen modal so the
                    full floor plan is always reachable even when the inline map is clipped. -->
               <button type="button" class="map-fab" id="mapExpandFab">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>

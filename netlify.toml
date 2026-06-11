@@ -1,10 +1,10 @@
-# Studio Soulutions — Netlify config
+# Studio Soulutions, Netlify config
 # Studio Soulutions platform build
 
 [build]
   publish = "."
   functions = "netlify/functions"
-  # No build step yet — static site. When we add a bundler, set command + a /dist publish dir.
+  # No build step yet, static site. When we add a bundler, set command + a /dist publish dir.
 
 # Pretty URLs for the three entry points
 [[redirects]]
@@ -67,7 +67,7 @@
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
-# Kiosk hardening — keep this tab from being framed elsewhere
+# Kiosk hardening, keep this tab from being framed elsewhere
 [[headers]]
   for = "/kiosk.html"
   [headers.values]

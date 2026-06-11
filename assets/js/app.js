@@ -2,11 +2,11 @@
 // ============ DATA ============
 // Photos with `photo` are confirmed real tenants/suites; others use dark earthy gradient placeholders.
 const tenants = [
-  // Only Dueces is confirmed real — everyone else is is_concept: true (shows a "Test" pill)
+  // Only Dueces is confirmed real, everyone else is is_concept: true (shows a "Test" pill)
   { id: 't1', name: 'Dueces Nail Studio', service: 'Manicure · Pedicure · Nail Art', category: 'nails', suite: 'Suite 200', avatar: 'D', theme: 'av-sage', open: true,
     is_concept: false,
     photo: 'assets/photos/1000040455.jpg',
-    bio: 'Sage-walled and softly lit — a quiet, careful place for nails done with intention. Gel, pedicures, nail art. Eight years of practice. Appointments preferred, walk-ins welcome when the chair is open.',
+    bio: 'Sage-walled and softly lit, a quiet, careful place for nails done with intention. Gel, pedicures, nail art. Eight years of practice. Appointments preferred, walk-ins welcome when the chair is open.',
     tags: ['Gel', 'Pedicure', 'Nail Art', 'Structured Mani'], hours: 'Tue–Sat 10–6' },
   { id: 't4', name: 'Indigo & Oak', service: 'Color & Balayage Specialist', category: 'hair', suite: 'Suite 204', avatar: 'IO', theme: 'av-moss', open: true, available: false, is_concept: true,
     photo: 'assets/photos/hair1.png',
@@ -20,7 +20,7 @@ const tenants = [
     book: 'https://verdantskin.vagaro.com', text: '555-212-0488', bookLabel: 'Vagaro' },
   { id: 't6', name: 'The Lash Loft', service: 'Lash Extensions & Lifts', category: 'brows', suite: 'Suite 210', avatar: 'LL', theme: 'av-rose', open: true, available: false, is_concept: true,
     photo: 'assets/photos/lash1.png',
-    bio: 'Custom lash sets designed to your eye shape. Classic, hybrid, and volume — plus lifts and tints for low-maintenance days.',
+    bio: 'Custom lash sets designed to your eye shape. Classic, hybrid, and volume, plus lifts and tints for low-maintenance days.',
     tags: ['Extensions', 'Lifts', 'Tints', 'Removals'], hours: 'Mon–Sat 9–7',
     book: 'https://thelashloft.booksy.com', bookLabel: 'Booksy' },
   { id: 't7', name: 'Bloom Brow Bar', service: 'Brows, Lamination & Microblading', category: 'brows', suite: 'Suite 206', avatar: 'B', theme: 'av-clay', open: true, is_concept: true,
@@ -56,7 +56,7 @@ const tenants = [
 ];
 
 // If the owner admin has saved tenants to localStorage, use those instead of the seed.
-// Admin writes to STORAGE_KEY = 'ss_tenants_v1' — see admin.html.
+// Admin writes to STORAGE_KEY = 'ss_tenants_v1', see admin.html.
 (function syncFromAdmin() {
   try {
     const stored = JSON.parse(localStorage.getItem('ss_tenants_v1') || 'null');
@@ -67,7 +67,7 @@ const tenants = [
   } catch (e) { /* fall back to seed */ }
 })();
 
-// Vacancies — concept seed for the Available Suites view. Same admin sync.
+// Vacancies, concept seed for the Available Suites view. Same admin sync.
 let vacancies = [
   { id: 'v1', suite_number: '108', sqft: 110, monthly_rent: 875,  photo: '', description: 'Front-facing single-station suite. Two large windows. Plumbing for a shampoo station.', available_from: 'July 2026',   contact_note: 'Email the building owner to tour', is_concept: true },
   { id: 'v2', suite_number: '116', sqft: 140, monthly_rent: 1050, photo: '', description: 'Corner double suite with private storage. Recently renovated walls + flooring.',   available_from: 'August 2026', contact_note: 'Email the building owner to tour', is_concept: true }
@@ -82,11 +82,11 @@ let vacancies = [
 })();
 
 const didYouKnow = [
-  { theme: 'sage', eyebrow: 'Welcome', text: 'Dueces Nail Studio is our newest sage-walled suite — quiet, careful, by appointment.', link: 'See Dueces', linkId: 't1' },
-  { theme: 'clay', eyebrow: 'Pair it', text: 'A facial at Verdant + a brow shape at Bloom — both on the 2nd floor, easy walk between.', link: 'See the pairing', linkId: 't5' },
-  { theme: 'sand', eyebrow: 'Local secret', text: 'Tilde does 1:1 makeup lessons — perfect for the morning of a wedding day in the building.', link: 'See Tilde', linkId: 't9' },
+  { theme: 'sage', eyebrow: 'Welcome', text: 'Dueces Nail Studio is our newest sage-walled suite, quiet, careful, by appointment.', link: 'See Dueces', linkId: 't1' },
+  { theme: 'clay', eyebrow: 'Pair it', text: 'A facial at Verdant + a brow shape at Bloom, both on the 2nd floor, easy walk between.', link: 'See the pairing', linkId: 't5' },
+  { theme: 'sand', eyebrow: 'Local secret', text: 'Tilde does 1:1 makeup lessons, perfect for the morning of a wedding day in the building.', link: 'See Tilde', linkId: 't9' },
   { theme: 'sage', eyebrow: 'Did you know?', text: 'There\'s a licensed massage therapist two doors down from your color appointment.', link: 'See Quiet Hands', linkId: 't8' },
-  { theme: 'clay', eyebrow: 'Walk-ins', text: 'Bloom Brow Bar takes walk-ins for brow shaping — usually 15 minutes, no appointment needed.', link: 'See Bloom', linkId: 't7' }
+  { theme: 'clay', eyebrow: 'Walk-ins', text: 'Bloom Brow Bar takes walk-ins for brow shaping, usually 15 minutes, no appointment needed.', link: 'See Bloom', linkId: 't7' }
 ];
 
 // ============ STATE ============
@@ -116,7 +116,7 @@ function avatarHTML(t, size) {
       ? `<div class="pair-avatar has-photo" style="background-image: url('${t.photo}');"></div>`
       : `<div class="pair-avatar ${t.theme}">${t.avatar}</div>`;
   }
-  // card visual — featured tile. Three-state: Available / With a client / Closed.
+  // card visual, featured tile. Three-state: Available / With a client / Closed.
   const s = statusInfo(t);
   const shortLabel = s.state === 'available' ? 'Available'
                    : s.state === 'busy'      ? 'With a client'
@@ -147,7 +147,7 @@ function renderDYK() {
   `).join('');
 }
 
-// Pick a featured tenant — prefer one with a real photo
+// Pick a featured tenant, prefer one with a real photo
 function pickFeaturedTenant() {
   const candidates = tenants.filter(t => t.photo && isAvailableNow(t));
   if (candidates.length > 0) {
@@ -169,7 +169,7 @@ function renderDiscoverCards() {
   if (elNow)   elNow.textContent = openCount;
   if (elAvail) elAvail.textContent = availCount;
 
-  // Welcome hero — spell the studio count for warmth ("Eight studios. One roof.")
+  // Welcome hero, spell the studio count for warmth ("Eight studios. One roof.")
   const NUMBER_WORDS = ['Zero','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen','Twenty'];
   const welcomeCount = document.getElementById('welcomeCount');
   const welcomeOpen  = document.getElementById('welcomeOpen');
@@ -211,7 +211,7 @@ function renderVacancies() {
     list.innerHTML = `
       <div class="empty-state">
         <div class="em-title serif">No suites listed</div>
-        <p>Check back soon — the owner adds open rooms here.</p>
+        <p>Check back soon, the owner adds open rooms here.</p>
       </div>`;
     return;
   }
@@ -224,7 +224,7 @@ function renderVacancies() {
         ${visual}
         <div class="row-meta">
           <div class="tenant-name" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-            <span>Suite ${v.suite_number || '—'}</span>
+            <span>Suite ${v.suite_number || '-'}</span>
             ${v.is_concept ? '<span class="test-pill">Test</span>' : ''}
           </div>
           <div class="tenant-service">${v.sqft ? v.sqft + ' sq ft · ' : ''}${v.monthly_rent ? '$' + Number(v.monthly_rent).toLocaleString() + '/mo' : 'Rent on request'}</div>
@@ -270,7 +270,7 @@ function isOpenNow(t) {
   if (t.open === false) return false;
   return (t.status || 'active') === 'active';
 }
-// Real-and-open (any availability state) — used wherever we mean "real,
+// Real-and-open (any availability state), used wherever we mean "real,
 // currently-open tenants" regardless of whether they're with a client.
 function isRealAndOpen(t) {
   return !t.is_concept && isOpenNow(t);
@@ -395,7 +395,7 @@ function openTenant(id) {
   if (!t) return;
   currentTenant = t;
   const isSaved = savedIds.has(t.id);
-  // "While you're here" — prefer other studios that are OPEN RIGHT NOW and in a different category.
+  // "While you're here", prefer other studios that are OPEN RIGHT NOW and in a different category.
   // This is the cross-pollination moment: someone came for one thing, here are alternatives a few doors down.
   const openOthers = tenants.filter(p => p.id !== t.id && isOpenNow(p) && p.category !== t.category);
   const sameCatOthers = tenants.filter(p => p.id !== t.id && isOpenNow(p) && p.category === t.category);
@@ -437,7 +437,7 @@ function openTenant(id) {
       </div>
       <div class="pair-with">
         <h3>While you're at <em>${t.name.split(' ')[0]}</em>…</h3>
-        <div class="sub">Other studios in the building, open right now. Walk over after — or save them for next time.</div>
+        <div class="sub">Other studios in the building, open right now. Walk over after, or save them for next time.</div>
         <div class="pair-scroll">
           ${pairs.map(p => `
             <div class="pair-card" onclick="openTenant('${p.id}')">
@@ -655,7 +655,7 @@ function renderMap() {
   if (!svg || !routeLayer) return;
   document.querySelectorAll('#phoneMapSuites .suite.is-target').forEach(s => s.classList.remove('is-target'));
   routeLayer.innerHTML = '';
-  // Reset the YAH lean state — browse mode = no target = no lean.
+  // Reset the YAH lean state, browse mode = no target = no lean.
   const yahEl = svg.querySelector('.you-are-here');
   if (yahEl) {
     yahEl.classList.remove('has-target');
@@ -681,7 +681,7 @@ function renderMap() {
   const targetSuite = document.querySelector(`#phoneMapSuites .suite[data-suite="${cssEscape(suiteKey)}"]`);
   if (targetSuite) targetSuite.classList.add('is-target');
 
-  // Make the YAH dot "lean" toward the destination — a directional nudge that
+  // Make the YAH dot "lean" toward the destination, a directional nudge that
   // reads as "step this way" without the marching-dash gimmick. Magnitude is
   // a few user-units; direction is the unit vector from YAH to suite center.
   if (yahEl) {
@@ -719,7 +719,7 @@ function themeBg(theme) {
   return map[theme] || '#8B7E70';
 }
 function showRouteTo(tenantId) {
-  // Route directly to the fullscreen modal — no more cramped inline view.
+  // Route directly to the fullscreen modal, no more cramped inline view.
   // The modal header shows tenant info + "View profile" so the customer sees
   // the profile AND the map together, exactly as Anne wanted.
   routeTarget = tenantId;
@@ -764,7 +764,7 @@ renderDirectory();
 renderVacancies();
 updateSavedBadge();
 
-/* Kiosk-style hero search on the Discover view — mirrors kiosk.html */
+/* Kiosk-style hero search on the Discover view, mirrors kiosk.html */
 (function wireKioskSearch() {
   const input = document.getElementById('kioskSearchInput');
   const results = document.getElementById('kioskSearchResults');
@@ -781,7 +781,7 @@ updateSavedBadge();
     }).slice(0, 6);
     results.hidden = false;
     if (!matches.length) {
-      results.innerHTML = '<div class="ks-result" style="opacity:.7;cursor:default;">No match — try a service like "lash" or "color".</div>';
+      results.innerHTML = '<div class="ks-result" style="opacity:.7;cursor:default;">No match, try a service like "lash" or "color".</div>';
       return;
     }
     results.innerHTML = matches.map(function(t) {
@@ -806,7 +806,7 @@ updateSavedBadge();
   });
 })();
 
-/* Fullscreen map modal — clones the inline #phoneMapSuites SVG into the modal
+/* Fullscreen map modal, clones the inline #phoneMapSuites SVG into the modal
    body so the visitor sees the full floor plan and the live route. Re-uses
    the same openTenant flow when a suite is tapped. */
 (function wirePhoneMapModal() {
@@ -864,7 +864,7 @@ updateSavedBadge();
     clone.removeAttribute('height');
     clone.removeAttribute('id');
     body.appendChild(clone);
-    // Suite taps in the modal: open that tenant's profile sheet — so the user
+    // Suite taps in the modal: open that tenant's profile sheet, so the user
     // gets profile + map together (modal map stays open behind the sheet).
     clone.querySelectorAll('.suite').forEach(function(g) {
       g.addEventListener('click', function() {

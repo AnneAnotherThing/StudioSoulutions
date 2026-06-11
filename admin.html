@@ -4,19 +4,19 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#0e0c0a" />
-<title>Studio Soulutions — Owner Admin</title>
+<title>Studio Soulutions - Owner Admin</title>
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
 <link rel="apple-touch-icon" href="assets/favicon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
 /* =====================================================================
-   Studio Soulutions — Owner Admin
+   Studio Soulutions, Owner Admin
    Hive-Rise · light, neutral, taupe + sage (beauty-industry-appropriate)
    ===================================================================== */
 :root {
   /* Surfaces */
-  --bg:           #F5EDE0;       /* warm sand cream — primary surface */
+  --bg:           #F5EDE0;       /* warm sand cream, primary surface */
   --bg-2:         #EFE4D2;
   --bg-3:         #E5D9C3;
   --surface:      #FBF6EE;
@@ -39,14 +39,14 @@
   /* Lines */
   --line:         #E5D9C3;
   --line-2:       #D4C4A8;
-  /* Legacy aliases — bumped alphas so cards and buttons have clear contrast
+  /* Legacy aliases, bumped alphas so cards and buttons have clear contrast
      against the cream bg. */
   --cream:        var(--ink);
   --cream-soft:   var(--surface);
   --ink-on-cream: var(--surface-2);
   --cream-04: rgba(61,53,48,0.05);
-  --cream-06: rgba(61,53,48,0.12);  /* card/button fill — bumped from 0.07 for contrast against cream bg */
-  --cream-10: rgba(61,53,48,0.18);  /* :active states + btn-secondary + header-action — bumped from 0.11 */
+  --cream-06: rgba(61,53,48,0.12);  /* card/button fill, bumped from 0.07 for contrast against cream bg */
+  --cream-10: rgba(61,53,48,0.18);  /* :active states + btn-secondary + header-action, bumped from 0.11 */
   --cream-15: rgba(61,53,48,0.22);  /* nudged up to keep relative spacing */
   --cream-20: rgba(61,53,48,0.20);
   --cream-30: rgba(61,53,48,0.26);
@@ -287,7 +287,7 @@ input, textarea, select {
     scrollbar-width: none;
   }
   aside.sidebar::-webkit-scrollbar { display: none; }
-  /* Hide brand-row and footer on mobile — keep just the nav tabs */
+  /* Hide brand-row and footer on mobile, keep just the nav tabs */
   aside.sidebar .brand-row,
   aside.sidebar .footer { display: none !important; }
   aside.sidebar nav {
@@ -470,7 +470,7 @@ aside.sidebar {
 .tenant-tile .photo.av-fern  { background: linear-gradient(135deg, #B5C5A5 0%, #5E7558 100%); color: var(--ink) !important; }
 .tenant-tile .photo.av-amber { background: linear-gradient(135deg, #E8D5A5 0%, #B59055 100%); color: var(--ink) !important; }
 .tenant-tile .photo.av-bone  { background: linear-gradient(135deg, #F0E8D8 0%, #B8AB9C 100%); color: var(--ink) !important; }
-/* Test / concept pill — unconfirmed tenants and their photos read as placeholders */
+/* Test / concept pill, unconfirmed tenants and their photos read as placeholders */
 .test-pill {
   position: absolute; right: 10px; top: 10px;
   background: rgba(245,237,224,0.85);
@@ -542,7 +542,7 @@ aside.sidebar {
   border-radius: 6px;
 }
 
-/* ----- Available Suites tab — looser, more breathing room than tenant tiles ----- */
+/* ----- Available Suites tab, looser, more breathing room than tenant tiles ----- */
 #vacancyGrid {
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 18px;
@@ -906,7 +906,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 18px 0; }
   letter-spacing: -0.01em;
 }
 
-/* Walkthrough back-pill — clean, subtle, on-brand */
+/* Walkthrough back-pill, clean, subtle, on-brand */
 .back-to-walkthrough {
   position: fixed;
   top: 18px; left: 18px;
@@ -938,7 +938,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 18px 0; }
 </head>
 <body>
 
-<!-- Back to launch pad — only shown when opened from the launch pad (?from=pad) -->
+<!-- Back to launch pad, only shown when opened from the launch pad (?from=pad) -->
 <a href="Laura-Walkthrough.html" id="launchPadPill" class="back-to-walkthrough" style="display: none;">
   <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l-6 6 6 6"/></svg>
   <span>Launch pad</span>
@@ -1045,7 +1045,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 18px 0; }
       <div class="topbar">
         <div class="breadcrumbs">
           <h1>Tenants</h1>
-          <span class="sub" id="tenantCountSub">— studios in your building</span>
+          <span class="sub" id="tenantCountSub">, studios in your building</span>
         </div>
         <div class="actions-row">
           <div class="search-bar" style="max-width: 320px;">
@@ -1067,7 +1067,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 18px 0; }
       <div class="topbar">
         <div class="breadcrumbs">
           <h1>Highlights</h1>
-          <span class="sub">Welcomes, promos, building news — appears on the kiosk and the phone</span>
+          <span class="sub">Welcomes, promos, building news, appears on the kiosk and the phone</span>
         </div>
         <div class="actions-row">
           <button class="btn btn-primary" onclick="addPost()">
@@ -1084,7 +1084,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 18px 0; }
       <div class="topbar">
         <div class="breadcrumbs">
           <h1>Available <em>suites</em></h1>
-          <span class="sub" id="vacancyCountSub">— suites open for lease</span>
+          <span class="sub" id="vacancyCountSub">, suites open for lease</span>
         </div>
         <div class="actions-row">
           <button class="btn btn-primary" onclick="openVacancyEditor()">
@@ -1152,7 +1152,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 18px 0; }
         </div>
       </div>
       <div class="placeholder-canvas">
-        <h3>Floor plan editor — next up</h3>
+        <h3>Floor plan editor, next up</h3>
         Upload a scanned floor plan, then mark each suite's location and link it to a tenant.<br>
         The interactive map will render in the kiosk and phone once this is wired.
       </div>
@@ -1231,7 +1231,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 18px 0; }
         <input type="email" id="t_email" placeholder="hello@dueces.com" />
       </div>
     </div>
-    <!-- Online booking — tenant pastes the link to their existing booking
+    <!-- Online booking, tenant pastes the link to their existing booking
          site (GlossGenius, Vagaro, Booksy, Square, etc.). If filled in, the
          phone-app profile gets a "Book on <platform>" button that links out. -->
     <div class="field row-2">
@@ -1281,7 +1281,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 18px 0; }
 
     <hr class="sep" />
 
-    <!-- Live availability — separate from "Open". A tenant can be open (within
+    <!-- Live availability, separate from "Open". A tenant can be open (within
          hours, doors unlocked) AND with a client (not currently free). This
          toggle lets them flip themselves between Available / With a client. -->
     <div class="field">
@@ -1320,7 +1320,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 18px 0; }
           </div>
           <div class="meta" id="aiProviderMeta">Demo · returns 3 sample tones</div>
         </div>
-        <textarea id="t_ai_input" rows="3" placeholder="Paste rough notes, a sentence or two — what they do, how they describe themselves, anything tenant-specific."></textarea>
+        <textarea id="t_ai_input" rows="3" placeholder="Paste rough notes, a sentence or two, what they do, how they describe themselves, anything tenant-specific."></textarea>
         <div class="toolbar">
           <div class="tone-chip is-on" data-tone="warm">Warm &amp; welcoming</div>
           <div class="tone-chip" data-tone="editorial">Editorial / minimal</div>
@@ -1432,7 +1432,7 @@ hr.sep { border: 0; height: 1px; background: var(--line); margin: 18px 0; }
 
 <script>
 /* =====================================================================
-   Studio Soulutions — Admin · single-page app
+   Studio Soulutions, Admin · single-page app
    ===================================================================== */
 
 const STORAGE_KEY    = 'ss_tenants_v1';
@@ -1447,7 +1447,7 @@ const SEED_TENANTS = [
     service: 'Manicure · Pedicure · Nail Art', services: ['Gel', 'Pedicure', 'Nail Art', 'Structured Mani'],
     category: 'nails', open: true, status: 'active', hours: 'Tue–Sat 10–6',
     photo: 'assets/photos/1000040455.jpg',
-    bio: 'Sage-walled and softly lit — a quiet, careful place for nails done with intention. Gel, pedicures, nail art. Eight years of practice. Appointments preferred, walk-ins welcome when the chair is open.',
+    bio: 'Sage-walled and softly lit, a quiet, careful place for nails done with intention. Gel, pedicures, nail art. Eight years of practice. Appointments preferred, walk-ins welcome when the chair is open.',
     avatar: 'D', theme: 'av-sage', is_concept: false },
   { id: 't4',  name: 'Indigo & Oak', owner_name: '', suite: 'Suite 204', phone: '', email: '', instagram: '', website: '',
     service: 'Color & Balayage Specialist', services: ['Balayage','Color','Cuts','Toners','Gloss'],
@@ -1465,7 +1465,7 @@ const SEED_TENANTS = [
     service: 'Lash Extensions & Lifts', services: ['Extensions','Lifts','Tints','Removals'],
     category: 'brows', open: true, status: 'active', hours: 'Mon–Sat 9–7',
     photo: 'assets/photos/lash1.png',
-    bio: 'Custom lash sets designed to your eye shape. Classic, hybrid, and volume — plus lifts and tints for low-maintenance days.',
+    bio: 'Custom lash sets designed to your eye shape. Classic, hybrid, and volume, plus lifts and tints for low-maintenance days.',
     avatar: 'LL', theme: 'av-rose', is_concept: true },
   { id: 't7',  name: 'Bloom Brow Bar', owner_name: '', suite: 'Suite 206', phone: '', email: '', instagram: '', website: '',
     service: 'Brows, Lamination & Microblading', services: ['Shaping','Lamination','Tinting','Microblading'],
@@ -1508,19 +1508,19 @@ const SEED_TENANTS = [
 const SEED_STUDIO = {
   name: 'Studio Soulutions',
   tagline: 'A home for the people who make people feel at home.',
-  about: 'A community of independent stylists, nail artists, and wellness pros — each with their own suite and their own story.',
-  owner_note: 'Studio Soulutions is home to a careful group of independent artists — color, nails, lash, wellness, skin. This screen exists so that everyone who walks in finds the studio that fits them — not just the one closest to the door.\n— The owner',
+  about: 'A community of independent stylists, nail artists, and wellness pros, each with their own suite and their own story.',
+  owner_note: 'Studio Soulutions is home to a careful group of independent artists, color, nails, lash, wellness, skin. This screen exists so that everyone who walks in finds the studio that fits them, not just the one closest to the door.\n, The owner',
   email: 'hello@studiosoulutions.com',
   phone: '',
   address: ''
 };
 
 const SEED_POSTS = [
-  { id: 'p1', type: 'welcome', title: 'Welcome Dueces Nail Studio', body: 'Newly opened in our sage-green suite — stop by and say hi.', published_at: new Date().toISOString() },
-  { id: 'p2', type: 'building_news', title: 'New touchscreen kiosk in the lobby', body: 'Our directory is now interactive — explore every studio in the building from the front door.', published_at: new Date(Date.now() - 86400000 * 3).toISOString() }
+  { id: 'p1', type: 'welcome', title: 'Welcome Dueces Nail Studio', body: 'Newly opened in our sage-green suite, stop by and say hi.', published_at: new Date().toISOString() },
+  { id: 'p2', type: 'building_news', title: 'New touchscreen kiosk in the lobby', body: 'Our directory is now interactive, explore every studio in the building from the front door.', published_at: new Date(Date.now() - 86400000 * 3).toISOString() }
 ];
 
-// Concept vacancy seeds — Anne's "test" content for the Available Suites view.
+// Concept vacancy seeds, Anne's "test" content for the Available Suites view.
 const SEED_VACANCIES = [
   { id: 'v1', suite_number: '108', sqft: 110, monthly_rent: 875,  photo: '', description: 'Front-facing single-station suite. Two large windows. Plumbing for a shampoo station.', available_from: 'July 2026',   contact_note: 'Email the building owner to tour',         is_concept: true },
   { id: 'v2', suite_number: '116', sqft: 140, monthly_rent: 1050, photo: '', description: 'Corner double suite with private storage. Recently renovated walls + flooring.',   available_from: 'August 2026', contact_note: 'Email the building owner to tour',         is_concept: true }
@@ -1574,7 +1574,7 @@ function clearSession() { localStorage.removeItem(SESSION_KEY); }
 
 function handleLogin(e) {
   e.preventDefault();
-  // Demo mode is permissive — any input (or none) unlocks the admin.
+  // Demo mode is permissive, any input (or none) unlocks the admin.
   const email = document.getElementById('loginEmail').value.trim() || 'demo';
   setSession(email);
   showApp(email);
@@ -1679,7 +1679,7 @@ function openTenantEditor(id) {
   setVal('t_suite_number', t.suite || '');
   // Phone field shows whichever of call/text/phone is on file (they're the
   // same number when both are allowed). Checkboxes reflect what the tenant
-  // opted into. Default-on for new tenants — most opt to allow both.
+  // opted into. Default-on for new tenants, most opt to allow both.
   const phoneOnFile = t.call || t.text || t.phone || '';
   setVal('t_phone', phoneOnFile);
   document.getElementById('t_allow_call').checked = isNew ? true : !!t.call;
@@ -1697,7 +1697,7 @@ function openTenantEditor(id) {
   // New tenants default to "test/concept" ON so Anne doesn't have to remember to flag them;
   // editing existing reflects the saved value.
   document.getElementById('t_is_concept').checked = isNew ? true : !!t.is_concept;
-  // Default-on for "Available" — most tenants are free more often than not.
+  // Default-on for "Available", most tenants are free more often than not.
   // Tenants who haven't been edited since this field was added (no `available`
   // key on the record) also default to available so they don't suddenly read
   // "With a client" for no reason.
@@ -1718,7 +1718,7 @@ function openTenantEditor(id) {
   // Services tags
   renderTags('t_services', t.services || []);
 
-  // AI results — clear
+  // AI results, clear
   document.getElementById('aiResults').innerHTML = '';
 
   // Show
@@ -1835,7 +1835,7 @@ async function generateBio() {
       console.info('AI function not configured, using stub.');
     }
   } catch (err) {
-    // Network error / function not deployed — fall back to the stub.
+    // Network error / function not deployed, fall back to the stub.
     console.info('AI function unreachable, using stub.', err);
   }
 
@@ -1866,7 +1866,7 @@ function useBio(i) {
   toast('Bio applied');
 }
 
-/* Three-tone bio writer — stub that does substring detection in mock mode.
+/* Three-tone bio writer, stub that does substring detection in mock mode.
    The real implementation will call a Netlify Function that wraps Claude. */
 function generateThreeTones({ name, input, services, suite, hours }) {
   const subj = name || 'this studio';
@@ -1882,7 +1882,7 @@ function generateThreeTones({ name, input, services, suite, hours }) {
   const tones = {
     warm: `A ${placeNoun} for ${what.replace(/[·]/g,'and')} done with intention. ${name ? name + ' brings ' : 'Brings '}a careful, unrushed practice to ${(suite || 'the room').toLowerCase()}${hours ? ', ' + hours.toLowerCase() : ''}. Walk in welcomed when the chair is open.`,
     editorial: `${subj}. Considered ${what}. ${hours || 'By appointment.'}`,
-    friendly: `Hi! ${name ? "I'm " + (name.split(' ')[0]) : "We're"} — I love a calm, no-rush appointment. ${(what || 'A few things').replace(/[·]/g, 'and')}, plus whatever you want to bring me. ${hours || "Book in or walk in when I'm not booked."}`
+    friendly: `Hi! ${name ? "I'm " + (name.split(' ')[0]) : "We're"}, I love a calm, no-rush appointment. ${(what || 'A few things').replace(/[·]/g, 'and')}, plus whatever you want to bring me. ${hours || "Book in or walk in when I'm not booked."}`
   };
   return [
     { tone: 'Warm & welcoming',     text: tones.warm.replace(/\s+/g,' ').trim() },
@@ -1932,7 +1932,7 @@ function saveTenant() {
     photo,
     category,
     open:        (getVal('t_status') === 'active'),
-    // Live availability — controls the "Available" vs "With a client" pill
+    // Live availability, controls the "Available" vs "With a client" pill
     // on the kiosk and phone profile. Independent from `open` / `status`.
     available:   document.getElementById('t_available').checked,
     avatar:      (name[0] || '?').toUpperCase(),
@@ -1949,7 +1949,7 @@ function saveTenant() {
   saveTenants();
   renderTenants();
   closeDrawer();
-  toast(editing ? 'Tenant updated' : 'Tenant added — visible in the lobby on next reload');
+  toast(editing ? 'Tenant updated' : 'Tenant added, visible in the lobby on next reload');
 }
 
 function deleteTenant() {
@@ -2051,7 +2051,7 @@ function renderVacancies() {
         ${v.is_concept ? '<span class="test-pill">Test</span>' : ''}
       </div>
       <div class="body">
-        <div class="name">Suite ${v.suite_number || '—'}</div>
+        <div class="name">Suite ${v.suite_number || '-'}</div>
         <div class="meta">${v.sqft ? v.sqft + ' sq ft · ' : ''}${v.monthly_rent ? '$' + Number(v.monthly_rent).toLocaleString() + '/mo' : 'Rent on request'}</div>
         <div class="svc">${(v.description || '').slice(0, 110)}${(v.description || '').length > 110 ? '…' : ''}</div>
         <div class="row">
@@ -2152,7 +2152,7 @@ function saveVacancy() {
   saveVacancies();
   renderVacancies();
   closeVacancyDrawer();
-  toast(editingVacancy ? 'Suite updated' : 'Suite listed — visible in the lobby on next reload');
+  toast(editingVacancy ? 'Suite updated' : 'Suite listed, visible in the lobby on next reload');
 }
 
 function deleteVacancy() {

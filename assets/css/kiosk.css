@@ -56,7 +56,7 @@
     background-image: url('../photos/studio-soulutions-hero.jpg');
     background-size: cover; background-position: center;
     z-index: 0;
-    pointer-events: none;       /* decorative — must not eat clicks */
+    pointer-events: none;       /* decorative, must not eat clicks */
   }
   #app::after {
     content: ''; position: absolute; inset: 0;
@@ -64,7 +64,7 @@
       radial-gradient(80% 60% at 80% 0%, rgba(139,154,126,0.12) 0%, transparent 60%),
       linear-gradient(180deg, rgba(245,237,224,0.55) 0%, rgba(245,237,224,0.82) 60%, rgba(245,237,224,0.96) 100%);
     z-index: 1;
-    pointer-events: none;       /* decorative — must not eat clicks */
+    pointer-events: none;       /* decorative, must not eat clicks */
   }
 
   .kiosk-shell-v2 {
@@ -72,7 +72,7 @@
     height: 100%;
     display: grid;
     grid-template-rows: auto auto 1fr auto;
-    /* Fluid padding — tight on a 13" laptop, generous on a lobby TV. */
+    /* Fluid padding, tight on a 13" laptop, generous on a lobby TV. */
     padding: clamp(0.9rem, 1.6vw, 1.6rem) clamp(1.1rem, 2.2vw, 2.4rem);
     gap: clamp(0.6rem, 1vw, 1rem);
     overflow: hidden;
@@ -115,7 +115,7 @@
     max-width: 38em;
   }
   .hero-search .hero-sub span { color: var(--ink); font-weight: 600; }
-  /* Pair-rotator — quietly cycles "while you're at X, walk to Y" pairings */
+  /* Pair-rotator, quietly cycles "while you're at X, walk to Y" pairings */
   .pair-rotator {
     margin-top: 0.6rem;
     display: inline-flex; align-items: center; gap: 10px;
@@ -189,7 +189,7 @@
   .sr-suite { font-size: 0.85rem; color: var(--ink-soft); margin-left: 8px; }
   .search-hint { color: var(--ink-faint); font-size: 0.85rem; margin-top: 0.9rem; }
 
-  /* Browse — two-column on landscape so the map fills the width AND the
+  /* Browse, two-column on landscape so the map fills the width AND the
      "by the way" cards live in a vertical sidebar instead of the footer.
      Collapses to single-column on narrow screens via the existing breakpoint. */
   .browse {
@@ -247,7 +247,7 @@
     backdrop-filter: blur(14px);
     box-shadow: 0 2px 6px rgba(61,53,48,0.06), 0 16px 40px rgba(61,53,48,0.08);
     /* Flex column so the tenant-grid fills only the space LEFT OVER after the
-       filter-chips row — without this, grid's height:100% claimed the full
+       filter-chips row, without this, grid's height:100% claimed the full
        container and the bottom rows were clipped off the bottom. */
     display: flex;
     flex-direction: column;
@@ -263,7 +263,7 @@
     align-content: start;
     padding-right: 4px;
   }
-  /* Filter chips don't shrink — they sit above the scrollable grid. */
+  /* Filter chips don't shrink, they sit above the scrollable grid. */
   .browse-content .filter-chips { flex: 0 0 auto; }
   /* The HTML `hidden` attribute must beat `display: grid` above */
   .browse-content [hidden] { display: none !important; }
@@ -273,7 +273,7 @@
     border-radius: 12px;
     padding: 0.4rem 0.5rem;
     display: grid;
-    grid-template-columns: 40px minmax(0, 1fr);   /* even tighter — fits more cards on screen */
+    grid-template-columns: 40px minmax(0, 1fr);   /* even tighter, fits more cards on screen */
     align-items: center;                          /* center the body vertically with the photo */
     gap: 0.5rem;
     box-shadow: 0 2px 4px rgba(61,53,48,0.06), 0 8px 18px rgba(61,53,48,0.07);
@@ -294,7 +294,7 @@
     overflow: hidden;
     display: flex; flex-direction: column; gap: 1px;
   }
-  /* Name on one line — truncates with ellipsis if too long. Test pill
+  /* Name on one line, truncates with ellipsis if too long. Test pill
      sits inline at the end; if it doesn't fit, it wraps to a 2nd row but
      that's the only second-row content allowed. */
   .tenant-name {
@@ -410,21 +410,21 @@
     fill: rgba(245,237,224,1);
     stroke: var(--taupe-deep);
   }
-  /* Occupied suites — colored by the JS that knows which tenants exist */
+  /* Occupied suites, colored by the JS that knows which tenants exist */
   .suite.is-occupied rect {
     fill: rgba(139,154,126,0.22);     /* sage tint */
     stroke: var(--sage-deep);
   }
   .suite.is-occupied text { fill: var(--ink); }
   .suite.is-occupied.is-open rect { fill: rgba(139,154,126,0.40); }
-  /* Vacancies — clay tint */
+  /* Vacancies, clay tint */
   .suite.is-vacant rect {
     fill: rgba(201,123,90,0.16);
     stroke: var(--clay-deep);
     stroke-dasharray: 4 3;
   }
   .suite.is-vacant text { fill: var(--clay-deep); }
-  /* Currently selected suite — strong visual emphasis so it reads as
+  /* Currently selected suite, strong visual emphasis so it reads as
      "this is the suite you're looking at" at a glance. */
   .suite.is-active rect {
     fill: var(--ink);
@@ -439,8 +439,8 @@
     50%      { stroke-width: 9; }
   }
 
-  /* Callout that comes OUT of the selected suite — name label + connecting
-     line — so a visitor sees "this is theirs" right on the floor plan. */
+  /* Callout that comes OUT of the selected suite, name label + connecting
+     line, so a visitor sees "this is theirs" right on the floor plan. */
   .suite-callout text {
     font-family: 'Fraunces', serif;
     font-weight: 600;
@@ -471,7 +471,7 @@
   .legend-vacant   { fill: rgba(201,123,90,0.20); stroke: var(--clay-deep); stroke-width: 1.2; stroke-dasharray: 3 2; }
   .legend-empty    { fill: rgba(255,251,244,0.92); stroke: rgba(61,53,48,0.30); stroke-width: 1.2; }
 
-  /* Byway dialog — overlay that appears when "From the owner" or
+  /* Byway dialog, overlay that appears when "From the owner" or
      "Available suites" is tapped from the sidebar. Body-level so it stays
      visible regardless of which tab is active. */
   .byway-dialog {
@@ -518,7 +518,7 @@
   }
   .byway-dialog-close:hover { background: rgba(61,53,48,0.15); }
 
-  /* Map "expand" floating action button — sits over the inline map and opens the modal. */
+  /* Map "expand" floating action button, sits over the inline map and opens the modal. */
   .map-fab {
     position: absolute;
     bottom: 12px; right: 12px;
@@ -540,10 +540,10 @@
   .map-fab svg { width: 14px; height: 14px; }
 
   /* When the .map-wrap is moved into the modal, hide the inline FAB (you're
-     already in the modal — no need to expand it again). */
+     already in the modal, no need to expand it again). */
   .map-modal .map-wrap .map-fab { display: none; }
   
-  /* Fullscreen modal — overlays the entire kiosk-shell. */
+  /* Fullscreen modal, overlays the entire kiosk-shell. */
   .map-modal {
     position: fixed;
     inset: 0;
@@ -599,7 +599,7 @@
     overflow: hidden;
     display: grid; place-items: center;
   }
-  /* SVG inside the modal — scale to the modal body. The kiosk's existing .map-svg
+  /* SVG inside the modal, scale to the modal body. The kiosk's existing .map-svg
      styles apply, just inside a bigger container, so the map gets bigger automatically. */
   .map-modal-body .map-svg {
     width: 100%; height: 100%;
@@ -617,7 +617,7 @@
     100% { transform: scale(2.2); opacity: 0; }
   }
 
-  /* Cross-pollination tenant detail panel — slides in from the right when a tenant card is tapped */
+  /* Cross-pollination tenant detail panel, slides in from the right when a tenant card is tapped */
   .tenant-panel {
     position: fixed; inset: 0;
     z-index: 280;
@@ -760,7 +760,7 @@
   }
 
   /* By the way */
-  /* Filter chips — let visitors discover by what they want */
+  /* Filter chips, let visitors discover by what they want */
   .filter-chips {
     display: flex; flex-wrap: wrap; gap: 0.5rem;
     margin: 0.2rem 0 0.7rem;
@@ -785,7 +785,7 @@
     border-color: var(--ink);
   }
 
-  /* By the way — slimmed down strip so the directory has room to breathe */
+  /* By the way, slimmed down strip so the directory has room to breathe */
   .byway { padding-top: 0.55rem; border-top: 1px solid var(--cream-10); }
   .byway-eyebrow { font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase; font-weight: 700; color: var(--cream-50); margin-bottom: 0.4rem; }
   .byway-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.55rem; }
@@ -836,7 +836,7 @@
   .byway-card.qr .sub { font-size: 0.52rem; color: var(--cream-50); }
 
 
-  /* Medium-desktop breakpoint — tightens the layout for ~13" laptops / windowed
+  /* Medium-desktop breakpoint, tightens the layout for ~13" laptops / windowed
      browsers where the full kiosk would overflow. The clamp() values above
      already scale most things, but this enforces a tighter cap at this size. */
   @media (max-width: 1280px) {
@@ -903,7 +903,7 @@
     body > .mobile-apology { display: block; position: relative; margin: 64px auto 14px; z-index: 10; }
     #app .mobile-apology { display: none; }
 
-    /* The kiosk "device frame" that holds the scaled-down kiosk —
+    /* The kiosk "device frame" that holds the scaled-down kiosk,
        same treatment the pitch deck uses, so the kiosk on a phone reads
        like a miniature of the real lobby touchscreen. */
     .kiosk-device-bezel {
@@ -927,7 +927,7 @@
     }
     #app::before, #app::after { z-index: 0; }
 
-    /* Scale the full kiosk to fit the device frame — JS overrides this with the
+    /* Scale the full kiosk to fit the device frame, JS overrides this with the
        exact frame width on load, so the preview always fills the bezel cleanly. */
     .kiosk-shell-v2 {
       position: absolute; top: 0; left: 0;
@@ -955,7 +955,7 @@
     }
   }
 
-  /* Walkthrough back-pill — clean, subtle, on-brand */
+  /* Walkthrough back-pill, clean, subtle, on-brand */
   .back-to-walkthrough {
     position: fixed;
     top: 18px; left: 18px;

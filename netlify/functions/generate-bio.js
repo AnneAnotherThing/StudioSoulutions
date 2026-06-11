@@ -1,5 +1,5 @@
 /* =====================================================================
-   Studio Soulutions — AI bio generator (Netlify Function)
+   Studio Soulutions, AI bio generator (Netlify Function)
    Studio Soulutions platform build
    ---------------------------------------------------------------------
    Takes a tenant's rough notes + a few structured fields, asks Claude to
@@ -16,7 +16,7 @@ const ANTHROPIC_API = 'https://api.anthropic.com/v1/messages';
 const DEFAULT_MODEL = 'claude-sonnet-4-6';
 
 exports.handler = async function (event) {
-  // CORS preflight — keep the function callable from the static admin page.
+  // CORS preflight, keep the function callable from the static admin page.
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 204, headers: corsHeaders(), body: '' };
   }
@@ -51,9 +51,9 @@ exports.handler = async function (event) {
 
   const system = [
     "You are a copywriter for Studio Soulutions, a directory app that lives on touchscreen kiosks and phones inside salon-suite buildings.",
-    "Each tenant inside a salon-suite building gets a short bio in the directory — 1 to 3 sentences max.",
+    "Each tenant inside a salon-suite building gets a short bio in the directory, 1 to 3 sentences max.",
     "House voice: warm, calming, neutral, never pushy, beauty-industry-appropriate. Lean into natural language like 'softly lit', 'considered', 'careful'. Avoid corporate cliches and exclamation points.",
-    "The bio runs under the tenant's name on a kiosk a stranger is reading in a lobby — so it should explain who they are, what they do, and the feeling of being in their suite. No marketing fluff, no 'we are passionate about', no superlatives.",
+    "The bio runs under the tenant's name on a kiosk a stranger is reading in a lobby, so it should explain who they are, what they do, and the feeling of being in their suite. No marketing fluff, no 'we are passionate about', no superlatives.",
     "When given rough notes from the tenant, preserve their actual specialties and tone preferences. When the input is sparse, write something honest and inviting rather than invented details.",
     "Return THREE distinct bio variants in three different tones. Output strict JSON with this exact shape:",
     `{ "bios": [`,
