@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="theme-color" content="#0e0c0a" />
+<title>Salon Plus Studios - Discover the studios under this roof</title>
+<meta name="description" content="The mobile companion for Salon Plus Studios. Every stylist, barber, and nail artist in the building, findable, mappable, bookable." />
+<link rel="canonical" href="https://studiosoulutions.com/salonplus/app/" />
+<link rel="icon" type="image/png" sizes="64x64" href="../../assets/favicon-64.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../../assets/favicon-192.png">
+<link rel="apple-touch-icon" href="../../assets/favicon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/app.css?v=3">
+<style>
+  /* Salon Plus override: the REAL breezeway hallway replaces the concept
+     render as the ambient backdrop. Lighter cream wash than the prototype
+     so the building's actual color and light show through. */
+  body {
+    background:
+      radial-gradient(90% 60% at 80% 0%, rgba(139,154,126,0.12) 0%, transparent 60%),
+      linear-gradient(180deg, rgba(245,237,224,0.28) 0%, rgba(245,237,224,0.52) 45%, rgba(245,237,224,0.88) 100%),
+      url('../../assets/photos/salonplus-hallway-low.jpg') center top / cover no-repeat;
+    background-attachment: fixed, fixed, fixed;
+    background-color: var(--bg);
+  }
+  /* the search hint sits bare over the photo; give it a frosted pill + real ink */
+  .kiosk-search .ks-hint, .ks-hint {
+    display: inline-block;
+    background: rgba(250,248,244,0.88);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(61,53,48,0.08);
+    border-radius: 999px;
+    padding: 6px 16px;
+    color: #3D3530 !important;
+  }
+  /* the found suite pulses so it's unmissable at a glance */
+  @keyframes suitePulse {
+    0%, 100% { filter: drop-shadow(0 0 2px rgba(201,123,90,0.45)); }
+    50%      { filter: drop-shadow(0 0 15px rgba(201,123,90,0.95)); }
+  }
+  .map-svg .suite.is-target, .map-modal .suite.is-target { animation: suitePulse 1.4s ease-in-out infinite; }
+  /* lift the discover greeting, less empty photo before the question */
+  #view-discover .welcome { padding-top: 26px; min-height: 0; }
+  /* frosted panel behind welcome text so it reads over the livelier photo */
+  .welcome-panel {
+    display: inline-block;
+    background: rgba(250,248,244,0.86);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(61,53,48,0.08);
+    border-radius: 18px;
+    padding: 16px 20px 18px;
+    box-shadow: 0 8px 30px rgba(51,49,45,0.08);
+  }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand">
+    <!-- Salon Plus's own logo lockup; falls back to the text lockup until the file lands -->
+    <img id="brandLogo" src="../../assets/logo-salonplus.png" alt="Salon Plus Studios"
+         style="height:48px;width:auto;max-width:230px;object-fit:contain;display:block;background:transparent;flex-shrink:0;mix-blend-mode:multiply;"
+         onerror="this.style.display='none'; document.getElementById('brandFallback').style.display='block';">
+    <div id="brandFallback" style="display:none;">
+      <div class="brand-name">Salon Plus <em>Studios</em></div>
+    </div>
+  </div>
+  <div class="header-action" id="bookmarkBtn" onclick="switchView('saved')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    <span class="badge" id="savedCount" style="display:none">0</span>
+  </div>
+</header>
+
+<!-- DISCOVER VIEW, card-led splash, mirrors the kiosk menu -->
+<section class="view active" id="view-discover">
+  <div class="welcome">
+    <div class="welcome-panel">
+      <div class="eyebrow">Welcome in</div>
+      <h1>Who are you <em>here to see?</em></h1>
+      <p>Thirty-plus independent studios under this roof · find your person, or your next one.</p>
+    </div>
+  </div>
+
+  <!-- Kiosk-style hero search, mirrors the lobby touchscreen -->
+  <div class="kiosk-search">
+    <div class="ks-shell">
+      <svg class="ks-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="kioskSearchInput" class="ks-input" type="text" placeholder="Type a name, studio, or suite…" autocomplete="off" />
+    </div>
+    <div class="ks-results" id="kioskSearchResults" hidden></div>
+    <p class="ks-hint">Or browse below, see who's here and where to go.</p>
+  </div>
+
+  <!-- Primary navigation, customer-first: find your person, find someone new, find a deal -->
+  <div class="primary-menu">
+
+    <!-- Find who you're here to see -->
+    <button class="menu-card primary-card" type="button" onclick="switchView('map')">
+      <div class="mc-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+      </div>
+      <div class="mc-body">
+        <div class="mc-label">Find who you're here to see</div>
+        <div class="mc-meta">Tap the map, their suite lights up</div>
+      </div>
+    </button>
+
+    <!-- Find someone new -->
+    <button class="menu-card primary-card" type="button" onclick="switchView('directory')">
+      <div class="mc-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      </div>
+      <div class="mc-body">
+        <div class="mc-label">Find someone new</div>
+        <div class="mc-meta">Hair · barber · nails · spa · cards filling in now</div>
+      </div>
+    </button>
+
+    <!-- Coupons & specials -->
+    <button class="menu-card primary-card is-sage" type="button" onclick="switchView('specials')">
+      <div class="mc-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 12 22l-8.59-8.59A2 2 0 0 1 3 12V4a1 1 0 0 1 1-1h8a2 2 0 0 1 1.41.59L22 12a2 2 0 0 1-1.41 1.41z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>
+      </div>
+      <div class="mc-body">
+        <div class="mc-label">Coupons &amp; specials</div>
+        <div class="mc-meta open"><span class="pulse-dot"></span>The sweet stuff, straight from the studios</div>
+      </div>
+    </button>
+
+  </div>
+
+  <!-- "By the way" strip, mirrors the kiosk's bottom row -->
+  <div class="byway-eyebrow"><span>By the way</span></div>
+  <div class="byway-strip">
+
+    <!-- Featured today (rotating tenant) -->
+    <button class="byway-card with-photo is-clay" type="button" id="mcFeatured" onclick="openFeatured()">
+      <div class="mc-icon" id="mcFeaturedIcon"></div>
+      <div class="mc-body">
+        <div class="mc-label" id="mcFeaturedLabel">Featured today</div>
+        <div class="mc-meta" id="mcFeaturedMeta">-</div>
+      </div>
+    </button>
+
+    <!-- Available suites (vacancies for lease) -->
+    <button class="byway-card" type="button" onclick="switchView('vacancies')">
+      <div class="mc-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7.5"/><path d="M12 3L3 9.5h18L12 3z"/><path d="M9 22V13h6v9"/></svg>
+      </div>
+      <div class="mc-body">
+        <div class="mc-label">Now leasing</div>
+        <div class="mc-meta">Ask the leasing office · Suite 106</div>
+      </div>
+    </button>
+
+    <!-- From the building -->
+    <button class="byway-card" type="button" onclick="switchView('owner')">
+      <div class="mc-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <div class="mc-body">
+        <div class="mc-label">From the building</div>
+        <div class="mc-meta">A note to our guests</div>
+      </div>
+    </button>
+
+    <!-- Saved studios -->
+    <button class="byway-card" type="button" onclick="switchView('saved')">
+      <div class="mc-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="mc-body">
+        <div class="mc-label">Saved studios</div>
+        <div class="mc-meta"><span id="mc-saved-count">0</span> bookmarked</div>
+      </div>
+    </button>
+
+    <!-- Work here? (tenant recruiting, tucked into the byway strip) -->
+    <button class="byway-card" type="button" onclick="location.href='../#join'">
+      <div class="mc-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+      </div>
+      <div class="mc-body">
+        <div class="mc-label">Work here? Get listed</div>
+        <div class="mc-meta">Free while the neighborhood builds</div>
+      </div>
+    </button>
+
+  </div>
+
+  <!-- Did you know? ambient content below the menu -->
+  <div class="discover-divider"><div class="line"></div><span class="lbl">Did you know?</span><div class="line"></div></div>
+  <div class="dyk-scroll" id="dykScroll"></div>
+</section>
+
+<!-- SUITE MAP VIEW -->
+<!-- Two modes: browse (default) and route (entered via "Show me the way" on
+     a profile). Route mode dynamically rewrites the SVG viewBox to zoom in on
+     the slice containing the entrance pin + destination suite. -->
+<section class="view" id="view-map">
+  <div class="welcome" style="min-height: 160px; padding-top: 60px;">
+    <div class="welcome-panel">
+      <div class="eyebrow" id="mapEyebrow">Suite map</div>
+      <h1 style="font-size: 26px;" id="mapHeadline">You are <em>here</em></h1>
+      <p id="mapSubline">Tap a suite to see who's inside.</p>
+    </div>
+  </div>
+
+  <!-- Find a studio by name, straight from the map -->
+  <div class="kiosk-search" style="margin-top: 6px;">
+    <div class="ks-shell">
+      <svg class="ks-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="mapSearchInput" class="ks-input" type="text" placeholder="Find a studio by name, we'll light it up&hellip;" autocomplete="off" />
+    </div>
+    <div class="ks-results" id="mapSearchResults" hidden></div>
+  </div>
+
+  <div class="map-route-card" id="mapRouteCard" hidden>
+    <div class="mrc-avatar" id="mrcAvatar"></div>
+    <div>
+      <div class="mrc-name" id="mrcName"></div>
+      <div class="mrc-sub" id="mrcSub"></div>
+    </div>
+    <button class="mrc-clear" type="button" onclick="clearRoute()">Clear</button>
+  </div>
+  <div class="map-stage">
+    <div class="map-photo" aria-hidden="true"></div>
+    <svg class="map-svg" id="phoneMapSvg" viewBox="0 0 900 990" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Suite map">
+      <rect x="8" y="8" width="884" height="974" rx="14" fill="rgba(255,251,244,0.85)" stroke="rgba(61,53,48,0.18)" stroke-width="2"/>
+      <g id="routeLayer"></g>
+      <g class="suites" id="phoneMapSuites"></g>
+      <g class="you-are-here" id="yahPin">
+        <circle r="14" fill="#C97B5A" opacity="0.20"/>
+        <circle r="7"  fill="#C97B5A"/>
+        <text class="yah-label" y="-24" text-anchor="middle">YOU ARE HERE</text>
+      </g>
+    </svg>
+    <!-- Expand to fullscreen modal, covers the case where the inline map is clipped. -->
+    <button type="button" class="map-fab" id="mapExpandFab" aria-label="Expand map">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+      Expand
+    </button>
+  </div>
+  <div class="map-hint">Tap any suite to see who's inside. Unnamed suites just haven't claimed their card yet.</div>
+</section>
+
+<!-- FROM LAURA VIEW -->
+<section class="view" id="view-owner">
+  <div class="welcome" style="min-height: 200px; padding-top: 80px;">
+    <div class="welcome-panel">
+      <div class="eyebrow">From the building</div>
+      <h1 style="font-size: 26px;">A note to <em>our guests</em></h1>
+    </div>
+  </div>
+  <div style="
+    margin-top: 18px;
+    background: var(--cream-06);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 18px 20px;
+    color: var(--cream-70);
+    font-size: 14px;
+    line-height: 1.65;
+    backdrop-filter: blur(10px);
+  ">
+    <p>Salon Plus Studios is home to more than thirty independent artists, hair, barbering, nails, lash, skin, wellness. Each one runs their own room, their own brand, their own way.</p>
+    <p style="margin-top: 12px;">This app exists so that everyone who walks in finds the studio that fits them, not just the one closest to the door. If you work here and your studio isn't on the map yet, claiming your card is free and takes two minutes.</p>
+    <div style="margin-top: 18px; font-family: 'Fraunces', serif; font-style: italic; color: var(--cream); font-size: 16px;">, Salon Plus Studios</div>
+  </div>
+</section>
+
+<!-- COUPONS & SPECIALS VIEW -->
+<section class="view" id="view-specials">
+  <div class="welcome" style="min-height: 200px; padding-top: 80px;">
+    <div class="welcome-panel">
+      <div class="eyebrow">Coupons &amp; specials</div>
+      <h1 style="font-size: 28px;">The sweet <em>stuff</em></h1>
+      <p>Deals, welcome offers, and specials from the studios, posted as they claim their cards.</p>
+    </div>
+  </div>
+  <div id="specialsList" class="directory-list" style="margin-top: 12px;"></div>
+</section>
+
+<!-- AVAILABLE SUITES VIEW (vacancies for lease) -->
+<section class="view" id="view-vacancies">
+  <div class="welcome" style="min-height: 200px; padding-top: 80px;">
+    <div class="welcome-panel">
+      <div class="eyebrow">Now leasing</div>
+      <h1 style="font-size: 28px;">Room to <em>grow</em></h1>
+      <p>Suite availability is being re-verified. The leasing office in Suite 106 knows what's truly open, and they're lovely about tours.</p>
+    </div>
+  </div>
+  <div id="vacancyList" class="directory-list" style="margin-top: 12px;"></div>
+</section>
+
+<!-- DIRECTORY VIEW -->
+<section class="view" id="view-directory">
+  <div class="search-wrap">
+    <div class="search-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </div>
+    <input type="text" class="search-input" id="searchInput" placeholder="Search studios, services, or suites">
+  </div>
+
+  <div class="filter-row" id="filterRow">
+    <div class="chip active" data-filter="all">All</div>
+    <div class="chip" data-filter="hair">Hair</div>
+    <div class="chip" data-filter="barber">Barber</div>
+    <div class="chip" data-filter="nails">Nails</div>
+    <div class="chip" data-filter="spa">Spa &amp; Beauty</div>
+  </div>
+
+  <div class="directory-list" id="directoryList"></div>
+</section>
+
+<!-- SAVED VIEW -->
+<section class="view" id="view-saved">
+  <div class="section-head" style="margin-top: 0;">
+    <h2>Saved studios</h2>
+  </div>
+  <div class="directory-list" id="savedList"></div>
+  <div class="empty-state" id="savedEmpty">
+    <div class="em-icon">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    </div>
+    <div class="em-title serif">Nothing saved yet</div>
+    <p>Tap the bookmark on any studio to come back to it later.</p>
+  </div>
+
+  <div class="proto-note">
+    <strong>A note on this preview:</strong> the old directory board turned out to be years out of date, so we cleared it. Deuces Nail Studio (Suite 301) is the first verified card, photos and all. Every other suite is waiting for its studio to claim it, free, two minutes, and you're on the map with your real name, suite, and booking link.
+  </div>
+</section>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-item active" data-view="discover" onclick="switchView('discover')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+    Discover
+  </button>
+  <button class="nav-item" data-view="directory" onclick="switchView('directory')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+    Directory
+  </button>
+  <button class="nav-item" data-view="saved" onclick="switchView('saved')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    Saved
+  </button>
+</nav>
+
+<!-- TENANT PROFILE SHEET -->
+<div class="sheet-backdrop" id="sheetBackdrop" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <button class="sheet-close" onclick="closeSheet()">×</button>
+  <div id="sheetContent"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="../data.js"></script>
+<script src="app.js"></script>
+
+<!-- Fullscreen map modal. Populated on open with a clone of the live SVG. -->
+<div class="map-modal" id="mapModal" aria-hidden="true" role="dialog">
+  <div class="map-modal-inner">
+    <div class="map-modal-head">
+      <h2>Suite map</h2>
+      <button type="button" class="map-modal-close" id="mapModalClose" aria-label="Close map">&times;</button>
+    </div>
+    <div class="map-modal-body" id="mapModalBody"></div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+# Studio Soulutions, Cloudflare Pages redirects
+# Pretty URLs for the entry points
+/kiosk      /kiosk.html      200
+/admin      /admin.html      200
+/app        /app.html        200
+/community  /community.html  200
+
+# SPA-style fallback for the phone view (handles deep links into tenant profiles later)
+/app/*      /app.html        200

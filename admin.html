@@ -1815,10 +1815,10 @@ async function generateBio() {
   let bios = null;
   let source = 'stub';
 
-  // Try the real Netlify Function first; fall back to the local stub if it isn't there
+  // Try the real Pages Function first; fall back to the local stub if it isn't there
   // (e.g. when running via file:// or a plain local server without the function).
   try {
-    const res = await fetch('/.netlify/functions/generate-bio', {
+    const res = await fetch('/api/generate-bio', {
       method:  'POST',
       headers: { 'content-type': 'application/json' },
       body:    JSON.stringify(payload),

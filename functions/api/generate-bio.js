@@ -1,5 +1,5 @@
 /* =====================================================================
-   Studio Soulutions, AI bio generator (Netlify Function)
+   Studio Soulutions, AI bio generator (Cloudflare Pages Function)
    Studio Soulutions platform build
    ---------------------------------------------------------------------
    Takes a tenant's rough notes + a few structured fields, asks Claude to
@@ -7,7 +7,7 @@
    friendly), and returns them as JSON the admin can drop straight into
    the editor.
 
-   Required env var:  ANTHROPIC_API_KEY   (set in Netlify dashboard)
+   Required env var:  ANTHROPIC_API_KEY   (set in Cloudflare Pages dashboard)
 
    Optional env var:  ANTHROPIC_MODEL     (defaults to claude-sonnet-4-6)
    ===================================================================== */
@@ -15,17 +15,13 @@
 const ANTHROPIC_API = 'https://api.anthropic.com/v1/messages';
 const DEFAULT_MODEL = 'claude-sonnet-4-6';
 
-exports.handler = async function (event) {
-  // CORS preflight, keep the function callable from the static admin page.
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 204, headers: corsHeaders(), body: '' };
-  }
-  if (event.httpMethod !== 'POST') {
-    return json(405, { error: 'POST required' });
-  }
+export async function onRequestOptions() {
+  return new Response(null, { status: 204, headers: corsHeaders() });
+}
 
+export async function onRequestPost({ request, env }) {
   let payload;
-  try { payload = JSON.parse(event.body || '{}'); }
+  try { payload = await request.json(); }
   catch { return json(400, { error: 'Invalid JSON body' }); }
 
   const {
@@ -40,14 +36,14 @@ exports.handler = async function (event) {
     return json(400, { error: 'Need at least a name or a few rough notes to write a bio.' });
   }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     return json(500, {
-      error: 'ANTHROPIC_API_KEY is not set on this deployment. Set it in the Netlify dashboard and redeploy.'
+      error: 'ANTHROPIC_API_KEY is not set on this deployment. Set it in the Cloudflare Pages dashboard and redeploy.'
     });
   }
 
-  const model = process.env.ANTHROPIC_MODEL || DEFAULT_MODEL;
+  const model = env.ANTHROPIC_MODEL || DEFAULT_MODEL;
 
   const system = [
     "You are a copywriter for Studio Soulutions, a directory app that lives on touchscreen kiosks and phones inside salon-suite buildings.",
@@ -118,7 +114,7 @@ exports.handler = async function (event) {
   } catch (err) {
     return json(500, { error: 'Network / function error', detail: String(err).slice(0, 500) });
   }
-};
+}
 
 function corsHeaders() {
   return {
@@ -128,10 +124,9 @@ function corsHeaders() {
   };
 }
 
-function json(statusCode, body) {
-  return {
-    statusCode,
+function json(status, body) {
+  return new Response(JSON.stringify(body), {
+    status,
     headers: { 'content-type': 'application/json', ...corsHeaders() },
-    body: JSON.stringify(body),
-  };
+  });
 }

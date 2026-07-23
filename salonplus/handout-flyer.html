@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Salon Plus Studios - Flyer (print handout)</title>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #F2EFE9; --surface: #FAF8F4; --ink: #33312D; --ink-soft: #6C685F;
+    --ink-faint: #918C81; --bronze: #9A6B45; --bronze-deep: #7C5334; --line: #DCD6CA;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: #E5E1D8; color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.5;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .page {
+    width: 8.5in; min-height: 11in; margin: 24px auto; padding: 0.55in 0.8in;
+    background: var(--bg); box-shadow: 0 10px 40px rgba(0,0,0,.18);
+    display: flex; flex-direction: column; text-align: center;
+  }
+  @page { size: letter portrait; margin: 0; }
+  @media print {
+    /* white paper, keep the ink for the words */
+    :root { --bg: #fff; --surface: #fff; }
+    body { background: none; }
+    .page { margin: 0; box-shadow: none; width: auto; min-height: auto; }
+    .free { background: none; color: var(--ink); border: 1.5px solid var(--ink); }
+  }
+  .logo-sp { height: 82px; max-width: 6in; object-fit: contain; display: block; margin: 0 auto 10px; mix-blend-mode: multiply; }
+  .eyebrow { font-family:'Jost',sans-serif; font-size: 12px; letter-spacing: .38em; text-transform: uppercase; font-weight: 500; color: var(--bronze); }
+  .lockup { font-family: 'Jost', sans-serif; font-size: 22px; letter-spacing: .16em; text-transform: uppercase; margin-bottom: 8px; }
+  .lockup .ss { color: var(--bronze); font-weight: 600; letter-spacing: .02em; margin-right: 10px; }
+  h1 { font-family:'Jost',sans-serif; font-weight: 300; font-size: 54px; line-height: 1.06; margin: 18px auto 12px; max-width: 8em; }
+  h1 strong { font-weight: 500; color: var(--bronze-deep); }
+  .sub { color: var(--ink-soft); font-size: 16.5px; max-width: 30em; margin: 0 auto; }
+
+  .points { display: flex; justify-content: center; gap: 14px; margin: 24px 0 6px; }
+  .pt {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px 18px; width: 2.15in;
+  }
+  .pt b { font-family:'Jost',sans-serif; font-weight: 500; font-size: 16px; display: block; margin-bottom: 4px; }
+  .pt span { font-size: 12.5px; color: var(--ink-soft); }
+
+  .qr-block { margin: 20px auto 0; }
+  .qr-frame {
+    display: inline-block; background: #fff; border: 1.5px solid var(--ink);
+    border-radius: 18px; padding: 18px;
+  }
+  .qr-frame img { width: 2.1in; height: 2.1in; display: block; }
+  .scanline { font-family:'Jost',sans-serif; font-size: 19px; letter-spacing: .08em; margin-top: 14px; }
+  .url { font-family:'Jost',sans-serif; font-size: 16px; color: var(--bronze-deep); margin-top: 4px; }
+
+  .free {
+    margin: 18px auto 0; display: inline-block; background: var(--ink); color: var(--bg);
+    font-family:'Jost',sans-serif; letter-spacing: .14em; text-transform: uppercase;
+    font-size: 13px; padding: 10px 26px; border-radius: 999px;
+  }
+  .foot { margin-top: auto; padding-top: 24px; font-size: 11.5px; color: var(--ink-faint); }
+</style>
+</head>
+<body>
+<div class="page">
+  <div>
+    <img class="logo-sp" src="../assets/logo-salonplus.png" alt="Salon Plus Studios" />
+    <p class="eyebrow">For everyone who works in this building</p>
+  </div>
+
+  <h1>Your studio, <strong>on the map.</strong></h1>
+  <p class="sub">The new Salon Plus directory is live: the building map, every studio, and a card for yours, with your booking link on it.</p>
+
+  <div class="points">
+    <div class="pt"><b>Get found</b><span>Walk-ins and searchers see who's here, and where you are.</span></div>
+    <div class="pt"><b>Get booked</b><span>Your Instagram and booking link, one tap from the map.</span></div>
+    <div class="pt"><b>Get it free</b><span>Listing costs nothing. Two minutes, and you're on it.</span></div>
+  </div>
+
+  <div class="qr-block">
+    <span class="qr-frame"><img src="../assets/qr-salonplus.png" alt="QR code to studiosoulutions.com/salonplus" /></span>
+    <p class="scanline">Scan to see the map &amp; claim your spot</p>
+    <p class="url">studiosoulutions.com/salonplus</p>
+  </div>
+
+  <span class="free">Free to be listed &#183; ask Laura</span>
+
+  <p class="foot">Salon Plus Studios &#183; Powered by Studio Soulutions &#183; For more information visit <strong>studiosoulutions.com</strong><br />Made with <svg viewBox="0 0 24 24" width="10" height="10" fill="#e2a63b" aria-hidden="true" style="display:inline-block;vertical-align:-1px;"><path d="M12 21s-7-4.6-9.5-9C.8 8.4 2.9 4.5 6.6 4.5c2 0 3.6 1.1 5.4 2.7 1.8-1.6 3.4-2.7 5.4-2.7 3.7 0 5.8 3.9 4.1 7.5C19 16.4 12 21 12 21z"/></svg> by Hive-Rise <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#e2a63b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:-2px;"><ellipse cx="12" cy="15" rx="4.5" ry="5.5"/><path d="M8.2 13.5h7.6M8.2 17h7.6"/><ellipse cx="7.5" cy="7.5" rx="3" ry="2" transform="rotate(-28 7.5 7.5)"/><ellipse cx="16.5" cy="7.5" rx="3" ry="2" transform="rotate(28 16.5 7.5)"/></svg> &#183; hive-rise.com</p>
+</div>
+</body>
+</html>

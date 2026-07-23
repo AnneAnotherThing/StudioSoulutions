@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Salon Plus Studios - Interest form (print handout)</title>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #F2EFE9; --surface: #FAF8F4; --ink: #33312D; --ink-soft: #6C685F;
+    --ink-faint: #918C81; --bronze: #9A6B45; --bronze-deep: #7C5334; --line: #DCD6CA;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: #E5E1D8; color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.5;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .page {
+    width: 8.5in; min-height: 11in; margin: 24px auto; padding: 0.55in 0.6in;
+    background: var(--bg); box-shadow: 0 10px 40px rgba(0,0,0,.18);
+    display: flex; flex-direction: column;
+  }
+  @page { size: letter portrait; margin: 0; }
+  @media print {
+    /* white paper, keep the ink for the words */
+    :root { --bg: #fff; --surface: #fff; }
+    body { background: none; }
+    .page { margin: 0; box-shadow: none; width: auto; min-height: auto; }
+  }
+  .logo { height: 42px; }
+  .logo-sp { height: 52px; mix-blend-mode: multiply; }
+  .eyebrow { font-family:'Jost',sans-serif; font-size: 11px; letter-spacing: .34em; text-transform: uppercase; font-weight: 500; color: var(--bronze); }
+  .head { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1.5px solid var(--ink); padding-bottom: 12px; }
+  .lockup { font-family: 'Jost', sans-serif; font-size: 20px; letter-spacing: .14em; text-transform: uppercase; }
+  .lockup .ss { color: var(--bronze); font-weight: 600; letter-spacing: .02em; margin-right: 8px; }
+  h1 { font-family:'Jost',sans-serif; font-weight: 300; font-size: 30px; line-height: 1.12; margin: 20px 0 6px; }
+  h1 strong { font-weight: 500; color: var(--bronze-deep); }
+  .intro { color: var(--ink-soft); font-size: 13.5px; max-width: 42em; }
+
+  .field { margin-top: 16px; }
+  .field label { display: block; font-family:'Jost',sans-serif; font-weight: 500; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px; }
+  .writein { border: 0; border-bottom: 1.5px solid var(--ink); height: 34px; }
+  .box { border: 1.5px solid var(--ink); border-radius: 10px; height: 84px; background: var(--surface); }
+  .row { display: grid; gap: 22px; }
+  .r-2 { grid-template-columns: 2fr 1fr; }
+  .r-2e { grid-template-columns: 1fr 1fr; }
+
+  .svc-row { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 4px; }
+  .svc { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
+  .svc i { width: 16px; height: 16px; border: 1.5px solid var(--ink); border-radius: 4px; display: inline-block; }
+  .hint { font-size: 11px; color: var(--ink-faint); margin-top: 4px; }
+
+  .foot {
+    margin-top: auto; padding-top: 16px; border-top: 1px solid var(--line);
+    display: flex; align-items: center; gap: 18px;
+  }
+  .foot img { width: 0.95in; height: 0.95in; }
+  .foot-copy { font-size: 12.5px; color: var(--ink-soft); }
+  .foot-copy strong { color: var(--ink); }
+  .foot-copy .url { font-family:'Jost',sans-serif; font-size: 14px; color: var(--bronze-deep); }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="head">
+    <img class="logo-sp" src="../assets/logo-salonplus.png" alt="Salon Plus Studios" />
+    <img class="logo" src="../assets/logo_ss_green_v5.png" alt="Studio Soulutions" />
+  </div>
+
+  <h1>Put your studio on the building map, <strong>free.</strong></h1>
+  <p class="intro">We're building a proper directory for everyone at Salon Plus Studios: the map, your card, your booking link, findable by anyone who walks in or searches. Two minutes below, and you're on it. Listing is free.</p>
+
+  <div class="row r-2">
+    <div class="field">
+      <label>Business name *</label>
+      <div class="writein"></div>
+    </div>
+    <div class="field">
+      <label>Suite #</label>
+      <div class="writein"></div>
+    </div>
+  </div>
+
+  <div class="row r-2e">
+    <div class="field">
+      <label>Your name *</label>
+      <div class="writein"></div>
+    </div>
+    <div class="field">
+      <label>Phone</label>
+      <div class="writein"></div>
+      <p class="hint">Okay to text you? &nbsp; <span class="svc"><i></i> yes</span> &nbsp; <span class="svc"><i></i> calls only</span></p>
+    </div>
+  </div>
+
+  <div class="row r-2e">
+    <div class="field">
+      <label>Email</label>
+      <div class="writein"></div>
+    </div>
+    <div class="field">
+      <label>Days &amp; hours (roughly)</label>
+      <div class="writein"></div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>What do you do?</label>
+    <div class="svc-row">
+      <span class="svc"><i></i> Hair</span>
+      <span class="svc"><i></i> Barber</span>
+      <span class="svc"><i></i> Nails</span>
+      <span class="svc"><i></i> Lashes / Brows</span>
+      <span class="svc"><i></i> Skin / Spa</span>
+      <span class="svc"><i></i> Massage</span>
+      <span class="svc"><i></i> Other: ____________</span>
+    </div>
+  </div>
+
+  <div class="row r-2e">
+    <div class="field">
+      <label>Instagram</label>
+      <div class="writein"></div>
+    </div>
+    <div class="field">
+      <label>Booking link (StyleSeat, Booksy...)</label>
+      <div class="writein"></div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Anything else? Specialties, hours, how you'd like your studio described</label>
+    <div class="box"></div>
+  </div>
+
+  <div class="foot">
+    <img src="../assets/qr-salonplus.png" alt="QR code to studiosoulutions.com/salonplus" />
+    <p class="foot-copy">
+      <strong>Hand this back to Laura</strong>, or scan the code to do it on your phone instead.<br />
+      <span class="url">studiosoulutions.com/salonplus</span><br />
+      For more information visit <strong>studiosoulutions.com</strong><br />
+      Made with <svg viewBox="0 0 24 24" width="10" height="10" fill="#e2a63b" aria-hidden="true" style="display:inline-block;vertical-align:-1px;"><path d="M12 21s-7-4.6-9.5-9C.8 8.4 2.9 4.5 6.6 4.5c2 0 3.6 1.1 5.4 2.7 1.8-1.6 3.4-2.7 5.4-2.7 3.7 0 5.8 3.9 4.1 7.5C19 16.4 12 21 12 21z"/></svg> by Hive-Rise <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#e2a63b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:-2px;"><ellipse cx="12" cy="15" rx="4.5" ry="5.5"/><path d="M8.2 13.5h7.6M8.2 17h7.6"/><ellipse cx="7.5" cy="7.5" rx="3" ry="2" transform="rotate(-28 7.5 7.5)"/><ellipse cx="16.5" cy="7.5" rx="3" ry="2" transform="rotate(28 16.5 7.5)"/></svg> &#183; hive-rise.com
+    </p>
+  </div>
+</div>
+</body>
+</html>

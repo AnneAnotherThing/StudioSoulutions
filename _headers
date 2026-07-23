@@ -1,0 +1,21 @@
+# Studio Soulutions, Cloudflare Pages headers
+
+# Short, revalidate-friendly cache on CSS/JS so edits propagate without manual busting
+/assets/css/*
+  Cache-Control: public, max-age=300, must-revalidate
+
+/assets/js/*
+  Cache-Control: public, max-age=300, must-revalidate
+
+# Long immutable cache only on images/photos (filenames are versioned, e.g. logo_ss_green_v5.png)
+/assets/photos/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Kiosk hardening, keep this tab from being framed elsewhere
+/kiosk
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: no-referrer
+
+/kiosk.html
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: no-referrer

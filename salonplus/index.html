@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#F2EFE9" />
+<title>Salon Plus Studios - Every studio under one roof</title>
+<meta name="description" content="The studios of Salon Plus Studios, all in one place. Find your stylist, barber, or nail artist on the map, and if you work here, get your studio listed free." />
+<link rel="canonical" href="https://studiosoulutions.com/salonplus/" />
+<link rel="icon" type="image/png" sizes="64x64" href="../assets/favicon-64.png">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:       #F2EFE9;   /* warm board greige */
+    --bg-2:     #EAE6DD;
+    --surface:  #FAF8F4;
+    --ink:      #33312D;
+    --ink-soft: #6C685F;
+    --ink-faint:#918C81;
+    --bronze:   #9A6B45;   /* the cross on their board */
+    --bronze-deep: #7C5334;
+    --silver:   #B9B4AC;
+    --line:     #DCD6CA;
+    --open:     #A97F4F;
+    --occupied: #E9E2D6;
+    --common:   #E2DFD8;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+  }
+  .disp { font-family: 'Jost', 'Century Gothic', sans-serif; }
+  .eyebrow {
+    font-family: 'Jost', sans-serif; font-size: 12px; letter-spacing: 0.34em;
+    text-transform: uppercase; font-weight: 500; color: var(--bronze);
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+
+  /* ----- header ----- */
+  header { padding: 20px 0; border-bottom: 1px solid var(--line); }
+  .header-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .lockup { display: flex; align-items: baseline; gap: 10px; text-decoration: none; color: var(--ink); }
+  .lockup .ss {
+    font-family: 'Jost', sans-serif; font-weight: 600; font-size: 22px;
+    color: var(--bronze); letter-spacing: 0.02em;
+  }
+  .lockup .name { font-family: 'Jost', sans-serif; font-weight: 400; font-size: 19px; letter-spacing: 0.14em; text-transform: uppercase; }
+  nav a { color: var(--ink-soft); text-decoration: none; font-size: 14px; margin-left: 20px; }
+  nav a:hover { color: var(--bronze-deep); }
+
+  /* ----- hero ----- */
+  .hero {
+    padding: 64px 0 48px;
+    /* the real Salon Plus breezeway, under a warm greige wash so the type stays crisp */
+    background:
+      linear-gradient(180deg, rgba(242,239,233,0.88) 0%, rgba(242,239,233,0.94) 70%, rgba(242,239,233,1) 100%),
+      url('../assets/photos/salonplus-hallway.jpg') center 72% / cover no-repeat;
+    border-bottom: 1px solid var(--line);
+  }
+  .hero h1 {
+    font-family: 'Jost', sans-serif; font-weight: 300;
+    font-size: clamp(34px, 5.4vw, 58px); line-height: 1.08;
+    letter-spacing: 0.01em; max-width: 13em;
+  }
+  .hero h1 strong { font-weight: 500; color: var(--bronze-deep); }
+  .hero p { margin-top: 18px; max-width: 34em; color: var(--ink-soft); font-size: 17px; }
+  .cta-row { margin-top: 28px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; padding: 13px 26px; border-radius: 999px;
+    font-family: 'Jost', sans-serif; font-weight: 500; font-size: 15px; letter-spacing: 0.06em;
+    text-decoration: none; transition: all .15s ease; cursor: pointer; border: 1px solid transparent;
+  }
+  .btn-primary { background: var(--ink); color: var(--surface); }
+  .btn-primary:hover { background: var(--bronze-deep); }
+  .btn-ghost { border-color: var(--silver); color: var(--ink); background: transparent; }
+  .btn-ghost:hover { border-color: var(--bronze); color: var(--bronze-deep); }
+
+  /* ----- sections ----- */
+  section { padding: 56px 0; }
+  section h2 { font-family: 'Jost', sans-serif; font-weight: 400; font-size: clamp(26px, 3.4vw, 38px); letter-spacing: 0.02em; }
+  .sec-head { margin-bottom: 26px; }
+  .sec-head p { color: var(--ink-soft); margin-top: 8px; max-width: 44em; }
+
+  /* ----- map ----- */
+  .map-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+    padding: 18px; box-shadow: 0 1px 2px rgba(51,49,45,.05), 0 10px 30px rgba(51,49,45,.06);
+  }
+  .map-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .map-scroll svg { display: block; min-width: 640px; max-width: 860px; margin: 0 auto; width: 100%; height: auto; }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 14px; font-size: 13px; color: var(--ink-soft); align-items:center; }
+  .legend span { display: inline-flex; align-items: center; gap: 7px; }
+  .chip { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+  .chip.occ  { background: var(--occupied); border: 1px solid #C9BFAF; }
+  .chip.open { background: transparent; border: 1.5px dashed var(--open); }
+  .chip.com  { background: var(--common);  border: 1px solid var(--line); }
+  .map-note { margin-top: 10px; font-size: 12.5px; color: var(--ink-faint); }
+
+  /* suite shapes */
+  .suite rect { transition: filter .12s ease; }
+  .suite { cursor: pointer; }
+  .suite:hover rect, .suite:focus rect { filter: brightness(0.96); }
+  .suite.open-suite:hover rect { filter: none; stroke-width: 2.4; }
+  text { font-family: 'Inter', sans-serif; pointer-events: none; }
+  .t-num  { font-size: 11px; font-weight: 600; fill: var(--ink); }
+  .t-name { font-size: 8.5px; fill: var(--ink-soft); }
+  .t-open { font-size: 9px; font-weight: 600; fill: var(--open); letter-spacing: .08em; }
+  .t-com  { font-size: 8.5px; fill: var(--ink-faint); }
+  .t-wing { font-family: 'Jost', sans-serif; font-size: 13px; letter-spacing: .22em; fill: var(--ink-faint); }
+
+  /* tooltip */
+  #tip {
+    position: fixed; z-index: 50; display: none; max-width: 240px;
+    background: var(--ink); color: #F5F2EC; border-radius: 12px;
+    padding: 10px 14px; font-size: 13px; line-height: 1.45;
+    box-shadow: 0 12px 30px rgba(0,0,0,.25); pointer-events: none;
+  }
+  #tip .tt-suite { font-family: 'Jost', sans-serif; letter-spacing: .12em; font-size: 11px; text-transform: uppercase; color: #CBB394; }
+  #tip .tt-name  { font-weight: 600; }
+
+  /* ----- roster ----- */
+  .roster-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+  .r-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: 12px 14px; display: flex; align-items: center; gap: 12px;
+  }
+  .r-suite {
+    font-family: 'Jost', sans-serif; font-weight: 500; font-size: 12px; letter-spacing: .05em;
+    background: var(--bg-2); border: 1px solid var(--line); color: var(--ink-soft);
+    border-radius: 8px; padding: 4px 8px; white-space: nowrap;
+  }
+  .r-name { font-size: 14.5px; font-weight: 500; }
+  .floor-label { font-family: 'Jost', sans-serif; letter-spacing: .2em; text-transform: uppercase; font-size: 12px; color: var(--ink-faint); margin: 22px 0 10px; }
+  .floor-label:first-of-type { margin-top: 0; }
+
+  /* ----- form ----- */
+  .form-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+    padding: clamp(20px, 4vw, 40px); max-width: 780px;
+    box-shadow: 0 1px 2px rgba(51,49,45,.05), 0 10px 30px rgba(51,49,45,.06);
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 560px) { .grid-2 { grid-template-columns: 1fr; } }
+  label { display: block; font-size: 13px; font-weight: 600; color: var(--ink-soft); margin-bottom: 6px; }
+  label .req { color: var(--bronze); }
+  input[type=text], input[type=tel], input[type=email], textarea {
+    width: 100%; padding: 12px 14px; border-radius: 10px;
+    border: 1px solid var(--line); background: #fff; color: var(--ink);
+    font: inherit; font-size: 15px;
+  }
+  input:focus, textarea:focus { outline: 2px solid var(--bronze); outline-offset: 0; border-color: var(--bronze); }
+  .field { margin-bottom: 16px; }
+  .svc-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .svc {
+    border: 1px solid var(--line); background: #fff; border-radius: 999px;
+    padding: 8px 16px; font-size: 14px; cursor: pointer; user-select: none;
+    transition: all .12s ease;
+  }
+  .svc input { position: absolute; opacity: 0; pointer-events: none; }
+  .svc.on { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+  .check-row { display: flex; align-items: center; gap: 9px; font-size: 14px; color: var(--ink-soft); }
+  .check-row input { width: 17px; height: 17px; accent-color: var(--bronze); }
+  .form-msg { margin-top: 14px; font-size: 14.5px; display: none; }
+  .form-msg.err { color: #A8452E; display: block; }
+  .thanks { display: none; text-align: center; padding: 30px 10px; }
+  .thanks h3 { font-family: 'Jost', sans-serif; font-weight: 400; font-size: 28px; margin-bottom: 10px; }
+  .thanks p { color: var(--ink-soft); max-width: 30em; margin: 0 auto; }
+  .hp { position: absolute; left: -9999px; opacity: 0; height: 0; overflow: hidden; }
+
+  footer { border-top: 1px solid var(--line); padding: 30px 0 40px; margin-top: 30px; }
+  .foot-row { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; font-size: 13.5px; color: var(--ink-faint); }
+  footer a { color: var(--bronze-deep); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-row">
+    <a class="lockup" href="#top">
+      <span class="ss">S&#8202;S</span>
+      <span class="name">Salon Plus Studios</span>
+    </a>
+    <nav>
+      <a href="#map">Map</a>
+      <a href="#studios">Studios</a>
+      <a href="#join">Get listed</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero" id="top">
+  <div class="wrap">
+    <p class="eyebrow">The building directory, reimagined</p>
+    <h1>One roof. Thirty&#8209;plus studios. <strong>Your people are in here.</strong></h1>
+    <p>Salon Plus Studios is home to independent stylists, barbers, nail artists, and wellness pros, each running their own studio. This page is where the whole neighborhood becomes findable, starting with the map below.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#join">Get your studio listed, free</a>
+      <a class="btn btn-ghost" href="#map">See the map</a>
+      <a class="btn btn-ghost" href="app/">Open the directory app</a>
+    </div>
+  </div>
+</div>
+
+<section id="map">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>The map</h2>
+      <p>Tap any suite. Claimed studios show who's inside; the rest are waiting for their name, if one of them is yours, tap it and claim your card.</p>
+    </div>
+    <div class="map-card">
+      <div class="map-scroll" id="mapHost"></div>
+      <div class="legend">
+        <span><i class="chip occ"></i> Claimed studio</span>
+        <span><i class="chip open"></i> Not claimed yet</span>
+        <span><i class="chip com"></i> Common area</span>
+      </div>
+      <p class="map-note">Schematic layout, not to scale. The old directory board was years out of date, so suites show their number only until each studio claims its card. Suite 106 (leasing office) sits off this view.</p>
+    </div>
+  </div>
+</section>
+
+<section id="studios" style="padding-top: 26px;">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Who's here (so far)</h2>
+      <p>The old board was years stale, so we're rebuilding the directory studio by studio, verified names only. Claimed studios appear here; yours could be next.</p>
+    </div>
+    <div id="rosterHost"></div>
+  </div>
+</section>
+
+<section id="join" style="background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">For Salon Plus tenants</p>
+      <h2>Get your studio on the map</h2>
+      <p>We're building a proper home for every business in this building: your own card, your services, your booking link, findable by anyone who walks in or searches. Listing is <strong>free</strong> while we build the neighborhood. Two minutes, and Laura takes it from there.</p>
+    </div>
+
+    <div class="form-card">
+      <form id="interestForm" novalidate>
+        <div class="hp"><label>Leave this empty<input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="f_biz">Business name <span class="req">*</span></label>
+            <input type="text" id="f_biz" name="business" required autocomplete="organization" placeholder="e.g. Deuces Nail Studio">
+          </div>
+          <div class="field">
+            <label for="f_suite">Suite number</label>
+            <input type="text" id="f_suite" name="suite" placeholder="e.g. 302">
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="f_name">Your name <span class="req">*</span></label>
+            <input type="text" id="f_name" name="name" required autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="f_phone">Phone</label>
+            <input type="tel" id="f_phone" name="phone" autocomplete="tel">
+            <div class="check-row" style="margin-top:8px;">
+              <input type="checkbox" id="f_text" name="ok_to_text" checked>
+              <label for="f_text" style="margin:0; font-weight:400;">Okay to text me</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="f_email">Email</label>
+            <input type="email" id="f_email" name="email" autocomplete="email">
+          </div>
+          <div class="field">
+            <label for="f_hours">Days &amp; hours <span style="font-weight:400;">(roughly)</span></label>
+            <input type="text" id="f_hours" name="hours" placeholder="e.g. Tue–Sat 10–6">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>What do you do?</label>
+          <div class="svc-row" id="svcRow">
+            <label class="svc"><input type="checkbox" name="services" value="Hair">Hair</label>
+            <label class="svc"><input type="checkbox" name="services" value="Barber">Barber</label>
+            <label class="svc"><input type="checkbox" name="services" value="Nails">Nails</label>
+            <label class="svc"><input type="checkbox" name="services" value="Lashes / Brows">Lashes / Brows</label>
+            <label class="svc"><input type="checkbox" name="services" value="Skin / Spa">Skin / Spa</label>
+            <label class="svc"><input type="checkbox" name="services" value="Massage">Massage</label>
+            <label class="svc"><input type="checkbox" name="services" value="Other">Other</label>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="f_insta">Instagram</label>
+            <input type="text" id="f_insta" name="instagram" placeholder="@yourstudio">
+          </div>
+          <div class="field">
+            <label for="f_book">Booking link</label>
+            <input type="text" id="f_book" name="booking" placeholder="StyleSeat, Booksy, GlossGenius...">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f_notes">Anything else? <span style="font-weight:400;">(optional)</span></label>
+          <textarea id="f_notes" name="notes" rows="3" placeholder="Specialties, hours, how you'd like your studio described..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="submitBtn">Put me on the map</button>
+        <p class="form-msg" id="formMsg"></p>
+      </form>
+
+      <div class="thanks" id="thanksBox">
+        <h3>You're on the list.</h3>
+        <p>Thank you! Laura will follow up soon to get your studio card just right. In the meantime, tell your suite neighbors, the map fills in fastest when everybody's on it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-row">
+    <span>Salon Plus Studios</span>
+    <span>Made with <svg viewBox="0 0 24 24" width="12" height="12" fill="#e2a63b" aria-hidden="true" style="display:inline-block;vertical-align:-1px;"><path d="M12 21s-7-4.6-9.5-9C.8 8.4 2.9 4.5 6.6 4.5c2 0 3.6 1.1 5.4 2.7 1.8-1.6 3.4-2.7 5.4-2.7 3.7 0 5.8 3.9 4.1 7.5C19 16.4 12 21 12 21z"/></svg> by <a href="https://hive-rise.com" target="_blank" rel="noopener">Hive-Rise</a> <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#e2a63b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:-2px;"><ellipse cx="12" cy="15" rx="4.5" ry="5.5"/><path d="M8.2 13.5h7.6M8.2 17h7.6"/><ellipse cx="7.5" cy="7.5" rx="3" ry="2" transform="rotate(-28 7.5 7.5)"/><ellipse cx="16.5" cy="7.5" rx="3" ry="2" transform="rotate(28 16.5 7.5)"/></svg></span>
+    <span>Powered by <a href="/">Studio Soulutions</a></span>
+  </div>
+</footer>
+
+<div id="tip"></div>
+
+<script src="data.js"></script>
+<script>
+/* =====================================================================
+   Salon Plus Studios, directory page
+   Roster + map data live in data.js, shared with the mobile companion
+   at /salonplus/app/, until the Supabase layer lands.
+   ===================================================================== */
+
+const { ROSTER, LAYOUT } = window.SALONPLUS;
+
+/* ----- render: hallways + rooms from the corridor-aware LAYOUT ----- */
+function esc(str) {
+  return String(str).replace(/[&<>"']/g, ch => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[ch]));
+}
+function truncate(str, n) { return str.length > n ? str.slice(0, n - 1) + '…' : str; }
+
+let svg = `<svg viewBox="0 0 ${LAYOUT.W} ${LAYOUT.H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Floor map of Salon Plus Studios with hallways">`;
+
+/* hallway "streets" under everything, mall-directory style */
+for (const c of LAYOUT.corridors) {
+  svg += `<rect x="${c.band.x}" y="${c.band.y}" width="${c.band.w}" height="${c.band.h}" rx="16" fill="rgba(139,154,126,0.16)" stroke="rgba(107,122,95,0.22)" stroke-width="1.2"/>`;
+}
+const bwHall = LAYOUT.corridors.find(c => c.id === 'BW');
+if (bwHall) {
+  svg += `<text transform="translate(${bwHall.band.x + bwHall.band.w/2 + 4}, ${bwHall.band.y + bwHall.band.h/2 + 60}) rotate(-90)" text-anchor="middle" style="font-size:13px; letter-spacing:.34em; fill: rgba(107,122,95,0.55); font-weight:600;">BREEZEWAY</text>`;
+}
+for (const lb of LAYOUT.labels) {
+  svg += `<text class="t-wing" x="${lb.x}" y="${lb.y}">${esc(lb.text)}</text>`;
+}
+/* entrance pin */
+svg += `<g transform="translate(${LAYOUT.entrance.x}, ${LAYOUT.entrance.y})">`
+    +  `<circle r="12" fill="var(--bronze)" opacity="0.18"/><circle r="6" fill="var(--bronze)"/>`
+    +  `</g>`;
+
+/* uniform chips: identical size for every suite, names live in the tooltip */
+const CHIP_W = 66, CHIP_H = 46, COM_W = 56, COM_H = 30;
+const COMMON_SHORT = { "Women's": 'WC', "Men's": 'WC', 'Restroom': 'WC', 'Break': 'Break', 'Waiting': 'Waiting', 'Laundry': 'Laundry', 'Electric': 'Utility' };
+for (const r of LAYOUT.rooms) {
+  const name = ROSTER[r.s];
+  const cx = r.x + r.w / 2, cy = r.y + r.h / 2;
+  const smallText = r.s.length > 3 ? ' font-size="13"' : '';
+
+  if (r.common) {
+    svg += `<g class="suite common" data-suite="${esc(r.s)}" data-kind="common">`
+        +  `<rect x="${cx - COM_W/2}" y="${cy - COM_H/2}" width="${COM_W}" height="${COM_H}" rx="10" fill="var(--common)" stroke="var(--line)"/>`
+        +  `<text class="t-com" x="${cx}" y="${cy + 3.5}" text-anchor="middle">${esc(COMMON_SHORT[r.s] || r.s)}</text></g>`;
+  } else if (name) {
+    svg += `<g class="suite" tabindex="0" data-suite="${esc(r.s)}" data-kind="occupied" data-name="${esc(name)}">`
+        +  `<rect x="${cx - CHIP_W/2}" y="${cy - CHIP_H/2}" width="${CHIP_W}" height="${CHIP_H}" rx="12" fill="var(--occupied)" stroke="#C9BFAF"/>`
+        +  `<text class="t-num" x="${cx}" y="${cy + 5}" text-anchor="middle"${smallText}>${esc(r.s)}</text></g>`;
+  } else {
+    /* unclaimed: neutral, we don't know who's inside until they claim */
+    svg += `<g class="suite open-suite" tabindex="0" data-suite="${esc(r.s)}" data-kind="open">`
+        +  `<rect x="${cx - CHIP_W/2}" y="${cy - CHIP_H/2}" width="${CHIP_W}" height="${CHIP_H}" rx="12" fill="var(--surface)" stroke="#CFC6B4"/>`
+        +  `<text class="t-num" x="${cx}" y="${cy + 5}" text-anchor="middle"${smallText} style="fill: var(--ink-faint);">${esc(r.s)}</text></g>`;
+  }
+}
+svg += `</svg>`;
+document.getElementById('mapHost').innerHTML = svg;
+
+/* ----- tooltip + open-suite prefill ----- */
+const tip = document.getElementById('tip');
+function showTip(el, evt) {
+  const kind = el.dataset.kind;
+  if (kind === 'common') {
+    tip.innerHTML = `<div class="tt-name">${esc(el.dataset.suite)} room</div>`;
+  } else if (kind === 'occupied') {
+    tip.innerHTML = `<div class="tt-suite">Suite ${esc(el.dataset.suite)}</div><div class="tt-name">${esc(el.dataset.name)}</div>`;
+  } else {
+    tip.innerHTML = `<div class="tt-suite">Suite ${esc(el.dataset.suite)}</div><div class="tt-name">Not claimed yet</div><div style="opacity:.75">Yours? Tap to claim your free card.</div>`;
+  }
+  tip.style.display = 'block';
+  positionTip(evt);
+}
+function positionTip(evt) {
+  const pad = 14;
+  let tx = evt.clientX + pad, ty = evt.clientY + pad;
+  const r = tip.getBoundingClientRect();
+  if (tx + r.width > innerWidth - 8) tx = evt.clientX - r.width - pad;
+  if (ty + r.height > innerHeight - 8) ty = evt.clientY - r.height - pad;
+  tip.style.left = tx + 'px'; tip.style.top = ty + 'px';
+}
+document.getElementById('mapHost').addEventListener('pointermove', e => {
+  const g = e.target.closest('.suite');
+  if (g) showTip(g, e); else tip.style.display = 'none';
+});
+document.getElementById('mapHost').addEventListener('pointerleave', () => tip.style.display = 'none');
+document.getElementById('mapHost').addEventListener('click', e => {
+  const g = e.target.closest('.suite');
+  if (!g) return;
+  if (g.dataset.kind === 'open') {
+    document.getElementById('f_suite').value = g.dataset.suite;
+    document.getElementById('join').scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
+/* ----- roster ----- */
+const floors = { '100s': [], '200s': [], '300s': [] };
+for (const [suite, name] of Object.entries(ROSTER)) {
+  const key = suite[0] === '1' ? '100s' : suite[0] === '2' ? '200s' : '300s';
+  floors[key].push({ suite, name });
+}
+let rosterHtml = '';
+for (const [floor, list] of Object.entries(floors)) {
+  if (!list.length) continue;   // skip floors with no verified studios yet
+  list.sort((a, b) => a.suite.localeCompare(b.suite, undefined, { numeric: true }));
+  rosterHtml += `<div class="floor-label">${floor}</div><div class="roster-grid">`
+    + list.map(t => `<div class="r-card"><span class="r-suite">${esc(t.suite)}</span><span class="r-name">${esc(t.name)}</span></div>`).join('')
+    + `</div>`;
+}
+document.getElementById('rosterHost').innerHTML = rosterHtml;
+
+/* ----- ?suite= prefill (links in from the mobile companion) ----- */
+const suiteParam = new URLSearchParams(location.search).get('suite');
+if (suiteParam) {
+  document.getElementById('f_suite').value = suiteParam;
+  document.getElementById('join').scrollIntoView();
+}
+
+/* ----- service pills ----- */
+document.querySelectorAll('.svc input').forEach(cb => {
+  cb.addEventListener('change', () => cb.closest('.svc').classList.toggle('on', cb.checked));
+});
+
+/* ----- submit ----- */
+const form = document.getElementById('interestForm');
+const msg  = document.getElementById('formMsg');
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  msg.className = 'form-msg';
+
+  const data = {
+    business:   form.business.value.trim(),
+    suite:      form.suite.value.trim(),
+    name:       form.name.value.trim(),
+    phone:      form.phone.value.trim(),
+    ok_to_text: form.ok_to_text.checked,
+    email:      form.email.value.trim(),
+    hours:      form.hours.value.trim(),
+    services:   [...form.querySelectorAll('.svc input:checked')].map(c => c.value),
+    instagram:  form.instagram.value.trim(),
+    booking:    form.booking.value.trim(),
+    notes:      form.notes.value.trim(),
+    hp:         form.company.value,           // honeypot
+    building:   'salonplus',                  // which building this lead belongs to
+    source:     'salonplus-web',              // which channel it came in on
+  };
+  if (!data.business || !data.name) {
+    msg.textContent = 'Business name and your name are the only two we really need.';
+    msg.classList.add('err');
+    return;
+  }
+  if (!data.phone && !data.email) {
+    msg.textContent = 'Leave a phone number or an email so Laura can reach you.';
+    msg.classList.add('err');
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Sending…';
+  try {
+    const res = await fetch('/api/salonplus-interest', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error('bad status ' + res.status);
+    form.style.display = 'none';
+    document.getElementById('thanksBox').style.display = 'block';
+  } catch {
+    msg.textContent = "Hmm, that didn't go through. Try once more, or just hand your paper form to Laura.";
+    msg.classList.add('err');
+    btn.disabled = false; btn.textContent = 'Put me on the map';
+  }
+});
+</script>
+</body>
+</html>

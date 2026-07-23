@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="robots" content="noindex" />
+<title>Salon Plus Studios - Directory verification worksheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fff; --surface: #FAF8F4; --ink: #33312D; --ink-soft: #6C685F;
+    --ink-faint: #918C81; --bronze: #9A6B45; --bronze-deep: #7C5334; --line: #DCD6CA;
+    --sage: #6B7A5F;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  @page { size: letter landscape; margin: 0.38in; }
+  body {
+    background: #fff; color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.4; font-size: 10.5px;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .head { display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid var(--ink); padding-bottom: 8px; }
+  .logo-sp { height: 44px; mix-blend-mode: multiply; }
+  .logo-ss { height: 34px; }
+  h1 { font-family:'Jost',sans-serif; font-weight: 300; font-size: 22px; margin: 10px 0 4px; }
+  h1 strong { font-weight: 500; color: var(--bronze-deep); }
+  .intro {
+    color: var(--ink-soft); font-size: 10.5px; max-width: 9.6in; margin-bottom: 10px;
+  }
+  .intro b { color: var(--ink); }
+
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    font-family:'Jost',sans-serif; font-weight: 500; font-size: 9px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--ink-soft); text-align: left;
+    border-bottom: 1.5px solid var(--ink); padding: 4px 6px;
+  }
+  tbody td { border-bottom: 1px solid var(--line); padding: 7px 6px; vertical-align: bottom; }
+  tbody tr { page-break-inside: avoid; }
+  .suite { font-family:'Jost',sans-serif; font-weight: 600; font-size: 12px; white-space: nowrap; }
+  .bname { font-size: 11px; font-weight: 500; }
+  .blank { border-bottom: 1px solid #B9B4AC; height: 14px; }
+  .ok { font-size: 13px; color: var(--ink-faint); text-align: center; }
+  tr.verified { background: rgba(139,154,126,0.12); }
+  tr.verified .vnote { font-size: 9px; color: var(--sage); font-weight: 600; letter-spacing: .04em; }
+
+  .foot {
+    margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--line);
+    display: flex; justify-content: space-between; font-size: 9px; color: var(--ink-faint);
+  }
+</style>
+</head>
+<body>
+
+<div class="head">
+  <img class="logo-sp" src="../assets/logo-salonplus.png" alt="Salon Plus Studios" />
+  <img class="logo-ss" src="../assets/logo_ss_green_v5.png" alt="Studio Soulutions" />
+</div>
+
+<h1>The directory, as the lobby board shows it. <strong>Mark it up, we'll load it fast.</strong></h1>
+<p class="intro">
+  Laura, this is everything the board lists today, transcribed exactly (including its mistakes, it had Deuces in the wrong
+  suite, so every line is suspect until you or the studio confirms it). <b>Cross out what's wrong, write what's right, and jot
+  whatever you can grab of the other fields</b>, that's the same info the sign-up form collects, so anything you capture here
+  goes straight onto their card. Send a photo of this sheet to Anne and edits go live the same day. Studios can also do it
+  themselves in two minutes at <b>studiosoulutions.com/salonplus</b>.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width:5%;">Suite</th>
+      <th style="width:17%;">The board says</th>
+      <th style="width:4%;">Right?</th>
+      <th style="width:15%;">Correction (name / suite)</th>
+      <th style="width:16%;">Owner &amp; phone</th>
+      <th style="width:11%;">Days &amp; hours</th>
+      <th style="width:13%;">Services</th>
+      <th style="width:19%;">Instagram / booking link</th>
+    </tr>
+  </thead>
+  <tbody id="rows"></tbody>
+</table>
+
+<div class="foot">
+  <span>Send edits to Anne &#183; changes load same-day &#183; studiosoulutions.com/salonplus</span>
+  <span>Salon Plus Studios &#183; Powered by Studio Soulutions &#183; Made with <svg viewBox="0 0 24 24" width="9" height="9" fill="#e2a63b" style="display:inline-block;vertical-align:-1px;"><path d="M12 21s-7-4.6-9.5-9C.8 8.4 2.9 4.5 6.6 4.5c2 0 3.6 1.1 5.4 2.7 1.8-1.6 3.4-2.7 5.4-2.7 3.7 0 5.8 3.9 4.1 7.5C19 16.4 12 21 12 21z"/></svg> by Hive-Rise</span>
+</div>
+
+<script>
+/* The board transcription, exactly as photographed (Deuces corrected + verified). */
+const BOARD = [
+  ['101A', 'HairCutsByAlex'],
+  ['101B', 'Southpaw Studio'],
+  ['103',  'Soul and Beauty Day Spa'],
+  ['106',  'Royal Laser Med Spa'],
+  ['106',  'Leasing Office'],
+  ['201',  'DO LA LA Salon'],
+  ['202',  'Primos Fine Cuts'],
+  ['203',  "A Vibe Beaute' Bar"],
+  ['205',  'FinedreadLocs Natural Hair Academy'],
+  ['209',  'Style Beauty Salon'],
+  ['211',  'Braids, Dreds & Beyond'],
+  ['212',  'True Story Tha Barber'],
+  ['215',  "Ruben's Barber Parlor"],
+  ['301',  'SetsByBecca'],
+  ['302',  'Deuces Nail Studio'],
+  ['304',  'Classy Cuts By Rachel'],
+  ['305',  'Nails By Lily'],
+  ['306',  'Empolished'],
+  ['309',  'Cuts From the Heart'],
+  ['310',  'Gala Hair Salon'],
+  ['311',  'Colour Me Beautiful'],
+  ['312',  'AZ Hair Replacement'],
+  ['316',  'Nekendra Salon de Coiffure'],
+  ['317',  'Aisy Beauty Co, LLC'],
+  ['318',  'Feel Good Hair By Robyn'],
+  ['320',  'House of Lavish LLC'],
+  ['321',  'Dees Beauty Studios'],
+  ['322',  'Celia and Barbie Hair and Nails'],
+  ['326',  'Azariah Lynn Hair Studio'],
+  ['327',  'Thelley Fades'],
+  ['328',  'Francois Salon'],
+  ['329',  "E's Cuts"],
+];
+
+document.getElementById('rows').innerHTML = BOARD.map(([suite, name]) => {
+  const deuces = name === 'Deuces Nail Studio';
+  return `
+  <tr${deuces ? ' class="verified"' : ''}>
+    <td class="suite">${suite}</td>
+    <td class="bname">${name}</td>
+    <td class="ok">${deuces ? '&#10003;' : '&#9744;'}</td>
+    <td>${deuces ? '<span class="vnote">VERIFIED · actually Suite 301</span>' : '<div class="blank"></div>'}</td>
+    <td>${deuces ? '<span class="vnote">card claimed, photos in</span>' : '<div class="blank"></div>'}</td>
+    <td><div class="blank"></div></td>
+    <td><div class="blank"></div></td>
+    <td><div class="blank"></div></td>
+  </tr>`;
+}).join('');
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="robots" content="noindex" />
+<title>Salon Plus map, layout reference for restyling</title>
+<style>
+  * { margin: 0; }
+  body { background: #FFFFFF; }
+  svg { display: block; width: 900px; height: 990px; }
+  text { font-family: Arial, sans-serif; }
+</style>
+</head>
+<body>
+<div id="host"></div>
+<script src="data.js"></script>
+<script>
+/* Bare-bones geometry export: exact hallways + suite positions, drawn
+   plainly so an image model can repaint it without inventing layout. */
+const { ROSTER, LAYOUT } = window.SALONPLUS;
+let svg = `<svg viewBox="0 0 ${LAYOUT.W} ${LAYOUT.H}" xmlns="http://www.w3.org/2000/svg">`;
+svg += `<rect x="0" y="0" width="${LAYOUT.W}" height="${LAYOUT.H}" fill="#FFFFFF"/>`;
+for (const c of LAYOUT.corridors) {
+  svg += `<rect x="${c.band.x}" y="${c.band.y}" width="${c.band.w}" height="${c.band.h}" rx="14" fill="#DCE5D4" stroke="#9FB08F"/>`;
+}
+const bw = LAYOUT.corridors.find(c => c.id === 'BW');
+svg += `<text transform="translate(${bw.band.x + bw.band.w/2 + 4}, ${bw.band.y + bw.band.h/2 + 40}) rotate(-90)" text-anchor="middle" font-size="14" letter-spacing="4" fill="#7C8B6E">BREEZEWAY</text>`;
+for (const lb of LAYOUT.labels) {
+  svg += `<text x="${lb.x}" y="${lb.y}" font-size="15" letter-spacing="3" fill="#8A8378" font-weight="bold">${lb.text}</text>`;
+}
+svg += `<circle cx="${LAYOUT.entrance.x}" cy="${LAYOUT.entrance.y}" r="9" fill="#C97B5A"/>`;
+/* True room footprints so proportions read honestly in the illustration. */
+const SHORT = { "Women's": 'WC', "Men's": 'WC', 'Restroom': 'WC', 'Break': 'Break', 'Waiting': 'Waiting', 'Laundry': 'Laundry', 'Electric': 'Utility' };
+for (const r of LAYOUT.rooms) {
+  const cx = r.x + r.w/2, cy = r.y + r.h/2;
+  if (r.common) {
+    const label = SHORT[r.s] || r.s;
+    svg += `<rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" rx="9" fill="#EFEDE8" stroke="#C9C2B4"/>`
+        + (r.h > r.w * 1.2
+            ? `<text transform="translate(${cx + 4}, ${cy}) rotate(-90)" text-anchor="middle" font-size="11" fill="#8A8378">${label}</text>`
+            : `<text x="${cx}" y="${cy + 4}" text-anchor="middle" font-size="10" fill="#8A8378">${label}</text>`);
+  } else {
+    const claimed = !!ROSTER[r.s];
+    svg += `<rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" rx="10" fill="${claimed ? '#B9C7A8' : '#FBF8F1'}" stroke="#8F8878"/>`
+        + `<text x="${cx}" y="${cy + 5}" text-anchor="middle" font-size="${r.s.length > 3 ? 13 : 16}" fill="#3A362F" font-weight="bold">${r.s}</text>`;
+  }
+}
+svg += `</svg>`;
+document.getElementById('host').innerHTML = svg;
+</script>
+</body>
+</html>
