@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="../../assets/favicon-192.png">
 <link rel="apple-touch-icon" href="../../assets/favicon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/app.css?v=3">
+<link rel="stylesheet" href="../../assets/css/app.css?v=4">
 <style>
   /* Salon Plus override: the REAL breezeway hallway replaces the concept
      render as the ambient backdrop. The wash stays thin at the top so the
@@ -64,6 +64,22 @@
   .welcome-panel h1 { font-size: 19px; }
   .welcome-panel p { margin-top: 5px; font-size: 12px; }
   .welcome-panel .eyebrow { margin-bottom: 4px; font-size: 10px; }
+  /* darker ink inside the frost so the light panels still read crisply */
+  .welcome-panel .eyebrow { color: #7C5334; }
+  .welcome-panel h1 { color: #2A2723; }
+  .welcome-panel h1 em { color: #7C5334; }
+  .welcome-panel p { color: #3D3530; }
+  /* the discover menu cards pick up a real frost + darker text so they
+     hold their own over the livelier photo */
+  .menu-card {
+    background: rgba(250,248,244,0.48);
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+    border-color: rgba(61,53,48,0.16);
+  }
+  .menu-card .mc-label { color: #2A2723; }
+  .menu-card .mc-meta { color: #57524A; }
+  .menu-card .mc-icon { color: #3D3530; border-color: rgba(61,53,48,0.18); }
 </style>
 </head>
 <body>

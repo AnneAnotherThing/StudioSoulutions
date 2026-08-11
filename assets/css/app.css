@@ -1219,6 +1219,9 @@ body {
   stroke-linecap: round; stroke-linejoin: round;
   opacity: 0.10;
 }
+/* the grid display below beats the [hidden] attribute's display:none,
+   so restate it: no route selected, no card. */
+.map-route-card[hidden] { display: none; }
 .map-route-card {
   position: relative; z-index: 2;
   margin: 0 4px 14px;
