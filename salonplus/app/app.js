@@ -84,6 +84,10 @@ const tenants = Object.entries(ROSTER).map(([suite, name], i) => {
     Object.assign(base, {
       claimed: true, open: true,
       photo: '../../assets/photos/salonplus-103-soulandbeauty.png',
+      photos: [
+        '../../assets/photos/salonplus-103-soulandbeauty-facial.jpg',
+        '../../assets/photos/salonplus-103-soulandbeauty-glow.jpg',
+      ],
       bio: 'Christina specializes in therapeutic and medical massage, with anti-aging and hydra-facials and deep-clean facials alongside. Care that works below the surface. Find the spa on Instagram at @soulandbeauty.dayspa.',
       tags: ['Therapeutic Massage', 'Medical Massage', 'Hydra-Facial', 'Deep Clean Facial'],
       hours: 'Tue–Sat 10–6',
@@ -429,6 +433,10 @@ function openTenant(id) {
       <div class="profile-tags">
         ${t.tags.map(tag => `<span class="profile-tag">${escapeHtml(tag)}</span>`).join('')}
       </div>
+      ${t.photos && t.photos.length ? `
+      <div class="profile-gallery">
+        ${t.photos.map(p => `<button class="pg-shot" type="button" style="background-image:url('${p}')" onclick="openLightbox('${p}')" aria-label="View photo full size"></button>`).join('')}
+      </div>` : ''}
       <div class="profile-actions">
         ${renderContactActions(t, isSaved)}
       </div>
@@ -453,6 +461,20 @@ function openTenant(id) {
   `;
   document.getElementById('sheet').classList.add('open');
   document.getElementById('sheetBackdrop').classList.add('open');
+}
+
+/* Tap a gallery shot, see it big; tap anywhere to put it away. */
+function openLightbox(src) {
+  let lb = document.getElementById('lightbox');
+  if (!lb) {
+    lb = document.createElement('div');
+    lb.id = 'lightbox';
+    lb.innerHTML = '<img alt="">';
+    lb.addEventListener('click', () => lb.classList.remove('open'));
+    document.body.appendChild(lb);
+  }
+  lb.querySelector('img').src = src;
+  lb.classList.add('open');
 }
 
 function closeSheet() {
