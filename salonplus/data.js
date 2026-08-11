@@ -125,13 +125,9 @@
   room('103', 500, 560, 104, 116, 'H3');
   room('Break', 500, 718, 104, 52, 'BW', 1);
   room('Laundry', 500, 776, 104, 52, 'BW', 1);
-  room('101D', 646, 712, 64, 58, 'H3');
-  room('101C', 716, 712, 64, 58, 'H3');
-  room('101B', 786, 712, 74, 58, 'H3');
-  room('101',  646, 778, 64, 58, 'H5');
-  room('101E', 716, 778, 64, 58, 'H5');
-  room('101A', 786, 778, 74, 58, 'H5');
-  room('102',  716, 872, 64, 58, 'H5');
+  /* One suite 101 in the 100s block (per Anne 8/11/26); the subdivided
+     101A-E letters and the separate 102 came off the old stale board. */
+  room('101',  716, 872, 64, 58, 'H5');
 
   window.SALONPLUS = {
     ROSTER,

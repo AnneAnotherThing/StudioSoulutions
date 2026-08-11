@@ -353,10 +353,13 @@ function truncate(str, n) { return str.length > n ? str.slice(0, n - 1) + '…' 
 
 let svg = `<svg viewBox="0 0 ${LAYOUT.W} ${LAYOUT.H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Floor map of Salon Plus Studios with hallways">`;
 
-/* hallway "streets" under everything, mall-directory style */
+/* hallway "streets" under everything, mall-directory style. Solid fill
+   under one group opacity so crossings stay flat, no lines at junctions. */
+svg += '<g opacity="0.16">';
 for (const c of LAYOUT.corridors) {
-  svg += `<rect x="${c.band.x}" y="${c.band.y}" width="${c.band.w}" height="${c.band.h}" rx="16" fill="rgba(139,154,126,0.16)" stroke="rgba(107,122,95,0.22)" stroke-width="1.2"/>`;
+  svg += `<rect x="${c.band.x}" y="${c.band.y}" width="${c.band.w}" height="${c.band.h}" rx="16" fill="rgb(107,122,95)"/>`;
 }
+svg += '</g>';
 const bwHall = LAYOUT.corridors.find(c => c.id === 'BW');
 if (bwHall) {
   svg += `<text transform="translate(${bwHall.band.x + bwHall.band.w/2 + 4}, ${bwHall.band.y + bwHall.band.h/2 + 60}) rotate(-90)" text-anchor="middle" style="font-size:13px; letter-spacing:.34em; fill: rgba(107,122,95,0.55); font-weight:600;">BREEZEWAY</text>`;

@@ -678,9 +678,12 @@ function buildMapSvg() {
   const NS = 'http://www.w3.org/2000/svg';
   const hallG = document.createElementNS(NS, 'g');
   hallG.setAttribute('id', 'corridorLayer');
-  let hallHtml = LAYOUT.corridors.map(c =>
-    `<rect x="${c.band.x}" y="${c.band.y}" width="${c.band.w}" height="${c.band.h}" rx="16" fill="rgba(139,154,126,0.16)" stroke="rgba(107,122,95,0.22)" stroke-width="1.2"/>`
-  ).join('');
+  // Solid-fill bands under one group opacity: where halls cross, the
+  // overlap composites to the same flat shade instead of stacking darker,
+  // and with no per-rect strokes there are no lines through junctions.
+  let hallHtml = '<g opacity="0.16">' + LAYOUT.corridors.map(c =>
+    `<rect x="${c.band.x}" y="${c.band.y}" width="${c.band.w}" height="${c.band.h}" rx="16" fill="rgb(107,122,95)"/>`
+  ).join('') + '</g>';
   // street name down the breezeway, the map's spine
   const bw = LAYOUT.corridors.find(c => c.id === 'BW');
   if (bw) {
