@@ -24,6 +24,8 @@
      (it even had Deuces in the wrong suite), so every other name came off
      until confirmed. To verify a studio: move its line up from UNVERIFIED. */
   const ROSTER = {
+    '103':  'Soul and Beauty Day Spa', /* claimed via interest form 8/11/26, Christina */
+    '212':  'True Story Tha Barber',   /* claimed via interest form 8/11/26, True */
     '301':  'Deuces Nail Studio',   /* board says 302; really 301, confirmed by Anne */
   };
 
@@ -32,7 +34,6 @@
   const UNVERIFIED_BOARD_ROSTER = {
     '101A': 'HairCutsByAlex',
     '101B': 'Southpaw Studio',
-    '103':  'Soul and Beauty Day Spa',
     '106':  'Royal Laser Med Spa',
     '201':  'DO LA LA Salon',
     '202':  'Primos Fine Cuts',
@@ -40,7 +41,6 @@
     '205':  'FinedreadLocs Natural Hair Academy',
     '209':  'Style Beauty Salon',
     '211':  'Braids, Dreds & Beyond',
-    '212':  'True Story Tha Barber',
     '215':  "Ruben's Barber Parlor",
     '302':  'SetsByBecca',
     '304':  'Classy Cuts By Rachel',

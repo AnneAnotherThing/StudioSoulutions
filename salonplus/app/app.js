@@ -79,6 +79,32 @@ const tenants = Object.entries(ROSTER).map(([suite, name], i) => {
       hours: 'Tue–Sat 10–6',
     });
   }
+  if (suite === '103') {
+    // Soul and Beauty Day Spa, claimed via the interest form 8/11/26
+    Object.assign(base, {
+      claimed: true, open: true,
+      bio: 'Christina specializes in therapeutic and medical massage, with anti-aging and hydra-facials and deep-clean facials alongside. Care that works below the surface. Find the spa on Instagram at @soulandbeauty.dayspa.',
+      tags: ['Therapeutic Massage', 'Medical Massage', 'Hydra-Facial', 'Deep Clean Facial'],
+      hours: 'Tue–Sat 10–6',
+      book: 'https://www.vagaro.com/soulandbeautydayspa',
+      bookLabel: 'Vagaro',
+      call: '(623) 915-1755',
+      text: '(623) 915-1755',
+    });
+  }
+  if (suite === '212') {
+    // True Story Tha Barber, claimed via the interest form 8/11/26
+    Object.assign(base, {
+      claimed: true, open: true,
+      bio: 'Award-winning barber work, consistent and detailed, at a price that respects your wallet. Come find out for yourself. On Instagram at @true_story_tha_barber_.',
+      tags: ['Barber', 'Cuts', 'Award-Winning'],
+      hours: 'Tue–Sun 10–7',
+      book: 'https://truestorythabarber.square.site',
+      bookLabel: 'Square',
+      call: '(330) 962-6676',
+      text: '(330) 962-6676',
+    });
+  }
   return base;
 });
 
