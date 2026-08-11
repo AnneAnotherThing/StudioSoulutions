@@ -129,6 +129,8 @@
 
 <script>
 const CODE_KEY = 'sp-leads-code-v1';
+/* ?building=some-slug scopes the list; ?building=* shows every building */
+const BUILDING = new URLSearchParams(location.search).get('building') || 'salonplus';
 let rows = [];
 
 const $ = id => document.getElementById(id);
@@ -138,7 +140,7 @@ async function load(code) {
   const res = await fetch('/api/salonplus-leads', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ code, building: 'salonplus' }),
+    body: JSON.stringify({ code, building: BUILDING }),
   });
   if (res.status === 401) throw new Error('bad-code');
   if (!res.ok) throw new Error('server');
@@ -158,12 +160,17 @@ function render() {
     const when = r.created_at ? new Date(r.created_at).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : '';
     const line = (label, html) => html ? `<dt>${label}</dt><dd>${html}</dd>` : '';
     const services = (r.services || []).map(s => `<span class="pill">${esc(s)}</span>`).join('');
+    const photos = (r.photos || []).map(u =>
+      `<a href="${esc(u)}" target="_blank" rel="noopener"><img src="${esc(u)}" alt="" style="width:74px;height:74px;object-fit:cover;border-radius:10px;border:1px solid var(--line);display:block;"></a>`
+    ).join('');
     return `<div class="card">
       <div class="card-top">
         <span class="biz">${esc(r.business)}</span>
         ${r.suite ? `<span class="suite-tag">Suite ${esc(r.suite)}</span>` : ''}
+        ${BUILDING === '*' && r.building ? `<span class="suite-tag">${esc(r.building)}</span>` : ''}
         <span class="when">${esc(when)}</span>
       </div>
+      ${photos ? `<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">${photos}</div>` : ''}
       <dl class="rows">
         ${line('Contact', esc(r.name))}
         ${line('Phone', r.phone ? `<a href="tel:${esc(r.phone)}">${esc(r.phone)}</a>${r.ok_to_text ? ' &middot; okay to text' : ' &middot; call, no text'}` : '')}

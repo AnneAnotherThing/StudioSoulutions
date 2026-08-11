@@ -51,10 +51,10 @@ export default async function handler(request) {
     return json(200, { ok: true });
   }
 
+  // building '*' returns every building's submissions in one list
   const building = typeof p.building === 'string' && p.building ? p.building : 'salonplus';
-  const query = `${url}/rest/v1/${TABLE}`
-    + `?building=eq.${encodeURIComponent(building)}`
-    + `&order=created_at.desc&limit=500`;
+  const filter = building === '*' ? '' : `building=eq.${encodeURIComponent(building)}&`;
+  const query = `${url}/rest/v1/${TABLE}?${filter}order=created_at.desc&limit=500`;
 
   const res = await fetch(query, {
     headers: { apikey: key, authorization: `Bearer ${key}` },

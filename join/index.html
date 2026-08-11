@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#F5EDE0" />
+<title>Get your studio on the map - Studio Soulutions</title>
+<meta name="description" content="Work in a salon-suite building? Get your studio listed: your services, booking link, and photos, findable by everyone who walks in. Free while your building's directory is being built." />
+<link rel="canonical" href="https://studiosoulutions.com/join/" />
+<link rel="icon" type="image/png" sizes="64x64" href="../assets/favicon-64.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:         #F5EDE0;
+    --bg-2:       #EFE4D2;
+    --surface:    #FBF6EE;
+    --ink:        #3D3530;
+    --ink-soft:   #6B6357;
+    --ink-faint:  #8B7E70;
+    --sage:       #8B9A7E;
+    --sage-deep:  #6B7A5F;
+    --clay:       #C97B5A;
+    --line:       #E5D9C3;
+    --line-2:     #D4C4A8;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased; line-height: 1.55;
+  }
+  .serif { font-family: 'Fraunces', Georgia, serif; font-variation-settings: 'opsz' 144; }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 0 20px 70px; }
+  header { padding: 22px 0 18px; border-bottom: 1px solid var(--line); margin-bottom: 30px; }
+  .lockup { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+  .lockup img { height: 40px; width: auto; display: block; }
+  .lockup span { font-family:'Fraunces',serif; font-weight: 600; font-size: 19px; letter-spacing: -0.01em; }
+  .eyebrow { font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase; font-weight: 600; color: var(--sage-deep); }
+  h1 { font-family:'Fraunces',serif; font-weight: 600; font-size: clamp(28px, 5vw, 40px); letter-spacing: -0.02em; line-height: 1.1; margin-top: 8px; }
+  h1 em { font-style: italic; font-weight: 500; color: var(--sage-deep); }
+  .lede { color: var(--ink-soft); margin-top: 12px; max-width: 36em; }
+
+  .form-card {
+    margin-top: 30px; background: var(--surface);
+    border: 1px solid var(--line); border-radius: 20px;
+    padding: 28px 24px; box-shadow: 0 1px 2px rgba(61,53,48,0.04), 0 10px 30px rgba(61,53,48,0.07);
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 540px) { .grid-2 { grid-template-columns: 1fr; } }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 12.5px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px; }
+  .field input[type=text], .field input[type=tel], .field input[type=email], .field textarea {
+    width: 100%; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--line-2);
+    background: #FFFDF9; font: inherit; color: var(--ink);
+  }
+  .field input:focus, .field textarea:focus { outline: none; border-color: var(--sage); }
+  .req { color: var(--clay); }
+  .svc-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .svc { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line-2); border-radius: 999px; padding: 8px 14px; font-size: 14px; cursor: pointer; background: #FFFDF9; user-select: none; }
+  .svc input { accent-color: var(--sage-deep); }
+  .svc.on { border-color: var(--sage-deep); background: rgba(139,154,126,0.12); }
+  .check-row { display: flex; align-items: center; gap: 8px; }
+  .check-row input { accent-color: var(--sage-deep); }
+  .check-row label { margin: 0; text-transform: none; letter-spacing: 0; font-weight: 400; font-size: 14px; color: var(--ink); }
+  .hp { position: absolute; left: -9999px; top: -9999px; }
+
+  .btn {
+    display: inline-block; padding: 13px 28px; border-radius: 999px; border: 1px solid transparent;
+    font: inherit; font-weight: 600; font-size: 15px; cursor: pointer; transition: all .15s ease;
+  }
+  .btn-primary { background: var(--ink); color: var(--surface); }
+  .btn-primary:hover { background: var(--sage-deep); }
+  .btn-primary[disabled] { opacity: .6; cursor: default; }
+  .btn-ghost { border-color: var(--line-2); color: var(--ink); background: transparent; }
+  .btn-ghost:hover { border-color: var(--sage); color: var(--sage-deep); }
+
+  .form-msg { margin-top: 12px; font-size: 14px; min-height: 1.2em; }
+  .form-msg.err { color: #A8593E; }
+  .fine { margin-top: 10px; font-size: 12.5px; color: var(--ink-faint); }
+  .thanks { display: none; text-align: center; padding: 40px 10px; }
+  .thanks h3 { font-family:'Fraunces',serif; font-weight: 600; font-size: 26px; }
+  .thanks p { color: var(--ink-soft); margin-top: 10px; max-width: 30em; margin-left: auto; margin-right: auto; }
+  footer { margin-top: 46px; text-align: center; font-size: 12.5px; color: var(--ink-faint); }
+  footer a { color: var(--sage-deep); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="lockup" href="/">
+      <img src="../assets/logo_ss_green_v5.png" alt="" onerror="this.style.display='none'">
+      <span>Studio Soulutions</span>
+    </a>
+  </header>
+
+  <div class="eyebrow">For studio professionals</div>
+  <h1>Get your studio <em>on the map</em></h1>
+  <p class="lede">Work in a salon-suite building? Tell us where you are and what you do, and your studio becomes findable: your services, your booking link, your photos, for everyone who walks in the door. Free while your building's directory is being built.</p>
+
+  <div class="form-card">
+    <form id="interestForm">
+      <div class="hp"><label>Leave this empty<input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
+
+      <div class="field">
+        <label for="f_building">Your building or shopping center <span class="req">*</span></label>
+        <input type="text" id="f_building" name="building_name" required placeholder="e.g. Salon Plus Studios, Phoenix">
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="f_biz">Business name <span class="req">*</span></label>
+          <input type="text" id="f_biz" name="business" required autocomplete="organization" placeholder="e.g. Deuces Nail Studio">
+        </div>
+        <div class="field">
+          <label for="f_suite">Suite number</label>
+          <input type="text" id="f_suite" name="suite" placeholder="e.g. 302">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="f_name">Your name <span class="req">*</span></label>
+          <input type="text" id="f_name" name="name" required autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="f_phone">Phone <span class="req" title="Phone or email, at least one">*</span></label>
+          <input type="tel" id="f_phone" name="phone" autocomplete="tel">
+          <div class="check-row" style="margin-top:8px;">
+            <input type="checkbox" id="f_text" name="ok_to_text" checked>
+            <label for="f_text">Okay to text me</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="f_email">Email <span class="req" title="Phone or email, at least one">*</span></label>
+          <input type="email" id="f_email" name="email" autocomplete="email">
+        </div>
+        <div class="field">
+          <label for="f_hours">Days &amp; hours <span style="text-transform:none;letter-spacing:0;font-weight:400;">(roughly)</span></label>
+          <input type="text" id="f_hours" name="hours" placeholder="e.g. Tue-Sat 10-6">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>What do you do?</label>
+        <div class="svc-row" id="svcRow">
+          <label class="svc"><input type="checkbox" name="services" value="Hair">Hair</label>
+          <label class="svc"><input type="checkbox" name="services" value="Barber">Barber</label>
+          <label class="svc"><input type="checkbox" name="services" value="Nails">Nails</label>
+          <label class="svc"><input type="checkbox" name="services" value="Lashes / Brows">Lashes / Brows</label>
+          <label class="svc"><input type="checkbox" name="services" value="Skin / Spa">Skin / Spa</label>
+          <label class="svc"><input type="checkbox" name="services" value="Massage">Massage</label>
+          <label class="svc"><input type="checkbox" name="services" value="Other">Other</label>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="f_insta">Instagram</label>
+          <input type="text" id="f_insta" name="instagram" placeholder="@yourstudio">
+        </div>
+        <div class="field">
+          <label for="f_book">Booking link</label>
+          <input type="text" id="f_book" name="booking" placeholder="StyleSeat, Booksy, GlossGenius...">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="f_notes">Anything else? <span style="text-transform:none;letter-spacing:0;font-weight:400;">(optional)</span></label>
+        <textarea id="f_notes" name="notes" rows="3" placeholder="Specialties, how you'd like your studio described..."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Photos of your work or studio <span style="text-transform:none;letter-spacing:0;font-weight:400;">(optional, up to 3)</span></label>
+        <input type="file" id="f_photos" accept="image/*" multiple style="display:none;">
+        <button type="button" class="btn btn-ghost" id="addPhotosBtn" style="font-size:14px; padding:10px 22px;">Add photos</button>
+        <div id="photoStrip" style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;"></div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="submitBtn">Put me on the map</button>
+      <p class="form-msg" id="formMsg"></p>
+      <p class="fine"><span class="req">*</span> required &middot; phone and email count as one: leave at least one so we can reach you.</p>
+    </form>
+
+    <div class="thanks" id="thanksBox">
+      <h3>You're on the list.</h3>
+      <p>Thank you! We'll follow up soon to get your studio card just right, and to bring the rest of your building along with you.</p>
+    </div>
+  </div>
+
+  <footer>
+    <a href="/">Studio Soulutions</a> &middot; every studio under one roof, discoverable
+  </footer>
+</div>
+
+<script>
+/* ----- ?building= prefill, for QR codes and links per building ----- */
+const buildingParam = new URLSearchParams(location.search).get('building');
+if (buildingParam) document.getElementById('f_building').value = buildingParam;
+
+/* ----- service pills ----- */
+document.querySelectorAll('.svc input').forEach(cb => {
+  cb.addEventListener('change', () => cb.closest('.svc').classList.toggle('on', cb.checked));
+});
+
+/* ----- photos: pick up to 3, compress in the browser so uploads stay
+   small enough for the function, thumbnail strip with remove ----- */
+const MAX_PHOTOS = 3;
+let pickedPhotos = [];
+
+function compressImage(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const MAX_DIM = 1400;
+      const scale = Math.min(1, MAX_DIM / Math.max(img.width, img.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(img.src);
+      resolve(canvas.toDataURL('image/jpeg', 0.82));
+    };
+    img.onerror = () => { URL.revokeObjectURL(img.src); reject(new Error('bad image')); };
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+function renderPhotoStrip() {
+  const strip = document.getElementById('photoStrip');
+  strip.innerHTML = pickedPhotos.map((p, i) => `
+    <div style="position:relative; width:84px; height:84px;">
+      <img src="${p}" alt="" style="width:100%; height:100%; object-fit:cover; border-radius:12px; border:1px solid var(--line-2); display:block;">
+      <button type="button" data-remove="${i}" aria-label="Remove photo"
+        style="position:absolute; top:-7px; right:-7px; width:22px; height:22px; border-radius:50%; border:none; background:var(--ink); color:#fff; font-size:13px; line-height:1; cursor:pointer;">&times;</button>
+    </div>`).join('');
+  document.getElementById('addPhotosBtn').style.display = pickedPhotos.length >= MAX_PHOTOS ? 'none' : '';
+}
+
+document.getElementById('addPhotosBtn').addEventListener('click', () => document.getElementById('f_photos').click());
+document.getElementById('photoStrip').addEventListener('click', e => {
+  const btn = e.target.closest('[data-remove]');
+  if (!btn) return;
+  pickedPhotos.splice(Number(btn.dataset.remove), 1);
+  renderPhotoStrip();
+});
+document.getElementById('f_photos').addEventListener('change', async e => {
+  const room = MAX_PHOTOS - pickedPhotos.length;
+  const files = [...e.target.files].filter(f => f.type.startsWith('image/')).slice(0, room);
+  e.target.value = '';
+  for (const f of files) {
+    try { pickedPhotos.push(await compressImage(f)); } catch { /* skip unreadable file */ }
+  }
+  renderPhotoStrip();
+});
+
+/* ----- submit ----- */
+const form = document.getElementById('interestForm');
+const msg  = document.getElementById('formMsg');
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  msg.className = 'form-msg';
+
+  const buildingName = form.building_name.value.trim();
+  const data = {
+    business:       form.business.value.trim(),
+    suite:          form.suite.value.trim(),
+    name:           form.name.value.trim(),
+    phone:          form.phone.value.trim(),
+    ok_to_text:     form.ok_to_text.checked,
+    email:          form.email.value.trim(),
+    hours:          form.hours.value.trim(),
+    services:       [...form.querySelectorAll('.svc input:checked')].map(c => c.value),
+    instagram:      form.instagram.value.trim(),
+    booking:        form.booking.value.trim(),
+    notes:          form.notes.value.trim(),
+    photos:         pickedPhotos,
+    hp:             form.company.value,
+    building:       buildingName,        // the function slugs this for storage
+    building_label: buildingName,        // and shows this in the lead email
+    source:         'join-web',
+  };
+  if (!data.phone && !data.email) {
+    msg.textContent = 'Leave a phone number or an email so we can reach you.';
+    msg.classList.add('err');
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Sending…';
+  try {
+    const res = await fetch('/api/interest', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error('bad status ' + res.status);
+    form.style.display = 'none';
+    document.getElementById('thanksBox').style.display = 'block';
+  } catch {
+    msg.textContent = "Hmm, that didn't go through. Give it another try in a moment.";
+    msg.classList.add('err');
+    btn.disabled = false; btn.textContent = 'Put me on the map';
+  }
+});
+</script>
+</body>
+</html>
