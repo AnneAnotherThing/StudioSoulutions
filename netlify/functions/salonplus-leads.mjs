@@ -3,9 +3,9 @@
    Studio Soulutions platform build
    ---------------------------------------------------------------------
    Serves interest-form submissions to the viewer page at
-   /salonplus/leads.html. Reads ss_interest with the server-side service
-   key, gated by a shared passcode, so the table never needs a public
-   read policy and the anon key can't see leads.
+   /salonplus/leads.html, and deletes one on request. Uses the
+   server-side service key, gated by a shared passcode, so the table
+   never needs a public read policy and the anon key can't see leads.
 
    Required env vars (set in the Netlify dashboard):
      SUPABASE_URL           Anne's shared forms/leads Supabase project URL
@@ -36,6 +36,20 @@ export default async function handler(request) {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_KEY;
   if (!url || !key) return json(500, { error: 'SUPABASE_URL / SUPABASE_SERVICE_KEY not set.' });
+
+  if (p.action === 'delete') {
+    const id = typeof p.id === 'string' ? p.id.trim() : '';
+    if (!/^[0-9a-f-]{36}$/i.test(id)) return json(400, { error: 'Bad id.' });
+    const res = await fetch(`${url}/rest/v1/${TABLE}?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: { apikey: key, authorization: `Bearer ${key}` },
+    });
+    if (!res.ok) {
+      console.error('leads: delete failed', res.status, (await res.text()).slice(0, 300));
+      return json(502, { error: 'Could not delete the submission.' });
+    }
+    return json(200, { ok: true });
+  }
 
   const building = typeof p.building === 'string' && p.building ? p.building : 'salonplus';
   const query = `${url}/rest/v1/${TABLE}`

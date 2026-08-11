@@ -243,7 +243,7 @@
     </div>
 
     <div class="form-card">
-      <form id="interestForm" novalidate>
+      <form id="interestForm">
         <div class="hp"><label>Leave this empty<input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
 
         <div class="grid-2">
@@ -263,7 +263,7 @@
             <input type="text" id="f_name" name="name" required autocomplete="name">
           </div>
           <div class="field">
-            <label for="f_phone">Phone</label>
+            <label for="f_phone">Phone <span class="req" title="Phone or email, at least one">*</span></label>
             <input type="tel" id="f_phone" name="phone" autocomplete="tel">
             <div class="check-row" style="margin-top:8px;">
               <input type="checkbox" id="f_text" name="ok_to_text" checked>
@@ -274,7 +274,7 @@
 
         <div class="grid-2">
           <div class="field">
-            <label for="f_email">Email</label>
+            <label for="f_email">Email <span class="req" title="Phone or email, at least one">*</span></label>
             <input type="email" id="f_email" name="email" autocomplete="email">
           </div>
           <div class="field">
@@ -314,6 +314,7 @@
 
         <button type="submit" class="btn btn-primary" id="submitBtn">Put me on the map</button>
         <p class="form-msg" id="formMsg"></p>
+        <p style="margin-top:10px; font-size:12.5px; color:var(--ink-faint);"><span class="req">*</span> required &middot; phone and email count as one: leave at least one so Laura can reach you.</p>
       </form>
 
       <div class="thanks" id="thanksBox">

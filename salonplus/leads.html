@@ -79,6 +79,13 @@
   .rows dd { color: var(--ink); overflow-wrap: anywhere; }
   .rows a { color: var(--bronze-deep); }
   .pill { display: inline-block; background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 1px 10px; font-size: 12.5px; margin: 2px 4px 2px 0; }
+  .del {
+    background: transparent; border: 1px solid var(--line); color: var(--ink-faint);
+    font-family:'Jost',sans-serif; font-size: 12px; letter-spacing: .08em;
+    border-radius: 999px; padding: 4px 14px; cursor: pointer; margin-left: auto;
+  }
+  .del:hover { border-color: #A04A2E; color: #A04A2E; }
+  .del[disabled] { opacity: .5; cursor: default; }
   .empty { text-align: center; color: var(--ink-faint); padding: 60px 0; }
   .hidden { display: none; }
   footer { margin-top: 40px; text-align: center; font-size: 12.5px; color: var(--ink-faint); }
@@ -167,9 +174,34 @@ function render() {
         ${line('Booking', esc(r.booking))}
         ${line('Notes', esc(r.notes))}
       </dl>
+      <div style="margin-top:12px; display:flex;">
+        <button class="del" data-id="${esc(r.id)}" data-biz="${esc(r.business)}">Remove</button>
+      </div>
     </div>`;
   }).join('');
 }
+
+// One handler for every Remove button, confirm first, then delete server-side.
+$('cards').addEventListener('click', async e => {
+  const btn = e.target.closest('.del');
+  if (!btn) return;
+  const { id, biz } = btn.dataset;
+  if (!confirm(`Remove the submission from "${biz}"? This can't be undone.`)) return;
+  btn.disabled = true; btn.textContent = 'Removing…';
+  try {
+    const res = await fetch('/api/salonplus-leads', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ code: sessionStorage.getItem(CODE_KEY), action: 'delete', id }),
+    });
+    if (!res.ok) throw new Error('delete failed');
+    rows = rows.filter(r => r.id !== id);
+    render();
+  } catch {
+    btn.disabled = false; btn.textContent = 'Remove';
+    alert("Couldn't remove it. Try again in a moment.");
+  }
+});
 
 async function unlock(code, { silent } = {}) {
   const btn = $('unlockBtn');
