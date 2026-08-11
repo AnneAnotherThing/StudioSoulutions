@@ -765,7 +765,10 @@ function renderMap() {
   const targetSuite = document.querySelector(`#phoneMapSuites .suite[data-suite="${cssEscape(suiteKey)}"]`);
   if (targetSuite) targetSuite.classList.add('is-target');
 
-  svg.setAttribute('viewBox', computeFocusViewBox(room));
+  // Full building stays in frame: with the whole map visible you can
+  // follow the path from the entrance pin to the pulsing suite without
+  // losing your bearings to a zoom.
+  svg.setAttribute('viewBox', `0 0 ${LAYOUT.W} ${LAYOUT.H}`);
   if (card) {
     card.hidden = false;
     const av = document.getElementById('mrcAvatar');
@@ -781,19 +784,6 @@ function renderMap() {
   if (subline)  subline.textContent = `${t.suite} · start at the entrance pin, the glowing suite is theirs.`;
 }
 
-/* Zoom to a suite plus enough surrounding streets for context; never
-   tighter than about half the building so chips stay map-sized. */
-function computeFocusViewBox(room) {
-  const PAD = 120, MIN_W = 520, MIN_H = 460;
-  let x = room.x - PAD, y = room.y - PAD;
-  let w = room.w + PAD * 2, h = room.h + PAD * 2;
-  if (w < MIN_W) { x -= (MIN_W - w) / 2; w = MIN_W; }
-  if (h < MIN_H) { y -= (MIN_H - h) / 2; h = MIN_H; }
-  x = Math.max(0, Math.min(x, LAYOUT.W - w));
-  y = Math.max(0, Math.min(y, LAYOUT.H - h));
-  w = Math.min(LAYOUT.W - x, w); h = Math.min(LAYOUT.H - y, h);
-  return `${x} ${y} ${w} ${h}`;
-}
 function themeBg(theme) {
   const map = {'av-sage':'#8B9A7E','av-moss':'#6B7A5F','av-clay':'#C97B5A','av-rose':'#C9928C',
     'av-stone':'#8B7E70','av-sand':'#C9B89A','av-rust':'#A8593E','av-fern':'#7A8B6F',
