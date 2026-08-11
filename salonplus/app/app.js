@@ -83,6 +83,7 @@ const tenants = Object.entries(ROSTER).map(([suite, name], i) => {
     // Soul and Beauty Day Spa, claimed via the interest form 8/11/26
     Object.assign(base, {
       claimed: true, open: true,
+      photo: '../../assets/photos/salonplus-103-soulandbeauty.png',
       bio: 'Christina specializes in therapeutic and medical massage, with anti-aging and hydra-facials and deep-clean facials alongside. Care that works below the surface. Find the spa on Instagram at @soulandbeauty.dayspa.',
       tags: ['Therapeutic Massage', 'Medical Massage', 'Hydra-Facial', 'Deep Clean Facial'],
       hours: 'Tue–Sat 10–6',
