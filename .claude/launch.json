@@ -2,10 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "studiosoulutions",
+      "name": "static-site",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["--yes", "serve", ".", "-l", "5057"],
-      "port": 5057
+      "runtimeArgs": ["-y", "http-server", "-p", "8788", "-c-1", "."],
+      "port": 8788
     }
   ]
 }

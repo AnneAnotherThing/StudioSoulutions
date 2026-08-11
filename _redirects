@@ -1,4 +1,4 @@
-# Studio Soulutions, Cloudflare Pages redirects
+# Studio Soulutions, Netlify redirects
 # Pretty URLs for the entry points
 /kiosk      /kiosk.html      200
 /admin      /admin.html      200

@@ -1,5 +1,5 @@
 /* =====================================================================
-   Studio Soulutions, AI bio generator (Cloudflare Pages Function)
+   Studio Soulutions, AI bio generator (Netlify Function)
    Studio Soulutions platform build
    ---------------------------------------------------------------------
    Takes a tenant's rough notes + a few structured fields, asks Claude to
@@ -7,7 +7,8 @@
    friendly), and returns them as JSON the admin can drop straight into
    the editor.
 
-   Required env var:  ANTHROPIC_API_KEY   (set in Cloudflare Pages dashboard)
+   Required env var:  ANTHROPIC_API_KEY   (set in the Netlify dashboard,
+                                          Site settings > Environment variables)
 
    Optional env var:  ANTHROPIC_MODEL     (defaults to claude-sonnet-4-6)
    ===================================================================== */
@@ -15,11 +16,16 @@
 const ANTHROPIC_API = 'https://api.anthropic.com/v1/messages';
 const DEFAULT_MODEL = 'claude-sonnet-4-6';
 
-export async function onRequestOptions() {
-  return new Response(null, { status: 204, headers: corsHeaders() });
-}
+export const config = { path: '/api/generate-bio' };
 
-export async function onRequestPost({ request, env }) {
+export default async function handler(request) {
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: corsHeaders() });
+  }
+  if (request.method !== 'POST') {
+    return json(405, { error: 'Method not allowed' });
+  }
+
   let payload;
   try { payload = await request.json(); }
   catch { return json(400, { error: 'Invalid JSON body' }); }
@@ -36,14 +42,14 @@ export async function onRequestPost({ request, env }) {
     return json(400, { error: 'Need at least a name or a few rough notes to write a bio.' });
   }
 
-  const apiKey = env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     return json(500, {
-      error: 'ANTHROPIC_API_KEY is not set on this deployment. Set it in the Cloudflare Pages dashboard and redeploy.'
+      error: 'ANTHROPIC_API_KEY is not set on this deployment. Set it in the Netlify dashboard and redeploy.'
     });
   }
 
-  const model = env.ANTHROPIC_MODEL || DEFAULT_MODEL;
+  const model = process.env.ANTHROPIC_MODEL || DEFAULT_MODEL;
 
   const system = [
     "You are a copywriter for Studio Soulutions, a directory app that lives on touchscreen kiosks and phones inside salon-suite buildings.",

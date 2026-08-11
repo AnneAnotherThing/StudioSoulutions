@@ -1,5 +1,5 @@
 /* =====================================================================
-   Studio Soulutions, Salon Plus interest sheet (Cloudflare Pages Function)
+   Studio Soulutions, Salon Plus interest sheet (Netlify Function)
    Studio Soulutions platform build
    ---------------------------------------------------------------------
    Receives interest-form submissions from /salonplus and does two things:
@@ -9,8 +9,10 @@
    Succeeds if EITHER sink works, so a mail hiccup never loses a lead
    and a DB hiccup never blocks the email. Fails only if both fail.
 
-   Required env vars (set in the Cloudflare Pages dashboard):
-     SUPABASE_URL           shared Hive-Rise project URL
+   Required env vars (set in the Netlify dashboard, Site settings >
+   Environment variables):
+     SUPABASE_URL           https://jxeynaiaibbmdkugstxc.supabase.co
+                            (Anne's shared forms/leads Supabase project)
      SUPABASE_SERVICE_KEY   service-role key (server-side only, never shipped)
      RESEND_API_KEY         Anne's Resend key
      LEAD_TO                Laura's email
@@ -27,11 +29,16 @@ const BUILDING_NAMES = {
   salonplus: 'Salon Plus Studios',
 };
 
-export async function onRequestOptions() {
-  return new Response(null, { status: 204, headers: corsHeaders() });
-}
+export const config = { path: '/api/salonplus-interest' };
 
-export async function onRequestPost({ request, env }) {
+export default async function handler(request) {
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: corsHeaders() });
+  }
+  if (request.method !== 'POST') {
+    return json(405, { error: 'Method not allowed' });
+  }
+
   let p;
   try { p = await request.json(); }
   catch { return json(400, { error: 'Invalid JSON body' }); }
@@ -63,7 +70,7 @@ export async function onRequestPost({ request, env }) {
     return json(400, { error: 'need a phone or an email' });
   }
 
-  const results = await Promise.allSettled([saveToSupabase(env, row), emailLead(env, row)]);
+  const results = await Promise.allSettled([saveToSupabase(row), emailLead(row)]);
   const saved  = results[0].status === 'fulfilled';
   const mailed = results[1].status === 'fulfilled';
 
@@ -78,9 +85,9 @@ export async function onRequestPost({ request, env }) {
   return json(200, { ok: true, saved, mailed });
 }
 
-async function saveToSupabase(env, row) {
-  const url = env.SUPABASE_URL;
-  const key = env.SUPABASE_SERVICE_KEY;
+async function saveToSupabase(row) {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_KEY;
   if (!url || !key) throw new Error('SUPABASE_URL / SUPABASE_SERVICE_KEY not set');
 
   const res = await fetch(`${url}/rest/v1/${TABLE}`, {
@@ -96,13 +103,13 @@ async function saveToSupabase(env, row) {
   if (!res.ok) throw new Error(`supabase ${res.status}: ${(await res.text()).slice(0, 200)}`);
 }
 
-async function emailLead(env, row) {
-  const key = env.RESEND_API_KEY;
-  const to  = env.LEAD_TO;
+async function emailLead(row) {
+  const key = process.env.RESEND_API_KEY;
+  const to  = process.env.LEAD_TO;
   if (!key || !to) throw new Error('RESEND_API_KEY / LEAD_TO not set');
 
-  const from = env.RESEND_FROM || 'Studio Soulutions <onboarding@resend.dev>';
-  const cc   = env.LEAD_CC ? [env.LEAD_CC] : undefined;
+  const from = process.env.RESEND_FROM || 'Studio Soulutions <onboarding@resend.dev>';
+  const cc   = process.env.LEAD_CC ? [process.env.LEAD_CC] : undefined;
 
   const line = (label, val) => val
     ? `<tr><td style="padding:6px 14px 6px 0;color:#6C685F;white-space:nowrap;">${label}</td><td style="padding:6px 0;color:#33312D;">${escHtml(val)}</td></tr>`

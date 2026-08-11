@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#F2EFE9" />
+<title>Salon Plus Studios - Interest submissions</title>
+<link rel="icon" type="image/png" sizes="64x64" href="../assets/favicon-64.png">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:       #F2EFE9;
+    --bg-2:     #EAE6DD;
+    --surface:  #FAF8F4;
+    --ink:      #33312D;
+    --ink-soft: #6C685F;
+    --ink-faint:#918C81;
+    --bronze:   #9A6B45;
+    --bronze-deep: #7C5334;
+    --silver:   #B9B4AC;
+    --line:     #DCD6CA;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55; min-height: 100vh;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 20px 60px; }
+  header { padding: 22px 0; border-bottom: 1px solid var(--line); margin-bottom: 26px; }
+  .lockup { display: flex; align-items: baseline; gap: 10px; }
+  .lockup .name { font-family:'Jost',sans-serif; font-weight: 400; font-size: 19px; letter-spacing: .14em; text-transform: uppercase; }
+  .lockup .name strong { font-weight: 600; color: var(--bronze); }
+  .eyebrow { font-family:'Jost',sans-serif; font-size: 12px; letter-spacing: .34em; text-transform: uppercase; font-weight: 500; color: var(--bronze); }
+  h1 { font-family:'Jost',sans-serif; font-weight: 300; font-size: clamp(26px, 4vw, 38px); margin-top: 6px; }
+  .sub { color: var(--ink-soft); margin-top: 6px; font-size: 15px; }
+
+  /* gate */
+  .gate { max-width: 420px; margin: 60px auto 0; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 30px; text-align: center; box-shadow: 0 10px 30px rgba(51,49,45,.06); }
+  .gate p { color: var(--ink-soft); font-size: 14.5px; margin: 10px 0 18px; }
+  .gate input {
+    width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--line);
+    background: #fff; font: inherit; text-align: center; letter-spacing: .1em;
+  }
+  .gate input:focus { outline: none; border-color: var(--bronze); }
+  .btn {
+    display: inline-block; margin-top: 14px; padding: 12px 28px; border-radius: 999px; border: none;
+    font-family:'Jost',sans-serif; font-weight: 500; font-size: 15px; letter-spacing: .06em;
+    background: var(--ink); color: var(--surface); cursor: pointer; transition: background .15s;
+  }
+  .btn:hover { background: var(--bronze-deep); }
+  .btn[disabled] { opacity: .55; cursor: default; }
+  .gate-err { color: #A04A2E; font-size: 13.5px; margin-top: 12px; display: none; }
+
+  /* toolbar */
+  .toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
+  .toolbar input {
+    flex: 1; min-width: 200px; padding: 11px 16px; border-radius: 999px; border: 1px solid var(--line);
+    background: var(--surface); font: inherit; font-size: 14.5px;
+  }
+  .toolbar input:focus { outline: none; border-color: var(--bronze); }
+  .count { font-family:'Jost',sans-serif; font-size: 13px; letter-spacing: .08em; color: var(--ink-faint); white-space: nowrap; }
+  .refresh { background: transparent; border: 1px solid var(--silver); color: var(--ink); padding: 10px 20px; border-radius: 999px; font-family:'Jost',sans-serif; font-size: 14px; cursor: pointer; }
+  .refresh:hover { border-color: var(--bronze); color: var(--bronze-deep); }
+
+  /* cards */
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+    padding: 20px 22px; margin-bottom: 14px; box-shadow: 0 1px 2px rgba(51,49,45,.04);
+  }
+  .card-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .biz { font-family:'Jost',sans-serif; font-weight: 500; font-size: 19px; }
+  .suite-tag { font-family:'Jost',sans-serif; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--bronze); border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; background: var(--bg-2); }
+  .when { font-size: 12.5px; color: var(--ink-faint); }
+  .rows { margin-top: 12px; display: grid; grid-template-columns: 110px 1fr; gap: 5px 14px; font-size: 14.5px; }
+  .rows dt { color: var(--ink-faint); }
+  .rows dd { color: var(--ink); overflow-wrap: anywhere; }
+  .rows a { color: var(--bronze-deep); }
+  .pill { display: inline-block; background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 1px 10px; font-size: 12.5px; margin: 2px 4px 2px 0; }
+  .empty { text-align: center; color: var(--ink-faint); padding: 60px 0; }
+  .hidden { display: none; }
+  footer { margin-top: 40px; text-align: center; font-size: 12.5px; color: var(--ink-faint); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="lockup"><span class="name">Salon <strong>Plus</strong> Studios</span></div>
+  </header>
+
+  <!-- passcode gate -->
+  <div class="gate" id="gate">
+    <div class="eyebrow">Private</div>
+    <h1>Interest submissions</h1>
+    <p>Enter the passcode to see who has asked to be on the map.</p>
+    <input id="codeInput" type="password" placeholder="Passcode" autocomplete="off" />
+    <br />
+    <button class="btn" id="unlockBtn">Open</button>
+    <div class="gate-err" id="gateErr">That passcode didn't work. Try again.</div>
+  </div>
+
+  <!-- list -->
+  <div class="hidden" id="listWrap">
+    <div class="eyebrow">Interest submissions</div>
+    <h1>Who wants on the map</h1>
+    <p class="sub">Every studio that filled out the interest form, newest first.</p>
+
+    <div class="toolbar" style="margin-top:22px;">
+      <input id="search" type="text" placeholder="Search name, business, suite&hellip;" />
+      <span class="count" id="count"></span>
+      <button class="refresh" id="refreshBtn">Refresh</button>
+    </div>
+
+    <div id="cards"></div>
+    <div class="empty hidden" id="empty">No submissions yet. They'll show up here the moment someone sends the form.</div>
+  </div>
+
+  <footer>Studio Soulutions &middot; Built for Salon Plus Studios</footer>
+</div>
+
+<script>
+const CODE_KEY = 'sp-leads-code-v1';
+let rows = [];
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+
+async function load(code) {
+  const res = await fetch('/api/salonplus-leads', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ code, building: 'salonplus' }),
+  });
+  if (res.status === 401) throw new Error('bad-code');
+  if (!res.ok) throw new Error('server');
+  return (await res.json()).rows || [];
+}
+
+function render() {
+  const q = $('search').value.trim().toLowerCase();
+  const shown = !q ? rows : rows.filter(r =>
+    [r.business, r.name, r.suite, r.email, r.phone, r.instagram, r.notes]
+      .some(v => (v || '').toLowerCase().includes(q)));
+
+  $('count').textContent = q ? `${shown.length} of ${rows.length}` : `${rows.length} total`;
+  $('empty').classList.toggle('hidden', shown.length > 0);
+
+  $('cards').innerHTML = shown.map(r => {
+    const when = r.created_at ? new Date(r.created_at).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : '';
+    const line = (label, html) => html ? `<dt>${label}</dt><dd>${html}</dd>` : '';
+    const services = (r.services || []).map(s => `<span class="pill">${esc(s)}</span>`).join('');
+    return `<div class="card">
+      <div class="card-top">
+        <span class="biz">${esc(r.business)}</span>
+        ${r.suite ? `<span class="suite-tag">Suite ${esc(r.suite)}</span>` : ''}
+        <span class="when">${esc(when)}</span>
+      </div>
+      <dl class="rows">
+        ${line('Contact', esc(r.name))}
+        ${line('Phone', r.phone ? `<a href="tel:${esc(r.phone)}">${esc(r.phone)}</a>${r.ok_to_text ? ' &middot; okay to text' : ' &middot; call, no text'}` : '')}
+        ${line('Email', r.email ? `<a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : '')}
+        ${line('Hours', esc(r.hours))}
+        ${line('Services', services)}
+        ${line('Instagram', esc(r.instagram))}
+        ${line('Booking', esc(r.booking))}
+        ${line('Notes', esc(r.notes))}
+      </dl>
+    </div>`;
+  }).join('');
+}
+
+async function unlock(code, { silent } = {}) {
+  const btn = $('unlockBtn');
+  btn.disabled = true; btn.textContent = 'Opening…';
+  try {
+    rows = await load(code);
+    sessionStorage.setItem(CODE_KEY, code);
+    $('gate').classList.add('hidden');
+    $('listWrap').classList.remove('hidden');
+    render();
+  } catch (e) {
+    sessionStorage.removeItem(CODE_KEY);
+    if (!silent) {
+      $('gateErr').style.display = 'block';
+      $('gateErr').textContent = e.message === 'bad-code'
+        ? "That passcode didn't work. Try again."
+        : "Couldn't reach the server. Try again in a moment.";
+    }
+  } finally {
+    btn.disabled = false; btn.textContent = 'Open';
+  }
+}
+
+$('unlockBtn').addEventListener('click', () => unlock($('codeInput').value.trim()));
+$('codeInput').addEventListener('keydown', e => { if (e.key === 'Enter') unlock($('codeInput').value.trim()); });
+$('search').addEventListener('input', render);
+$('refreshBtn').addEventListener('click', async () => {
+  const code = sessionStorage.getItem(CODE_KEY);
+  if (!code) return;
+  rows = await load(code).catch(() => rows);
+  render();
+});
+
+// Remembered for the tab: re-open without retyping.
+const saved = sessionStorage.getItem(CODE_KEY);
+if (saved) unlock(saved, { silent: true });
+</script>
+</body>
+</html>
