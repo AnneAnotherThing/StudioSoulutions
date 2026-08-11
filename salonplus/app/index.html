@@ -44,23 +44,25 @@
     50%      { filter: drop-shadow(0 0 15px rgba(201,123,90,0.95)); }
   }
   .map-svg .suite.is-target, .map-modal .suite.is-target { animation: suitePulse 1.4s ease-in-out infinite; }
-  /* lift the discover greeting, less empty photo before the question */
-  #view-discover .welcome { padding-top: 26px; min-height: 0; }
+  /* the greeting sits high and small; the min-height leaves a clear
+     stretch of pure hallway between the card and the search bar */
+  #view-discover .welcome { padding-top: 18px; min-height: 250px; }
   /* frosted panel behind welcome text: light enough that the hallway
      shows through it, small enough that the hallway owns the frame */
   .welcome-panel {
     display: inline-block;
-    background: rgba(250,248,244,0.55);
-    backdrop-filter: blur(7px);
-    -webkit-backdrop-filter: blur(7px);
+    background: rgba(250,248,244,0.32);
+    /* stronger blur carries the legibility that the lighter frost gave up */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(61,53,48,0.08);
-    border-radius: 16px;
-    padding: 11px 15px 12px;
+    border-radius: 14px;
+    padding: 8px 12px 10px;
     box-shadow: 0 8px 30px rgba(51,49,45,0.08);
   }
-  .welcome-panel h1 { font-size: 24px; }
-  .welcome-panel p { margin-top: 7px; font-size: 13px; }
-  .welcome-panel .eyebrow { margin-bottom: 6px; }
+  .welcome-panel h1 { font-size: 19px; }
+  .welcome-panel p { margin-top: 5px; font-size: 12px; }
+  .welcome-panel .eyebrow { margin-bottom: 4px; font-size: 10px; }
 </style>
 </head>
 <body>
