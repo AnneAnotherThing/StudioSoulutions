@@ -11,8 +11,7 @@
 
    Required env vars (set in the Netlify dashboard, Site settings >
    Environment variables):
-     SUPABASE_URL           https://jxeynaiaibbmdkugstxc.supabase.co
-                            (Anne's shared forms/leads Supabase project)
+     SUPABASE_URL           Anne's shared forms/leads Supabase project URL
      SUPABASE_SERVICE_KEY   service-role key (server-side only, never shipped)
      RESEND_API_KEY         Anne's Resend key
      LEAD_TO                Laura's email

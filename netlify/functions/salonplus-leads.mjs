@@ -8,7 +8,7 @@
    read policy and the anon key can't see leads.
 
    Required env vars (set in the Netlify dashboard):
-     SUPABASE_URL           https://jxeynaiaibbmdkugstxc.supabase.co
+     SUPABASE_URL           Anne's shared forms/leads Supabase project URL
      SUPABASE_SERVICE_KEY   service-role key (same as salonplus-interest)
      LEADS_CODE             the passcode the viewer page asks for
    ===================================================================== */
