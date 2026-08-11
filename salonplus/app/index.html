@@ -44,9 +44,10 @@
     50%      { filter: drop-shadow(0 0 15px rgba(201,123,90,0.95)); }
   }
   .map-svg .suite.is-target, .map-modal .suite.is-target { animation: suitePulse 1.4s ease-in-out infinite; }
-  /* the greeting sits high and small; the min-height leaves a clear
-     stretch of pure hallway between the card and the search bar */
-  #view-discover .welcome { padding-top: 18px; min-height: 250px; }
+  /* the greeting sits high and small; flex-start pins it to the top so
+     the min-height leaves a clear run of pure hallway BENEATH the card,
+     between it and the search bar */
+  #view-discover .welcome { padding-top: 18px; min-height: 250px; justify-content: flex-start; }
   /* frosted panel behind welcome text: light enough that the hallway
      shows through it, small enough that the hallway owns the frame */
   .welcome-panel {
