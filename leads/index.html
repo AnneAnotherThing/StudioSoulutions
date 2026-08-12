@@ -4,22 +4,23 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex, nofollow" />
-<meta name="theme-color" content="#F2EFE9" />
-<title>Salon Plus Studios - Interest submissions</title>
+<meta name="theme-color" content="#F5EDE0" />
+<title>Studio Soulutions - Interest submissions</title>
 <link rel="icon" type="image/png" sizes="64x64" href="../assets/favicon-64.png">
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --bg:       #F2EFE9;
-    --bg-2:     #EAE6DD;
-    --surface:  #FAF8F4;
-    --ink:      #33312D;
-    --ink-soft: #6C685F;
-    --ink-faint:#918C81;
-    --bronze:   #9A6B45;
-    --bronze-deep: #7C5334;
-    --silver:   #B9B4AC;
-    --line:     #DCD6CA;
+    --bg:       #F5EDE0;
+    --bg-2:     #EFE4D2;
+    --surface:  #FBF6EE;
+    --ink:      #3D3530;
+    --ink-soft: #6B6357;
+    --ink-faint:#8B7E70;
+    --sage:     #8B9A7E;
+    --sage-deep:#6B7A5F;
+    --clay:     #C97B5A;
+    --line:     #E5D9C3;
+    --line-2:   #D4C4A8;
   }
   * { box-sizing: border-box; margin: 0; }
   body {
@@ -30,61 +31,62 @@
   }
   .wrap { max-width: 860px; margin: 0 auto; padding: 0 20px 60px; }
   header { padding: 22px 0; border-bottom: 1px solid var(--line); margin-bottom: 26px; }
-  .lockup { display: flex; align-items: baseline; gap: 10px; }
-  .lockup .name { font-family:'Jost',sans-serif; font-weight: 400; font-size: 19px; letter-spacing: .14em; text-transform: uppercase; }
-  .lockup .name strong { font-weight: 600; color: var(--bronze); }
-  .eyebrow { font-family:'Jost',sans-serif; font-size: 12px; letter-spacing: .34em; text-transform: uppercase; font-weight: 500; color: var(--bronze); }
-  h1 { font-family:'Jost',sans-serif; font-weight: 300; font-size: clamp(26px, 4vw, 38px); margin-top: 6px; }
+  .lockup { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+  .lockup img { height: 36px; width: auto; display: block; }
+  .lockup span { font-family:'Fraunces',serif; font-weight: 600; font-size: 18px; }
+  .eyebrow { font-size: 11px; letter-spacing: .32em; text-transform: uppercase; font-weight: 600; color: var(--sage-deep); }
+  h1 { font-family:'Fraunces',serif; font-weight: 600; font-size: clamp(26px, 4vw, 38px); letter-spacing: -0.02em; margin-top: 6px; }
   .sub { color: var(--ink-soft); margin-top: 6px; font-size: 15px; }
 
   /* gate */
-  .gate { max-width: 420px; margin: 60px auto 0; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 30px; text-align: center; box-shadow: 0 10px 30px rgba(51,49,45,.06); }
+  .gate { max-width: 420px; margin: 60px auto 0; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 30px; text-align: center; box-shadow: 0 10px 30px rgba(61,53,48,.07); }
   .gate p { color: var(--ink-soft); font-size: 14.5px; margin: 10px 0 18px; }
   .gate input {
-    width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--line);
-    background: #fff; font: inherit; text-align: center; letter-spacing: .1em;
+    width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--line-2);
+    background: #FFFDF9; font: inherit; text-align: center; letter-spacing: .1em;
   }
-  .gate input:focus { outline: none; border-color: var(--bronze); }
+  .gate input:focus { outline: none; border-color: var(--sage); }
   .btn {
     display: inline-block; margin-top: 14px; padding: 12px 28px; border-radius: 999px; border: none;
-    font-family:'Jost',sans-serif; font-weight: 500; font-size: 15px; letter-spacing: .06em;
+    font: inherit; font-weight: 600; font-size: 15px;
     background: var(--ink); color: var(--surface); cursor: pointer; transition: background .15s;
   }
-  .btn:hover { background: var(--bronze-deep); }
+  .btn:hover { background: var(--sage-deep); }
   .btn[disabled] { opacity: .55; cursor: default; }
-  .gate-err { color: #A04A2E; font-size: 13.5px; margin-top: 12px; display: none; }
+  .gate-err { color: #A8593E; font-size: 13.5px; margin-top: 12px; display: none; }
 
   /* toolbar */
-  .toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
-  .toolbar input {
-    flex: 1; min-width: 200px; padding: 11px 16px; border-radius: 999px; border: 1px solid var(--line);
-    background: var(--surface); font: inherit; font-size: 14.5px;
+  .toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+  .toolbar input, .toolbar select {
+    padding: 11px 16px; border-radius: 999px; border: 1px solid var(--line-2);
+    background: var(--surface); font: inherit; font-size: 14.5px; color: var(--ink);
   }
-  .toolbar input:focus { outline: none; border-color: var(--bronze); }
-  .count { font-family:'Jost',sans-serif; font-size: 13px; letter-spacing: .08em; color: var(--ink-faint); white-space: nowrap; }
-  .refresh { background: transparent; border: 1px solid var(--silver); color: var(--ink); padding: 10px 20px; border-radius: 999px; font-family:'Jost',sans-serif; font-size: 14px; cursor: pointer; }
-  .refresh:hover { border-color: var(--bronze); color: var(--bronze-deep); }
+  .toolbar input { flex: 1; min-width: 180px; }
+  .toolbar input:focus, .toolbar select:focus { outline: none; border-color: var(--sage); }
+  .count { font-size: 13px; letter-spacing: .06em; color: var(--ink-faint); white-space: nowrap; }
+  .refresh { background: transparent; border: 1px solid var(--line-2); color: var(--ink); padding: 10px 20px; border-radius: 999px; font: inherit; font-size: 14px; cursor: pointer; }
+  .refresh:hover { border-color: var(--sage); color: var(--sage-deep); }
 
   /* cards */
   .card {
     background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
-    padding: 20px 22px; margin-bottom: 14px; box-shadow: 0 1px 2px rgba(51,49,45,.04);
+    padding: 20px 22px; margin-bottom: 14px; box-shadow: 0 1px 2px rgba(61,53,48,.04);
   }
   .card-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-  .biz { font-family:'Jost',sans-serif; font-weight: 500; font-size: 19px; }
-  .suite-tag { font-family:'Jost',sans-serif; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--bronze); border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; background: var(--bg-2); }
+  .biz { font-family:'Fraunces',serif; font-weight: 600; font-size: 19px; }
+  .suite-tag { font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--sage-deep); border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; background: var(--bg-2); font-weight: 600; }
   .when { font-size: 12.5px; color: var(--ink-faint); }
   .rows { margin-top: 12px; display: grid; grid-template-columns: 110px 1fr; gap: 5px 14px; font-size: 14.5px; }
   .rows dt { color: var(--ink-faint); }
   .rows dd { color: var(--ink); overflow-wrap: anywhere; }
-  .rows a { color: var(--bronze-deep); }
+  .rows a { color: var(--sage-deep); }
   .pill { display: inline-block; background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 1px 10px; font-size: 12.5px; margin: 2px 4px 2px 0; }
   .del {
-    background: transparent; border: 1px solid var(--line); color: var(--ink-faint);
-    font-family:'Jost',sans-serif; font-size: 12px; letter-spacing: .08em;
+    background: transparent; border: 1px solid var(--line-2); color: var(--ink-faint);
+    font: inherit; font-size: 12px; letter-spacing: .06em;
     border-radius: 999px; padding: 4px 14px; cursor: pointer; margin-left: auto;
   }
-  .del:hover { border-color: #A04A2E; color: #A04A2E; }
+  .del:hover { border-color: #A8593E; color: #A8593E; }
   .del[disabled] { opacity: .5; cursor: default; }
   .empty { text-align: center; color: var(--ink-faint); padding: 60px 0; }
   .hidden { display: none; }
@@ -94,7 +96,10 @@
 <body>
 <div class="wrap">
   <header>
-    <div class="lockup"><span class="name">Salon <strong>Plus</strong> Studios</span></div>
+    <a class="lockup" href="/">
+      <img src="../assets/logo_ss_green_v5.png" alt="" onerror="this.style.display='none'">
+      <span>Studio Soulutions</span>
+    </a>
   </header>
 
   <!-- passcode gate -->
@@ -112,26 +117,26 @@
   <div class="hidden" id="listWrap">
     <div class="eyebrow">Interest submissions</div>
     <h1>Who wants on the map</h1>
-    <p class="sub">Every studio that filled out the interest form, newest first.</p>
+    <p class="sub">Every studio that filled out an interest form, any building, newest first.</p>
 
     <div class="toolbar" style="margin-top:22px;">
       <input id="search" type="text" placeholder="Search name, business, suite&hellip;" />
+      <select id="buildingFilter" title="Filter by building"><option value="*">All buildings</option></select>
       <span class="count" id="count"></span>
       <button class="refresh" id="refreshBtn">Refresh</button>
     </div>
 
     <div id="cards"></div>
-    <div class="empty hidden" id="empty">No submissions yet. They'll show up here the moment someone sends the form.</div>
+    <div class="empty hidden" id="empty">No submissions yet. They'll show up here the moment someone sends a form.</div>
   </div>
 
-  <footer>Studio Soulutions &middot; Built for Salon Plus Studios</footer>
+  <footer>Studio Soulutions &middot; every studio under one roof, discoverable</footer>
 </div>
 
 <script>
-const CODE_KEY = 'sp-leads-code-v1';
-/* ?building=some-slug scopes the list; ?building=* shows every building */
-const BUILDING = new URLSearchParams(location.search).get('building') || 'salonplus';
+const CODE_KEY = 'ss-leads-code-v1';
 let rows = [];
+let buildingFilter = new URLSearchParams(location.search).get('building') || '*';
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
@@ -140,20 +145,30 @@ async function load(code) {
   const res = await fetch('/api/salonplus-leads', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ code, building: BUILDING }),
+    body: JSON.stringify({ code, building: '*' }),
   });
   if (res.status === 401) throw new Error('bad-code');
   if (!res.ok) throw new Error('server');
   return (await res.json()).rows || [];
 }
 
+function rebuildBuildingFilter() {
+  const sel = $('buildingFilter');
+  const buildings = [...new Set(rows.map(r => r.building).filter(Boolean))].sort();
+  sel.innerHTML = '<option value="*">All buildings</option>'
+    + buildings.map(b => `<option value="${esc(b)}"${b === buildingFilter ? ' selected' : ''}>${esc(b)}</option>`).join('');
+  if (buildingFilter !== '*' && !buildings.includes(buildingFilter)) buildingFilter = '*';
+  sel.value = buildingFilter;
+}
+
 function render() {
   const q = $('search').value.trim().toLowerCase();
-  const shown = !q ? rows : rows.filter(r =>
-    [r.business, r.name, r.suite, r.email, r.phone, r.instagram, r.notes]
+  let shown = buildingFilter === '*' ? rows : rows.filter(r => r.building === buildingFilter);
+  if (q) shown = shown.filter(r =>
+    [r.business, r.name, r.suite, r.email, r.phone, r.instagram, r.facebook, r.tiktok, r.notes, r.building]
       .some(v => (v || '').toLowerCase().includes(q)));
 
-  $('count').textContent = q ? `${shown.length} of ${rows.length}` : `${rows.length} total`;
+  $('count').textContent = `${shown.length} of ${rows.length}`;
   $('empty').classList.toggle('hidden', shown.length > 0);
 
   $('cards').innerHTML = shown.map(r => {
@@ -167,7 +182,7 @@ function render() {
       <div class="card-top">
         <span class="biz">${esc(r.business)}</span>
         ${r.suite ? `<span class="suite-tag">Suite ${esc(r.suite)}</span>` : ''}
-        ${BUILDING === '*' && r.building ? `<span class="suite-tag">${esc(r.building)}</span>` : ''}
+        ${r.building ? `<span class="suite-tag">${esc(r.building)}</span>` : ''}
         <span class="when">${esc(when)}</span>
       </div>
       ${photos ? `<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">${photos}</div>` : ''}
@@ -178,6 +193,8 @@ function render() {
         ${line('Hours', esc(r.hours))}
         ${line('Services', services)}
         ${line('Instagram', esc(r.instagram))}
+        ${line('Facebook', esc(r.facebook))}
+        ${line('TikTok', esc(r.tiktok))}
         ${line('Booking', esc(r.booking))}
         ${line('Notes', esc(r.notes))}
       </dl>
@@ -188,28 +205,6 @@ function render() {
   }).join('');
 }
 
-// One handler for every Remove button, confirm first, then delete server-side.
-$('cards').addEventListener('click', async e => {
-  const btn = e.target.closest('.del');
-  if (!btn) return;
-  const { id, biz } = btn.dataset;
-  if (!confirm(`Remove the submission from "${biz}"? This can't be undone.`)) return;
-  btn.disabled = true; btn.textContent = 'Removing…';
-  try {
-    const res = await fetch('/api/salonplus-leads', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ code: sessionStorage.getItem(CODE_KEY), action: 'delete', id }),
-    });
-    if (!res.ok) throw new Error('delete failed');
-    rows = rows.filter(r => r.id !== id);
-    render();
-  } catch {
-    btn.disabled = false; btn.textContent = 'Remove';
-    alert("Couldn't remove it. Try again in a moment.");
-  }
-});
-
 async function unlock(code, { silent } = {}) {
   const btn = $('unlockBtn');
   btn.disabled = true; btn.textContent = 'Opening…';
@@ -218,6 +213,7 @@ async function unlock(code, { silent } = {}) {
     sessionStorage.setItem(CODE_KEY, code);
     $('gate').classList.add('hidden');
     $('listWrap').classList.remove('hidden');
+    rebuildBuildingFilter();
     render();
   } catch (e) {
     sessionStorage.removeItem(CODE_KEY);
@@ -235,11 +231,36 @@ async function unlock(code, { silent } = {}) {
 $('unlockBtn').addEventListener('click', () => unlock($('codeInput').value.trim()));
 $('codeInput').addEventListener('keydown', e => { if (e.key === 'Enter') unlock($('codeInput').value.trim()); });
 $('search').addEventListener('input', render);
+$('buildingFilter').addEventListener('change', e => { buildingFilter = e.target.value; render(); });
 $('refreshBtn').addEventListener('click', async () => {
   const code = sessionStorage.getItem(CODE_KEY);
   if (!code) return;
   rows = await load(code).catch(() => rows);
+  rebuildBuildingFilter();
   render();
+});
+
+// One handler for every Remove button, confirm first, then delete server-side.
+$('cards').addEventListener('click', async e => {
+  const btn = e.target.closest('.del');
+  if (!btn) return;
+  const { id, biz } = btn.dataset;
+  if (!confirm(`Remove the submission from "${biz}"? This can't be undone.`)) return;
+  btn.disabled = true; btn.textContent = 'Removing…';
+  try {
+    const res = await fetch('/api/salonplus-leads', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ code: sessionStorage.getItem(CODE_KEY), action: 'delete', id }),
+    });
+    if (!res.ok) throw new Error('delete failed');
+    rows = rows.filter(r => r.id !== id);
+    rebuildBuildingFilter();
+    render();
+  } catch {
+    btn.disabled = false; btn.textContent = 'Remove';
+    alert("Couldn't remove it. Try again in a moment.");
+  }
 });
 
 // Remembered for the tab: re-open without retyping.

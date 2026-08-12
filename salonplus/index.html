@@ -302,6 +302,17 @@
             <input type="text" id="f_insta" name="instagram" placeholder="@yourstudio">
           </div>
           <div class="field">
+            <label for="f_facebook">Facebook</label>
+            <input type="text" id="f_facebook" name="facebook" placeholder="Page name or link">
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="f_tiktok">TikTok</label>
+            <input type="text" id="f_tiktok" name="tiktok" placeholder="@yourstudio">
+          </div>
+          <div class="field">
             <label for="f_book">Booking link</label>
             <input type="text" id="f_book" name="booking" placeholder="StyleSeat, Booksy, GlossGenius...">
           </div>
@@ -537,6 +548,8 @@ form.addEventListener('submit', async e => {
     hours:      form.hours.value.trim(),
     services:   [...form.querySelectorAll('.svc input:checked')].map(c => c.value),
     instagram:  form.instagram.value.trim(),
+    facebook:   form.facebook.value.trim(),
+    tiktok:     form.tiktok.value.trim(),
     booking:    form.booking.value.trim(),
     notes:      form.notes.value.trim(),
     photos:     pickedPhotos,                 // compressed data URLs, up to 3

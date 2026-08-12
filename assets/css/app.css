@@ -974,6 +974,23 @@ body {
   border-radius: 999px;
 }
 
+/* PROFILE SOCIALS, tappable pills linking out to the studio's accounts */
+.profile-socials {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin: -8px 0 22px;
+}
+.social-pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--cream-06);
+  border: 1px solid var(--line);
+  color: var(--cream);
+  font-size: 12.5px; font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 999px;
+  text-decoration: none;
+}
+.social-pill:active { background: var(--cream-10); }
+
 /* PROFILE GALLERY, extra photos on a claimed card. Tap one, see it big. */
 .profile-gallery {
   display: flex; gap: 10px;

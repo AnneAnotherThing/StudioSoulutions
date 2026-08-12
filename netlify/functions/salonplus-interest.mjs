@@ -62,6 +62,8 @@ export default async function handler(request) {
     hours:      clip(p.hours, 120),
     services:   Array.isArray(p.services) ? p.services.slice(0, 10).map(s => clip(s, 40)) : [],
     instagram:  clip(p.instagram, 120),
+    facebook:   clip(p.facebook, 200),
+    tiktok:     clip(p.tiktok, 120),
     booking:    clip(p.booking, 300),
     notes:      clip(p.notes, 2000),
     building:   slug(clip(p.building, 60)) || 'salonplus',
@@ -162,12 +164,14 @@ async function saveToSupabase(row) {
   });
 
   let res = await insert(row);
-  if (!res.ok && row.photos) {
-    // If the photos column hasn't been added yet, don't lose the lead:
-    // drop the photos from the row and save the rest.
-    const { photos, ...rest } = row;
-    console.warn('interest: insert with photos failed, retrying without', res.status);
-    res = await insert(rest);
+  if (!res.ok) {
+    // If newer columns (photos, facebook, tiktok) haven't been added to
+    // the table yet, don't lose the lead: strip them and save the rest.
+    const { photos, facebook, tiktok, ...base } = row;
+    if (photos || facebook || tiktok) {
+      console.warn('interest: full insert failed, retrying with base columns', res.status);
+      res = await insert(base);
+    }
   }
   if (!res.ok) throw new Error(`supabase ${res.status}: ${(await res.text()).slice(0, 200)}`);
 }
@@ -203,6 +207,8 @@ async function emailLead(row, buildingLabel, photoUrls) {
       ${line('Hours', row.hours)}
       ${line('Services', row.services.join(', '))}
       ${line('Instagram', row.instagram)}
+      ${line('Facebook', row.facebook)}
+      ${line('TikTok', row.tiktok)}
       ${line('Booking', row.booking)}
       ${line('Notes', row.notes)}
     </table>

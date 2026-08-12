@@ -7,3 +7,7 @@
 
 # SPA-style fallback for the phone view (handles deep links into tenant profiles later)
 /app/*      /app.html        200
+
+# Leads moved to one home for every building
+/salonplus/leads.html   /leads/   301
+/salonplus/leads        /leads/   301

@@ -88,7 +88,8 @@ const tenants = Object.entries(ROSTER).map(([suite, name], i) => {
         '../../assets/photos/salonplus-103-soulandbeauty-facial.jpg',
         '../../assets/photos/salonplus-103-soulandbeauty-glow.jpg',
       ],
-      bio: 'Christina specializes in therapeutic and medical massage, with anti-aging and hydra-facials and deep-clean facials alongside. Care that works below the surface. Find the spa on Instagram at @soulandbeauty.dayspa.',
+      bio: 'Christina specializes in therapeutic and medical massage, with anti-aging and hydra-facials and deep-clean facials alongside. Care that works below the surface.',
+      instagram: 'soulandbeauty.dayspa',
       tags: ['Therapeutic Massage', 'Medical Massage', 'Hydra-Facial', 'Deep Clean Facial'],
       hours: 'Tue–Sat 10–6',
       book: 'https://www.vagaro.com/soulandbeautydayspa',
@@ -101,7 +102,8 @@ const tenants = Object.entries(ROSTER).map(([suite, name], i) => {
     // True Story Tha Barber, claimed via the interest form 8/11/26
     Object.assign(base, {
       claimed: true, open: true,
-      bio: 'Award-winning barber work, consistent and detailed, at a price that respects your wallet. Come find out for yourself. On Instagram at @true_story_tha_barber_.',
+      bio: 'Award-winning barber work, consistent and detailed, at a price that respects your wallet. Come find out for yourself.',
+      instagram: 'true_story_tha_barber_',
       tags: ['Barber', 'Cuts', 'Award-Winning'],
       hours: 'Tue–Sun 10–7',
       book: 'https://truestorythabarber.square.site',
@@ -433,6 +435,7 @@ function openTenant(id) {
       <div class="profile-tags">
         ${t.tags.map(tag => `<span class="profile-tag">${escapeHtml(tag)}</span>`).join('')}
       </div>
+      ${renderSocials(t)}
       ${t.photos && t.photos.length ? `
       <div class="profile-gallery">
         ${t.photos.map(p => `<button class="pg-shot" type="button" style="background-image:url('${p}')" onclick="openLightbox('${p}')" aria-label="View photo full size"></button>`).join('')}
@@ -461,6 +464,37 @@ function openTenant(id) {
   `;
   document.getElementById('sheet').classList.add('open');
   document.getElementById('sheetBackdrop').classList.add('open');
+}
+
+/* ============ SOCIAL LINKS ==============================================
+   Tenants enter handles or full links on the interest form; normalize
+   either into a real profile URL and show them as tappable pills. */
+function socialUrl(kind, v) {
+  if (!v) return null;
+  v = v.trim();
+  if (/^https?:\/\//i.test(v)) return v;
+  const handle = v.replace(/^@/, '').replace(/^.*\.com\//i, '').replace(/\/+$/, '');
+  if (!handle) return null;
+  if (kind === 'instagram') return `https://instagram.com/${handle}`;
+  if (kind === 'facebook')  return `https://facebook.com/${handle}`;
+  if (kind === 'tiktok')    return `https://tiktok.com/@${handle}`;
+  return null;
+}
+
+function renderSocials(t) {
+  const ICONS = {
+    instagram: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>',
+    facebook:  '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>',
+    tiktok:    '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>',
+  };
+  const LABELS = { instagram: 'Instagram', facebook: 'Facebook', tiktok: 'TikTok' };
+  const links = ['instagram', 'facebook', 'tiktok']
+    .map(k => ({ k, url: socialUrl(k, t[k]) }))
+    .filter(s => s.url);
+  if (!links.length) return '';
+  return `<div class="profile-socials">
+    ${links.map(s => `<a class="social-pill" href="${s.url}" target="_blank" rel="noopener noreferrer">${ICONS[s.k]} ${LABELS[s.k]}</a>`).join('')}
+  </div>`;
 }
 
 /* Tap a gallery shot, see it big; tap anywhere to put it away. */
