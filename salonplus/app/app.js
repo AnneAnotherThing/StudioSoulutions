@@ -381,8 +381,59 @@ function updateSavedBadge() {
   if (splashCount) splashCount.textContent = savedIds.size;
 }
 
+// ============ BACK BUTTON =================================================
+// The phone's back button peels UI layers (lightbox → map modal → sheet →
+// view) instead of leaving the site; only the discover screen backs out.
+// Every opened layer pushes a history entry paired with a close function;
+// popstate runs the topmost. Layers closed in the UI leave their entry
+// behind as a no-op, which the handler quietly consumes on the next back.
+const layerStack = [];
+
+function pushLayer(name, closeFn) {
+  layerStack.push({ name, closeFn });
+  history.pushState({ spLayer: name }, '');
+}
+
+/* UI close controls route through here: if this layer is on top, pop the
+   history entry (popstate does the closing); otherwise close directly. */
+function closeLayerFromUi(name, rawClose) {
+  const top = layerStack[layerStack.length - 1];
+  if (top && top.name === name) history.back();
+  else rawClose();
+}
+
+window.addEventListener('popstate', () => {
+  const layer = layerStack.pop();
+  if (!layer) return;                    // nothing of ours: browser leaves normally
+  const did = layer.closeFn();
+  // Stale entry (already closed in the UI): chain another back so the
+  // user's press always visibly does something — including leaving the
+  // site when no real layers remain.
+  if (did === false) history.back();
+});
+
+function activeViewName() {
+  const v = document.querySelector('.view.active');
+  return v ? v.id.replace('view-', '') : 'discover';
+}
+
 // ============ INTERACTIONS ============
 function switchView(view) {
+  if (view === 'discover') {
+    const top = layerStack[layerStack.length - 1];
+    if (top && top.name === 'view') { history.back(); return; }
+    switchViewRaw('discover');
+    return;
+  }
+  const hasViewLayer = layerStack.some(l => l.name === 'view');
+  switchViewRaw(view);
+  if (!hasViewLayer) pushLayer('view', () => {
+    if (activeViewName() !== 'discover') { switchViewRaw('discover'); return true; }
+    return false;
+  });
+}
+
+function switchViewRaw(view) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById(`view-${view}`).classList.add('active');
   const primaryViews = ['discover', 'directory', 'saved'];
@@ -462,8 +513,13 @@ function openTenant(id) {
       </div>
     </div>
   `;
+  const wasOpen = document.getElementById('sheet').classList.contains('open');
   document.getElementById('sheet').classList.add('open');
   document.getElementById('sheetBackdrop').classList.add('open');
+  if (!wasOpen) pushLayer('sheet', () => {
+    if (document.getElementById('sheet').classList.contains('open')) { closeSheetRaw(); return true; }
+    return false;
+  });
 }
 
 /* ============ SOCIAL LINKS ==============================================
@@ -505,14 +561,23 @@ function openLightbox(src) {
     lb = document.createElement('div');
     lb.id = 'lightbox';
     lb.innerHTML = '<img alt="">';
-    lb.addEventListener('click', () => lb.classList.remove('open'));
+    lb.addEventListener('click', () => closeLayerFromUi('lightbox', () => lb.classList.remove('open')));
     document.body.appendChild(lb);
   }
   lb.querySelector('img').src = src;
+  const wasOpen = lb.classList.contains('open');
   lb.classList.add('open');
+  if (!wasOpen) pushLayer('lightbox', () => {
+    if (lb.classList.contains('open')) { lb.classList.remove('open'); return true; }
+    return false;
+  });
 }
 
 function closeSheet() {
+  closeLayerFromUi('sheet', closeSheetRaw);
+}
+
+function closeSheetRaw() {
   document.getElementById('sheet').classList.remove('open');
   document.getElementById('sheetBackdrop').classList.remove('open');
   currentTenant = null;
@@ -852,7 +917,7 @@ function themeBg(theme) {
 }
 function showRouteTo(tenantId) {
   routeTarget = tenantId;
-  closeSheet();
+  closeSheetRaw();   // raw: we're moving forward to the map, not back
   switchView('map');
   if (typeof window.openMapModal === 'function') window.openMapModal();
 }
@@ -1014,13 +1079,13 @@ function wirePhoneMapModal() {
         if (tid) openTenant(tid);
       });
       const cb = document.getElementById('mapModalClose');
-      if (cb) cb.addEventListener('click', closeModal);
+      if (cb) cb.addEventListener('click', closeModalFromUi);
     } else {
       headEl.innerHTML = ''
         + '<h2 style="margin:0; font-family:\'Fraunces\',serif; font-weight:500; font-size:20px; color:var(--ink-on-cream);">Suite map</h2>'
         + '<button type="button" class="map-modal-close" id="mapModalClose" aria-label="Close map">&times;</button>';
       const cb = document.getElementById('mapModalClose');
-      if (cb) cb.addEventListener('click', closeModal);
+      if (cb) cb.addEventListener('click', closeModalFromUi);
     }
   }
 
@@ -1042,9 +1107,14 @@ function wirePhoneMapModal() {
       });
     });
     renderHead();
+    const wasOn = modal.classList.contains('is-on');
     modal.classList.add('is-on');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    if (!wasOn) pushLayer('modal', function() {
+      if (modal.classList.contains('is-on')) { closeModal(); return true; }
+      return false;
+    });
   }
   function closeModal() {
     modal.classList.remove('is-on');
@@ -1052,15 +1122,16 @@ function wirePhoneMapModal() {
     body.innerHTML = '';
     document.body.style.overflow = '';
   }
+  function closeModalFromUi() { closeLayerFromUi('modal', closeModal); }
 
   window.openMapModal = openModal;
-  window.closeMapModal = closeModal;
+  window.closeMapModal = closeModalFromUi;
 
   fab.addEventListener('click', openModal);
-  closeBtn.addEventListener('click', closeModal);
-  modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(); });
+  closeBtn.addEventListener('click', closeModalFromUi);
+  modal.addEventListener('click', function(e) { if (e.target === modal) closeModalFromUi(); });
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && modal.classList.contains('is-on')) closeModal();
+    if (e.key === 'Escape' && modal.classList.contains('is-on')) closeModalFromUi();
   });
 }
 if (document.readyState === 'loading') {
