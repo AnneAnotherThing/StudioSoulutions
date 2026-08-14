@@ -31,7 +31,7 @@ const SP_META = {
   '309':  { c: 'hair',   sv: 'Cuts & Styling' },
   '310':  { c: 'hair',   sv: 'Hair Salon' },
   '311':  { c: 'hair',   sv: 'Color & Styling' },
-  '312':  { c: 'hair',   sv: 'Hair Replacement' },
+  '312':  { c: 'hair',   sv: 'Non-Surgical Hair Replacement' },
   '316':  { c: 'hair',   sv: 'Salon de Coiffure' },
   '317':  { c: 'spa',    sv: 'Beauty Co.' },
   '318':  { c: 'hair',   sv: 'Hair Studio' },
@@ -112,6 +112,31 @@ const tenants = Object.entries(ROSTER).map(([suite, name], i) => {
       text: '(330) 962-6676',
     });
   }
+  if (suite === '312') {
+    /* Arizona Hair Replacement, built entirely off Todd's printed business
+       card (8/14/26) — no interest form, no interview. Everything here is
+       on the card and nothing else is: no hours, no photos, no booking
+       link, because the card doesn't carry them. This is the floor for a
+       studio that only wants a spot on the map. */
+    Object.assign(base, {
+      claimed: true,
+      bio: 'Todd Donahue, hair technician. Affordable non-surgical hair replacement, and the reason for it, in the words printed on his own card: look your best, feel your best.',
+      tags: ['Non-Surgical', 'Hair Replacement', 'Hair Technician'],
+      call: '(602) 900-1057',
+      text: '(602) 900-1057',
+      email: 'arizonahair@outlook.com',
+      site: 'https://www.arizonahairreplacement.com',
+      siteLabel: 'arizonahairreplacement.com',
+      /* His card IS his brand, so it doubles as the hero. photoFit 'card'
+         shows it whole instead of cover-cropping it; the gallery copy is
+         what makes it readable, tap it and the lightbox opens it full size.
+         Waiting on the cropped scan, uncomment both once it's saved:
+      photo: '../../assets/photos/salonplus-312-arizonahair-card.jpg',
+      photoFit: 'card',
+      photos: ['../../assets/photos/salonplus-312-arizonahair-card.jpg'],
+      */
+    });
+  }
   return base;
 });
 
@@ -127,9 +152,32 @@ const didYouKnow = [
 ];
 
 /* ----- coupons & specials -------------------------------------------------
-   Studios post these as they claim their cards. Shape:
-   { id, suite, title, detail, expires } — rendered newest-first. */
-const SPECIALS = [];
+   Studios post these themselves at /salonplus/offer/, assembled from
+   dropdowns and composed server-side. Shape:
+   { id, suite, title, detail, expires } — rendered newest-first.
+
+   Nobody prunes this list. The endpoint only returns offers that are
+   still live and haven't run out, so an expired coupon leaves the app
+   without anyone touching it. */
+let SPECIALS = [];
+
+async function loadSpecials() {
+  try {
+    const res = await fetch('/api/salonplus-specials', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'list', building: 'salonplus' }),
+    });
+    if (!res.ok) return;
+    SPECIALS = (await res.json()).rows || [];
+    /* Re-render only if they're already looking at the tab; otherwise
+       switchView will render it fresh when they get there. */
+    if (document.querySelector('#view-specials.active')) renderSpecials();
+  } catch {
+    /* Offline, or a local static preview with no function runtime. The
+       empty state already says the right thing, so say nothing. */
+  }
+}
 
 function renderSpecials() {
   const list = document.getElementById('specialsList');
@@ -195,10 +243,13 @@ function avatarHTML(t, size) {
 }
 
 /* Status: no live hours data yet, so claimed cards show their posted hours
-   and unclaimed cards stay neutral instead of pretending to be open. */
+   and unclaimed cards stay neutral instead of pretending to be open.
+   A card built off a business card has no hours at all, so it points at
+   the phone number rather than guessing open or closed. */
 function statusInfo(t) {
-  if (!t.claimed) return { state: 'closed', label: 'Not claimed yet' };
-  if (t.open)     return { state: 'available', label: 'Open today' };
+  if (!t.claimed)          return { state: 'closed', label: 'Not claimed yet' };
+  if (t.open)              return { state: 'available', label: 'Open today' };
+  if (!t.hours && t.call)  return { state: 'closed', label: 'Call for hours' };
   return { state: 'closed', label: 'Closed' };
 }
 function statusPillHTML(t) {
@@ -467,7 +518,7 @@ function openTenant(id) {
   const s = statusInfo(t);
   const pillClass = s.state === 'available' ? 'open' : 'closed';
   const heroVisual = t.photo
-    ? `<div class="profile-hero has-photo" style="background-image: url('${t.photo}');">
+    ? `<div class="profile-hero has-photo${t.photoFit === 'card' ? ' is-card' : ''}" style="background-image: url('${t.photo}');">
          <span class="photo-tag ${pillClass}"><span class="dot"></span>${s.label}</span>
        </div>`
     : `<div class="profile-hero ${t.theme}" style="position:relative;">${t.avatar}${claimedPillHTML(t, 'on-photo')}</div>`;
@@ -481,7 +532,7 @@ function openTenant(id) {
       <div class="profile-meta">
         <span><strong>${t.suite}</strong></span>
         <span style="color: var(--cream-40)">•</span>
-        <span>${t.hours || 'Hours coming soon'}</span>
+        <span>${t.hours || (t.call ? 'Call for hours' : 'Hours coming soon')}</span>
       </div>
       <div class="profile-bio">${t.bio}</div>
       <div class="profile-tags">
@@ -605,6 +656,8 @@ function renderContactActions(t, isSaved) {
     call: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
     text: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
     map:  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>',
+    site: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+    email:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>',
     claim:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>'
   };
   const methods = [];
@@ -612,6 +665,12 @@ function renderContactActions(t, isSaved) {
     label: t.bookLabel ? `Book on ${t.bookLabel}` : `Book online` });
   if (t.call) methods.push({ key:'call', href:`tel:${t.call.replace(/[^0-9+]/g, '')}`, label:`Call ${t.call}` });
   if (t.text) methods.push({ key:'text', href:`sms:${t.text.replace(/[^0-9+]/g, '')}`, label:`Text ${t.text}` });
+  /* A studio with no booking system still has the two things printed on
+     every business card, a website and an email. Both come last so the
+     phone stays the primary button when there's nothing to book. */
+  if (t.site)  methods.push({ key:'site', href:t.site, target:'_blank', rel:'noopener noreferrer',
+    label: t.siteLabel ? escapeHtml(t.siteLabel) : 'Visit the website' });
+  if (t.email) methods.push({ key:'email', href:`mailto:${t.email}`, label:`Email ${escapeHtml(t.email)}` });
 
   const saveBtn = `
     <button class="btn btn-secondary ${isSaved ? 'saved' : ''}" onclick="toggleSave('${t.id}')" aria-label="${isSaved ? 'Unsave' : 'Save'}">
@@ -954,6 +1013,7 @@ renderDiscoverCards();
 renderDirectory();
 renderVacancies();
 updateSavedBadge();
+loadSpecials();
 
 /* Kiosk-style hero search on the Discover view, mirrors kiosk.html */
 (function wireKioskSearch() {

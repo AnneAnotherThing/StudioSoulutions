@@ -52,9 +52,8 @@
     50%      { filter: drop-shadow(0 0 15px rgba(201,123,90,0.95)); }
   }
   .map-svg .suite.is-target, .map-modal .suite.is-target { animation: suitePulse 1.4s ease-in-out infinite; }
-  /* the greeting sits high and small; flex-start pins it to the top so
-     the min-height leaves a clear run of pure hallway BENEATH the card,
-     between it and the search bar */
+  /* the discover view opens on a clear run of pure hallway photo before
+     the search bar; the empty welcome div is that window */
   #view-discover .welcome { padding-top: 18px; min-height: 250px; justify-content: flex-start; }
   /* frosted panel behind welcome text: light enough that the hallway
      shows through it, small enough that the hallway owns the frame */
@@ -110,13 +109,7 @@
 
 <!-- DISCOVER VIEW, card-led splash, mirrors the kiosk menu -->
 <section class="view active" id="view-discover">
-  <div class="welcome">
-    <div class="welcome-panel">
-      <div class="eyebrow">Welcome in</div>
-      <h1>Who are you <em>here to see?</em></h1>
-      <p>Thirty-plus independent studios under this roof · find your person, or your next one.</p>
-    </div>
-  </div>
+  <div class="welcome"></div>
 
   <!-- Kiosk-style hero search, mirrors the lobby touchscreen -->
   <div class="kiosk-search">
@@ -128,7 +121,7 @@
     <p class="ks-hint">Or browse below, see who's here and where to go.</p>
   </div>
 
-  <!-- Primary navigation, customer-first: find your person, find someone new, find a deal -->
+  <!-- Primary navigation, customer-first: find your person, find a deal -->
   <div class="primary-menu">
 
     <!-- Find who you're here to see -->
@@ -139,17 +132,6 @@
       <div class="mc-body">
         <div class="mc-label">Find who you're here to see</div>
         <div class="mc-meta">Tap the map, their suite lights up</div>
-      </div>
-    </button>
-
-    <!-- Find someone new -->
-    <button class="menu-card primary-card" type="button" onclick="switchView('directory')">
-      <div class="mc-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-      </div>
-      <div class="mc-body">
-        <div class="mc-label">Find someone new</div>
-        <div class="mc-meta">Hair · barber · nails · spa · cards filling in now</div>
       </div>
     </button>
 

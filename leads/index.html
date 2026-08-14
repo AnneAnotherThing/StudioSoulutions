@@ -119,6 +119,13 @@
     <h1>Who wants on the map</h1>
     <p class="sub">Every studio that filled out an interest form, any building, newest first.</p>
 
+    <!-- Live offers. Not an approval queue: these are already up. This is
+         only the off switch, for the rare one that shouldn't be. -->
+    <div class="hidden" id="offersWrap" style="margin-top:26px;">
+      <div class="eyebrow" style="margin-bottom:10px;">Live offers <span id="offersCount" class="count"></span></div>
+      <div id="offers"></div>
+    </div>
+
     <div class="toolbar" style="margin-top:22px;">
       <input id="search" type="text" placeholder="Search name, business, suite&hellip;" />
       <select id="buildingFilter" title="Filter by building"><option value="*">All buildings</option></select>
@@ -205,6 +212,54 @@ function render() {
   }).join('');
 }
 
+/* ----- live offers -----------------------------------------------------
+   Studios post these themselves at /salonplus/offer/ and they expire on
+   their own, so there is nothing here to approve or clean up. The only
+   control is Hide, for the one that turns out to be a problem. */
+async function loadOffers() {
+  let offers = [];
+  try {
+    const res = await fetch('/api/salonplus-specials', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'list', building: 'salonplus' }),
+    });
+    if (res.ok) offers = (await res.json()).rows || [];
+  } catch { /* leave the panel hidden rather than showing an error here */ }
+
+  $('offersWrap').classList.toggle('hidden', offers.length === 0);
+  $('offersCount').textContent = offers.length ? `${offers.length} running` : '';
+  $('offers').innerHTML = offers.map(o => `
+    <div class="card" style="padding:14px 18px;">
+      <div class="card-top">
+        <span class="biz" style="font-size:17px;">${esc(o.title)}</span>
+        <span class="suite-tag">Suite ${esc(o.suite)}</span>
+        <span class="when">${o.detail ? esc(o.detail) + ' &middot; ' : ''}through ${esc(o.expires)}</span>
+        <button class="del hide-offer" data-id="${esc(o.id)}" data-title="${esc(o.title)}">Hide</button>
+      </div>
+    </div>`).join('');
+}
+
+$('offers').addEventListener('click', async e => {
+  const btn = e.target.closest('.hide-offer');
+  if (!btn) return;
+  const { id, title } = btn.dataset;
+  if (!confirm(`Take down "${title}"? The studio can post a new one whenever.`)) return;
+  btn.disabled = true; btn.textContent = 'Hiding…';
+  try {
+    const res = await fetch('/api/salonplus-specials', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'hide', code: sessionStorage.getItem(CODE_KEY), id }),
+    });
+    if (!res.ok) throw new Error('hide failed');
+    await loadOffers();
+  } catch {
+    btn.disabled = false; btn.textContent = 'Hide';
+    alert("Couldn't hide it. Try again in a moment.");
+  }
+});
+
 async function unlock(code, { silent } = {}) {
   const btn = $('unlockBtn');
   btn.disabled = true; btn.textContent = 'Opening…';
@@ -215,6 +270,7 @@ async function unlock(code, { silent } = {}) {
     $('listWrap').classList.remove('hidden');
     rebuildBuildingFilter();
     render();
+    loadOffers();
   } catch (e) {
     sessionStorage.removeItem(CODE_KEY);
     if (!silent) {

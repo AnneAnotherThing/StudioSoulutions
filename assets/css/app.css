@@ -900,6 +900,15 @@ body {
   border: 1px solid var(--line);
 }
 .profile-hero.has-photo { font-size: 0; }
+/* A studio whose only image is its business card. `cover` would shave the
+   logo off one edge and the phone number off the other, so the card gets
+   shown whole, laid on the cream like it's sitting on a counter. */
+.profile-hero.is-card {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
 .profile-hero::after {
   content: '';
   position: absolute;
