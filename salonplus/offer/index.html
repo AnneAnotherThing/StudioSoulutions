@@ -199,6 +199,15 @@
       <button class="btn btn-ghost" id="signOutBtn">Sign out</button>
     </div>
     <div class="err" id="postErr"></div>
+
+    <!-- The other half of tenant self-service. Hours, photos, booking link,
+         anything that isn't an offer goes back through the interest form,
+         which reaches Anne rather than editing the card directly. -->
+    <p class="note" style="margin-top:26px;border-top:1px solid var(--line);padding-top:18px;">
+      Hours changed? New photos, new booking link?
+      <a id="updateDetailsLink" href="../" style="color:var(--sage-deep);font-weight:600;">Update your details</a>
+      and Anne will take care of it.
+    </p>
   </div>
 
   <!-- ===== posted ===== -->
@@ -276,6 +285,8 @@ async function unlock(suite, code, { silent } = {}) {
     }
 
     $('studioName').textContent = `${session.studio} · Suite ${session.suite}`;
+    // Prefills the interest form with their suite, so it's one less thing to type.
+    $('updateDetailsLink').href = `../?suite=${encodeURIComponent(session.suite)}#join`;
     const o = session.options;
     fill($('serviceSel'), session.services, v => v);
     fill($('addonSel'),   session.services, v => v);

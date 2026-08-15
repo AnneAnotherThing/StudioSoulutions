@@ -715,9 +715,14 @@ function renderContactActions(t, isSaved) {
        </button>`
     : '';
 
-  const claimHtml = `
+  /* Only an UNCLAIMED card carries this, and then it's the recruiting ask.
+     A claimed card is customer-facing: someone looking up a manicure has no
+     use for a button aimed at the studio. Studios change their own details
+     from /salonplus/offer/, which they already hold a code for, so there's
+     one tenant door instead of one on every card. */
+  const claimHtml = t.claimed ? '' : `
     <a class="btn btn-outline" href="${CLAIM_URL(t.id)}" style="border-style:dashed;">
-      ${ICONS.claim} ${t.claimed ? 'Update this card' : 'This is my studio, claim my free card'}
+      ${ICONS.claim} This is my studio, claim my free card
     </a>`;
 
   if (methods.length === 0) {
