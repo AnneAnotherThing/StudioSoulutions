@@ -118,7 +118,9 @@
       <input id="kioskSearchInput" class="ks-input" type="text" placeholder="Type a name, studio, or suite…" autocomplete="off" />
     </div>
     <div class="ks-results" id="kioskSearchResults" hidden></div>
-    <p class="ks-hint">Or browse below, see who's here and where to go.</p>
+    <!-- Text came off, the gap stays: it's what keeps the search bar from
+         colliding with the menu. See .ks-hint:empty in app.css. -->
+    <p class="ks-hint"></p>
   </div>
 
   <!-- Primary navigation, customer-first: find your person, find a deal -->
@@ -143,6 +145,19 @@
       <div class="mc-body">
         <div class="mc-label">Coupons &amp; specials</div>
         <div class="mc-meta open"><span class="pulse-dot"></span>The sweet stuff, straight from the studios</div>
+      </div>
+    </button>
+
+    <!-- Find someone new, opens the scrolling directory. Sits last on
+         purpose: you come in knowing who you're here to see, browsing is
+         the afterthought. -->
+    <button class="menu-card primary-card" type="button" onclick="switchView('directory')">
+      <div class="mc-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      </div>
+      <div class="mc-body">
+        <div class="mc-label">Find someone new</div>
+        <div class="mc-meta">Hair · barber · nails · spa · cards filling in now</div>
       </div>
     </button>
 

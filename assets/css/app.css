@@ -217,6 +217,9 @@ body {
   text-align: center;
   letter-spacing: 0.02em;
 }
+/* Emptied of its text but still holding the gap open between the search
+   bar and the menu below it. */
+.ks-hint:empty { min-height: 19px; }
 
 /* DISCOVER, MENU CARDS (kiosk-style, mobile-shaped) */
 .menu-stack { display: flex; flex-direction: column; gap: 10px; }

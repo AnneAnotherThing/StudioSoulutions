@@ -69,9 +69,18 @@ create index if not exists ss_specials_live_lookup
 -- before running this; they are what you hand the studio.
 -- Services mirror the tags on each card in salonplus/data.js.
 -- ---------------------------------------------------------------------
+-- Don't build a code out of the studio's own phone number or address; the
+-- whole point is that it isn't guessable from their card.
 insert into public.ss_suite_codes (suite, studio, code, services) values
   ('301', 'Deuces Nail Studio',        'DEUCES-4417', array['Gel','Pedicure','Nail Art','Structured Mani']),
   ('103', 'Soul and Beauty Day Spa',   'SOUL-2810',   array['Therapeutic Massage','Medical Massage','Hydra-Facial','Deep Clean Facial']),
   ('212', 'True Story Tha Barber',     'TRUE-9265',   array['Cuts','Beard Trim','Line Up']),
-  ('312', 'Arizona Hair Replacement',  'AZHR-1057',   array['Consultation','Hair Replacement','Maintenance'])
+
+  -- The three below picked only a broad category on the interest form
+  -- ("Hair", "Other"), so these service lists are inferred from their
+  -- business names, not stated by them. A studio can only ever advertise
+  -- what's in this array, so confirm each one before handing over a code.
+  ('309', 'Cuts From The Heart',       'HEART-5183',  array['Haircut','Style','Trim']),
+  ('311', 'Colour Me Beautiful LLC',   'COLOUR-7402', array['Colour','Haircut','Style']),
+  ('312', 'Arizona Hair Replacement',  'AZHR-6390',   array['Consultation','Hair Replacement','Maintenance'])
 on conflict (suite) do nothing;

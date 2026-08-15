@@ -113,15 +113,15 @@ const tenants = Object.entries(ROSTER).map(([suite, name], i) => {
     });
   }
   if (suite === '312') {
-    /* Arizona Hair Replacement, built entirely off Todd's printed business
-       card (8/14/26) — no interest form, no interview. Everything here is
-       on the card and nothing else is: no hours, no photos, no booking
-       link, because the card doesn't carry them. This is the floor for a
-       studio that only wants a spot on the map. */
+    /* Arizona Hair Replacement. Todd sent his business card and filled out
+       the interest form the same day, and the two agree line for line. The
+       hours and the "men and women" bit come from the form; the website
+       only ever appeared on the card. */
     Object.assign(base, {
-      claimed: true,
-      bio: 'Todd Donahue, hair technician. Affordable non-surgical hair replacement, and the reason for it, in the words printed on his own card: look your best, feel your best.',
-      tags: ['Non-Surgical', 'Hair Replacement', 'Hair Technician'],
+      claimed: true, open: true,
+      bio: 'Todd Donahue, hair technician. Non-surgical hair replacement for men and women, by appointment. The reason for it, in the words printed on his own card: look your best, feel your best.',
+      tags: ['Non-Surgical', 'Hair Replacement', 'Men & Women'],
+      hours: 'Mon–Thu 11–7 · Fri 11–4',
       call: '(602) 900-1057',
       text: '(602) 900-1057',
       email: 'arizonahair@outlook.com',
@@ -135,6 +135,37 @@ const tenants = Object.entries(ROSTER).map(([suite, name], i) => {
       photoFit: 'card',
       photos: ['../../assets/photos/salonplus-312-arizonahair-card.jpg'],
       */
+    });
+  }
+  if (suite === '309') {
+    /* Cuts From The Heart, claimed via the interest form 8/12/26. Leticia
+       left the notes field empty, so the bio says only what the form
+       actually told us. It gets warmer the day she sends a line about
+       herself. */
+    Object.assign(base, {
+      claimed: true, open: true,
+      bio: 'Cuts and styling with Leticia Gordon, by appointment. One chair, one client, in the 300s wing.',
+      tags: ['Hair', 'Cuts', 'By Appointment'],
+      hours: 'By appointment',
+      call: '(623) 335-6668',
+      text: '(623) 335-6668',
+    });
+  }
+  if (suite === '311') {
+    /* Colour Me Beautiful LLC, claimed via the interest form 8/11/26.
+       Juanita's booking link came through inside a sentence on the form;
+       the URL is the part that matters. Her Instagram handle spells colour
+       the American way, which is hers to spell, not ours to correct. */
+    Object.assign(base, {
+      claimed: true, open: true,
+      bio: 'Colour and styling with Juanita Salas, Thursdays through Sundays. Book straight from her own page.',
+      instagram: 'colormebeautifulllc',
+      tags: ['Hair', 'Colour', 'Styling'],
+      hours: 'Thu–Sun',
+      book: 'https://juanitasalas.glossgenius.com/',
+      bookLabel: 'GlossGenius',
+      call: '(602) 621-5196',
+      text: '(602) 621-5196',
     });
   }
   return base;

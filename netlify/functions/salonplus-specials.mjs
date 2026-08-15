@@ -23,6 +23,12 @@
      SUPABASE_URL           same project as ss_interest
      SUPABASE_SERVICE_KEY   service-role key, server-side only
      LEADS_CODE             Anne's existing passcode, reused for hide
+   Optional:
+     RESEND_API_KEY         already set for the interest form
+     OFFER_TO               who gets the heads-up when an offer goes up;
+                            falls back to LEAD_TO, so setting nothing
+                            still mails whoever gets the leads today
+     RESEND_FROM            shared with the interest form
    ===================================================================== */
 
 const SPECIALS = 'ss_specials';
@@ -195,10 +201,56 @@ async function postOffer(db, p) {
   });
   if (!row) return json(502, { error: 'Could not post the offer.' });
 
+  /* Heads-up mail, deliberately after the offer is already live and
+     deliberately not awaited into the response path: this is a courtesy,
+     not an approval step. A Resend hiccup must never cost a studio its
+     coupon, so a failure only ever reaches the logs. */
+  emailOffer({ studio: s.studio, suite: s.suite, title, detail, expires: prettyDate(row.expires_at), id: row.id })
+    .catch(e => console.error('specials: notify failed', e.message));
+
   return json(200, {
     ok: true,
     offer: { id: row.id, suite: row.suite, title, detail, expires: prettyDate(row.expires_at) },
   });
+}
+
+/* Same Resend setup the interest form already uses, so this needs no new
+   keys, only OFFER_TO (falling back to LEAD_TO, so it works either way). */
+async function emailOffer(o) {
+  const key = process.env.RESEND_API_KEY;
+  const to  = process.env.OFFER_TO || process.env.LEAD_TO;
+  if (!key || !to) return;                      // not configured, not an error
+
+  const from = process.env.RESEND_FROM || 'Studio Soulutions <onboarding@resend.dev>';
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+
+  const html = `
+  <div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;color:#33312D;">
+    <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:#9A6B45;">Salon Plus Studios</p>
+    <h2 style="font-weight:400;margin:6px 0 4px;">${esc(o.studio)} posted an offer</h2>
+    <p style="margin:0 0 20px;color:#918C81;font-size:14px;">Suite ${esc(o.suite)} &middot; it is already live in the app</p>
+    <div style="border:1px solid #E5D9C3;border-radius:14px;padding:18px 20px;background:#FBF6EE;">
+      <div style="font-size:19px;">${esc(o.title)}</div>
+      ${o.detail ? `<div style="font-size:14px;color:#6C685F;margin-top:4px;">${esc(o.detail)}</div>` : ''}
+      <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#6B7A5F;margin-top:10px;">Through ${esc(o.expires)}</div>
+    </div>
+    <p style="margin-top:22px;font-size:14px;color:#6C685F;">
+      Nothing to approve, and nothing to take down later, it expires on its own.
+      If this one shouldn't be up, hide it at
+      <a href="https://studiosoulutions.com/leads/" style="color:#6B7A5F;">studiosoulutions.com/leads</a>.
+    </p>
+  </div>`;
+
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
+    body: JSON.stringify({
+      from, to: [to],
+      subject: `Salon Plus offer: ${o.studio} (Suite ${o.suite})`,
+      html,
+    }),
+  });
+  if (!res.ok) throw new Error(`resend ${res.status}: ${(await res.text()).slice(0, 200)}`);
 }
 
 /* ============ hide, Anne's off switch ================================= */

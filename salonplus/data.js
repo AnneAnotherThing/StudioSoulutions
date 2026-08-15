@@ -27,9 +27,10 @@
     '103':  'Soul and Beauty Day Spa', /* claimed via interest form 8/11/26, Christina */
     '212':  'True Story Tha Barber',   /* claimed via interest form 8/11/26, True */
     '301':  'Deuces Nail Studio',   /* board says 302; really 301, confirmed by Anne */
-    '312':  'Arizona Hair Replacement', /* business card 8/14/26, Todd Donahue; card
-                                           prints "Ste 312", matches the board's
-                                           shorthand "AZ Hair Replacement" */
+    '309':  'Cuts From The Heart',  /* claimed via interest form 8/12/26, Leticia Gordon */
+    '311':  'Colour Me Beautiful LLC', /* claimed via interest form 8/11/26, Juanita Salas */
+    '312':  'Arizona Hair Replacement', /* interest form 8/14/26, Todd Donahue, and a
+                                           business card that agrees with it line for line */
   };
 
   /* The old directory-board roster, suspect until someone confirms each
@@ -49,9 +50,7 @@
     '304':  'Classy Cuts By Rachel',
     '305':  'Nails By Lily',
     '306':  'Empolished',
-    '309':  'Cuts From the Heart',
     '310':  'Gala Hair Salon',
-    '311':  'Colour Me Beautiful',
     '316':  'Nekendra Salon de Coiffure',
     '317':  'Aisy Beauty Co, LLC',
     '318':  'Feel Good Hair By Robyn',
