@@ -46,6 +46,18 @@
     padding: 6px 16px;
     color: #3D3530 !important;
   }
+  /* With the text removed the pill has nothing to wrap, and an empty one
+     reads as a stray blob over the photo. Strip the decoration, keep only
+     the gap it was holding between the search bar and the menu. */
+  .kiosk-search .ks-hint:empty, .ks-hint:empty {
+    display: block;
+    min-height: 32px;
+    background: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 0;
+    padding: 0;
+  }
   /* the found suite pulses so it's unmissable at a glance */
   @keyframes suitePulse {
     0%, 100% { filter: drop-shadow(0 0 2px rgba(201,123,90,0.45)); }
