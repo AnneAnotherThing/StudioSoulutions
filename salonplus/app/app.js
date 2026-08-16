@@ -49,9 +49,11 @@ const CAT_LABEL = { hair: 'Hair', barber: 'Barber', nails: 'Nails', spa: 'Spa & 
 const CLAIM_URL = suite => `../?suite=${encodeURIComponent(suite)}#join`;
 
 // ============ DATA ============
-// Every name and suite comes from the real directory board. Deuces is the
-// first claimed card (real photos + bio); everyone else fills in as they claim.
-const tenants = Object.entries(ROSTER).map(([suite, name], i) => {
+/* The directory now lives in Supabase and is edited from the admin panel,
+   so what follows is the FALLBACK: the roster baked into data.js, used
+   when the directory endpoint can't be reached. It keeps the app useful
+   on a bad connection instead of showing an empty building. */
+const FALLBACK_TENANTS = Object.entries(ROSTER).map(([suite, name], i) => {
   const meta = SP_META[suite] || { c: 'hair', sv: 'Independent Studio' };
   const base = {
     id: suite,
@@ -170,6 +172,78 @@ const tenants = Object.entries(ROSTER).map(([suite, name], i) => {
   }
   return base;
 });
+
+/* The live directory, swapped in over the fallback the moment it arrives. */
+let tenants = FALLBACK_TENANTS;
+
+const initialsOf = name =>
+  name.replace(/[^A-Za-z ]/g, '').split(' ').slice(0, 2).map(w => w[0] || '').join('').toUpperCase();
+const wingOf = suite =>
+  suite[0] === '3' ? '300s wing' : suite[0] === '2' ? '200s wing' : '100s wing';
+
+/* One admin row becomes one card. Anything a tier isn't allowed to show
+   has already been stripped server-side, so an empty field here means
+   "not permitted or not provided" and the card simply omits it. */
+function tenantFromRow(r, i) {
+  return {
+    id: r.suite,
+    name: r.name,
+    service: r.service || 'Independent Studio',
+    category: r.category || 'hair',
+    suite: `Suite ${r.suite}`,
+    avatar: initialsOf(r.name) || r.suite[0],
+    theme: THEMES[i % THEMES.length],
+    claimed: true,
+    open: !!r.hours,          // posted hours is what makes a card read as open
+    tier: r.tier,
+    photo: r.photo || undefined,
+    photos: (r.photos || []).length ? r.photos : undefined,
+    photoFit: r.photoFit,
+    bio: r.bio || `One of the independent studios that call Salon Plus home.`,
+    tags: (r.tags || []).length ? r.tags : [CAT_LABEL[r.category] || 'Studio', wingOf(r.suite)],
+    hours: r.hours || '',
+    book: r.book || undefined,
+    bookLabel: r.bookLabel || undefined,
+    call: r.call || undefined,
+    text: r.text || undefined,
+    email: r.email || undefined,
+    site: r.site || undefined,
+    siteLabel: r.site ? r.site.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '') : undefined,
+    instagram: r.instagram || undefined,
+    facebook: r.facebook || undefined,
+    tiktok: r.tiktok || undefined,
+  };
+}
+
+async function loadDirectory() {
+  try {
+    const res = await fetch('/api/salonplus-admin', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'directory', building: 'salonplus' }),
+    });
+    if (!res.ok) return;
+    const rows = (await res.json()).rows || [];
+    /* An empty answer is more likely a misconfigured deploy than an empty
+       building, and showing nothing is worse than showing yesterday's
+       roster, so the fallback stands. */
+    if (!rows.length) return;
+
+    tenants = rows.map(tenantFromRow);
+    renderDiscoverCards();
+    renderDirectory();
+    const view = activeViewName();
+    if (view === 'specials') renderSpecials();
+    if (view === 'saved') renderSaved();
+    if (currentTenant) {
+      const still = tenants.find(t => t.id === currentTenant.id);
+      if (still) openTenant(still.id); else closeSheetRaw();
+    }
+  } catch {
+    /* Offline, or a local static preview with no function runtime. The
+       fallback roster is already on screen. */
+  }
+}
 
 // Vacancies: the board's availability data was years stale, so we list
 // nothing until the leasing office confirms what's actually open.
@@ -501,6 +575,13 @@ function activeViewName() {
 
 // ============ INTERACTIONS ============
 function switchView(view) {
+  /* The nav sits above an open profile sheet now, so a tap can land while a
+     studio's card is up. Put the card away first, otherwise the new view
+     arrives underneath it. Closing it raw leaves a stale 'sheet' layer on
+     the stack, which popstate already knows to skip. */
+  const sheet = document.getElementById('sheet');
+  if (sheet && sheet.classList.contains('open')) closeSheetRaw();
+
   if (view === 'discover') {
     const top = layerStack[layerStack.length - 1];
     if (top && top.name === 'view') { history.back(); return; }
@@ -1050,6 +1131,9 @@ renderDirectory();
 renderVacancies();
 updateSavedBadge();
 loadSpecials();
+/* Paints from the data.js fallback first so the building is never blank,
+   then swaps in the live directory when it lands. */
+loadDirectory();
 
 /* Kiosk-style hero search on the Discover view, mirrors kiosk.html */
 (function wireKioskSearch() {

@@ -480,9 +480,10 @@ document.querySelectorAll('.svc input').forEach(cb => {
   cb.addEventListener('change', () => cb.closest('.svc').classList.toggle('on', cb.checked));
 });
 
-/* ----- photos: pick up to 3, compress in the browser so uploads stay
-   small enough for the function, thumbnail strip with remove ----- */
-const MAX_PHOTOS = 3;
+/* ----- photos: one profile shot plus three for the gallery. Compressed
+   in the browser, both so uploads fit the function and so a 4MB phone
+   snap can't end up as the thing the app has to download. ----- */
+const MAX_PHOTOS = 4;
 let pickedPhotos = [];   // data URLs, already compressed
 
 function compressImage(file) {
@@ -507,7 +508,8 @@ function renderPhotoStrip() {
   const strip = document.getElementById('photoStrip');
   strip.innerHTML = pickedPhotos.map((p, i) => `
     <div style="position:relative; width:84px; height:84px;">
-      <img src="${p}" alt="" style="width:100%; height:100%; object-fit:cover; border-radius:12px; border:1px solid var(--line); display:block;">
+      <img src="${p}" alt="" style="width:100%; height:100%; object-fit:cover; border-radius:12px; border:1px solid ${i === 0 ? 'var(--sage-deep)' : 'var(--line)'}; display:block;">
+      ${i === 0 ? `<span style="position:absolute;bottom:0;left:0;right:0;background:rgba(61,53,48,.72);color:#fff;font-size:9px;letter-spacing:.08em;text-transform:uppercase;text-align:center;padding:2px 0;border-radius:0 0 11px 11px;">Profile</span>` : ''}
       <button type="button" data-remove="${i}" aria-label="Remove photo"
         style="position:absolute; top:-7px; right:-7px; width:22px; height:22px; border-radius:50%; border:none; background:var(--ink); color:#fff; font-size:13px; line-height:1; cursor:pointer;">&times;</button>
     </div>`).join('');

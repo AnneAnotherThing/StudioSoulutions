@@ -800,7 +800,11 @@ body {
   border-top: 1px solid var(--line);
   display: flex;
   padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
-  z-index: 100;
+  /* Above the profile sheet (201) so you can jump straight from a studio's
+     card to Directory or Saved without backing out first. Still below the
+     lightbox and the fullscreen map (300/400), which are deliberate
+     take-over-the-screen modes. */
+  z-index: 220;
 }
 .nav-item {
   flex: 1;
@@ -849,6 +853,9 @@ body {
   transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
   overflow-y: auto;
   overscroll-behavior: contain;
+  /* the nav now floats over the sheet, so the last thing in the sheet
+     needs room to clear it */
+  padding-bottom: calc(78px + env(safe-area-inset-bottom));
 }
 .sheet.open { transform: translateX(-50%) translateY(0); }
 

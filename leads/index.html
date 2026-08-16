@@ -5,92 +5,118 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex, nofollow" />
 <meta name="theme-color" content="#F5EDE0" />
-<title>Studio Soulutions - Interest submissions</title>
+<title>Studio Soulutions - Directory admin</title>
 <link rel="icon" type="image/png" sizes="64x64" href="../assets/favicon-64.png">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --bg:       #F5EDE0;
-    --bg-2:     #EFE4D2;
-    --surface:  #FBF6EE;
-    --ink:      #3D3530;
-    --ink-soft: #6B6357;
-    --ink-faint:#8B7E70;
-    --sage:     #8B9A7E;
-    --sage-deep:#6B7A5F;
-    --clay:     #C97B5A;
-    --line:     #E5D9C3;
-    --line-2:   #D4C4A8;
+    --bg:#F5EDE0; --bg-2:#EFE4D2; --surface:#FBF6EE; --surface-2:#FFFBF4;
+    --ink:#3D3530; --ink-soft:#6B6357; --ink-faint:#8B7E70;
+    --sage:#8B9A7E; --sage-deep:#6B7A5F; --clay:#C97B5A; --clay-deep:#A8593E;
+    --line:#E5D9C3; --line-2:#D4C4A8;
   }
   * { box-sizing: border-box; margin: 0; }
   body {
     background: var(--bg); color: var(--ink);
     font-family: 'Inter', -apple-system, system-ui, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    line-height: 1.55; min-height: 100vh;
+    -webkit-font-smoothing: antialiased; line-height: 1.55; min-height: 100vh;
   }
-  .wrap { max-width: 860px; margin: 0 auto; padding: 0 20px 60px; }
-  header { padding: 22px 0; border-bottom: 1px solid var(--line); margin-bottom: 26px; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px 80px; }
+  header { padding: 20px 0; border-bottom: 1px solid var(--line); margin-bottom: 22px; }
   .lockup { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
-  .lockup img { height: 36px; width: auto; display: block; }
-  .lockup span { font-family:'Fraunces',serif; font-weight: 600; font-size: 18px; }
+  .lockup img { height: 34px; width: auto; display: block; }
+  .lockup span { font-family:'Fraunces',serif; font-weight: 600; font-size: 17px; }
   .eyebrow { font-size: 11px; letter-spacing: .32em; text-transform: uppercase; font-weight: 600; color: var(--sage-deep); }
-  h1 { font-family:'Fraunces',serif; font-weight: 600; font-size: clamp(26px, 4vw, 38px); letter-spacing: -0.02em; margin-top: 6px; }
+  h1 { font-family:'Fraunces',serif; font-weight: 600; font-size: clamp(24px, 4vw, 34px); letter-spacing: -0.02em; margin-top: 6px; }
+  h2 { font-family:'Fraunces',serif; font-weight: 600; font-size: 20px; margin-bottom: 4px; }
   .sub { color: var(--ink-soft); margin-top: 6px; font-size: 15px; }
 
   /* gate */
   .gate { max-width: 420px; margin: 60px auto 0; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 30px; text-align: center; box-shadow: 0 10px 30px rgba(61,53,48,.07); }
   .gate p { color: var(--ink-soft); font-size: 14.5px; margin: 10px 0 18px; }
-  .gate input {
-    width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--line-2);
-    background: #FFFDF9; font: inherit; text-align: center; letter-spacing: .1em;
-  }
-  .gate input:focus { outline: none; border-color: var(--sage); }
-  .btn {
-    display: inline-block; margin-top: 14px; padding: 12px 28px; border-radius: 999px; border: none;
-    font: inherit; font-weight: 600; font-size: 15px;
-    background: var(--ink); color: var(--surface); cursor: pointer; transition: background .15s;
-  }
+  .gate input { width:100%; padding:12px 16px; border-radius:12px; border:1px solid var(--line-2); background:#FFFDF9; font:inherit; text-align:center; margin-bottom:10px; }
+  .gate input:focus, input:focus, select:focus, textarea:focus { outline:none; border-color: var(--sage); }
+
+  .btn { display:inline-flex; align-items:center; gap:7px; padding:11px 22px; border-radius:999px; border:none; font:inherit; font-weight:600; font-size:14.5px; background:var(--ink); color:var(--surface); cursor:pointer; transition:background .15s; }
   .btn:hover { background: var(--sage-deep); }
-  .btn[disabled] { opacity: .55; cursor: default; }
-  .gate-err { color: #A8593E; font-size: 13.5px; margin-top: 12px; display: none; }
+  .btn[disabled] { opacity:.5; cursor:default; }
+  .btn-sm { padding:6px 14px; font-size:13px; }
+  .btn-ghost { background:transparent; border:1px solid var(--line-2); color:var(--ink-soft); font-weight:500; }
+  .btn-ghost:hover { background:transparent; border-color:var(--sage); color:var(--sage-deep); }
+  .btn-danger { background:transparent; border:1px solid var(--line-2); color:var(--ink-faint); }
+  .btn-danger:hover { background:transparent; border-color:var(--clay-deep); color:var(--clay-deep); }
+  .err { color: var(--clay-deep); font-size:13.5px; margin-top:12px; display:none; }
 
-  /* toolbar */
-  .toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
-  .toolbar input, .toolbar select {
-    padding: 11px 16px; border-radius: 999px; border: 1px solid var(--line-2);
-    background: var(--surface); font: inherit; font-size: 14.5px; color: var(--ink);
-  }
-  .toolbar input { flex: 1; min-width: 180px; }
-  .toolbar input:focus, .toolbar select:focus { outline: none; border-color: var(--sage); }
-  .count { font-size: 13px; letter-spacing: .06em; color: var(--ink-faint); white-space: nowrap; }
-  .refresh { background: transparent; border: 1px solid var(--line-2); color: var(--ink); padding: 10px 20px; border-radius: 999px; font: inherit; font-size: 14px; cursor: pointer; }
-  .refresh:hover { border-color: var(--sage); color: var(--sage-deep); }
+  /* tabs */
+  .tabs { display:flex; gap:6px; flex-wrap:wrap; border-bottom:1px solid var(--line); margin:22px 0 20px; }
+  .tab { padding:10px 18px; border:none; background:none; font:inherit; font-size:14.5px; font-weight:600; color:var(--ink-faint); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; }
+  .tab[aria-selected="true"] { color:var(--ink); border-bottom-color:var(--sage-deep); }
+  .tab .pip { display:inline-grid; place-items:center; min-width:19px; height:19px; padding:0 5px; margin-left:6px; border-radius:999px; background:var(--clay); color:#fff; font-size:11px; font-weight:700; }
+  .panel[hidden] { display:none; }
 
-  /* cards */
-  .card {
-    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
-    padding: 20px 22px; margin-bottom: 14px; box-shadow: 0 1px 2px rgba(61,53,48,.04);
-  }
-  .card-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-  .biz { font-family:'Fraunces',serif; font-weight: 600; font-size: 19px; }
-  .suite-tag { font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--sage-deep); border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; background: var(--bg-2); font-weight: 600; }
-  .when { font-size: 12.5px; color: var(--ink-faint); }
-  .rows { margin-top: 12px; display: grid; grid-template-columns: 110px 1fr; gap: 5px 14px; font-size: 14.5px; }
-  .rows dt { color: var(--ink-faint); }
-  .rows dd { color: var(--ink); overflow-wrap: anywhere; }
-  .rows a { color: var(--sage-deep); }
-  .pill { display: inline-block; background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 1px 10px; font-size: 12.5px; margin: 2px 4px 2px 0; }
-  .del {
-    background: transparent; border: 1px solid var(--line-2); color: var(--ink-faint);
-    font: inherit; font-size: 12px; letter-spacing: .06em;
-    border-radius: 999px; padding: 4px 14px; cursor: pointer; margin-left: auto;
-  }
-  .del:hover { border-color: #A8593E; color: #A8593E; }
-  .del[disabled] { opacity: .5; cursor: default; }
-  .empty { text-align: center; color: var(--ink-faint); padding: 60px 0; }
-  .hidden { display: none; }
-  footer { margin-top: 40px; text-align: center; font-size: 12.5px; color: var(--ink-faint); }
+  /* spreadsheet */
+  .sheet-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:14px; background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:940px; font-size:14px; }
+  th { text-align:left; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-faint); font-weight:600; padding:11px 10px; border-bottom:1px solid var(--line); white-space:nowrap; background:var(--bg-2); position:sticky; top:0; z-index:1; }
+  td { padding:4px 6px; border-bottom:1px solid var(--line); vertical-align:middle; }
+  tr:last-child td { border-bottom:none; }
+  tr.dirty td { background:#FCF7E8; }
+  tr.draft .cell-name { color: var(--ink-faint); }
+  .cell { width:100%; padding:7px 9px; border:1px solid transparent; border-radius:8px; background:transparent; font:inherit; font-size:14px; color:var(--ink); }
+  .cell:hover { border-color:var(--line-2); }
+  .cell:focus { border-color:var(--sage); background:var(--surface-2); }
+  select.cell { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238B7E70' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 8px center; padding-right:24px; }
+  .col-suite { width:88px; } .col-tier { width:120px; } .col-status { width:110px; }
+  .col-cat { width:110px; } .col-act { width:150px; }
+  .rowbtn { background:none; border:none; font:inherit; font-size:12.5px; font-weight:600; color:var(--sage-deep); cursor:pointer; padding:4px 6px; }
+  .rowbtn:hover { text-decoration:underline; }
+  .rowbtn.warn { color:var(--ink-faint); } .rowbtn.warn:hover { color:var(--clay-deep); }
+
+  .toolbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:14px; }
+  .toolbar input[type=text], .toolbar select { padding:10px 15px; border-radius:999px; border:1px solid var(--line-2); background:var(--surface); font:inherit; font-size:14px; }
+  .count { font-size:13px; color:var(--ink-faint); }
+  .spacer { flex:1; }
+  .savebar { position:sticky; bottom:0; margin-top:14px; padding:12px 16px; background:var(--surface-2); border:1px solid var(--line-2); border-radius:14px; display:flex; align-items:center; gap:12px; box-shadow:0 -4px 20px rgba(61,53,48,.08); }
+  .savebar[hidden] { display:none; }
+
+  /* detail drawer */
+  .drawer-back { position:fixed; inset:0; background:rgba(61,53,48,.4); opacity:0; pointer-events:none; transition:opacity .2s; z-index:50; }
+  .drawer-back.open { opacity:1; pointer-events:auto; }
+  .drawer { position:fixed; top:0; right:0; height:100%; width:min(560px,100%); background:var(--bg); border-left:1px solid var(--line); transform:translateX(100%); transition:transform .25s cubic-bezier(.32,.72,0,1); z-index:51; overflow-y:auto; padding:26px 26px 60px; }
+  .drawer.open { transform:none; }
+  .drawer h2 { margin-bottom:14px; }
+  .field { margin-top:16px; }
+  .field label { display:block; font-size:12.5px; font-weight:600; color:var(--ink-soft); margin-bottom:6px; }
+  .field input, .field select, .field textarea { width:100%; padding:11px 13px; border:1px solid var(--line-2); border-radius:10px; background:var(--surface-2); font:inherit; font-size:14.5px; color:var(--ink); }
+  .field textarea { min-height:88px; resize:vertical; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .hint { font-size:12.5px; color:var(--ink-faint); margin-top:5px; }
+  .checkrow { display:flex; align-items:center; gap:9px; margin-top:12px; font-size:14px; }
+  .checkrow input { width:auto; }
+
+  .shots { display:flex; gap:9px; flex-wrap:wrap; margin-top:8px; }
+  .shot { width:78px; height:78px; border-radius:10px; border:1px solid var(--line-2); background-size:cover; background-position:center; position:relative; cursor:pointer; }
+  .shot.is-profile { border:2px solid var(--sage-deep); }
+  .shot .tagx { position:absolute; bottom:-1px; left:-1px; right:-1px; background:rgba(61,53,48,.72); color:#fff; font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; text-align:center; padding:2px 0; border-radius:0 0 9px 9px; }
+
+  /* cards for inbox / offers / log */
+  .card { background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:18px 20px; margin-bottom:12px; }
+  .card-top { display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap; }
+  .biz { font-family:'Fraunces',serif; font-weight:600; font-size:18px; }
+  .suite-tag { font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--sage-deep); border:1px solid var(--line); border-radius:999px; padding:3px 12px; background:var(--bg-2); font-weight:600; }
+  .when { font-size:12.5px; color:var(--ink-faint); }
+  .rows { margin-top:10px; display:grid; grid-template-columns:104px 1fr; gap:4px 14px; font-size:14px; }
+  .rows dt { color:var(--ink-faint); } .rows dd { overflow-wrap:anywhere; }
+  .pill { display:inline-block; background:var(--bg-2); border:1px solid var(--line); border-radius:999px; padding:1px 10px; font-size:12.5px; margin:2px 4px 2px 0; }
+  .empty { text-align:center; color:var(--ink-faint); padding:50px 0; }
+
+  /* settings */
+  .tier-card { background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:20px 22px; margin-bottom:14px; }
+  .switches { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:10px 18px; margin-top:14px; }
+  .switch { display:flex; align-items:center; gap:9px; font-size:14px; }
+  .toast { position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--ink); color:var(--surface); padding:11px 22px; border-radius:999px; font-size:14px; font-weight:500; opacity:0; pointer-events:none; transition:all .25s; z-index:80; }
+  .toast.show { opacity:1; transform:translateX(-50%); }
+  .hidden { display:none; }
 </style>
 </head>
 <body>
@@ -102,226 +128,583 @@
     </a>
   </header>
 
-  <!-- passcode gate -->
+  <!-- ===== gate ===== -->
   <div class="gate" id="gate">
     <div class="eyebrow">Private</div>
-    <h1>Interest submissions</h1>
-    <p>Enter the passcode to see who has asked to be on the map.</p>
+    <h1>Directory admin</h1>
+    <p>The passcode, plus your first name so changes have a signature.</p>
+    <input id="whoInput" type="text" placeholder="Your name" autocomplete="given-name" />
     <input id="codeInput" type="password" placeholder="Passcode" autocomplete="off" />
-    <br />
-    <button class="btn" id="unlockBtn">Open</button>
-    <div class="gate-err" id="gateErr">That passcode didn't work. Try again.</div>
+    <button class="btn" id="unlockBtn" style="width:100%;justify-content:center;">Open</button>
+    <div class="err" id="gateErr"></div>
   </div>
 
-  <!-- list -->
-  <div class="hidden" id="listWrap">
-    <div class="eyebrow">Interest submissions</div>
-    <h1>Who wants on the map</h1>
-    <p class="sub">Every studio that filled out an interest form, any building, newest first.</p>
+  <!-- ===== panel ===== -->
+  <div class="hidden" id="panel">
+    <div class="eyebrow">Directory admin</div>
+    <h1>Every studio, every center</h1>
+    <p class="sub">Edits here go straight to the live app. There is no deploy to wait for.</p>
 
-    <!-- Live offers. Not an approval queue: these are already up. This is
-         only the off switch, for the rare one that shouldn't be. -->
-    <div class="hidden" id="offersWrap" style="margin-top:26px;">
-      <div class="eyebrow" style="margin-bottom:10px;">Live offers <span id="offersCount" class="count"></span></div>
-      <div id="offers"></div>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" data-tab="studios" aria-selected="true">Studios</button>
+      <button class="tab" role="tab" data-tab="inbox"   aria-selected="false">Inbox <span class="pip hidden" id="inboxPip">0</span></button>
+      <button class="tab" role="tab" data-tab="offers"  aria-selected="false">Offers</button>
+      <button class="tab" role="tab" data-tab="settings" aria-selected="false">Settings</button>
+      <button class="tab" role="tab" data-tab="log"     aria-selected="false">Changes</button>
     </div>
 
-    <div class="toolbar" style="margin-top:22px;">
-      <input id="search" type="text" placeholder="Search name, business, suite&hellip;" />
-      <select id="buildingFilter" title="Filter by building"><option value="*">All buildings</option></select>
-      <span class="count" id="count"></span>
-      <button class="refresh" id="refreshBtn">Refresh</button>
-    </div>
+    <!-- STUDIOS -->
+    <section class="panel" id="tab-studios">
+      <div class="toolbar">
+        <select id="filterBuilding"></select>
+        <input id="search" type="text" placeholder="Search name, suite, contact&hellip;" />
+        <span class="count" id="studioCount"></span>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost btn-sm" id="addRowBtn">+ Add a studio</button>
+      </div>
+      <div class="sheet-wrap">
+        <table>
+          <thead><tr>
+            <th class="col-suite">Suite</th>
+            <th>Studio</th>
+            <th>Service line</th>
+            <th class="col-cat">Category</th>
+            <th class="col-tier">Tier</th>
+            <th class="col-status">Status</th>
+            <th class="col-act"></th>
+          </tr></thead>
+          <tbody id="studioRows"></tbody>
+        </table>
+      </div>
+      <div class="savebar" id="saveBar" hidden>
+        <strong id="dirtyCount">0 unsaved</strong>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost btn-sm" id="revertBtn">Discard</button>
+        <button class="btn btn-sm" id="saveAllBtn">Save changes</button>
+      </div>
+    </section>
 
-    <div id="cards"></div>
-    <div class="empty hidden" id="empty">No submissions yet. They'll show up here the moment someone sends a form.</div>
+    <!-- INBOX -->
+    <section class="panel" id="tab-inbox" hidden>
+      <h2>Submissions waiting</h2>
+      <p class="sub" style="margin-bottom:18px;">Forms nobody has turned into a listing yet. Fix anything they got wrong on the way in.</p>
+      <div id="inboxList"></div>
+    </section>
+
+    <!-- OFFERS -->
+    <section class="panel" id="tab-offers" hidden>
+      <h2>Live offers</h2>
+      <p class="sub" style="margin-bottom:18px;">Studios post these themselves and they expire on their own. Nothing to approve.</p>
+      <div id="offersList"></div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="panel" id="tab-settings" hidden>
+      <h2>What each tier gets</h2>
+      <p class="sub" style="margin-bottom:18px;">This is the actual rule, not a description of it. Turn photos off for a tier and those cards lose their photos on the next load.</p>
+      <div id="tierList"></div>
+      <button class="btn" id="saveTiersBtn">Save tiers</button>
+
+      <h2 style="margin-top:40px;">Shopping centers</h2>
+      <p class="sub" style="margin-bottom:18px;">A center can hold listings before anyone traces its floor plan. Without a map, its studios simply have no "show me the way".</p>
+      <div id="buildingList"></div>
+      <div class="tier-card">
+        <h2 style="font-size:16px;">Add a center</h2>
+        <div class="two" style="margin-top:10px;">
+          <div class="field" style="margin:0;"><label>Name</label><input id="nbName" type="text" placeholder="e.g. Cactus Plaza"></div>
+          <div class="field" style="margin:0;"><label>City</label><input id="nbCity" type="text" placeholder="e.g. Mesa, AZ"></div>
+        </div>
+        <div class="two" style="margin-top:12px;">
+          <div class="field" style="margin:0;"><label>New studios start on</label><select id="nbTier"></select></div>
+          <div class="field" style="margin:0;display:flex;align-items:flex-end;">
+            <label class="checkrow" style="margin:0;"><input type="checkbox" id="nbMap"> Floor plan already traced</label>
+          </div>
+        </div>
+        <button class="btn btn-sm" id="addBuildingBtn" style="margin-top:16px;">Add center</button>
+      </div>
+    </section>
+
+    <!-- LOG -->
+    <section class="panel" id="tab-log" hidden>
+      <h2>Recent changes</h2>
+      <p class="sub" style="margin-bottom:18px;">Who did what, most recent first.</p>
+      <div id="logList"></div>
+    </section>
   </div>
-
-  <footer>Studio Soulutions &middot; every studio under one roof, discoverable</footer>
 </div>
 
+<!-- detail drawer -->
+<div class="drawer-back" id="drawerBack"></div>
+<aside class="drawer" id="drawer" aria-label="Studio details"></aside>
+<div class="toast" id="toast"></div>
+
 <script>
-const CODE_KEY = 'ss-leads-code-v1';
-let rows = [];
-let buildingFilter = new URLSearchParams(location.search).get('building') || '*';
+/* =====================================================================
+   Directory admin
+   Everything here talks to /api/salonplus-admin. The grid holds edits in
+   memory and saves on demand, so a mistyped cell is one Discard away
+   rather than already live.
+   ===================================================================== */
+const API = '/api/salonplus-admin';
+const OFFERS_API = '/api/salonplus-specials';
+const SESSION = 'ss-admin-v1';
 
 const $ = id => document.getElementById(id);
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-async function load(code) {
-  const res = await fetch('/api/salonplus-leads', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ code, building: '*' }),
+let auth = null;                 // { code, who }
+let state = { buildings: [], tiers: [], studios: [], leads: [], log: [] };
+let edits = new Map();           // studio id (or temp key) -> patch
+let newRows = [];                // rows added by hand, not yet saved
+let filterBuilding = '*';
+let searchTerm = '';
+let drawerFor = null;
+
+async function api(body) {
+  const res = await fetch(API, {
+    method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ ...body, ...(auth || {}) }),
   });
-  if (res.status === 401) throw new Error('bad-code');
-  if (!res.ok) throw new Error('server');
-  return (await res.json()).rows || [];
+  let data = {}; try { data = await res.json(); } catch {}
+  if (!res.ok) throw new Error(data.error || 'Something went wrong.');
+  return data;
+}
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-function rebuildBuildingFilter() {
-  const sel = $('buildingFilter');
-  const buildings = [...new Set(rows.map(r => r.building).filter(Boolean))].sort();
-  sel.innerHTML = '<option value="*">All buildings</option>'
-    + buildings.map(b => `<option value="${esc(b)}"${b === buildingFilter ? ' selected' : ''}>${esc(b)}</option>`).join('');
-  if (buildingFilter !== '*' && !buildings.includes(buildingFilter)) buildingFilter = '*';
-  sel.value = buildingFilter;
+/* ----- unlock ----- */
+async function unlock(code, who, { silent } = {}) {
+  const btn = $('unlockBtn');
+  btn.disabled = true; btn.textContent = 'Opening…'; $('gateErr').style.display = 'none';
+  try {
+    auth = { code, who };
+    const d = await api({ action: 'unlock' });
+    state = { buildings: d.buildings, tiers: d.tiers, studios: d.studios, leads: d.leads, log: d.log };
+    sessionStorage.setItem(SESSION, JSON.stringify(auth));
+    $('gate').classList.add('hidden'); $('panel').classList.remove('hidden');
+    renderAll();
+    loadOffers();
+  } catch (e) {
+    auth = null; sessionStorage.removeItem(SESSION);
+    if (!silent) { $('gateErr').style.display = 'block'; $('gateErr').textContent = e.message; }
+  } finally { btn.disabled = false; btn.textContent = 'Open'; }
 }
 
-function render() {
-  const q = $('search').value.trim().toLowerCase();
-  let shown = buildingFilter === '*' ? rows : rows.filter(r => r.building === buildingFilter);
-  if (q) shown = shown.filter(r =>
-    [r.business, r.name, r.suite, r.email, r.phone, r.instagram, r.facebook, r.tiktok, r.notes, r.building]
-      .some(v => (v || '').toLowerCase().includes(q)));
+function renderAll() {
+  renderBuildingFilter(); renderStudios(); renderInbox(); renderTiers(); renderBuildings(); renderLog();
+}
 
-  $('count').textContent = `${shown.length} of ${rows.length}`;
-  $('empty').classList.toggle('hidden', shown.length > 0);
+/* ----- the grid ----- */
+function allRows() { return [...newRows, ...state.studios]; }
+function rowKey(s) { return s.id || s._tmp; }
+function patched(s) { return { ...s, ...(edits.get(rowKey(s)) || {}) }; }
 
-  $('cards').innerHTML = shown.map(r => {
-    const when = r.created_at ? new Date(r.created_at).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : '';
-    const line = (label, html) => html ? `<dt>${label}</dt><dd>${html}</dd>` : '';
-    const services = (r.services || []).map(s => `<span class="pill">${esc(s)}</span>`).join('');
-    const photos = (r.photos || []).map(u =>
-      `<a href="${esc(u)}" target="_blank" rel="noopener"><img src="${esc(u)}" alt="" style="width:74px;height:74px;object-fit:cover;border-radius:10px;border:1px solid var(--line);display:block;"></a>`
-    ).join('');
+function renderBuildingFilter() {
+  const opts = ['<option value="*">All centers</option>']
+    .concat(state.buildings.map(b => `<option value="${esc(b.slug)}">${esc(b.name)}</option>`));
+  $('filterBuilding').innerHTML = opts.join('');
+  $('filterBuilding').value = filterBuilding;
+  $('nbTier').innerHTML = state.tiers.map(t => `<option value="${t.tier}">${t.tier} · ${esc(t.label)}</option>`).join('');
+}
+
+function renderStudios() {
+  const q = searchTerm.toLowerCase();
+  const shown = allRows().map(patched).filter(s => {
+    if (filterBuilding !== '*' && s.building !== filterBuilding) return false;
+    if (!q) return true;
+    return [s.suite, s.name, s.contact_name, s.service].some(v => (v || '').toLowerCase().includes(q));
+  });
+
+  $('studioCount').textContent = `${shown.length} of ${allRows().length}`;
+  $('studioRows').innerHTML = shown.map(s => {
+    const k = rowKey(s);
+    const isDirty = edits.has(k);
+    const tierOpts = state.tiers.map(t =>
+      `<option value="${t.tier}"${Number(s.tier) === t.tier ? ' selected' : ''}>${t.tier} · ${esc(t.label)}</option>`).join('');
+    const statusOpts = ['draft','live','hidden'].map(v =>
+      `<option value="${v}"${s.status === v ? ' selected' : ''}>${v}</option>`).join('');
+    const catOpts = ['hair','barber','nails','spa'].map(v =>
+      `<option value="${v}"${s.category === v ? ' selected' : ''}>${v}</option>`).join('');
+    return `<tr class="${isDirty ? 'dirty' : ''} ${s.status === 'draft' ? 'draft' : ''}" data-k="${esc(k)}">
+      <td><input class="cell" data-f="suite" value="${esc(s.suite)}" placeholder="000"></td>
+      <td class="cell-name"><input class="cell" data-f="name" value="${esc(s.name)}" placeholder="Studio name"></td>
+      <td><input class="cell" data-f="service" value="${esc(s.service)}" placeholder="e.g. Cuts &amp; Styling"></td>
+      <td><select class="cell" data-f="category">${catOpts}</select></td>
+      <td><select class="cell" data-f="tier">${tierOpts}</select></td>
+      <td><select class="cell" data-f="status">${statusOpts}</select></td>
+      <td>
+        <button class="rowbtn" data-act="detail">Details</button>
+        ${s.id ? `<button class="rowbtn warn" data-act="hide">Hide</button>` : `<button class="rowbtn warn" data-act="drop">Remove</button>`}
+      </td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="7"><div class="empty">Nothing here yet. Add a studio, or publish one from the Inbox.</div></td></tr>`;
+
+  const n = edits.size;
+  $('saveBar').hidden = n === 0;
+  $('dirtyCount').textContent = `${n} unsaved change${n === 1 ? '' : 's'}`;
+}
+
+$('studioRows').addEventListener('input', e => {
+  const cell = e.target.closest('.cell'); if (!cell) return;
+  const k = e.target.closest('tr').dataset.k;
+  const patch = edits.get(k) || {};
+  patch[cell.dataset.f] = cell.value;
+  edits.set(k, patch);
+  const n = edits.size;
+  $('saveBar').hidden = false;
+  $('dirtyCount').textContent = `${n} unsaved change${n === 1 ? '' : 's'}`;
+  e.target.closest('tr').classList.add('dirty');
+});
+$('studioRows').addEventListener('change', e => {
+  if (e.target.closest('select.cell')) e.target.dispatchEvent(new Event('input', { bubbles: true }));
+});
+$('studioRows').addEventListener('click', async e => {
+  const btn = e.target.closest('.rowbtn'); if (!btn) return;
+  const k = e.target.closest('tr').dataset.k;
+  const row = allRows().find(s => rowKey(s) === k);
+  if (btn.dataset.act === 'detail') return openDrawer(k);
+  if (btn.dataset.act === 'drop') {
+    newRows = newRows.filter(s => s._tmp !== k); edits.delete(k); return renderStudios();
+  }
+  if (btn.dataset.act === 'hide') {
+    if (!confirm(`Hide "${patched(row).name}"? It comes off the app but stays on file.`)) return;
+    try { await api({ action: 'setStatus', id: row.id, status: 'hidden' });
+      row.status = 'hidden'; renderStudios(); toast('Hidden'); }
+    catch (err) { alert(err.message); }
+  }
+});
+
+$('addRowBtn').addEventListener('click', () => {
+  const b = filterBuilding !== '*' ? filterBuilding : (state.buildings[0] || {}).slug;
+  const bld = state.buildings.find(x => x.slug === b) || {};
+  newRows.unshift({ _tmp: 't' + Date.now(), building: b, suite: '', name: '', service: '',
+    category: 'hair', tier: bld.default_tier || 1, status: 'draft', tags: [], photos: [] });
+  renderStudios();
+  const first = $('studioRows').querySelector('input.cell'); if (first) first.focus();
+});
+
+$('saveAllBtn').addEventListener('click', async () => {
+  const btn = $('saveAllBtn'); btn.disabled = true; btn.textContent = 'Saving…';
+  const failures = [];
+  for (const s of allRows()) {
+    const k = rowKey(s);
+    if (!edits.has(k)) continue;
+    const merged = patched(s);
+    try {
+      const out = await api({ action: 'saveStudio', studio: stripTmp(merged) });
+      edits.delete(k);
+      if (s._tmp) { newRows = newRows.filter(x => x._tmp !== s._tmp); state.studios.push(out.studio); }
+      else Object.assign(s, out.studio);
+    } catch (err) { failures.push(`${merged.suite || 'new'}: ${err.message}`); }
+  }
+  btn.disabled = false; btn.textContent = 'Save changes';
+  renderStudios();
+  if (failures.length) alert('Some rows did not save:\n\n' + failures.join('\n'));
+  else toast('Saved, and live in the app');
+});
+$('revertBtn').addEventListener('click', () => {
+  if (!confirm('Discard every unsaved change?')) return;
+  edits.clear(); newRows = []; renderStudios();
+});
+function stripTmp(s) { const { _tmp, ...rest } = s; return rest; }
+
+/* ----- detail drawer, everything the grid has no room for ----- */
+function openDrawer(k) {
+  const row = allRows().find(s => rowKey(s) === k); if (!row) return;
+  const s = patched(row);
+  drawerFor = k;
+  const tierOf = state.tiers.find(t => t.tier === Number(s.tier)) || {};
+  const shots = [s.photo, ...(s.photos || [])].filter(Boolean);
+
+  $('drawer').innerHTML = `
+    <button class="btn btn-ghost btn-sm" id="drawerClose" style="float:right;">Close</button>
+    <div class="eyebrow">${esc(s.building || '')} · Suite ${esc(s.suite || '—')}</div>
+    <h2>${esc(s.name || 'New studio')}</h2>
+    <p class="hint">Tier ${esc(String(s.tier))} · ${esc(tierOf.label || '')} — ${tierOf.photos_max ? `up to ${tierOf.photos_max} photos` : 'no photos'}, ${tierOf.allow_coupons ? 'can post coupons' : 'no coupons'}.</p>
+
+    <div class="field"><label>Shopping center</label>
+      <select data-d="building">${state.buildings.map(b => `<option value="${esc(b.slug)}"${b.slug === s.building ? ' selected' : ''}>${esc(b.name)}</option>`).join('')}</select></div>
+
+    <div class="two">
+      <div class="field"><label>Contact name</label><input data-d="contact_name" value="${esc(s.contact_name)}"></div>
+      <div class="field"><label>Hours</label><input data-d="hours" value="${esc(s.hours)}" placeholder="Tue–Sat 10–6"></div>
+    </div>
+
+    <div class="field"><label>Bio</label><textarea data-d="bio">${esc(s.bio)}</textarea></div>
+    <div class="field"><label>Tags</label><input data-d="tags" value="${esc((s.tags || []).join(', '))}" placeholder="Gel, Pedicure, Nail Art">
+      <div class="hint">Comma separated. These are also the services they can build a coupon from.</div></div>
+
+    <div class="two">
+      <div class="field"><label>Phone</label><input data-d="phone" value="${esc(s.phone)}"></div>
+      <div class="field"><label>Email</label><input data-d="email" value="${esc(s.email)}"></div>
+    </div>
+    <label class="checkrow"><input type="checkbox" data-d="ok_to_text" ${s.ok_to_text !== false ? 'checked' : ''}> Okay to text</label>
+    <label class="checkrow"><input type="checkbox" data-d="show_email" ${s.show_email ? 'checked' : ''}> Show their email on the public card</label>
+
+    <div class="two">
+      <div class="field"><label>Booking link</label><input data-d="booking_url" value="${esc(s.booking_url)}"></div>
+      <div class="field"><label>Booking service</label><input data-d="booking_label" value="${esc(s.booking_label)}" placeholder="Vagaro, Square…"></div>
+    </div>
+    <div class="field"><label>Website</label><input data-d="website" value="${esc(s.website)}"></div>
+    <div class="two">
+      <div class="field"><label>Instagram</label><input data-d="instagram" value="${esc(s.instagram)}"></div>
+      <div class="field"><label>Facebook</label><input data-d="facebook" value="${esc(s.facebook)}"></div>
+    </div>
+
+    <div class="field"><label>Photos</label>
+      ${tierOf.photos_max ? `
+        <div class="shots" id="shotList">
+          ${shots.map((u, i) => `<div class="shot ${i === 0 ? 'is-profile' : ''}" data-u="${esc(u)}" style="background-image:url('${esc(u)}')">${i === 0 ? '<span class="tagx">Profile</span>' : ''}</div>`).join('')
+            || '<div class="hint">None yet. Photos arrive with their form, or paste a URL below.</div>'}
+        </div>
+        <div class="hint">Tap a photo to make it the profile shot. One profile plus ${Math.max(0, tierOf.photos_max - 1)} in the gallery.</div>
+        <input data-d="_addPhoto" placeholder="Paste an image URL and press Enter" style="margin-top:9px;">
+        <label class="checkrow"><input type="checkbox" data-d="photo_fit_card" ${s.photo_fit === 'card' ? 'checked' : ''}> Show the profile image whole, uncropped (for a business card)</label>
+      ` : `<div class="hint">Tier ${esc(String(s.tier))} doesn't include photos. Change the tier, or change what the tier allows in Settings.</div>`}
+    </div>
+
+    <div style="margin-top:26px;display:flex;gap:10px;">
+      <button class="btn" id="drawerSave">Save this studio</button>
+      <button class="btn btn-ghost" id="drawerCancel">Cancel</button>
+    </div>`;
+
+  $('drawerBack').classList.add('open'); $('drawer').classList.add('open');
+  $('drawerClose').onclick = $('drawerCancel').onclick = closeDrawer;
+  $('drawerSave').onclick = saveDrawer;
+
+  const shotList = $('shotList');
+  if (shotList) shotList.addEventListener('click', e => {
+    const shot = e.target.closest('.shot'); if (!shot) return;
+    const all = [...shotList.querySelectorAll('.shot')].map(x => x.dataset.u);
+    const picked = shot.dataset.u;
+    stageDrawer({ photo: picked, photos: all.filter(u => u !== picked) });
+    openDrawer(k);
+  });
+  const add = $('drawer').querySelector('[data-d="_addPhoto"]');
+  if (add) add.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    const u = add.value.trim(); if (!u) return;
+    const cur = patched(row);
+    const list = [cur.photo, ...(cur.photos || [])].filter(Boolean).concat(u);
+    stageDrawer({ photo: list[0], photos: list.slice(1, 3 + 1) });
+    openDrawer(k);
+  });
+}
+function stageDrawer(patch) {
+  const cur = edits.get(drawerFor) || {};
+  edits.set(drawerFor, { ...cur, ...patch });
+}
+function collectDrawer() {
+  const patch = {};
+  $('drawer').querySelectorAll('[data-d]').forEach(el => {
+    const f = el.dataset.d;
+    if (f.startsWith('_')) return;
+    if (f === 'photo_fit_card') { patch.photo_fit = el.checked ? 'card' : 'cover'; return; }
+    if (el.type === 'checkbox') { patch[f] = el.checked; return; }
+    if (f === 'tags') { patch.tags = el.value.split(',').map(x => x.trim()).filter(Boolean); return; }
+    patch[f] = el.value;
+  });
+  return patch;
+}
+async function saveDrawer() {
+  const row = allRows().find(s => rowKey(s) === drawerFor); if (!row) return closeDrawer();
+  stageDrawer(collectDrawer());
+  const merged = patched(row);
+  const btn = $('drawerSave'); btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    const out = await api({ action: 'saveStudio', studio: stripTmp(merged) });
+    edits.delete(drawerFor);
+    if (row._tmp) { newRows = newRows.filter(x => x._tmp !== row._tmp); state.studios.push(out.studio); }
+    else Object.assign(row, out.studio);
+    closeDrawer(); renderStudios(); toast('Saved, and live in the app');
+  } catch (e) {
+    btn.disabled = false; btn.textContent = 'Save this studio';
+    alert(e.message);
+  }
+}
+function closeDrawer() {
+  $('drawerBack').classList.remove('open'); $('drawer').classList.remove('open');
+  drawerFor = null; renderStudios();
+}
+$('drawerBack').addEventListener('click', closeDrawer);
+
+/* ----- inbox ----- */
+function renderInbox() {
+  const n = state.leads.length;
+  $('inboxPip').textContent = n; $('inboxPip').classList.toggle('hidden', n === 0);
+  $('inboxList').innerHTML = state.leads.map(l => {
+    const when = l.created_at ? new Date(l.created_at).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : '';
+    const line = (k, v) => v ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '';
+    const shots = (l.photos || []).map(u => `<img src="${esc(u)}" alt="" style="width:66px;height:66px;object-fit:cover;border-radius:9px;border:1px solid var(--line);">`).join('');
     return `<div class="card">
       <div class="card-top">
-        <span class="biz">${esc(r.business)}</span>
-        ${r.suite ? `<span class="suite-tag">Suite ${esc(r.suite)}</span>` : ''}
-        ${r.building ? `<span class="suite-tag">${esc(r.building)}</span>` : ''}
+        <span class="biz">${esc(l.business)}</span>
+        ${l.suite ? `<span class="suite-tag">Suite ${esc(l.suite)}</span>` : '<span class="suite-tag">no suite given</span>'}
         <span class="when">${esc(when)}</span>
       </div>
-      ${photos ? `<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">${photos}</div>` : ''}
+      ${shots ? `<div style="display:flex;gap:8px;margin-top:11px;flex-wrap:wrap;">${shots}</div>` : ''}
       <dl class="rows">
-        ${line('Contact', esc(r.name))}
-        ${line('Phone', r.phone ? `<a href="tel:${esc(r.phone)}">${esc(r.phone)}</a>${r.ok_to_text ? ' &middot; okay to text' : ' &middot; call, no text'}` : '')}
-        ${line('Email', r.email ? `<a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : '')}
-        ${line('Hours', esc(r.hours))}
-        ${line('Services', services)}
-        ${line('Instagram', esc(r.instagram))}
-        ${line('Facebook', esc(r.facebook))}
-        ${line('TikTok', esc(r.tiktok))}
-        ${line('Booking', esc(r.booking))}
-        ${line('Notes', esc(r.notes))}
+        ${line('Contact', l.name)}${line('Phone', l.phone)}${line('Email', l.email)}
+        ${line('Hours', l.hours)}${line('Services', (l.services || []).join(', '))}
+        ${line('Instagram', l.instagram)}${line('Booking', l.booking)}${line('Notes', l.notes)}
+        ${line('Said building', l.building)}
       </dl>
-      <div style="margin-top:12px; display:flex;">
-        <button class="del" data-id="${esc(r.id)}" data-biz="${esc(r.business)}">Remove</button>
+      <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <select class="cell" style="max-width:210px;border-color:var(--line-2);" data-lead-building="${esc(l.id)}">
+          ${state.buildings.map(b => `<option value="${esc(b.slug)}"${b.slug === l.building ? ' selected' : ''}>${esc(b.name)}</option>`).join('')}
+        </select>
+        <input class="cell" style="max-width:110px;border-color:var(--line-2);" data-lead-suite="${esc(l.id)}" value="${esc(l.suite || '')}" placeholder="Suite">
+        <button class="btn btn-sm" data-publish="${esc(l.id)}">Publish to directory</button>
       </div>
     </div>`;
-  }).join('');
+  }).join('') || `<div class="empty">Nothing waiting. Every submission has been turned into a listing.</div>`;
 }
 
-/* ----- live offers -----------------------------------------------------
-   Studios post these themselves at /salonplus/offer/ and they expire on
-   their own, so there is nothing here to approve or clean up. The only
-   control is Hide, for the one that turns out to be a problem. */
+$('inboxList').addEventListener('click', async e => {
+  const btn = e.target.closest('[data-publish]'); if (!btn) return;
+  const id = btn.dataset.publish;
+  const building = $('inboxList').querySelector(`[data-lead-building="${CSS.escape(id)}"]`).value;
+  const suite = $('inboxList').querySelector(`[data-lead-suite="${CSS.escape(id)}"]`).value.trim();
+  if (!suite) return alert('Give them a suite number first.');
+  btn.disabled = true; btn.textContent = 'Publishing…';
+  try {
+    const out = await api({ action: 'publishLead', leadId: id, studio: { building, suite, status: 'live' } });
+    state.studios.push(out.studio);
+    state.leads = state.leads.filter(l => l.id !== id);
+    renderInbox(); renderStudios();
+    toast(out.couponCode ? `Live. Coupon code: ${out.couponCode}` : 'Live in the directory');
+    if (out.couponCode) alert(`${out.studio.name} is live.\n\nTheir coupon code is ${out.couponCode}\nSend it with studiosoulutions.com/salonplus/offer/`);
+  } catch (err) {
+    btn.disabled = false; btn.textContent = 'Publish to directory';
+    alert(err.message);
+  }
+});
+
+/* ----- offers ----- */
 async function loadOffers() {
   let offers = [];
   try {
-    const res = await fetch('/api/salonplus-specials', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ action: 'list', building: 'salonplus' }),
-    });
+    const res = await fetch(OFFERS_API, { method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'list', building: 'salonplus' }) });
     if (res.ok) offers = (await res.json()).rows || [];
-  } catch { /* leave the panel hidden rather than showing an error here */ }
-
-  $('offersWrap').classList.toggle('hidden', offers.length === 0);
-  $('offersCount').textContent = offers.length ? `${offers.length} running` : '';
-  $('offers').innerHTML = offers.map(o => `
+  } catch {}
+  $('offersList').innerHTML = offers.map(o => `
     <div class="card" style="padding:14px 18px;">
       <div class="card-top">
         <span class="biz" style="font-size:17px;">${esc(o.title)}</span>
         <span class="suite-tag">Suite ${esc(o.suite)}</span>
         <span class="when">${o.detail ? esc(o.detail) + ' &middot; ' : ''}through ${esc(o.expires)}</span>
-        <button class="del hide-offer" data-id="${esc(o.id)}" data-title="${esc(o.title)}">Hide</button>
+        <button class="rowbtn warn" data-hide="${esc(o.id)}" style="margin-left:auto;">Hide</button>
+      </div>
+    </div>`).join('') || `<div class="empty">No offers running right now.</div>`;
+}
+$('offersList').addEventListener('click', async e => {
+  const btn = e.target.closest('[data-hide]'); if (!btn) return;
+  if (!confirm('Take this offer down? The studio can post a new one whenever.')) return;
+  btn.disabled = true;
+  try {
+    const res = await fetch(OFFERS_API, { method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'hide', code: auth.code, id: btn.dataset.hide }) });
+    if (!res.ok) throw new Error();
+    loadOffers(); toast('Hidden');
+  } catch { btn.disabled = false; alert("Couldn't hide it."); }
+});
+
+/* ----- settings ----- */
+const TIER_SWITCHES = [
+  ['allow_coupons', 'Can post coupons'],
+  ['allow_contact', 'Call and text buttons'],
+  ['allow_booking', 'Booking link and website'],
+  ['allow_socials', 'Social links'],
+  ['allow_bio',     'Bio'],
+  ['allow_hours',   'Hours'],
+];
+function renderTiers() {
+  $('tierList').innerHTML = state.tiers.map(t => `
+    <div class="tier-card" data-tier="${t.tier}">
+      <div class="two">
+        <div class="field" style="margin:0;"><label>Tier ${t.tier} is called</label><input data-t="label" value="${esc(t.label)}"></div>
+        <div class="field" style="margin:0;"><label>Photos allowed</label>
+          <select data-t="photos_max">
+            ${[0,1,2,3,4].map(n => `<option value="${n}"${t.photos_max === n ? ' selected' : ''}>${n === 0 ? 'None' : n === 1 ? 'Profile only' : `Profile + ${n-1}`}</option>`).join('')}
+          </select></div>
+      </div>
+      <div class="field"><label>How you'd describe it</label><input data-t="blurb" value="${esc(t.blurb)}"></div>
+      <div class="switches">
+        ${TIER_SWITCHES.map(([f, label]) =>
+          `<label class="switch"><input type="checkbox" data-t="${f}" ${t[f] ? 'checked' : ''}> ${label}</label>`).join('')}
       </div>
     </div>`).join('');
 }
-
-$('offers').addEventListener('click', async e => {
-  const btn = e.target.closest('.hide-offer');
-  if (!btn) return;
-  const { id, title } = btn.dataset;
-  if (!confirm(`Take down "${title}"? The studio can post a new one whenever.`)) return;
-  btn.disabled = true; btn.textContent = 'Hiding…';
-  try {
-    const res = await fetch('/api/salonplus-specials', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ action: 'hide', code: sessionStorage.getItem(CODE_KEY), id }),
+$('saveTiersBtn').addEventListener('click', async () => {
+  const tiers = [...$('tierList').querySelectorAll('[data-tier]')].map(card => {
+    const out = { tier: Number(card.dataset.tier) };
+    card.querySelectorAll('[data-t]').forEach(el => {
+      out[el.dataset.t] = el.type === 'checkbox' ? el.checked
+                        : el.dataset.t === 'photos_max' ? Number(el.value) : el.value;
     });
-    if (!res.ok) throw new Error('hide failed');
-    await loadOffers();
-  } catch {
-    btn.disabled = false; btn.textContent = 'Hide';
-    alert("Couldn't hide it. Try again in a moment.");
-  }
+    return out;
+  });
+  const btn = $('saveTiersBtn'); btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    const out = await api({ action: 'saveTiers', tiers });
+    state.tiers = out.tiers; renderTiers(); renderStudios();
+    toast('Tiers saved. The app follows these now.');
+  } catch (e) { alert(e.message); }
+  finally { btn.disabled = false; btn.textContent = 'Save tiers'; }
 });
 
-async function unlock(code, { silent } = {}) {
-  const btn = $('unlockBtn');
-  btn.disabled = true; btn.textContent = 'Opening…';
+function renderBuildings() {
+  $('buildingList').innerHTML = state.buildings.map(b => `
+    <div class="card" style="padding:15px 18px;">
+      <div class="card-top">
+        <span class="biz" style="font-size:17px;">${esc(b.name)}</span>
+        <span class="suite-tag">${esc(b.slug)}</span>
+        <span class="when">${esc(b.city || '')} · new studios start on tier ${b.default_tier} · ${b.has_map ? 'map traced' : 'no map yet'}</span>
+      </div>
+    </div>`).join('');
+}
+$('addBuildingBtn').addEventListener('click', async () => {
+  const name = $('nbName').value.trim();
+  if (!name) return alert('Give the center a name.');
   try {
-    rows = await load(code);
-    sessionStorage.setItem(CODE_KEY, code);
-    $('gate').classList.add('hidden');
-    $('listWrap').classList.remove('hidden');
-    rebuildBuildingFilter();
-    render();
-    loadOffers();
-  } catch (e) {
-    sessionStorage.removeItem(CODE_KEY);
-    if (!silent) {
-      $('gateErr').style.display = 'block';
-      $('gateErr').textContent = e.message === 'bad-code'
-        ? "That passcode didn't work. Try again."
-        : "Couldn't reach the server. Try again in a moment.";
-    }
-  } finally {
-    btn.disabled = false; btn.textContent = 'Open';
-  }
+    const out = await api({ action: 'saveBuilding', building: {
+      name, city: $('nbCity').value.trim(),
+      default_tier: Number($('nbTier').value), has_map: $('nbMap').checked } });
+    state.buildings = out.buildings;
+    $('nbName').value = ''; $('nbCity').value = '';
+    renderBuildingFilter(); renderBuildings();
+    toast('Center added');
+  } catch (e) { alert(e.message); }
+});
+
+function renderLog() {
+  $('logList').innerHTML = (state.log || []).map(l => `
+    <div class="card" style="padding:12px 18px;">
+      <div class="card-top">
+        <span><strong>${esc(l.who)}</strong> · ${esc(l.action)}${l.target ? ' · ' + esc(l.target) : ''}</span>
+        <span class="when">${esc(new Date(l.at).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }))}</span>
+      </div>
+    </div>`).join('') || `<div class="empty">No changes recorded yet.</div>`;
 }
 
-$('unlockBtn').addEventListener('click', () => unlock($('codeInput').value.trim()));
-$('codeInput').addEventListener('keydown', e => { if (e.key === 'Enter') unlock($('codeInput').value.trim()); });
-$('search').addEventListener('input', render);
-$('buildingFilter').addEventListener('change', e => { buildingFilter = e.target.value; render(); });
-$('refreshBtn').addEventListener('click', async () => {
-  const code = sessionStorage.getItem(CODE_KEY);
-  if (!code) return;
-  rows = await load(code).catch(() => rows);
-  rebuildBuildingFilter();
-  render();
+/* ----- tabs & filters ----- */
+document.querySelector('.tabs').addEventListener('click', e => {
+  const tab = e.target.closest('.tab'); if (!tab) return;
+  document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t === tab)));
+  document.querySelectorAll('.panel').forEach(p => { p.hidden = p.id !== 'tab-' + tab.dataset.tab; });
 });
+$('filterBuilding').addEventListener('change', e => { filterBuilding = e.target.value; renderStudios(); });
+$('search').addEventListener('input', e => { searchTerm = e.target.value.trim(); renderStudios(); });
+$('unlockBtn').addEventListener('click', () => unlock($('codeInput').value.trim(), $('whoInput').value.trim()));
+$('codeInput').addEventListener('keydown', e => { if (e.key === 'Enter') $('unlockBtn').click(); });
+window.addEventListener('beforeunload', e => { if (edits.size) { e.preventDefault(); e.returnValue = ''; } });
 
-// One handler for every Remove button, confirm first, then delete server-side.
-$('cards').addEventListener('click', async e => {
-  const btn = e.target.closest('.del');
-  if (!btn) return;
-  const { id, biz } = btn.dataset;
-  if (!confirm(`Remove the submission from "${biz}"? This can't be undone.`)) return;
-  btn.disabled = true; btn.textContent = 'Removing…';
-  try {
-    const res = await fetch('/api/salonplus-leads', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ code: sessionStorage.getItem(CODE_KEY), action: 'delete', id }),
-    });
-    if (!res.ok) throw new Error('delete failed');
-    rows = rows.filter(r => r.id !== id);
-    rebuildBuildingFilter();
-    render();
-  } catch {
-    btn.disabled = false; btn.textContent = 'Remove';
-    alert("Couldn't remove it. Try again in a moment.");
-  }
-});
-
-// Remembered for the tab: re-open without retyping.
-const saved = sessionStorage.getItem(CODE_KEY);
-if (saved) unlock(saved, { silent: true });
+const saved = JSON.parse(sessionStorage.getItem(SESSION) || 'null');
+if (saved) unlock(saved.code, saved.who, { silent: true });
 </script>
 </body>
 </html>

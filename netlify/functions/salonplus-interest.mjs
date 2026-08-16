@@ -25,7 +25,7 @@
 
 const TABLE  = 'ss_interest';
 const BUCKET = 'ss-interest-photos';
-const MAX_PHOTOS = 3;
+const MAX_PHOTOS = 4;   // one profile shot + three for the gallery
 const MAX_PHOTO_BYTES = 3 * 1024 * 1024;   // per photo, post-decode
 
 /* Display names per building slug; buildings with their own pages add a
