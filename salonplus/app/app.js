@@ -74,7 +74,7 @@ const FALLBACK_TENANTS = Object.entries(ROSTER).map(([suite, name], i) => {
   if (suite === '301') {
     // Deuces Nail Studio, the first real card
     Object.assign(base, {
-      claimed: true, open: true,
+      claimed: true,
       photo: '../../assets/photos/1000040455.jpg',
       bio: 'Sage-walled and softly lit, a quiet, careful place for nails done with intention. Gel, pedicures, nail art. Appointments preferred, walk-ins welcome when the chair is open.',
       tags: ['Gel', 'Pedicure', 'Nail Art', 'Structured Mani'],
@@ -84,7 +84,7 @@ const FALLBACK_TENANTS = Object.entries(ROSTER).map(([suite, name], i) => {
   if (suite === '103') {
     // Soul and Beauty Day Spa, claimed via the interest form 8/11/26
     Object.assign(base, {
-      claimed: true, open: true,
+      claimed: true,
       photo: '../../assets/photos/salonplus-103-soulandbeauty.png',
       photos: [
         '../../assets/photos/salonplus-103-soulandbeauty-facial.jpg',
@@ -103,7 +103,7 @@ const FALLBACK_TENANTS = Object.entries(ROSTER).map(([suite, name], i) => {
   if (suite === '212') {
     // True Story Tha Barber, claimed via the interest form 8/11/26
     Object.assign(base, {
-      claimed: true, open: true,
+      claimed: true,
       bio: 'Award-winning barber work, consistent and detailed, at a price that respects your wallet. Come find out for yourself.',
       instagram: 'true_story_tha_barber_',
       tags: ['Barber', 'Cuts', 'Award-Winning'],
@@ -120,7 +120,7 @@ const FALLBACK_TENANTS = Object.entries(ROSTER).map(([suite, name], i) => {
        hours and the "men and women" bit come from the form; the website
        only ever appeared on the card. */
     Object.assign(base, {
-      claimed: true, open: true,
+      claimed: true,
       bio: 'Todd Donahue, hair technician. Non-surgical hair replacement for men and women, by appointment. The reason for it, in the words printed on his own card: look your best, feel your best.',
       tags: ['Non-Surgical', 'Hair Replacement', 'Men & Women'],
       hours: 'Mon–Thu 11–7 · Fri 11–4',
@@ -145,7 +145,7 @@ const FALLBACK_TENANTS = Object.entries(ROSTER).map(([suite, name], i) => {
        actually told us. It gets warmer the day she sends a line about
        herself. */
     Object.assign(base, {
-      claimed: true, open: true,
+      claimed: true,
       bio: 'Cuts and styling with Leticia Gordon, by appointment. One chair, one client, in the 300s wing.',
       tags: ['Hair', 'Cuts', 'By Appointment'],
       hours: 'By appointment',
@@ -159,7 +159,7 @@ const FALLBACK_TENANTS = Object.entries(ROSTER).map(([suite, name], i) => {
        the URL is the part that matters. Her Instagram handle spells colour
        the American way, which is hers to spell, not ours to correct. */
     Object.assign(base, {
-      claimed: true, open: true,
+      claimed: true,
       bio: 'Colour and styling with Juanita Salas, Thursdays through Sundays. Book straight from her own page.',
       instagram: 'colormebeautifulllc',
       tags: ['Hair', 'Colour', 'Styling'],
@@ -176,7 +176,7 @@ const FALLBACK_TENANTS = Object.entries(ROSTER).map(([suite, name], i) => {
        told us. Her hours arrived as "8a-5p" with no days named, which is
        why no days are printed here. */
     Object.assign(base, {
-      claimed: true, open: true,
+      claimed: true,
       bio: 'Hair with Kendra, in her own salon de coiffure. She opens at eight, earlier than most of this hallway.',
       tags: ['Hair', 'Cuts', 'Styling'],
       hours: '8a–5p',
@@ -208,7 +208,6 @@ function tenantFromRow(r, i) {
     avatar: initialsOf(r.name) || r.suite[0],
     theme: THEMES[i % THEMES.length],
     claimed: true,
-    open: !!r.hours,          // posted hours is what makes a card read as open
     tier: r.tier,
     photo: r.photo || undefined,
     photos: (r.photos || []).length ? r.photos : undefined,
@@ -365,12 +364,118 @@ function avatarHTML(t, size) {
    and unclaimed cards stay neutral instead of pretending to be open.
    A card built off a business card has no hours at all, so it points at
    the phone number rather than guessing open or closed. */
-function statusInfo(t) {
-  if (!t.claimed)          return { state: 'closed', label: 'Not claimed yet' };
-  if (t.open)              return { state: 'available', label: 'Open today' };
-  if (!t.hours && t.call)  return { state: 'closed', label: 'Call for hours' };
+/* ---- is the door actually open right now? ------------------------------
+   Posted hours are free text, because that's how studios write them on a
+   form. These read the handful of shapes they actually use and answer for
+   THIS minute, in the building's own time.
+
+   Arizona is the point of using a fixed zone: it never shifts for daylight
+   saving, so someone checking from another state sees the door's state
+   rather than their own clock's.
+
+   The rule when a line can't be read, like "By appointment": repeat what
+   they posted and stay neutral. Never claim open. */
+const HOURS_ZONE = 'America/Phoenix';
+const DAY_KEYS  = ['sun','mon','tue','wed','thu','fri','sat'];
+const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+function buildingNow(now) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: HOURS_ZONE, weekday: 'short', hour: 'numeric', minute: 'numeric', hour12: false,
+  }).formatToParts(now || new Date());
+  const get = type => (parts.find(p => p.type === type) || {}).value || '0';
+  return {
+    day: DAY_KEYS.indexOf(get('weekday').toLowerCase().slice(0, 3)),
+    mins: (Number(get('hour')) % 24) * 60 + Number(get('minute')),
+  };
+}
+
+/* A bare number on a salon sign carries an implied half of the day: nobody
+   opens at ten at night or closes at six in the morning. "10-6" is what
+   everyone means by it. */
+function toMinutes(h, m, mark, isOpening) {
+  if (!(h >= 1 && h <= 24)) return null;
+  if (mark) {
+    const pm = mark[0] === 'p';
+    if (h === 12) h = pm ? 12 : 0;
+    else if (pm) h += 12;
+  } else if (isOpening) {
+    if (h >= 1 && h <= 6) h += 12;
+  } else if (h >= 1 && h <= 11) {
+    h += 12;
+  }
+  return h * 60 + m;
+}
+
+function readDays(seg) {
+  const range = seg.match(/\b(sun|mon|tue|wed|thu|fri|sat)[a-z]*\s*-\s*(sun|mon|tue|wed|thu|fri|sat)[a-z]*/);
+  if (range) {
+    const from = DAY_KEYS.indexOf(range[1]), to = DAY_KEYS.indexOf(range[2]);
+    const days = [];
+    for (let i = 0; i < 7; i++) { const d = (from + i) % 7; days.push(d); if (d === to) break; }
+    return days;
+  }
+  const singles = [...seg.matchAll(/\b(sun|mon|tue|wed|thu|fri|sat)[a-z]*\b/g)].map(m => DAY_KEYS.indexOf(m[1]));
+  return singles.length ? singles : null;
+}
+
+function readTimes(seg) {
+  const m = seg.match(/(\d{1,2})(?::(\d{2}))?\s*(am?|pm?)?\s*-\s*(\d{1,2})(?::(\d{2}))?\s*(am?|pm?)?/);
+  if (!m) return null;
+  const open  = toMinutes(+m[1], +(m[2] || 0), m[3], true);
+  const close = toMinutes(+m[4], +(m[5] || 0), m[6], false);
+  if (open == null || close == null || close <= open) return null;
+  return { open, close };
+}
+
+/* -> [{days, open, close}] or null when the line isn't a schedule */
+function parseHours(text) {
+  if (!text) return null;
+  const s = String(text).toLowerCase().replace(/[–—]/g, '-').replace(/\s+/g, ' ').trim();
+  const spans = [];
+  for (const seg of s.split(/[·;]/)) {
+    const times = readTimes(seg);
+    if (!times) continue;                       // a day range with no clock tells us nothing
+    spans.push(Object.assign({ days: readDays(seg) || [0,1,2,3,4,5,6] }, times));
+  }
+  return spans.length ? spans : null;
+}
+
+function clockLabel(mins) {
+  const h24 = Math.floor(mins / 60), m = mins % 60;
+  const h = h24 % 12 === 0 ? 12 : h24 % 12;
+  return h + (m ? ':' + String(m).padStart(2, '0') : '') + (h24 < 12 ? 'am' : 'pm');
+}
+
+function statusInfo(t, now) {
+  if (!t.claimed) return { state: 'closed', label: 'Not claimed yet' };
+
+  const spans = parseHours(t.hours);
+  if (!spans) {
+    // Unreadable or absent: repeat what they posted rather than guess.
+    if (t.hours) return { state: 'closed', label: t.hours };
+    return { state: 'closed', label: t.call ? 'Call for hours' : 'Hours coming soon' };
+  }
+
+  const { day, mins } = buildingNow(now);
+  const today = spans.filter(s => s.days.indexOf(day) !== -1);
+
+  for (const s of today) {
+    if (mins >= s.open && mins < s.close) {
+      return { state: 'available', label: s.close - mins <= 60 ? 'Closes at ' + clockLabel(s.close) : 'Open now' };
+    }
+  }
+  const later = today.filter(s => mins < s.open).sort((x, y) => x.open - y.open)[0];
+  if (later) return { state: 'closed', label: 'Opens at ' + clockLabel(later.open) };
+
+  for (let i = 1; i <= 7; i++) {
+    const d = (day + i) % 7;
+    const s = spans.find(x => x.days.indexOf(d) !== -1);
+    if (s) return { state: 'closed', label: 'Opens ' + DAY_NAMES[d] + ' ' + clockLabel(s.open) };
+  }
   return { state: 'closed', label: 'Closed' };
 }
+
 function statusPillHTML(t) {
   const s = statusInfo(t);
   return `<div class="row-status is-${s.state}"><span class="dot"></span>${s.label}</div>`;
