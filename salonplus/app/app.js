@@ -170,6 +170,20 @@ const FALLBACK_TENANTS = Object.entries(ROSTER).map(([suite, name], i) => {
       text: '(602) 621-5196',
     });
   }
+  if (suite === '316') {
+    /* NeKendra’s Salon de Coiffure, claimed via the interest form 8/19/26.
+       Notes and socials came in empty, so the bio says only what the form
+       told us. Her hours arrived as "8a-5p" with no days named, which is
+       why no days are printed here. */
+    Object.assign(base, {
+      claimed: true, open: true,
+      bio: 'Hair with Kendra, in her own salon de coiffure. She opens at eight, earlier than most of this hallway.',
+      tags: ['Hair', 'Cuts', 'Styling'],
+      hours: '8a–5p',
+      call: '(602) 575-7562',
+      text: '(602) 575-7562',
+    });
+  }
   return base;
 });
 

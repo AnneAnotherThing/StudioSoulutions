@@ -202,4 +202,10 @@ values
    array['Non-Surgical','Hair Replacement','Men & Women'], 'Mon–Thu 11–7 · Fri 11–4',
    '(602) 900-1057', 'arizonahair@outlook.com', '', '', 'https://www.arizonahairreplacement.com',
    '', '', '{}', 2, 'live')
+  ,
+  ('salonplus', '316', 'NeKendra’s Salon de Coiffure', 'Kendra',
+   'Salon de Coiffure', 'hair',
+   'Hair with Kendra, in her own salon de coiffure. She opens at eight, earlier than most of this hallway.',
+   array['Hair','Cuts','Styling'], '8a–5p',
+   '(602) 575-7562', 'warenekendra@yahoo.com', '', '', '', '', '', '{}', 2, 'live')
 on conflict do nothing;

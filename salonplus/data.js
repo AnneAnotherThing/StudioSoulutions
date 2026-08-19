@@ -31,6 +31,7 @@
     '311':  'Colour Me Beautiful LLC', /* claimed via interest form 8/11/26, Juanita Salas */
     '312':  'Arizona Hair Replacement', /* interest form 8/14/26, Todd Donahue, and a
                                            business card that agrees with it line for line */
+    "316":  "NeKendra’s Salon de Coiffure", /* claimed via interest form 8/19/26, Kendra */
   };
 
   /* The old directory-board roster, suspect until someone confirms each
@@ -51,7 +52,6 @@
     '305':  'Nails By Lily',
     '306':  'Empolished',
     '310':  'Gala Hair Salon',
-    '316':  'Nekendra Salon de Coiffure',
     '317':  'Aisy Beauty Co, LLC',
     '318':  'Feel Good Hair By Robyn',
     '320':  'House of Lavish LLC',
