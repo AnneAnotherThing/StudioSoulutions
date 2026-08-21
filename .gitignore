@@ -1,0 +1,21 @@
+# Studio Soulutions -- repo hygiene
+# Site deploys from Netlify; nothing here needs to be public.
+
+# Client correspondence & pitch material (offline only)
+*-email.html
+*walkthrough*
+*Pitch*
+*pitch*
+_offline/
+
+# Seed data containing tenant contact details
+sql/
+
+# Secrets / local
+.env
+.env.*
+!.env.example
+.netlify/
+node_modules/
+.DS_Store
+Thumbs.db
