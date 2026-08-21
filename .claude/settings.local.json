@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /c/Users/amwhi/repos/StudioSoulutions log --oneline -3 -- salonplus/app)",
+      "Bash(git -C /c/Users/amwhi/repos/StudioSoulutions status --short salonplus/app)",
+      "Bash(git -C /c/Users/amwhi/repos/StudioSoulutions status -sb)",
+      "Bash(git -C /c/Users/amwhi/repos/StudioSoulutions remote -v)",
+      "Bash(curl -s -o /dev/null -w \"OPTIONS: %{http_code}\\\\n\" -X OPTIONS https://studiosoulutions.com/api/salonplus-interest)",
+      "Bash(curl -s -w \"\\\\nHONEYPOT-POST: %{http_code}\\\\n\" -X POST https://studiosoulutions.com/api/salonplus-interest -H \"content-type: application/json\" -d '{\"hp\":\"bot-test\"}')",
+      "Bash(curl -sI https://studiosoulutions.com)",
+      "Bash(curl -s -o /dev/null -w \"generate-bio POST: %{http_code}\\\\n\" -X POST https://studiosoulutions.com/api/generate-bio -H \"content-type: application/json\" -d '{}')",
+      "Bash(git -C /c/Users/amwhi/repos/StudioSoulutions status --short)",
+      "Read(//c/Users/amwhi/.claude/projects/C--Users-amwhi-repos-StudioSoulutions/memory/**)",
+      "Bash(echo \"- [Site hosted on Netlify]\\(studiosoulutions-hosted-on-netlify.md\\) — functions must be Netlify format, env vars in Netlify dashboard\")",
+      "Bash(ls /c/Users/amwhi/repos/)",
+      "Bash(curl -s -w '\\\\nHTTP %{http_code}\\\\n' 'https://jxeynaiaibbmdkugstxc.supabase.co/rest/v1/ss_interest?select=id&limit=1' -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4ZXluYWlhaWJibWRrdWdzdHhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0Mjk3NDUsImV4cCI6MjA5ODAwNTc0NX0.UnYm9L29mkmTrHlVyu8Silf2102u2WuPOKNsYNI7nDo' -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4ZXluYWlhaWJibWRrdWdzdHhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0Mjk3NDUsImV4cCI6MjA5ODAwNTc0NX0.UnYm9L29mkmTrHlVyu8Silf2102u2WuPOKNsYNI7nDo')",
+      "Bash(curl -s https://jxeynaiaibbmdkugstxc.supabase.co/rest/v1/ -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4ZXluYWlhaWJibWRrdWdzdHhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0Mjk3NDUsImV4cCI6MjA5ODAwNTc0NX0.UnYm9L29mkmTrHlVyu8Silf2102u2WuPOKNsYNI7nDo')",
+      "Bash(python -c \"import json,sys; d=json.load\\(sys.stdin\\); t=d.get\\('definitions',{}\\).get\\('ss_interest',{}\\); print\\(json.dumps\\({k:v.get\\('type','?'\\)+\\(' *req' if k in t.get\\('required',[]\\) else ''\\) for k,v in t.get\\('properties',{}\\).items\\(\\)}, indent=1\\)\\) if t else print\\('table not in schema'\\); print\\('ALL TABLES:', ', '.join\\(d.get\\('definitions',{}\\).keys\\(\\)\\)\\)\")",
+      "Bash(curl -s -w '\\\\nHTTP %{http_code}\\\\n' 'https://jxeynaiaibbmdkugstxc.supabase.co/rest/v1/ss_interest?select=business,suite,name,phone,ok_to_text,email,hours,services,instagram,booking,notes,building,source&limit=1' -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4ZXluYWlhaWJibWRrdWdzdHhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0Mjk3NDUsImV4cCI6MjA5ODAwNTc0NX0.UnYm9L29mkmTrHlVyu8Silf2102u2WuPOKNsYNI7nDo' -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4ZXluYWlhaWJibWRrdWdzdHhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0Mjk3NDUsImV4cCI6MjA5ODAwNTc0NX0.UnYm9L29mkmTrHlVyu8Silf2102u2WuPOKNsYNI7nDo')",
+      "Bash(echo \"- [Salon Plus leads passcode]\\(salonplus-leads-passcode.md\\) — SS_2026, matches LEADS_CODE on Netlify\" >> /c/Users/amwhi/.claude/projects/C--Users-amwhi-repos-StudioSoulutions/memory/MEMORY.md; cat /c/Users/amwhi/repos/StudioSoulutions/.gitignore 2>/dev/null; git -C /c/Users/amwhi/repos/StudioSoulutions status --short)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(curl -s -o /dev/null -w \"leads.html: %{http_code}\\\\n\" https://studiosoulutions.com/salonplus/leads.html)",
+      "Bash(curl -s https://studiosoulutions.com/salonplus/ -o /dev/null -w \"salonplus page: %{http_code}\\\\n\")",
+      "Bash(curl -sI https://studiosoulutions.com/salonplus/app/)",
+      "Bash(gh api *)",
+      "Bash(curl -s -o /dev/null -w \"retry leads.html: %{http_code}\\\\n\" https://studiosoulutions.com/salonplus/leads.html)",
+      "Bash(curl -s -w \"\\\\nHTTP %{http_code}\\\\n\" -X POST https://studiosoulutions.com/api/salonplus-interest -H \"content-type: application/json\" -d '{\"business\":\"TEST - Claude system check\",\"suite\":\"\",\"name\":\"Test Submission \\(safe to delete\\)\",\"phone\":\"\",\"email\":\"annewilson1021@gmail.com\",\"hours\":\"\",\"services\":[\"Test\"],\"instagram\":\"\",\"booking\":\"\",\"notes\":\"End-to-end test of the fixed contact form. Safe to ignore/delete.\",\"building\":\"salonplus\",\"source\":\"salonplus-web\"}')",
+      "Bash(curl -s -w \"\\\\nHTTP %{http_code}\\\\n\" -X POST https://studiosoulutions.com/api/salonplus-leads -H \"content-type: application/json\" -d '{\"code\":\"SS_2026\",\"building\":\"salonplus\"}')"
+    ]
+  }
+}
