@@ -102,6 +102,26 @@
     <form id="interestForm">
       <div class="hp"><label>Leave this empty<input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
 
+        <!-- One form, two jobs. A studio that isn't listed yet and one that
+             is and wants something fixed need different things from us, so
+             the form asks for different things back. -->
+        <div class="field" style="margin-bottom:22px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button type="button" class="mode-btn" data-mode="new" aria-pressed="true"
+              style="padding:13px 10px;border-radius:12px;border:1px solid var(--line-2);background:var(--surface);font:inherit;font-size:14px;font-weight:600;cursor:pointer;color:var(--ink);">
+              I'm new here
+            </button>
+            <button type="button" class="mode-btn" data-mode="change" aria-pressed="false"
+              style="padding:13px 10px;border-radius:12px;border:1px solid var(--line-2);background:var(--surface);font:inherit;font-size:14px;font-weight:600;cursor:pointer;color:var(--ink-soft);">
+              Update my listing
+            </button>
+          </div>
+          <div id="modeNote" style="display:none;margin-top:12px;padding:12px 15px;background:#FBF3EE;border-left:3px solid #A8593E;border-radius:0 10px 10px 0;font-size:13.5px;color:var(--ink-soft);">
+            Already listed? Tell us your suite and <strong>exactly what to change</strong> below, and add any new photos. You don't need to fill in the parts that aren't changing.
+          </div>
+        </div>
+
+
       <div class="field">
         <label for="f_building">Your building or shopping center <span class="req">*</span></label>
         <input type="text" id="f_building" name="building_name" required placeholder="e.g. Salon Plus Studios, Phoenix">
@@ -179,13 +199,19 @@
         </div>
       </div>
 
+        <div class="field">
+          <label for="f_website">Website</label>
+          <input type="text" id="f_website" name="website" placeholder="yourstudio.com">
+        </div>
+
+
       <div class="field">
         <label for="f_notes">Anything else? <span style="text-transform:none;letter-spacing:0;font-weight:400;">(optional)</span></label>
         <textarea id="f_notes" name="notes" rows="3" placeholder="Specialties, how you'd like your studio described..."></textarea>
       </div>
 
       <div class="field">
-        <label>Photos of your work or studio <span style="text-transform:none;letter-spacing:0;font-weight:400;">(optional, up to 3)</span></label>
+        <label>Photos of your work or studio <span style="text-transform:none;letter-spacing:0;font-weight:400;">(optional, up to 4 &mdash; the first is your profile shot)</span></label>
         <input type="file" id="f_photos" accept="image/*" multiple style="display:none;">
         <button type="button" class="btn btn-ghost" id="addPhotosBtn" style="font-size:14px; padding:10px 22px;">Add photos</button>
         <div id="photoStrip" style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;"></div>
@@ -292,12 +318,24 @@ form.addEventListener('submit', async e => {
     tiktok:         form.tiktok.value.trim(),
     booking:        form.booking.value.trim(),
     notes:          form.notes.value.trim(),
+    website:    form.website.value.trim(),
+    kind:       formMode,
     photos:         pickedPhotos,
     hp:             form.company.value,
     building:       buildingName,        // the function slugs this for storage
     building_label: buildingName,        // and shows this in the lead email
     source:         'join-web',
   };
+  if (formMode === 'change' && !data.suite) {
+    msg.textContent = 'Which suite are you? We need it to find your listing.';
+    msg.classList.add('err');
+    return;
+  }
+  if (formMode === 'change' && !data.notes) {
+    msg.textContent = 'Tell us what to change, in your own words.';
+    msg.classList.add('err');
+    return;
+  }
   if (!data.phone && !data.email) {
     msg.textContent = 'Leave a phone number or an email so we can reach you.';
     msg.classList.add('err');
@@ -321,6 +359,55 @@ form.addEventListener('submit', async e => {
     btn.disabled = false; btn.textContent = 'Put me on the map';
   }
 });
+
+/* ----- new listing vs. change request ---------------------------------
+   The difference isn't cosmetic: a change request is useless without a
+   suite to attach it to and a sentence saying what to change, so those
+   two become required and everything else relaxes. */
+let formMode = 'new';
+function setFormMode(mode) {
+  formMode = mode;
+  document.querySelectorAll('.mode-btn').forEach(b => {
+    const on = b.dataset.mode === mode;
+    b.setAttribute('aria-pressed', String(on));
+    b.style.borderColor = on ? (mode === 'change' ? '#A8593E' : 'var(--sage-deep)') : 'var(--line-2)';
+    b.style.boxShadow = on ? '0 0 0 1px ' + (mode === 'change' ? '#A8593E' : 'var(--sage-deep)') : 'none';
+    b.style.color = on ? (mode === 'change' ? '#A8593E' : 'var(--sage-deep)') : 'var(--ink-soft)';
+  });
+  const isChange = mode === 'change';
+  const note = document.getElementById('modeNote');
+  if (note) note.style.display = isChange ? 'block' : 'none';
+
+  const suite = document.getElementById('f_suite');
+  if (suite) {
+    suite.required = isChange;
+    const lab = document.querySelector('label[for="f_suite"]');
+    if (lab) lab.innerHTML = isChange ? 'Suite number <span class="req">*</span>' : 'Suite number';
+  }
+  const notes = document.getElementById('f_notes');
+  if (notes) {
+    notes.required = isChange;
+    notes.placeholder = isChange
+      ? 'e.g. "Please swap my profile photo for the new one, and my hours are now Tue-Sat 9-5."'
+      : "Specialties, hours, how you'd like your studio described...";
+    const lab = document.querySelector('label[for="f_notes"]');
+    if (lab) lab.innerHTML = isChange
+      ? 'What needs changing? <span class="req">*</span>'
+      : 'Anything else? <span style="font-weight:400;">(optional)</span>';
+  }
+  const btn = document.getElementById('submitBtn');
+  if (btn) btn.textContent = isChange ? 'Send my change' : btn.dataset.newLabel || btn.textContent;
+}
+document.querySelectorAll('.mode-btn').forEach(b =>
+  b.addEventListener('click', () => setFormMode(b.dataset.mode)));
+(function () {
+  const btn = document.getElementById('submitBtn');
+  if (btn) btn.dataset.newLabel = btn.textContent.trim();
+  /* Deep link straight to the change form: ...#join?change or ?change=1 */
+  const wantsChange = /[?&]change/.test(location.search) || /change/.test(location.hash);
+  setFormMode(wantsChange ? 'change' : 'new');
+})();
+
 </script>
 </body>
 </html>

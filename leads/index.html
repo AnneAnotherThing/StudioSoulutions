@@ -531,39 +531,111 @@ function closeDrawer() {
 }
 $('drawerBack').addEventListener('click', closeDrawer);
 
-/* ----- inbox ----- */
+/* ----- inbox -----------------------------------------------------------
+   Two kinds of arrival, kept visually apart because they're different
+   work: a new studio needs publishing, an existing one needs an edit. */
 function renderInbox() {
   const n = state.leads.length;
   $('inboxPip').textContent = n; $('inboxPip').classList.toggle('hidden', n === 0);
-  $('inboxList').innerHTML = state.leads.map(l => {
-    const when = l.created_at ? new Date(l.created_at).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : '';
-    const line = (k, v) => v ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '';
-    const shots = (l.photos || []).map(u => `<img src="${esc(u)}" alt="" style="width:66px;height:66px;object-fit:cover;border-radius:9px;border:1px solid var(--line);">`).join('');
-    return `<div class="card">
-      <div class="card-top">
-        <span class="biz">${esc(l.business)}</span>
-        ${l.suite ? `<span class="suite-tag">Suite ${esc(l.suite)}</span>` : '<span class="suite-tag">no suite given</span>'}
-        <span class="when">${esc(when)}</span>
-      </div>
-      ${shots ? `<div style="display:flex;gap:8px;margin-top:11px;flex-wrap:wrap;">${shots}</div>` : ''}
-      <dl class="rows">
-        ${line('Contact', l.name)}${line('Phone', l.phone)}${line('Email', l.email)}
-        ${line('Hours', l.hours)}${line('Services', (l.services || []).join(', '))}
-        ${line('Instagram', l.instagram)}${line('Booking', l.booking)}${line('Notes', l.notes)}
-        ${line('Said building', l.building)}
-      </dl>
-      <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-        <select class="cell" style="max-width:210px;border-color:var(--line-2);" data-lead-building="${esc(l.id)}">
-          ${state.buildings.map(b => `<option value="${esc(b.slug)}"${b.slug === l.building ? ' selected' : ''}>${esc(b.name)}</option>`).join('')}
-        </select>
-        <input class="cell" style="max-width:110px;border-color:var(--line-2);" data-lead-suite="${esc(l.id)}" value="${esc(l.suite || '')}" placeholder="Suite">
-        <button class="btn btn-sm" data-publish="${esc(l.id)}">Publish to directory</button>
-      </div>
-    </div>`;
-  }).join('') || `<div class="empty">Nothing waiting. Every submission has been turned into a listing.</div>`;
+
+  const changes = state.leads.filter(l => l.kind === 'change');
+  const fresh   = state.leads.filter(l => l.kind !== 'change');
+
+  const section = (title, blurb, rows) => rows.length
+    ? `<h2 style="margin-top:26px;">${title}</h2><p class="sub" style="margin-bottom:14px;">${blurb}</p>${rows.join('')}`
+    : '';
+
+  $('inboxList').innerHTML =
+    (section('Change requests', 'Studios already listed, asking for something to be fixed.',
+       changes.map(changeCard)) +
+     section('New submissions', 'Nobody has turned these into listings yet.',
+       fresh.map(newCard)))
+    || `<div class="empty">Nothing waiting. Every submission has been dealt with.</div>`;
+}
+
+function leadRows(l) {
+  const line = (k, v) => v ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '';
+  return `<dl class="rows">
+    ${line('Contact', l.name)}${line('Phone', l.phone)}${line('Email', l.email)}
+    ${line('Hours', l.hours)}${line('Services', (l.services || []).join(', '))}
+    ${line('Instagram', l.instagram)}${line('Facebook', l.facebook)}${line('TikTok', l.tiktok)}
+    ${line('Website', l.website)}${line('Booking', l.booking)}
+  </dl>`;
+}
+function leadShots(l) {
+  const shots = (l.photos || []).map((u, i) =>
+    `<a href="${esc(u)}" target="_blank" rel="noopener"><img src="${esc(u)}" alt="" style="width:66px;height:66px;object-fit:cover;border-radius:9px;border:${i === 0 ? '2px solid var(--sage-deep)' : '1px solid var(--line)'};display:block;"></a>`).join('');
+  return shots ? `<div style="display:flex;gap:8px;margin-top:11px;flex-wrap:wrap;">${shots}</div>` : '';
+}
+function whenOf(l) {
+  return l.created_at ? new Date(l.created_at).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : '';
+}
+
+/* A change request already has a studio somewhere. Finding it here saves
+   hunting for it in the grid, and proves the suite they gave is real. */
+function changeCard(l) {
+  const match = state.studios.find(s =>
+    s.building === l.building && String(s.suite) === String(l.suite) && s.status !== 'hidden');
+  return `<div class="card" style="border-left:3px solid var(--clay-deep);">
+    <div class="card-top">
+      <span class="biz">${esc(l.business)}</span>
+      <span class="suite-tag" style="color:var(--clay-deep);border-color:var(--clay);background:#FBF3EE;">Change &middot; Suite ${esc(l.suite || '?')}</span>
+      <span class="when">${esc(whenOf(l))}</span>
+    </div>
+    <div style="margin:13px 0;padding:14px 16px;background:#FBF3EE;border-left:3px solid var(--clay-deep);border-radius:0 10px 10px 0;">
+      <div class="eyebrow" style="color:var(--clay-deep);margin-bottom:5px;">What they want changed</div>
+      <div style="font-size:15px;font-weight:600;">${esc(l.notes || '(they left it blank)')}</div>
+    </div>
+    ${leadShots(l)}
+    ${leadRows(l)}
+    <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+      ${match
+        ? `<button class="btn btn-sm" data-openstudio="${esc(match.id)}">Open ${esc(match.name)}</button>`
+        : `<span class="when" style="color:var(--clay-deep);">No live studio in ${esc(l.building)} suite ${esc(l.suite || '?')} &mdash; check the suite they gave.</span>`}
+      <button class="btn btn-ghost btn-sm" data-handled="${esc(l.id)}">Mark done</button>
+    </div>
+  </div>`;
+}
+
+function newCard(l) {
+  return `<div class="card">
+    <div class="card-top">
+      <span class="biz">${esc(l.business)}</span>
+      ${l.suite ? `<span class="suite-tag">Suite ${esc(l.suite)}</span>` : '<span class="suite-tag">no suite given</span>'}
+      <span class="when">${esc(whenOf(l))}</span>
+    </div>
+    ${leadShots(l)}
+    ${leadRows(l)}
+    ${l.notes ? `<dl class="rows"><dt>Notes</dt><dd>${esc(l.notes)}</dd></dl>` : ''}
+    <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+      <select class="cell" style="max-width:210px;border-color:var(--line-2);" data-lead-building="${esc(l.id)}">
+        ${state.buildings.map(b => `<option value="${esc(b.slug)}"${b.slug === l.building ? ' selected' : ''}>${esc(b.name)}</option>`).join('')}
+      </select>
+      <input class="cell" style="max-width:110px;border-color:var(--line-2);" data-lead-suite="${esc(l.id)}" value="${esc(l.suite || '')}" placeholder="Suite">
+      <button class="btn btn-sm" data-publish="${esc(l.id)}">Publish to directory</button>
+    </div>
+  </div>`;
 }
 
 $('inboxList').addEventListener('click', async e => {
+  const openBtn = e.target.closest('[data-openstudio]');
+  if (openBtn) {
+    document.querySelector('.tab[data-tab="studios"]').click();
+    return openDrawer(openBtn.dataset.openstudio);
+  }
+  const doneBtn = e.target.closest('[data-handled]');
+  if (doneBtn) {
+    doneBtn.disabled = true; doneBtn.textContent = 'Closing…';
+    try {
+      await api({ action: 'markHandled', id: doneBtn.dataset.handled });
+      state.leads = state.leads.filter(l => l.id !== doneBtn.dataset.handled);
+      renderInbox(); toast('Closed');
+    } catch (err) {
+      doneBtn.disabled = false; doneBtn.textContent = 'Mark done';
+      alert(err.message);
+    }
+    return;
+  }
   const btn = e.target.closest('[data-publish]'); if (!btn) return;
   const id = btn.dataset.publish;
   const building = $('inboxList').querySelector(`[data-lead-building="${CSS.escape(id)}"]`).value;

@@ -64,6 +64,7 @@ export default async function handler(request) {
     case 'saveStudio':   return saveStudio(db, p);
     case 'publishLead':  return publishLead(db, p);
     case 'setStatus':    return setStatus(db, p);
+    case 'markHandled':  return markHandled(db, p);
     case 'saveTiers':    return saveTiers(db, p);
     case 'saveBuilding': return saveBuilding(db, p);
     default:             return json(400, { error: 'Unknown action.' });
@@ -134,10 +135,13 @@ async function unlock(db) {
   /* A lead is "handled" once a studio points back at it. The panel shows
      the rest as the inbox. */
   const claimed = new Set(studios.map(s => s.source_lead).filter(Boolean));
+  /* A change request is finished when someone says so, since nothing new
+     gets created to point back at it. */
+  const isOpen = l => !claimed.has(l.id) && !l.handled_at;
   return json(200, {
     ok: true,
     buildings, tiers, studios,
-    leads: (leads || []).filter(l => !claimed.has(l.id)),
+    leads: (leads || []).filter(isOpen),
     log: log || [],
   });
 }
@@ -312,6 +316,18 @@ function mintCode(name) {
   const stem = (name.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 5) || 'STUDIO');
   const digits = Array.from({ length: 4 }, () => Math.floor(Math.random() * 10)).join('');
   return `${stem}-${digits}`;
+}
+
+/* Closes a change request. The edit itself happens on the studio; this
+   only says somebody dealt with it, so the inbox empties honestly. */
+async function markHandled(db, p) {
+  const id = str(p.id);
+  if (!isUuid(id)) return json(400, { error: 'Bad submission id.' });
+  const ok = await db.patch(LEADS, { id: `eq.${id}` },
+    { handled_at: nowIso(), handled_by: str(p.who) });
+  if (!ok) return json(502, { error: 'Could not close that request.' });
+  await log(db, p, 'handled change request', '', { lead: id });
+  return json(200, { ok: true });
 }
 
 /* ============ settings ================================================ */

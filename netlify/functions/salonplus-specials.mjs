@@ -221,7 +221,7 @@ async function emailOffer(o) {
   const to  = process.env.OFFER_TO || process.env.LEAD_TO;
   if (!key || !to) return;                      // not configured, not an error
 
-  const from = process.env.RESEND_FROM || 'Studio Soulutions <onboarding@resend.dev>';
+  const from = senderAddress();
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 
   const html = `
@@ -366,6 +366,19 @@ function supabase(url, key) {
 }
 async function logFail(what, res) {
   console.error(`specials: ${what} failed`, res.status, (await res.text()).slice(0, 300));
+}
+
+/* No silent fallback to Resend's shared test sender. It only ever delivers
+   to the Resend account owner, so using it looks like working mail right up
+   until someone else is meant to receive something. Better to fail in the
+   log with a sentence that says what to do. */
+function senderAddress() {
+  const from = process.env.RESEND_FROM;
+  if (!from) throw new Error(
+    'RESEND_FROM is not set, so mail would go out from the shared Resend test sender, ' +
+    'which only delivers to the Resend account owner. Set RESEND_FROM to an address on ' +
+    'a domain verified in Resend, e.g. "Salon Plus Studios <hello@hive-rise.com>".');
+  return from;
 }
 
 function corsHeaders() {
