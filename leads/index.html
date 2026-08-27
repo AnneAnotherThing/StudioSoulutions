@@ -62,6 +62,11 @@
   tr:last-child td { border-bottom:none; }
   tr.dirty td { background:#FCF7E8; }
   tr.draft .cell-name { color: var(--ink-faint); }
+  /* A hidden studio is off the app but still on file, so it stays in the
+     grid, visibly switched off rather than quietly identical to a live one. */
+  tr.is-hidden td { opacity:.45; background:repeating-linear-gradient(135deg,transparent,transparent 7px,rgba(61,53,48,.03) 7px,rgba(61,53,48,.03) 14px); }
+  tr.is-hidden:hover td { opacity:.75; }
+  .off-tag { display:inline-block; margin-left:8px; font-size:10px; letter-spacing:.1em; text-transform:uppercase; font-weight:700; color:var(--ink-faint); border:1px solid var(--line-2); border-radius:999px; padding:1px 7px; vertical-align:middle; }
   .cell { width:100%; padding:7px 9px; border:1px solid transparent; border-radius:8px; background:transparent; font:inherit; font-size:14px; color:var(--ink); }
   .cell:hover { border-color:var(--line-2); }
   .cell:focus { border-color:var(--sage); background:var(--surface-2); }
@@ -186,8 +191,11 @@
 
     <!-- INBOX -->
     <section class="panel" id="tab-inbox" hidden>
-      <h2>Submissions waiting</h2>
-      <p class="sub" style="margin-bottom:18px;">Forms nobody has turned into a listing yet. Fix anything they got wrong on the way in.</p>
+      <h2>Submissions</h2>
+      <p class="sub" style="margin-bottom:14px;">Forms nobody has turned into a listing yet. Fix anything they got wrong on the way in.</p>
+      <label class="checkrow" style="margin:0 0 18px;">
+        <input type="checkbox" id="showProcessed"> Also show the ones already dealt with
+      </label>
       <div id="inboxList"></div>
     </section>
 
@@ -204,6 +212,50 @@
       <p class="sub" style="margin-bottom:18px;">This is the actual rule, not a description of it. Turn photos off for a tier and those cards lose their photos on the next load.</p>
       <div id="tierList"></div>
       <button class="btn" id="saveTiersBtn">Save tiers</button>
+
+      <h2 style="margin-top:40px;">Coupon codes</h2>
+      <p class="sub" style="margin-bottom:14px;">What they are, when they matter, and when you can ignore them entirely.</p>
+      <div class="tier-card">
+        <dl class="rows" style="grid-template-columns:170px 1fr;gap:12px 16px;">
+          <dt><strong>What a code is</strong></dt>
+          <dd>A short password for one studio, like <code>DEUCES-4417</code>. It lets that studio post its own coupon at
+            <a href="/salonplus/offer/" style="color:var(--sage-deep);">studiosoulutions.com/salonplus/offer/</a> and nothing else.
+            It cannot see other studios, edit their listing, or reach this panel.</dd>
+
+          <dt><strong>Where it comes from</strong></dt>
+          <dd>Made automatically the moment you publish a studio on a tier that allows coupons. You never write one by hand.
+            It appears in a popup right after you hit Publish.</dd>
+
+          <dt><strong>When you care</strong></dt>
+          <dd>Only twice. <strong>Once</strong>, when you hand it to the studio so they can post offers.
+            <strong>Again</strong>, if they lose it and ask.</dd>
+
+          <dt><strong>When you can ignore it</strong></dt>
+          <dd>Every other time. A studio that never posts a coupon simply never uses its code, and nothing breaks.
+            Codes do not expire and there is nothing to renew.</dd>
+
+          <dt><strong>If one leaks</strong></dt>
+          <dd>The worst case is a fake offer on one studio's card. Hide it on the Offers tab, then move that studio to a
+            tier without coupons and back again &mdash; that mints a fresh code and the old one stops working.</dd>
+
+          <dt><strong>Dropping a tier</strong></dt>
+          <dd>Move a studio to a tier that has coupons switched off and its code stops working straight away.
+            Move it back and it works again.</dd>
+        </dl>
+        <div style="margin-top:18px;padding:14px 16px;background:var(--bg-2);border-radius:12px;font-size:14px;">
+          <strong>What to send a studio:</strong><br>
+          <span style="color:var(--ink-soft);">"Here's your code for posting specials: <strong>YOUR-CODE</strong>.
+          Go to studiosoulutions.com/salonplus/offer/, put in your suite number and that code, and you can post an offer
+          in about a minute. It comes down on its own when it runs out."</span>
+        </div>
+      </div>
+
+      <h2 style="margin-top:40px;">Email</h2>
+      <p class="sub" style="margin-bottom:14px;">Sends one message to whoever notifications are set to go to, and shows exactly what the mail service said back.</p>
+      <div class="tier-card">
+        <button class="btn" id="mailCheckBtn">Send a test email</button>
+        <div id="mailCheckOut" style="margin-top:16px;display:none;"></div>
+      </div>
 
       <h2 style="margin-top:40px;">Shopping centers</h2>
       <p class="sub" style="margin-bottom:18px;">A center can hold listings before anyone traces its floor plan. Without a map, its studios simply have no "show me the way".</p>
@@ -250,6 +302,13 @@ const OFFERS_API = '/api/salonplus-specials';
 const SESSION = 'ss-admin-v1';
 
 const $ = id => document.getElementById(id);
+/* Submissions arrive as a run of digits. Nobody reads 6025551234. */
+const fmtPhone = v => {
+  const d = String(v || '').replace(/\D/g, '');
+  if (d.length === 10) return `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`;
+  if (d.length === 11 && d[0] === '1') return `(${d.slice(1,4)}) ${d.slice(4,7)}-${d.slice(7)}`;
+  return String(v || '').trim();
+};
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 let auth = null;                 // { code, who }
@@ -327,16 +386,16 @@ function renderStudios() {
       `<option value="${v}"${s.status === v ? ' selected' : ''}>${v}</option>`).join('');
     const catOpts = ['hair','barber','nails','spa'].map(v =>
       `<option value="${v}"${s.category === v ? ' selected' : ''}>${v}</option>`).join('');
-    return `<tr class="${isDirty ? 'dirty' : ''} ${s.status === 'draft' ? 'draft' : ''}" data-k="${esc(k)}">
+    return `<tr class="${isDirty ? 'dirty' : ''} ${s.status === 'draft' ? 'draft' : ''} ${s.status === 'hidden' ? 'is-hidden' : ''}" data-k="${esc(k)}">
       <td><input class="cell" data-f="suite" value="${esc(s.suite)}" placeholder="000"></td>
-      <td class="cell-name"><input class="cell" data-f="name" value="${esc(s.name)}" placeholder="Studio name"></td>
+      <td class="cell-name"><input class="cell" data-f="name" value="${esc(s.name)}" placeholder="Studio name">${s.status === 'hidden' ? '<span class="off-tag">off the app</span>' : ''}</td>
       <td><input class="cell" data-f="service" value="${esc(s.service)}" placeholder="e.g. Cuts &amp; Styling"></td>
       <td><select class="cell" data-f="category">${catOpts}</select></td>
       <td><select class="cell" data-f="tier">${tierOpts}</select></td>
       <td><select class="cell" data-f="status">${statusOpts}</select></td>
       <td>
         <button class="rowbtn" data-act="detail">Details</button>
-        ${s.id ? `<button class="rowbtn warn" data-act="hide">Hide</button>` : `<button class="rowbtn warn" data-act="drop">Remove</button>`}
+        ${!s.id ? `<button class="rowbtn warn" data-act="drop">Remove</button>` : s.status === 'hidden' ? `<button class="rowbtn" data-act="restore">Restore</button>` : `<button class="rowbtn warn" data-act="hide">Hide</button>`}
       </td>
     </tr>`;
   }).join('') || `<tr><td colspan="7"><div class="empty">Nothing here yet. Add a studio, or publish one from the Inbox.</div></td></tr>`;
@@ -367,6 +426,12 @@ $('studioRows').addEventListener('click', async e => {
   if (btn.dataset.act === 'detail') return openDrawer(k);
   if (btn.dataset.act === 'drop') {
     newRows = newRows.filter(s => s._tmp !== k); edits.delete(k); return renderStudios();
+  }
+  if (btn.dataset.act === 'restore') {
+    try { await api({ action: 'setStatus', id: row.id, status: 'draft' });
+      row.status = 'draft'; renderStudios(); toast('Back as a draft, publish it when ready'); }
+    catch (err) { alert(err.message); }
+    return;
   }
   if (btn.dataset.act === 'hide') {
     if (!confirm(`Hide "${patched(row).name}"? It comes off the app but stays on file.`)) return;
@@ -437,7 +502,7 @@ function openDrawer(k) {
       <div class="hint">Comma separated. These are also the services they can build a coupon from.</div></div>
 
     <div class="two">
-      <div class="field"><label>Phone</label><input data-d="phone" value="${esc(s.phone)}"></div>
+      <div class="field"><label>Phone</label><input data-d="phone" value="${esc(fmtPhone(s.phone))}"></div>
       <div class="field"><label>Email</label><input data-d="email" value="${esc(s.email)}"></div>
     </div>
     <label class="checkrow"><input type="checkbox" data-d="ok_to_text" ${s.ok_to_text !== false ? 'checked' : ''}> Okay to text</label>
@@ -452,6 +517,8 @@ function openDrawer(k) {
       <div class="field"><label>Instagram</label><input data-d="instagram" value="${esc(s.instagram)}"></div>
       <div class="field"><label>Facebook</label><input data-d="facebook" value="${esc(s.facebook)}"></div>
     </div>
+    <div class="field"><label>TikTok</label><input data-d="tiktok" value="${esc(s.tiktok || '')}">
+      <div class="hint">Handles or full links, either works. These become the round icons under their photo &mdash; ${[s.instagram, s.facebook, s.tiktok].filter(Boolean).length} showing now.</div></div>
 
     <div class="field"><label>Photos</label>
       ${tierOf.photos_max ? `
@@ -534,12 +601,17 @@ $('drawerBack').addEventListener('click', closeDrawer);
 /* ----- inbox -----------------------------------------------------------
    Two kinds of arrival, kept visually apart because they're different
    work: a new studio needs publishing, an existing one needs an edit. */
+let showProcessed = false;
 function renderInbox() {
-  const n = state.leads.length;
+  /* Processed submissions are kept, not deleted. The pip counts only what
+     still needs doing, so it never nags about finished work. */
+  const open = state.leads.filter(l => !l.processed);
+  const shown = showProcessed ? state.leads : open;
+  const n = open.length;
   $('inboxPip').textContent = n; $('inboxPip').classList.toggle('hidden', n === 0);
 
-  const changes = state.leads.filter(l => l.kind === 'change');
-  const fresh   = state.leads.filter(l => l.kind !== 'change');
+  const changes = shown.filter(l => l.kind === 'change');
+  const fresh   = shown.filter(l => l.kind !== 'change');
 
   const section = (title, blurb, rows) => rows.length
     ? `<h2 style="margin-top:26px;">${title}</h2><p class="sub" style="margin-bottom:14px;">${blurb}</p>${rows.join('')}`
@@ -550,13 +622,13 @@ function renderInbox() {
        changes.map(changeCard)) +
      section('New submissions', 'Nobody has turned these into listings yet.',
        fresh.map(newCard)))
-    || `<div class="empty">Nothing waiting. Every submission has been dealt with.</div>`;
+    || `<div class="empty">${showProcessed ? 'No submissions at all yet.' : 'Nothing waiting. Every submission has been dealt with.'}</div>`;
 }
 
 function leadRows(l) {
   const line = (k, v) => v ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '';
   return `<dl class="rows">
-    ${line('Contact', l.name)}${line('Phone', l.phone)}${line('Email', l.email)}
+    ${line('Contact', l.name)}${line('Phone', fmtPhone(l.phone))}${line('Email', l.email)}
     ${line('Hours', l.hours)}${line('Services', (l.services || []).join(', '))}
     ${line('Instagram', l.instagram)}${line('Facebook', l.facebook)}${line('TikTok', l.tiktok)}
     ${line('Website', l.website)}${line('Booking', l.booking)}
@@ -573,7 +645,23 @@ function whenOf(l) {
 
 /* A change request already has a studio somewhere. Finding it here saves
    hunting for it in the grid, and proves the suite they gave is real. */
+/* Already dealt with: kept for the record, deliberately quiet. */
+function doneCard(l, what) {
+  return `<div class="card" style="opacity:.6;">
+    <div class="card-top">
+      <span class="biz" style="font-size:16px;">${esc(l.business)}</span>
+      ${l.suite ? `<span class="suite-tag">Suite ${esc(l.suite)}</span>` : ''}
+      <span class="suite-tag" style="color:var(--ink-faint);">${esc(what)}</span>
+      <span class="when">${esc(whenOf(l))}</span>
+    </div>
+    ${leadShots(l)}
+    ${leadRows(l)}
+    ${l.notes ? `<dl class="rows"><dt>They said</dt><dd>${esc(l.notes)}</dd></dl>` : ''}
+  </div>`;
+}
+
 function changeCard(l) {
+  if (l.processed) return doneCard(l, 'Done');
   const match = state.studios.find(s =>
     s.building === l.building && String(s.suite) === String(l.suite) && s.status !== 'hidden');
   return `<div class="card" style="border-left:3px solid var(--clay-deep);">
@@ -598,6 +686,7 @@ function changeCard(l) {
 }
 
 function newCard(l) {
+  if (l.processed) return doneCard(l, 'Published');
   return `<div class="card">
     <div class="card-top">
       <span class="biz">${esc(l.business)}</span>
@@ -628,7 +717,7 @@ $('inboxList').addEventListener('click', async e => {
     doneBtn.disabled = true; doneBtn.textContent = 'Closing…';
     try {
       await api({ action: 'markHandled', id: doneBtn.dataset.handled });
-      state.leads = state.leads.filter(l => l.id !== doneBtn.dataset.handled);
+      const d = state.leads.find(l => l.id === doneBtn.dataset.handled); if (d) d.processed = true;
       renderInbox(); toast('Closed');
     } catch (err) {
       doneBtn.disabled = false; doneBtn.textContent = 'Mark done';
@@ -645,7 +734,7 @@ $('inboxList').addEventListener('click', async e => {
   try {
     const out = await api({ action: 'publishLead', leadId: id, studio: { building, suite, status: 'live' } });
     state.studios.push(out.studio);
-    state.leads = state.leads.filter(l => l.id !== id);
+    const done = state.leads.find(l => l.id === id); if (done) done.processed = true;
     renderInbox(); renderStudios();
     toast(out.couponCode ? `Live. Coupon code: ${out.couponCode}` : 'Live in the directory');
     if (out.couponCode) alert(`${out.studio.name} is live.\n\nTheir coupon code is ${out.couponCode}\nSend it with studiosoulutions.com/salonplus/offer/`);
@@ -729,6 +818,26 @@ $('saveTiersBtn').addEventListener('click', async () => {
   finally { btn.disabled = false; btn.textContent = 'Save tiers'; }
 });
 
+$('mailCheckBtn').addEventListener('click', async () => {
+  const btn = $('mailCheckBtn'), out = $('mailCheckOut');
+  btn.disabled = true; btn.textContent = 'Sending…';
+  out.style.display = 'block';
+  out.innerHTML = '<span class="hint">Asking the mail service…</span>';
+  try {
+    const r = await api({ action: 'mailCheck' });
+    const rows = Object.entries(r.env).map(([k, v]) =>
+      `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('');
+    out.innerHTML = `
+      <div style="padding:14px 16px;border-radius:12px;border-left:3px solid ${r.ok ? 'var(--sage-deep)' : 'var(--clay-deep)'};background:${r.ok ? '#EFF2EA' : '#FBF3EE'};">
+        <strong>${esc(r.verdict)}</strong>
+      </div>
+      <dl class="rows" style="margin-top:14px;">${rows}</dl>
+      ${r.resendSaid ? `<div class="hint" style="margin-top:10px;">Mail service replied: <code style="word-break:break-all;">${esc(r.resendSaid)}</code></div>` : ''}`;
+  } catch (e) {
+    out.innerHTML = '<span class="err" style="display:block;">' + esc(e.message) + '</span>';
+  } finally { btn.disabled = false; btn.textContent = 'Send a test email'; }
+});
+
 function renderBuildings() {
   $('buildingList').innerHTML = state.buildings.map(b => `
     <div class="card" style="padding:15px 18px;">
@@ -769,6 +878,7 @@ document.querySelector('.tabs').addEventListener('click', e => {
   document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t === tab)));
   document.querySelectorAll('.panel').forEach(p => { p.hidden = p.id !== 'tab-' + tab.dataset.tab; });
 });
+$('showProcessed').addEventListener('change', e => { showProcessed = e.target.checked; renderInbox(); });
 $('filterBuilding').addEventListener('change', e => { filterBuilding = e.target.value; renderStudios(); });
 $('search').addEventListener('input', e => { searchTerm = e.target.value.trim(); renderStudios(); });
 $('unlockBtn').addEventListener('click', () => unlock($('codeInput').value.trim(), $('whoInput').value.trim()));

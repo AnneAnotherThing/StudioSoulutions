@@ -21,6 +21,9 @@
      setStatus   passcode. draft / live / hidden.
      saveTiers   passcode. Rewrite what each tier is allowed to show.
      saveBuilding passcode. Add or edit a shopping center.
+     mailCheck   passcode. Asks Resend to send one message to LEAD_TO and
+                 reports exactly what Resend said, so a mail problem is
+                 diagnosed instead of guessed at.
 
    Required env vars:
      SUPABASE_URL, SUPABASE_SERVICE_KEY, LEADS_CODE
@@ -65,6 +68,7 @@ export default async function handler(request) {
     case 'publishLead':  return publishLead(db, p);
     case 'setStatus':    return setStatus(db, p);
     case 'markHandled':  return markHandled(db, p);
+    case 'mailCheck':    return mailCheck(db, p);
     case 'saveTiers':    return saveTiers(db, p);
     case 'saveBuilding': return saveBuilding(db, p);
     default:             return json(400, { error: 'Unknown action.' });
@@ -141,7 +145,10 @@ async function unlock(db) {
   return json(200, {
     ok: true,
     buildings, tiers, studios,
-    leads: (leads || []).filter(isOpen),
+    /* Everything is returned, flagged. Hiding processed submissions is a
+       view, not a deletion: "what did that studio originally send us?" is
+       a question worth being able to answer months later. */
+    leads: (leads || []).map(l => ({ ...l, processed: !isOpen(l) })),
     log: log || [],
   });
 }
@@ -264,7 +271,7 @@ async function cleanStudio(db, s) {
     bio:          str(s.bio),
     tags:         arr(s.tags),
     hours:        str(s.hours),
-    phone:        str(s.phone),
+    phone:        fmtPhone(s.phone),
     ok_to_text:   s.ok_to_text !== false,
     email:        str(s.email),
     show_email:   s.show_email === true,
@@ -328,6 +335,59 @@ async function markHandled(db, p) {
   if (!ok) return json(502, { error: 'Could not close that request.' });
   await log(db, p, 'handled change request', '', { lead: id });
   return json(200, { ok: true });
+}
+
+/* Mail check. Two wrong guesses about why mail was failing is two too
+   many, so this asks Resend directly and reports what it actually said.
+
+   Passcode-gated, and it will only ever send to LEAD_TO, the address
+   already configured on the deployment. It is not a relay: no caller
+   picks the recipient.
+
+   It returns the From and To addresses, which are configuration rather
+   than secrets and are exactly what a typo hides in. It never returns
+   the API key, only whether one is present and whether it is shaped
+   like a Resend key. */
+async function mailCheck(db, p) {
+  const key  = process.env.RESEND_API_KEY || '';
+  const from = process.env.RESEND_FROM || '';
+  const to   = process.env.LEAD_TO || '';
+
+  const env = {
+    RESEND_API_KEY: key ? (key.startsWith('re_') ? 'set, looks like a Resend key' : 'set, but does NOT start with re_') : 'MISSING',
+    RESEND_FROM: from || 'MISSING',
+    LEAD_TO: to || 'MISSING',
+    LEAD_CC: process.env.LEAD_CC || '(not set)',
+    OFFER_TO: process.env.OFFER_TO || '(not set, falls back to LEAD_TO)',
+  };
+
+  if (!key || !from || !to) {
+    return json(200, { ok: false, env, verdict: 'Missing configuration, nothing was sent.' });
+  }
+
+  let res, body = '';
+  try {
+    res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
+      body: JSON.stringify({
+        from, to: [to],
+        subject: 'Studio Soulutions mail check',
+        html: '<p>If you are reading this, outgoing mail works. Nothing else to do.</p>',
+      }),
+    });
+    body = (await res.text()).slice(0, 500);
+  } catch (e) {
+    return json(200, { ok: false, env, verdict: 'Could not reach Resend at all: ' + String(e).slice(0, 200) });
+  }
+
+  /* Resend's own words, verbatim. Whatever is wrong, it is in here. */
+  const verdict = res.ok
+    ? `Sent. Resend accepted it from ${from} to ${to}.`
+    : `Resend refused it (HTTP ${res.status}). Its exact words are in resendSaid.`;
+
+  await log(db, p, 'mail check', String(res.status), { ok: res.ok });
+  return json(200, { ok: res.ok, status: res.status, env, verdict, resendSaid: body });
 }
 
 /* ============ settings ================================================ */
@@ -404,6 +464,16 @@ function clampInt(v, lo, hi) {
   const n = Number(v);
   if (!Number.isFinite(n)) return lo;
   return Math.min(hi, Math.max(lo, Math.round(n)));
+}
+/* Forms hand back whatever someone typed: 6025551234, +16025551234,
+   602.555.1234. Store one shape so a card never reads like a serial
+   number. Anything that isn't a recognisable US number is left alone
+   rather than mangled. */
+function fmtPhone(v) {
+  const d = String(v || '').replace(/\D/g, '');
+  if (d.length === 10) return `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`;
+  if (d.length === 11 && d[0] === '1') return `(${d.slice(1,4)}) ${d.slice(4,7)}-${d.slice(7)}`;
+  return String(v || '').trim();
 }
 function isUuid(v) { return /^[0-9a-f-]{36}$/i.test(v); }
 function nowIso() { return new Date().toISOString(); }

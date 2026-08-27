@@ -286,7 +286,9 @@ async function unlock(suite, code, { silent } = {}) {
 
     $('studioName').textContent = `${session.studio} · Suite ${session.suite}`;
     // Prefills the interest form with their suite, so it's one less thing to type.
-    $('updateDetailsLink').href = `../?suite=${encodeURIComponent(session.suite)}#join`;
+    /* &change opens the form already switched to "Update my listing", so a
+       studio arriving from here never fills in a fresh listing by mistake. */
+    $('updateDetailsLink').href = `../?suite=${encodeURIComponent(session.suite)}&change#join`;
     const o = session.options;
     fill($('serviceSel'), session.services, v => v);
     fill($('addonSel'),   session.services, v => v);
