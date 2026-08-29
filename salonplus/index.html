@@ -175,6 +175,39 @@
   .foot-row { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; font-size: 13.5px; color: var(--ink-faint); }
   footer a { color: var(--bronze-deep); text-decoration: none; }
   footer a:hover { text-decoration: underline; }
+  /* The one real choice on this form, so it has to look like one. The
+     previous version was two flat buttons whose selected state leaned on
+     --sage-deep and --line-2; neither is defined on this page, so the
+     highlight rendered as nothing at all. Radio dots and a filled card
+     now, with literal colours so a missing token can't silently erase
+     the selection again. */
+  .modeq { font-size:13px; font-weight:600; color:#6C685F; margin-bottom:9px; }
+  .modepick { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  @media (max-width:540px) { .modepick { grid-template-columns:1fr; } }
+  .mode-btn {
+    display:flex; gap:11px; align-items:flex-start; text-align:left;
+    padding:14px 15px; border-radius:13px; cursor:pointer; font:inherit;
+    border:1.5px solid #DCD6CA; background:#FAF8F4;
+    transition:border-color .15s, background .15s, box-shadow .15s;
+  }
+  .mode-btn:hover { border-color:#B9B4AC; }
+  .mode-btn .dot {
+    flex:none; width:19px; height:19px; margin-top:1px; border-radius:50%;
+    border:1.5px solid #B9B4AC; background:#fff; position:relative;
+  }
+  .mode-btn.is-on .dot::after {
+    content:''; position:absolute; inset:3.5px; border-radius:50%; background:currentColor;
+  }
+  .mode-btn .m-t { display:block; font-size:15px; font-weight:600; color:#33312D; }
+  .mode-btn .m-d { display:block; font-size:12.5px; font-weight:400; color:#918C81; margin-top:2px; line-height:1.4; }
+  .mode-btn[data-mode="new"].is-on {
+    border-color:#9A6B45; box-shadow:0 0 0 1px #9A6B45; background:#FBF6F0;
+  }
+  .mode-btn[data-mode="new"].is-on .dot { border-color:#9A6B45; color:#9A6B45; }
+  .mode-btn[data-mode="change"].is-on {
+    border-color:#A8593E; box-shadow:0 0 0 1px #A8593E; background:#FBF3EE;
+  }
+  .mode-btn[data-mode="change"].is-on .dot { border-color:#A8593E; color:#A8593E; }
 </style>
 </head>
 <body>
@@ -250,14 +283,15 @@
              is and wants something fixed need different things from us, so
              the form asks for different things back. -->
         <div class="field" style="margin-bottom:22px;">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-            <button type="button" class="mode-btn" data-mode="new" aria-pressed="true"
-              style="padding:13px 10px;border-radius:12px;border:1px solid var(--line-2);background:var(--surface);font:inherit;font-size:14px;font-weight:600;cursor:pointer;color:var(--ink);">
-              I'm new here
+          <div class="modeq">First up, which of these are you?</div>
+          <div class="modepick" role="radiogroup" aria-label="New listing, or an update to one">
+            <button type="button" class="mode-btn" data-mode="new" role="radio" aria-checked="true">
+              <span class="dot"></span>
+              <span><span class="m-t">I'm new here</span><span class="m-d">Get my studio on the app</span></span>
             </button>
-            <button type="button" class="mode-btn" data-mode="change" aria-pressed="false"
-              style="padding:13px 10px;border-radius:12px;border:1px solid var(--line-2);background:var(--surface);font:inherit;font-size:14px;font-weight:600;cursor:pointer;color:var(--ink-soft);">
-              Update my listing
+            <button type="button" class="mode-btn" data-mode="change" role="radio" aria-checked="false">
+              <span class="dot"></span>
+              <span><span class="m-t">Update my listing</span><span class="m-d">Change details or add photos</span></span>
             </button>
           </div>
           <div id="modeNote" style="display:none;margin-top:12px;padding:12px 15px;background:#FBF3EE;border-left:3px solid #A8593E;border-radius:0 10px 10px 0;font-size:13.5px;color:var(--ink-soft);">
@@ -635,10 +669,8 @@ function setFormMode(mode) {
   formMode = mode;
   document.querySelectorAll('.mode-btn').forEach(b => {
     const on = b.dataset.mode === mode;
-    b.setAttribute('aria-pressed', String(on));
-    b.style.borderColor = on ? (mode === 'change' ? '#A8593E' : 'var(--sage-deep)') : 'var(--line-2)';
-    b.style.boxShadow = on ? '0 0 0 1px ' + (mode === 'change' ? '#A8593E' : 'var(--sage-deep)') : 'none';
-    b.style.color = on ? (mode === 'change' ? '#A8593E' : 'var(--sage-deep)') : 'var(--ink-soft)';
+    b.setAttribute('aria-checked', String(on));
+    b.classList.toggle('is-on', on);
   });
   const isChange = mode === 'change';
   const note = document.getElementById('modeNote');
@@ -670,8 +702,16 @@ document.querySelectorAll('.mode-btn').forEach(b =>
   const btn = document.getElementById('submitBtn');
   if (btn) btn.dataset.newLabel = btn.textContent.trim();
   /* Deep link straight to the change form: ...#join?change or ?change=1 */
-  const wantsChange = /[?&]change/.test(location.search) || /change/.test(location.hash);
-  setFormMode(wantsChange ? 'change' : 'new');
+  const wantsChange = () =>
+    /[?&]change/.test(location.search) || /change/.test(location.hash);
+  const applyFromUrl = () => setFormMode(wantsChange() ? 'change' : 'new');
+
+  applyFromUrl();
+  /* Re-applied on these events as well: the mode must survive a bfcache
+     restore (back button) and a hash change, and re-running it is
+     idempotent. */
+  window.addEventListener('pageshow', applyFromUrl);
+  window.addEventListener('hashchange', applyFromUrl);
 })();
 
 </script>
