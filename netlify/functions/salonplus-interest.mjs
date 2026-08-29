@@ -185,10 +185,13 @@ async function saveToSupabase(row) {
 
   let res = await insert(row);
   if (!res.ok) {
-    // If newer columns (photos, facebook, tiktok) haven't been added to
-    // the table yet, don't lose the lead: strip them and save the rest.
-    const { photos, facebook, tiktok, ...base } = row;
-    if (photos || facebook || tiktok) {
+    // If newer columns haven't been added to the table yet, don't lose the
+    // lead: strip them and save the rest. kind and website belong in this
+    // list too -- without them a change request against an un-migrated
+    // table failed twice and was never saved at all, and only the email
+    // carried it.
+    const { photos, facebook, tiktok, kind, website, ...base } = row;
+    if (photos || facebook || tiktok || kind || website) {
       console.warn('interest: full insert failed, retrying with base columns', res.status);
       res = await insert(base);
     }

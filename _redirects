@@ -11,3 +11,7 @@
 # Leads moved to one home for every building
 /salonplus/leads.html   /leads/   301
 /salonplus/leads        /leads/   301
+
+# Laura's page moved out from under the building it started in
+/salonplus/laura     /laura/   301
+/salonplus/laura/*   /laura/   301
