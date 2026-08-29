@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#F2EFE9" />
+<title>Salon Plus Studios - Everything in one place</title>
+<link rel="icon" type="image/png" sizes="64x64" href="../../assets/favicon-64.png">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:#F2EFE9; --bg-2:#EAE6DD; --surface:#FAF8F4;
+    --ink:#33312D; --ink-soft:#6C685F; --ink-faint:#918C81;
+    --bronze:#9A6B45; --bronze-deep:#7C5334; --silver:#B9B4AC;
+    --line:#DCD6CA; --sage:#7C8B6E; --clay:#A8593E;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased; line-height: 1.55;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 18px 70px; }
+  header { padding: 22px 0 18px; border-bottom: 1px solid var(--line); }
+  .lockup { display:flex; align-items:baseline; gap:10px; text-decoration:none; color:var(--ink); }
+  .lockup .ss { font-family:'Jost',sans-serif; font-weight:600; font-size:21px; color:var(--bronze); }
+  .lockup .name { font-family:'Jost',sans-serif; font-weight:400; font-size:17px; letter-spacing:.14em; text-transform:uppercase; }
+
+  .eyebrow { font-family:'Jost',sans-serif; font-size:11.5px; letter-spacing:.34em; text-transform:uppercase; font-weight:500; color:var(--bronze); }
+  h1 { font-family:'Jost',sans-serif; font-weight:300; font-size:clamp(30px,6vw,44px); line-height:1.1; margin-top:8px; }
+  h1 strong { font-weight:500; color:var(--bronze-deep); }
+  .lede { color:var(--ink-soft); margin-top:12px; font-size:16.5px; }
+  h2 { font-family:'Jost',sans-serif; font-weight:400; font-size:24px; letter-spacing:.02em; margin:0 0 4px; }
+  .sec { margin-top:44px; }
+  .sec > p.intro { color:var(--ink-soft); margin-bottom:16px; }
+
+  /* live snapshot */
+  .snap { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:26px; }
+  .snap div { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 12px; text-align:center; }
+  .snap .n { font-family:'Jost',sans-serif; font-size:30px; font-weight:400; color:var(--bronze-deep); line-height:1; }
+  .snap .l { font-size:12px; color:var(--ink-soft); margin-top:6px; }
+
+  /* link cards */
+  .card {
+    display:block; background:var(--surface); border:1px solid var(--line); border-radius:16px;
+    padding:18px 20px; margin-bottom:12px; text-decoration:none; color:inherit;
+    box-shadow:0 1px 2px rgba(51,49,45,.04);
+  }
+  .card .t { font-family:'Jost',sans-serif; font-size:19px; font-weight:500; }
+  .card .d { color:var(--ink-soft); font-size:14.5px; margin-top:5px; }
+  .card .u { font-size:12.5px; color:var(--bronze-deep); margin-top:10px; word-break:break-all; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+  .card.go:active { background:var(--bg-2); }
+  .rowbtns { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+  .mini {
+    font:inherit; font-size:13px; font-weight:600; padding:8px 16px; border-radius:999px;
+    border:1px solid var(--silver); background:transparent; color:var(--ink); cursor:pointer; text-decoration:none;
+  }
+  .mini:active { background:var(--bg-2); }
+  .mini.filled { background:var(--ink); color:var(--surface); border-color:var(--ink); }
+
+  .note { background:var(--bg-2); border-radius:14px; padding:15px 18px; font-size:14.5px; color:var(--ink-soft); margin-top:14px; }
+  .note strong { color:var(--ink); }
+
+  /* What's new. Sits above everything because it answers the questions
+     Laura actually asked, and it's the first thing she'll look for. */
+  .whatsnew { background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--bronze); border-radius:0 16px 16px 0; padding:20px 22px; margin-top:26px; }
+  .whatsnew .eyebrow { color:var(--bronze); }
+  .whatsnew h2 { margin:7px 0 4px; font-size:21px; }
+  .whatsnew .sub { color:var(--ink-soft); font-size:14.5px; }
+  .whatsnew ol { margin:16px 0 0; padding:0; list-style:none; counter-reset:wn; }
+  .whatsnew li { counter-increment:wn; position:relative; padding:0 0 15px 34px; margin-bottom:15px; border-bottom:1px solid var(--line); }
+  .whatsnew li:last-child { border-bottom:none; padding-bottom:0; margin-bottom:0; }
+  .whatsnew li::before {
+    content:counter(wn); position:absolute; left:0; top:1px;
+    width:23px; height:23px; border-radius:50%; background:var(--bg-2); color:var(--bronze-deep);
+    font-family:'Jost',sans-serif; font-size:13px; font-weight:600;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .whatsnew .ask { font-size:13.5px; color:var(--ink-faint); font-style:italic; }
+  .whatsnew .did { font-size:15px; margin-top:4px; }
+  .whatsnew .did strong { color:var(--bronze-deep); font-weight:600; }
+  .whatsnew code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13px; background:var(--bg-2); padding:1px 6px; border-radius:5px; color:var(--clay); }
+
+
+  /* copy blocks */
+  .say { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:12px; }
+  .say .who { font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint); font-weight:600; }
+  .say .msg { margin-top:8px; font-size:15px; color:var(--ink); }
+  footer { margin-top:52px; padding-top:20px; border-top:1px solid var(--line); text-align:center; font-size:12.5px; color:var(--ink-faint); }
+  footer a { color:var(--bronze-deep); }
+  .toast {
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(16px);
+    background:var(--ink); color:var(--surface); padding:11px 22px; border-radius:999px;
+    font-size:14px; opacity:0; pointer-events:none; transition:all .22s; z-index:20;
+  }
+  .toast.on { opacity:1; transform:translateX(-50%); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="lockup" href="../">
+      <span class="ss">S&#8202;S</span>
+      <span class="name">Salon Plus Studios</span>
+    </a>
+  </header>
+
+  <div style="padding-top:34px;">
+    <div class="eyebrow">For Laura</div>
+    <h1>Everything in <strong>one place</strong></h1>
+    <p class="lede">Every link you need, what each one does, and what to send your studios. Bookmark this page &mdash; it updates itself.</p>
+
+    <div class="whatsnew">
+      <div class="eyebrow">New since you asked</div>
+      <h2>Everything you asked for is live</h2>
+      <p class="sub">Four questions, four answers. Nothing here needs anything from you &mdash; it's already running.</p>
+      <ol>
+        <li>
+          <div class="ask">&ldquo;If a studio wants to add pictures, do we have an edit form?&rdquo;</div>
+          <div class="did">There is now. The join form has two buttons at the top &mdash; <strong>I'm new here</strong> and <strong>Update my listing</strong> &mdash; so a studio that's already on the app can send changes without starting over. Photos went from 3 to <strong>4</strong>, and the first one is their profile shot.</div>
+        </li>
+        <li>
+          <div class="ask">&ldquo;Can we add Instagram, Facebook and website buttons?&rdquo;</div>
+          <div class="did">Yes. The form now asks for a <strong>website</strong> alongside Instagram, Facebook and TikTok, and the ones a studio gives us turn into <strong>round icon buttons</strong> on their card in the app.</div>
+        </li>
+        <li>
+          <div class="ask">&ldquo;Can they get a notification that their info is received?&rdquo;</div>
+          <div class="did">They do, if they leave an email. A short <strong>receipt lands in their inbox</strong> the moment they submit &mdash; different wording for a new listing than for a change &mdash; so nobody is left wondering whether the form worked, and nobody texts you to ask.</div>
+        </li>
+        <li>
+          <div class="ask">&ldquo;A change request should reach you differently from a new studio.&rdquo;</div>
+          <div class="did">It does, three ways. The email to Anne is <strong>subject-line tagged <code>[CHANGE]</code></strong> so it sorts and searches, it arrives in a different colour with <strong>what they want changed at the very top</strong>, and in the admin panel change requests sit in <strong>their own section</strong> with a button that opens that studio's listing directly. Marked done when it's handled, not deleted.</div>
+        </li>
+      </ol>
+      <div class="note" style="margin-top:18px;">
+        <strong>The one link that does all of it:</strong> the <em>&ldquo;wants a change, or new photos&rdquo;</em> card below. It opens the form already switched to <strong>Update my listing</strong>, and if you pick a studio from the dropdown, it fills their suite in too.
+      </div>
+    </div>
+
+    <div class="snap">
+      <div><div class="n" id="nStudios">&mdash;</div><div class="l">studios listed</div></div>
+      <div><div class="n" id="nPhotos">&mdash;</div><div class="l">with a photo</div></div>
+      <div><div class="n" id="nSocial">&mdash;</div><div class="l">with a social link</div></div>
+    </div>
+    <p style="font-size:12.5px;color:var(--ink-faint);margin-top:10px;" id="snapNote">Reading the live directory&hellip;</p>
+  </div>
+
+  <!-- ============ links ============ -->
+  <div class="sec">
+    <h2>The links</h2>
+    <p class="intro">Tap to open, or copy to send on.</p>
+
+    <div class="card">
+      <div class="t">The app</div>
+      <div class="d">What your customers see. Browse by name, service or the floor map, then call, text or book. Cards now show whether a studio is open <em>right now</em>.</div>
+      <div class="u" data-url>https://studiosoulutions.com/salonplus/app/</div>
+      <div class="rowbtns">
+        <a class="mini filled" href="https://studiosoulutions.com/salonplus/app/">Open</a>
+        <button class="mini" data-copy>Copy link</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="t">The directory page</div>
+      <div class="d">The map and the full roster. A good one for a lobby sign or a QR code.</div>
+      <div class="u" data-url>https://studiosoulutions.com/salonplus/</div>
+      <div class="rowbtns">
+        <a class="mini filled" href="https://studiosoulutions.com/salonplus/">Open</a>
+        <button class="mini" data-copy>Copy link</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="t">A new studio wants listing</div>
+      <div class="d">Two minutes: name, suite, hours, services, photos. Free. It comes to us and we build their card.</div>
+      <div class="u" data-url>https://studiosoulutions.com/salonplus/#join</div>
+      <div class="rowbtns">
+        <a class="mini filled" href="https://studiosoulutions.com/salonplus/#join">Open</a>
+        <button class="mini" data-copy>Copy link</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="t">An existing studio wants a change, or new photos</div>
+      <div class="d">Same form, but it opens already switched to <strong>Update my listing</strong>. They tell us their suite and what to change. Up to <strong>4 photos</strong> &mdash; the first becomes the big one on their card.</div>
+      <div class="u" data-url>https://studiosoulutions.com/salonplus/?change#join</div>
+      <div class="rowbtns">
+        <a class="mini filled" href="https://studiosoulutions.com/salonplus/?change#join">Open</a>
+        <button class="mini" data-copy>Copy link</button>
+      </div>
+      <div class="note" id="pickWrap" style="display:none;">
+        <strong>Sending it to one studio in particular?</strong> Pick them and the link fills their suite in, so they don't have to.
+        <select id="pickStudio" style="width:100%;margin-top:10px;padding:11px 13px;border-radius:10px;border:1px solid var(--silver);background:var(--surface);font:inherit;font-size:15px;color:var(--ink);"></select>
+        <span class="u" style="margin-top:10px;display:block;" data-url id="pickUrl"></span>
+        <button class="mini" data-copy style="margin-top:8px;">Copy their link</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="t">A studio wants to post a coupon</div>
+      <div class="d">They post their own specials. They need their suite number and a short code &mdash; ask Anne for any studio's code. They pick from dropdowns, so nothing can go up looking wrong, and <strong>every offer takes itself down</strong> when it runs out.</div>
+      <div class="u" data-url>https://studiosoulutions.com/salonplus/offer/</div>
+      <div class="rowbtns">
+        <a class="mini filled" href="https://studiosoulutions.com/salonplus/offer/">Open</a>
+        <button class="mini" data-copy>Copy link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ what to send ============ -->
+  <div class="sec">
+    <h2>What to send a studio</h2>
+    <p class="intro">Ready to copy and text.</p>
+
+    <div class="say">
+      <div class="who">Asking for photos</div>
+      <div class="msg" data-say>Hi! Your studio's on the Salon Plus app but there's no photo on your card yet, and it makes a big difference. You can add up to 4 here, takes a minute: studiosoulutions.com/salonplus/?change#join</div>
+      <button class="mini" data-copy style="margin-top:10px;">Copy message</button>
+    </div>
+
+    <div class="say">
+      <div class="who">Asking for hours</div>
+      <div class="msg" data-say>Quick one — the app can show customers when you're open, but we only have your days, not your times. Send your opening and closing times here and your card will show "Open now" when you are: studiosoulutions.com/salonplus/?change#join</div>
+      <button class="mini" data-copy style="margin-top:10px;">Copy message</button>
+    </div>
+
+    <div class="say">
+      <div class="who">Asking for socials</div>
+      <div class="msg" data-say>Your card on the app can link straight to your Instagram, Facebook and website — we just need the handles. Add them here: studiosoulutions.com/salonplus/?change#join</div>
+      <button class="mini" data-copy style="margin-top:10px;">Copy message</button>
+    </div>
+
+    <div class="say">
+      <div class="who">A studio that isn't listed yet</div>
+      <div class="msg" data-say>We're putting every studio in the building on one app and map, so customers can actually find you. It's free. Two minutes to get on it: studiosoulutions.com/salonplus/#join</div>
+      <button class="mini" data-copy style="margin-top:10px;">Copy message</button>
+    </div>
+
+    <div class="say">
+      <div class="who">Handing over a coupon code</div>
+      <div class="msg" data-say>Here's your code for posting specials: YOUR-CODE. Go to studiosoulutions.com/salonplus/offer/, put in your suite number and that code, and you can post an offer in about a minute. It comes down on its own when it runs out.</div>
+      <button class="mini" data-copy style="margin-top:10px;">Copy message</button>
+      <div class="note" style="margin-top:12px;">Swap <strong>YOUR-CODE</strong> for the studio's actual code first &mdash; ask Anne.</div>
+    </div>
+  </div>
+
+  <footer>
+    Salon Plus Studios &middot; listed by <a href="/">Studio Soulutions</a><br>
+    Anything you want changed, just say.
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   Laura's page. The numbers are read from the live directory rather than
+   typed in, so this can't quietly go stale the way a printed sheet does.
+   If the directory can't be reached, the counts simply stay blank and
+   the page still works as a list of links.
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('on'), 1800);
+}
+
+/* Copy buttons: the URL or message sits in the nearest marked element. */
+document.addEventListener('click', async e => {
+  const btn = e.target.closest('[data-copy]');
+  if (!btn) return;
+  const scope = btn.closest('.note') || btn.closest('.card') || btn.closest('.say');
+  const src = scope && (scope.querySelector('[data-url]') || scope.querySelector('[data-say]'));
+  if (!src) return;
+  const text = src.textContent.trim();
+  try {
+    await navigator.clipboard.writeText(text);
+    toast('Copied');
+  } catch {
+    /* Older phones and any page not on https: select it so a long-press
+       copy still works rather than leaving them stuck. */
+    const r = document.createRange();
+    r.selectNodeContents(src);
+    const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    toast('Press and hold to copy');
+  }
+});
+
+(async function liveCounts() {
+  try {
+    const res = await fetch('/api/salonplus-admin', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'directory', building: 'salonplus' }),
+    });
+    if (!res.ok) throw new Error('unavailable');
+    const rows = (await res.json()).rows || [];
+    if (!rows.length) throw new Error('empty');
+
+    const withPhoto  = rows.filter(r => r.photo).length;
+    const withSocial = rows.filter(r => r.instagram || r.facebook || r.tiktok || r.site).length;
+
+    $('nStudios').textContent = rows.length;
+    $('nPhotos').textContent  = withPhoto;
+    $('nSocial').textContent  = withSocial;
+    $('snapNote').textContent = 'Live, straight from the directory.';
+
+    /* Per-studio update links. Built from the real roster rather than typed
+       by hand, so nobody can send one studio another studio's suite. */
+    const pick = $('pickStudio');
+    pick.innerHTML = rows.map(r =>
+      `<option value="${r.suite}">Suite ${r.suite} &middot; ${r.name}</option>`).join('');
+    const setPickUrl = () =>
+      $('pickUrl').textContent =
+        `https://studiosoulutions.com/salonplus/?suite=${encodeURIComponent(pick.value)}&change#join`;
+    pick.addEventListener('change', setPickUrl);
+    setPickUrl();
+    $('pickWrap').style.display = 'block';
+
+  } catch {
+    $('snapNote').textContent = 'Counts are unavailable right now. Every link below still works.';
+    document.querySelectorAll('.snap').forEach(el => el.style.display = 'none');
+  }
+})();
+</script>
+</body>
+</html>
