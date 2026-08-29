@@ -148,7 +148,8 @@
   <div class="hidden" id="panel">
     <div class="eyebrow">Directory admin</div>
     <h1>Every studio, every center</h1>
-    <p class="sub">Edits here go straight to the live app. There is no deploy to wait for.</p>
+    <p class="sub">Edits here go straight to the live app. There is no deploy to wait for.
+      <a href="/leads/guide/" style="color:var(--sage-deep);margin-left:6px;">Read the guide &rarr;</a></p>
 
     <div class="tabs" role="tablist">
       <button class="tab" role="tab" data-tab="studios" aria-selected="true">Studios</button>
@@ -204,6 +205,11 @@
       <h2>Live offers</h2>
       <p class="sub" style="margin-bottom:18px;">Studios post these themselves and they expire on their own. Nothing to approve.</p>
       <div id="offersList"></div>
+
+      <h2 style="margin-top:44px;">Everyone's posting code</h2>
+      <p class="sub" style="margin-bottom:14px;">Look up any studio's code here rather than asking anyone for it. Tap a code to copy it, or copy the whole message ready to text.</p>
+      <input class="cell" id="codeSearch" placeholder="Type a suite number or a studio name" style="max-width:340px;border-color:var(--line-2);margin-bottom:16px;">
+      <div id="codeList"></div>
     </section>
 
     <!-- SETTINGS -->
@@ -310,14 +316,30 @@ const fmtPhone = v => {
   return String(v || '').trim();
 };
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/* A studio's posting code, looked up by where it lives. Codes are keyed on
+   suite + building because that pair is what a studio types into the offer
+   form — it is the same identity from both ends. */
+const codeFor = s => (state.codes || []).find(c =>
+  String(c.suite) === String(s.suite) && c.building === s.building);
 
 let auth = null;                 // { code, who }
-let state = { buildings: [], tiers: [], studios: [], leads: [], log: [] };
+let state = { buildings: [], tiers: [], studios: [], leads: [], log: [], codes: [] };
 let edits = new Map();           // studio id (or temp key) -> patch
 let newRows = [];                // rows added by hand, not yet saved
 let filterBuilding = '*';
 let searchTerm = '';
 let drawerFor = null;
+
+/* Codes get read out over the phone and pasted into texts, so copying one
+   has to be a single tap rather than a careful drag across a table cell. */
+async function copyText(t) {
+  try { await navigator.clipboard.writeText(t); toast('Copied'); }
+  catch { prompt('Copy this:', t); }
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-copycode]');
+  if (b) copyText(b.dataset.copycode);
+});
 
 async function api(body) {
   const res = await fetch(API, {
@@ -340,7 +362,7 @@ async function unlock(code, who, { silent } = {}) {
   try {
     auth = { code, who };
     const d = await api({ action: 'unlock' });
-    state = { buildings: d.buildings, tiers: d.tiers, studios: d.studios, leads: d.leads, log: d.log };
+    state = { buildings: d.buildings, tiers: d.tiers, studios: d.studios, leads: d.leads, log: d.log, codes: d.codes || [] };
     sessionStorage.setItem(SESSION, JSON.stringify(auth));
     $('gate').classList.add('hidden'); $('panel').classList.remove('hidden');
     renderAll();
@@ -352,7 +374,7 @@ async function unlock(code, who, { silent } = {}) {
 }
 
 function renderAll() {
-  renderBuildingFilter(); renderStudios(); renderInbox(); renderTiers(); renderBuildings(); renderLog();
+  renderBuildingFilter(); renderStudios(); renderInbox(); renderTiers(); renderBuildings(); renderLog(); renderCodes();
 }
 
 /* ----- the grid ----- */
@@ -519,6 +541,30 @@ function openDrawer(k) {
     </div>
     <div class="field"><label>TikTok</label><input data-d="tiktok" value="${esc(s.tiktok || '')}">
       <div class="hint">Handles or full links, either works. These become the round icons under their photo &mdash; ${[s.instagram, s.facebook, s.tiktok].filter(Boolean).length} showing now.</div></div>
+
+    ${(() => {
+      /* The one place someone will look for it: on the studio itself.
+         Shown whether or not it is currently usable, because "there is a
+         code but the tier switched it off" and "there is no code" are
+         different problems with different fixes. */
+      const c = codeFor(s);
+      if (!tierOf.allow_coupons) {
+        return `<div class="field"><label>Coupon code</label>
+          <div class="hint">Tier ${esc(String(s.tier))} can't post coupons, so this studio has no working code.
+          ${c ? `Its old code <code>${esc(c.code)}</code> is switched off and comes back if you move them to a coupon tier.` : 'Move them to a coupon tier and one is made automatically.'}</div></div>`;
+      }
+      if (!c) {
+        return `<div class="field"><label>Coupon code</label>
+          <div class="hint">Not made yet &mdash; it appears the first time this studio is saved on a coupon tier.</div></div>`;
+      }
+      return `<div class="field"><label>Coupon code</label>
+        <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap;">
+          <code style="font-size:17px;letter-spacing:.06em;background:var(--bg-2);padding:8px 14px;border-radius:9px;color:var(--clay-deep);">${esc(c.code)}</code>
+          <button type="button" class="btn btn-ghost btn-sm" data-copycode="${esc(c.code)}">Copy code</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-copycode="Here's your code for posting specials: ${esc(c.code)}. Go to studiosoulutions.com/salonplus/offer/, put in your suite number and that code, and you can post an offer in about a minute. It comes down on its own when it runs out.">Copy the whole message</button>
+        </div>
+        <div class="hint">They type this plus their suite number at /salonplus/offer/. Safe to text &mdash; it only lets them post their own offers.</div></div>`;
+    })()}
 
     <div class="field"><label>Photos</label>
       ${tierOf.photos_max ? `
@@ -838,6 +884,31 @@ $('mailCheckBtn').addEventListener('click', async () => {
   } finally { btn.disabled = false; btn.textContent = 'Send a test email'; }
 });
 
+/* ----- posting codes ---------------------------------------------------
+   Deliberately a plain, searchable list. The question this answers is
+   always "what is Suite 4417's code" or "what is Deuces' code", asked in
+   a corridor, on a phone. */
+let codeSearchTerm = '';
+function renderCodes() {
+  const q = codeSearchTerm.toLowerCase();
+  const rows = (state.codes || [])
+    .filter(c => c.can_post)
+    .filter(c => !q || String(c.suite).toLowerCase().includes(q) || String(c.studio || '').toLowerCase().includes(q))
+    .sort((a, b) => String(a.suite).localeCompare(String(b.suite), undefined, { numeric: true }));
+
+  $('codeList').innerHTML = rows.map(c => `
+    <div class="card" style="padding:14px 18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+      <span class="suite-tag">Suite ${esc(c.suite)}</span>
+      <span class="biz" style="font-size:16px;">${esc(c.studio || 'unnamed')}</span>
+      <code style="margin-left:auto;font-size:16px;letter-spacing:.06em;background:var(--bg-2);padding:7px 13px;border-radius:9px;color:var(--clay-deep);">${esc(c.code)}</code>
+      <button class="rowbtn" data-copycode="${esc(c.code)}">Copy</button>
+      <button class="rowbtn" data-copycode="Here's your code for posting specials: ${esc(c.code)}. Go to studiosoulutions.com/salonplus/offer/, put in your suite number and that code, and you can post an offer in about a minute. It comes down on its own when it runs out.">Copy message</button>
+    </div>`).join('')
+    || `<div class="empty">${(state.codes || []).length
+          ? 'No studio matches that.'
+          : 'No codes yet. One is made automatically the first time you publish a studio on a tier that allows coupons.'}</div>`;
+}
+
 function renderBuildings() {
   $('buildingList').innerHTML = state.buildings.map(b => `
     <div class="card" style="padding:15px 18px;">
@@ -879,6 +950,7 @@ document.querySelector('.tabs').addEventListener('click', e => {
   document.querySelectorAll('.panel').forEach(p => { p.hidden = p.id !== 'tab-' + tab.dataset.tab; });
 });
 $('showProcessed').addEventListener('change', e => { showProcessed = e.target.checked; renderInbox(); });
+$('codeSearch').addEventListener('input', e => { codeSearchTerm = e.target.value.trim(); renderCodes(); });
 $('filterBuilding').addEventListener('change', e => { filterBuilding = e.target.value; renderStudios(); });
 $('search').addEventListener('input', e => { searchTerm = e.target.value.trim(); renderStudios(); });
 $('unlockBtn').addEventListener('click', () => unlock($('codeInput').value.trim(), $('whoInput').value.trim()));

@@ -127,12 +127,13 @@ function publicShape(s, tier) {
 
 /* ============ unlock: one call, everything the panel renders =========== */
 async function unlock(db) {
-  const [buildings, tiers, studios, leads, log] = await Promise.all([
+  const [buildings, tiers, studios, leads, log, codes] = await Promise.all([
     db.get(BUILDINGS, { order: 'name.asc' }),
     db.get(TIERS,     { order: 'tier.asc' }),
     db.get(STUDIOS,   { order: 'building.asc,suite.asc', limit: '500' }),
     db.get(LEADS,     { order: 'created_at.desc', limit: '200' }),
     db.get(LOG,       { order: 'at.desc', limit: '40' }),
+    db.get(CODES,     { order: 'suite.asc', limit: '500' }),
   ]);
   if (!buildings || !tiers || !studios) return json(502, { error: 'Could not load the directory.' });
 
@@ -145,6 +146,15 @@ async function unlock(db) {
   return json(200, {
     ok: true,
     buildings, tiers, studios,
+    /* Coupon codes come back with everything else. They used to be shown
+       once, in an alert at publish time, and were then unfindable — which
+       made "what's Suite 4417's code again?" a question only the database
+       could answer. A code is a posting password for one studio, not a
+       secret from the person running the building. */
+    codes: (codes || []).map(c => ({
+      suite: c.suite, building: c.building, studio: c.studio,
+      code: c.code, can_post: c.can_post !== false,
+    })),
     /* Everything is returned, flagged. Hiding processed submissions is a
        view, not a deletion: "what did that studio originally send us?" is
        a question worth being able to answer months later. */

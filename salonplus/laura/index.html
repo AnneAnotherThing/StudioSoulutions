@@ -13,13 +13,14 @@
     --bg:#F2EFE9; --bg-2:#EAE6DD; --surface:#FAF8F4;
     --ink:#33312D; --ink-soft:#6C685F; --ink-faint:#918C81;
     --bronze:#9A6B45; --bronze-deep:#7C5334; --silver:#B9B4AC;
-    --line:#DCD6CA; --sage:#7C8B6E; --clay:#A8593E;
+    --line:#DCD6CA; --sage:#7C8B6E; --sage-deep:#5F6E52; --clay:#A8593E; --clay-deep:#8E4831;
+    --blush:#FBF3EE;
   }
   * { box-sizing: border-box; margin: 0; }
   body {
     background: var(--bg); color: var(--ink);
     font-family: 'Inter', -apple-system, system-ui, sans-serif;
-    -webkit-font-smoothing: antialiased; line-height: 1.55;
+    -webkit-font-smoothing: antialiased; line-height: 1.62;
   }
   .wrap { max-width: 720px; margin: 0 auto; padding: 0 18px 70px; }
   header { padding: 22px 0 18px; border-bottom: 1px solid var(--line); }
@@ -28,30 +29,82 @@
   .lockup .name { font-family:'Jost',sans-serif; font-weight:400; font-size:17px; letter-spacing:.14em; text-transform:uppercase; }
 
   .eyebrow { font-family:'Jost',sans-serif; font-size:11.5px; letter-spacing:.34em; text-transform:uppercase; font-weight:500; color:var(--bronze); }
-  h1 { font-family:'Jost',sans-serif; font-weight:300; font-size:clamp(30px,6vw,44px); line-height:1.1; margin-top:8px; }
+  h1 { font-family:'Jost',sans-serif; font-weight:300; font-size:clamp(30px,6vw,44px); line-height:1.12; margin-top:8px; }
   h1 strong { font-weight:500; color:var(--bronze-deep); }
-  .lede { color:var(--ink-soft); margin-top:12px; font-size:16.5px; }
-  h2 { font-family:'Jost',sans-serif; font-weight:400; font-size:24px; letter-spacing:.02em; margin:0 0 4px; }
-  .sec { margin-top:44px; }
-  .sec > p.intro { color:var(--ink-soft); margin-bottom:16px; }
+  .lede { color:var(--ink-soft); margin-top:14px; font-size:17px; }
+  .lede + .lede { margin-top:12px; }
+  h2 { font-family:'Jost',sans-serif; font-weight:400; font-size:25px; letter-spacing:.02em; margin:0 0 4px; }
+  h3 { font-family:'Jost',sans-serif; font-weight:500; font-size:17.5px; margin:0 0 4px; }
+  .sec { margin-top:54px; }
+  .sec > p.intro { color:var(--ink-soft); margin-bottom:18px; font-size:15.5px; }
+  p + p { margin-top:11px; }
+
+  /* Standing promise that this page is the changelog, not a one-off
+     handout. Sage rather than bronze so it reads as a note from me
+     rather than as another feature announcement. */
+  .standing { background:#EFF2EA; border-left:3px solid var(--sage-deep); border-radius:0 14px 14px 0; padding:17px 20px; margin-top:22px; }
+  .standing .eyebrow { color:var(--sage-deep); }
+  .standing p { font-size:15.5px; color:var(--ink); margin-top:7px; }
+  .standing p.small { font-size:14px; color:var(--ink-soft); margin-top:7px; }
+
+  /* the four answers */
+  .whatsnew { background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--bronze); border-radius:0 16px 16px 0; padding:22px 24px; margin-top:30px; }
+  .whatsnew h2 { margin:8px 0 6px; font-size:23px; }
+  .whatsnew .sub { color:var(--ink-soft); font-size:15px; }
+  .whatsnew ol { margin:20px 0 0; padding:0; list-style:none; counter-reset:wn; }
+  .whatsnew li { counter-increment:wn; position:relative; padding:0 0 18px 36px; margin-bottom:18px; border-bottom:1px solid var(--line); }
+  .whatsnew li:last-child { border-bottom:none; padding-bottom:0; margin-bottom:0; }
+  .whatsnew li::before {
+    content:counter(wn); position:absolute; left:0; top:2px;
+    width:24px; height:24px; border-radius:50%; background:var(--bg-2); color:var(--bronze-deep);
+    font-family:'Jost',sans-serif; font-size:13px; font-weight:600;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .whatsnew .ask { font-size:14.5px; color:var(--bronze-deep); font-style:italic; }
+  .whatsnew .did { font-size:15.5px; margin-top:7px; color:var(--ink); }
+  .whatsnew .did strong { color:var(--bronze-deep); font-weight:600; }
+  code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13px; background:var(--bg-2); padding:1px 6px; border-radius:5px; color:var(--clay-deep); }
+
+  /* coffee */
+  .coffee {
+    background:linear-gradient(180deg,#FBF3EE 0%,#F6ECE3 100%);
+    border:1px solid #E8D5C4; border-radius:20px; padding:28px 26px 26px; margin-top:36px;
+  }
+  .coffee .cup { font-size:32px; line-height:1; }
+  .coffee h2 { margin:12px 0 8px; color:var(--bronze-deep); }
+  .coffee p { font-size:16.5px; color:var(--ink); }
+  .coffee .list { margin:18px 0 0; padding:0; list-style:none; }
+  .coffee .list li { position:relative; padding-left:26px; margin-bottom:10px; font-size:15.5px; color:var(--ink-soft); }
+  .coffee .list li::before { content:'\2713'; position:absolute; left:0; top:0; color:var(--bronze); font-weight:700; }
+  .coffee .sign { margin-top:20px; font-size:16.5px; color:var(--ink); }
 
   /* live snapshot */
-  .snap { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:26px; }
+  .snap { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:20px; }
   .snap div { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 12px; text-align:center; }
   .snap .n { font-family:'Jost',sans-serif; font-size:30px; font-weight:400; color:var(--bronze-deep); line-height:1; }
   .snap .l { font-size:12px; color:var(--ink-soft); margin-top:6px; }
 
+  /* the to-do list, built from live data */
+  .todo { background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:6px 20px; margin-top:16px; }
+  .todo .grp { padding:16px 0; border-bottom:1px solid var(--line); }
+  .todo .grp:last-child { border-bottom:none; }
+  .todo .grp h3 { color:var(--bronze-deep); font-size:16px; }
+  .todo .grp .why { font-size:13.5px; color:var(--ink-soft); margin-bottom:9px; }
+  .chips { display:flex; gap:7px; flex-wrap:wrap; }
+  .chip { font-size:13px; background:var(--bg-2); border-radius:999px; padding:5px 12px; color:var(--ink); }
+  .chip.done { background:#EDF1E8; color:var(--sage-deep); }
+
   /* link cards */
   .card {
     display:block; background:var(--surface); border:1px solid var(--line); border-radius:16px;
-    padding:18px 20px; margin-bottom:12px; text-decoration:none; color:inherit;
+    padding:20px 22px; margin-bottom:14px; text-decoration:none; color:inherit;
     box-shadow:0 1px 2px rgba(51,49,45,.04);
   }
-  .card .t { font-family:'Jost',sans-serif; font-size:19px; font-weight:500; }
-  .card .d { color:var(--ink-soft); font-size:14.5px; margin-top:5px; }
-  .card .u { font-size:12.5px; color:var(--bronze-deep); margin-top:10px; word-break:break-all; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
-  .card.go:active { background:var(--bg-2); }
-  .rowbtns { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+  .card .who-for { font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--bronze); font-weight:600; margin-bottom:7px; }
+  .card .t { font-family:'Jost',sans-serif; font-size:20px; font-weight:500; }
+  .card .d { color:var(--ink-soft); font-size:15px; margin-top:8px; }
+  .card .u { font-size:12.5px; color:var(--bronze-deep); margin-top:13px; word-break:break-all; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+  .rowbtns { display:flex; gap:8px; margin-top:13px; flex-wrap:wrap; }
   .mini {
     font:inherit; font-size:13px; font-weight:600; padding:8px 16px; border-radius:999px;
     border:1px solid var(--silver); background:transparent; color:var(--ink); cursor:pointer; text-decoration:none;
@@ -59,35 +112,25 @@
   .mini:active { background:var(--bg-2); }
   .mini.filled { background:var(--ink); color:var(--surface); border-color:var(--ink); }
 
-  .note { background:var(--bg-2); border-radius:14px; padding:15px 18px; font-size:14.5px; color:var(--ink-soft); margin-top:14px; }
+  .note { background:var(--bg-2); border-radius:14px; padding:16px 19px; font-size:14.5px; color:var(--ink-soft); margin-top:15px; }
   .note strong { color:var(--ink); }
 
-  /* What's new. Sits above everything because it answers the questions
-     Laura actually asked, and it's the first thing she'll look for. */
-  .whatsnew { background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--bronze); border-radius:0 16px 16px 0; padding:20px 22px; margin-top:26px; }
-  .whatsnew .eyebrow { color:var(--bronze); }
-  .whatsnew h2 { margin:7px 0 4px; font-size:21px; }
-  .whatsnew .sub { color:var(--ink-soft); font-size:14.5px; }
-  .whatsnew ol { margin:16px 0 0; padding:0; list-style:none; counter-reset:wn; }
-  .whatsnew li { counter-increment:wn; position:relative; padding:0 0 15px 34px; margin-bottom:15px; border-bottom:1px solid var(--line); }
-  .whatsnew li:last-child { border-bottom:none; padding-bottom:0; margin-bottom:0; }
-  .whatsnew li::before {
-    content:counter(wn); position:absolute; left:0; top:1px;
-    width:23px; height:23px; border-radius:50%; background:var(--bg-2); color:var(--bronze-deep);
-    font-family:'Jost',sans-serif; font-size:13px; font-weight:600;
-    display:flex; align-items:center; justify-content:center;
-  }
-  .whatsnew .ask { font-size:13.5px; color:var(--ink-faint); font-style:italic; }
-  .whatsnew .did { font-size:15px; margin-top:4px; }
-  .whatsnew .did strong { color:var(--bronze-deep); font-weight:600; }
-  .whatsnew code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13px; background:var(--bg-2); padding:1px 6px; border-radius:5px; color:var(--clay); }
-
+  /* how it fits */
+  .how { background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:6px 22px; }
+  .how .step { padding:18px 0; border-bottom:1px solid var(--line); }
+  .how .step:last-child { border-bottom:none; }
+  .how .step h3 { color:var(--bronze-deep); }
+  .how .step p { color:var(--ink-soft); font-size:15px; }
+  .how .me { color:var(--sage-deep); font-weight:600; }
+  .how .you { color:var(--clay-deep); font-weight:600; }
 
   /* copy blocks */
-  .say { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:12px; }
+  .say { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:17px 19px; margin-bottom:13px; }
   .say .who { font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint); font-weight:600; }
-  .say .msg { margin-top:8px; font-size:15px; color:var(--ink); }
-  footer { margin-top:52px; padding-top:20px; border-top:1px solid var(--line); text-align:center; font-size:12.5px; color:var(--ink-faint); }
+  .say .when { font-size:13.5px; color:var(--ink-soft); margin-top:5px; }
+  .say .msg { margin-top:10px; font-size:15px; color:var(--ink); background:var(--bg-2); border-radius:11px; padding:13px 15px; }
+
+  footer { margin-top:58px; padding-top:22px; border-top:1px solid var(--line); text-align:center; font-size:13px; color:var(--ink-faint); }
   footer a { color:var(--bronze-deep); }
   .toast {
     position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(16px);
@@ -108,52 +151,184 @@
 
   <div style="padding-top:34px;">
     <div class="eyebrow">For Laura</div>
-    <h1>Everything in <strong>one place</strong></h1>
-    <p class="lede">Every link you need, what each one does, and what to send your studios. Bookmark this page &mdash; it updates itself.</p>
+    <h1>Good morning, <strong>Laura!</strong></h1>
+    <p class="lede">
+      Sorry this took me a little bit! You asked four really good questions, and rather than fire
+      back a quick answer I wanted to get a proper guide written up alongside it &mdash; so we've got
+      somewhere to actually track everything we've got going in. This is turning into a real thing.
+    </p>
+    <p class="lede">
+      This page is where I keep everything for you now: every link, what each one actually does and
+      who it's for, a live list of which studios still need a nudge, and the exact words to text
+      them so you never have to sit there wording it yourself.
+    </p>
+    <p class="lede">
+      Save it to your phone's home screen. It reads the real directory every time you open it, so it
+      can't quietly go out of date the way a printed sheet does. And you genuinely can't break
+      anything from here &mdash; press everything.
+    </p>
+
+    <div class="standing">
+      <div class="eyebrow">Keep this one</div>
+      <p>
+        <strong>Anything new lands here too.</strong> Every time I add something, change how something
+        works, or fix something you've asked about, I'll write it up on this page &mdash; so you never
+        have to dig back through texts or emails to remember how a thing works.
+      </p>
+      <p class="small">
+        Same link, always. Just open it again and the newest bit will be sitting at the top.
+      </p>
+    </div>
 
     <div class="whatsnew">
-      <div class="eyebrow">New since you asked</div>
-      <h2>Everything you asked for is live</h2>
-      <p class="sub">Four questions, four answers. Nothing here needs anything from you &mdash; it's already running.</p>
+      <div class="eyebrow">You asked, so I built it</div>
+      <h2>All four, up and running</h2>
+      <p class="sub">Your questions, and exactly what happens now.</p>
       <ol>
         <li>
           <div class="ask">&ldquo;If a studio wants to add pictures, do we have an edit form?&rdquo;</div>
-          <div class="did">There is now. The join form has two buttons at the top &mdash; <strong>I'm new here</strong> and <strong>Update my listing</strong> &mdash; so a studio that's already on the app can send changes without starting over. Photos went from 3 to <strong>4</strong>, and the first one is their profile shot.</div>
+          <div class="did">
+            We do now! The join form grew two buttons right at the top &mdash;
+            <strong>I'm new here</strong> and <strong>Update my listing</strong>. A studio that's
+            already on the app taps the second one, tells us their suite and what they'd like changed,
+            and that's the whole job. They don't start over, and they don't have to remember what they
+            put last time.
+            <br><br>
+            Photos went from three to <strong>four</strong>, too. The first one they choose becomes
+            their <em>profile shot</em> &mdash; the big picture at the top of their card &mdash; and
+            the other three sit underneath as a little gallery. So if someone's card looks a bit bare
+            next to the others, this is the fix, and it takes them about a minute standing in their
+            own studio.
+          </div>
         </li>
         <li>
-          <div class="ask">&ldquo;Can we add Instagram, Facebook and website buttons?&rdquo;</div>
-          <div class="did">Yes. The form now asks for a <strong>website</strong> alongside Instagram, Facebook and TikTok, and the ones a studio gives us turn into <strong>round icon buttons</strong> on their card in the app.</div>
+          <div class="ask">&ldquo;Can we add Instagram, Facebook and website links?&rdquo;</div>
+          <div class="did">
+            Yes &mdash; and I threw in TikTok while I was in there. The form now collects
+            <strong>Instagram, Facebook, TikTok and a website</strong>, and whichever ones a studio
+            gives us turn into neat <strong>round icon buttons</strong> on their card.
+            <br><br>
+            They only show up if there's actually something to link to, so a studio with just an
+            Instagram gets one clean button instead of three sad empty ones. And they can type it
+            however they like &mdash; <em>@yourstudio</em>, or paste the whole long address &mdash;
+            it sorts itself out either way. That matters more than it sounds, because half of them
+            will paste from their phone.
+          </div>
         </li>
         <li>
-          <div class="ask">&ldquo;Can they get a notification that their info is received?&rdquo;</div>
-          <div class="did">They do, if they leave an email. A short <strong>receipt lands in their inbox</strong> the moment they submit &mdash; different wording for a new listing than for a change &mdash; so nobody is left wondering whether the form worked, and nobody texts you to ask.</div>
+          <div class="ask">&ldquo;Is it possible for them to get a notification that their info is received?&rdquo;</div>
+          <div class="did">
+            They do now, within seconds of hitting send &mdash; as long as they left an email address.
+            It's a short, warm note saying we've got it and someone's taking care of it, and it's
+            worded a little differently depending on whether they're brand new or asking for a change.
+            <br><br>
+            Honestly? This one's really a gift to <em>you</em>. It's the difference between a studio
+            wondering whether that form did anything and stopping you in the hallway to ask &mdash;
+            and them just knowing.
+          </div>
         </li>
         <li>
-          <div class="ask">&ldquo;A change request should reach you differently from a new studio.&rdquo;</div>
-          <div class="did">It does, three ways. The email to Anne is <strong>subject-line tagged <code>[CHANGE]</code></strong> so it sorts and searches, it arrives in a different colour with <strong>what they want changed at the very top</strong>, and in the admin panel change requests sit in <strong>their own section</strong> with a button that opens that studio's listing directly. Marked done when it's handled, not deleted.</div>
+          <div class="ask">&ldquo;Make it notify me differently when a change is requested.&rdquo;</div>
+          <div class="did">
+            Three ways, so it's genuinely impossible to miss:
+            <br><br>
+            The email subject starts with <code>[CHANGE]</code>. That looks boring on purpose &mdash;
+            boring is what sorts and searches properly in every mail app, and a pretty design doesn't.
+            The email itself arrives in a different colour, with <strong>what they want changed sitting
+            right at the top</strong> rather than buried down among the details. And in the admin
+            panel, change requests get <strong>their own section</strong> with a button that jumps
+            straight to that studio's listing, so there's no hunting for them.
+            <br><br>
+            When one's dealt with it gets marked done rather than deleted &mdash; so months from now
+            we can still answer &ldquo;hang on, what did she originally ask for?&rdquo;
+          </div>
         </li>
       </ol>
-      <div class="note" style="margin-top:18px;">
-        <strong>The one link that does all of it:</strong> the <em>&ldquo;wants a change, or new photos&rdquo;</em> card below. It opens the form already switched to <strong>Update my listing</strong>, and if you pick a studio from the dropdown, it fills their suite in too.
+      <div class="note" style="margin-top:20px;">
+        <strong>If you remember one thing off this whole page:</strong> the link in the
+        <em>&ldquo;something's changed&rdquo;</em> card below does nearly all of it. It opens the form
+        already flipped to <strong>Update my listing</strong> &mdash; and if you pick a studio from the
+        dropdown, it fills their suite number in for them too.
       </div>
     </div>
+  </div>
 
+  <!-- ============ coffee ============ -->
+  <div class="coffee">
+    <div class="cup">&#9749;</div>
+    <h2>Now &mdash; let's get coffee and actually play with it</h2>
+    <p>
+      This is the part I'd love most. Give me an hour, somewhere with decent coffee, you on your phone
+      and me on mine, and we'll just <em>use</em> the thing together.
+    </p>
+    <p>
+      I want you knowing this app as well as I do. Not because any of it's complicated &mdash; it
+      really isn't &mdash; but because when a studio catches you in the hallway with a question,
+      you should be able to answer it right there and then, instead of writing it on a Post-it for me.
+    </p>
+    <ul class="list">
+      <li>We'll put a pretend studio through the form start to finish, so you see exactly what they see on their phone</li>
+      <li>We'll send a change request and watch it land, so you know what I'm looking at on my end</li>
+      <li>I'll walk you round the app the way a customer uses it &mdash; the map, the search, the &ldquo;open now&rdquo; badge</li>
+      <li>We'll post a coupon on a test studio and watch it take itself back down</li>
+      <li>I'll get you into the admin panel and show you where everything lives, codes included</li>
+      <li>And you tell me every single thing you'd word differently. You know these women. I don't.</li>
+    </ul>
+    <p class="sign">
+      Pick a morning that suits you and I'll come to you. &#129293;
+    </p>
+  </div>
+
+  <!-- ============ live counts ============ -->
+  <div class="sec">
+    <h2>Where the building's at, right now</h2>
+    <p class="intro">
+      I'm not typing these numbers in &mdash; the page reads them live from the directory every single
+      time you open it. So if a studio sent photos over breakfast, that middle number has already gone
+      up by the time you look. It's the fastest way to see who still needs a nudge.
+    </p>
     <div class="snap">
       <div><div class="n" id="nStudios">&mdash;</div><div class="l">studios listed</div></div>
       <div><div class="n" id="nPhotos">&mdash;</div><div class="l">with a photo</div></div>
       <div><div class="n" id="nSocial">&mdash;</div><div class="l">with a social link</div></div>
     </div>
     <p style="font-size:12.5px;color:var(--ink-faint);margin-top:10px;" id="snapNote">Reading the live directory&hellip;</p>
+
+    <div class="note">
+      <strong>The gap between that first number and the other two is basically the whole job.</strong>
+      A studio without a photo is a card people scroll straight past, and a studio without hours can
+      never show &ldquo;open now&rdquo;. So rather than leave you to work out who that is, I got the
+      page to just tell you &mdash; look below.
+    </div>
+
+    <div id="todoWrap" style="display:none;">
+      <h3 style="margin-top:26px;">Who still needs a nudge</h3>
+      <p class="intro" style="margin-bottom:0;">
+        Straight from the live directory. Tap any name to copy a ready-written message for that
+        studio, with their suite already filled in.
+      </p>
+      <div class="todo" id="todoList"></div>
+    </div>
   </div>
 
   <!-- ============ links ============ -->
   <div class="sec">
-    <h2>The links</h2>
-    <p class="intro">Tap to open, or copy to send on.</p>
+    <h2>Every link, and what it's really for</h2>
+    <p class="intro">Tap <strong>Open</strong> to have a look, or <strong>Copy link</strong> to paste it straight into a text.</p>
 
     <div class="card">
+      <div class="who-for">For customers</div>
       <div class="t">The app</div>
-      <div class="d">What your customers see. Browse by name, service or the floor map, then call, text or book. Cards now show whether a studio is open <em>right now</em>.</div>
+      <div class="d">
+        This is the one that matters most &mdash; it's what a customer sees when they scan a QR code
+        or you send them the link. They browse by name, by service, or tap the floor map to find a
+        suite, then call, text or book right from the card without leaving the page.
+      </div>
+      <div class="d">
+        The newest bit: cards now show whether a studio is <strong>open right now</strong>. That only
+        works when we have their actual opening and closing times, not just which days they work
+        &mdash; which is exactly why one of the messages further down is about hours.
+      </div>
       <div class="u" data-url>https://studiosoulutions.com/salonplus/app/</div>
       <div class="rowbtns">
         <a class="mini filled" href="https://studiosoulutions.com/salonplus/app/">Open</a>
@@ -162,8 +337,13 @@
     </div>
 
     <div class="card">
+      <div class="who-for">For the lobby, and for signage</div>
       <div class="t">The directory page</div>
-      <div class="d">The map and the full roster. A good one for a lobby sign or a QR code.</div>
+      <div class="d">
+        The map and the full roster on one page. This is the one to sit behind a QR code on a lobby
+        sign, a window decal or a flyer &mdash; it explains the building to somebody who's never set
+        foot in it, then hands them along to the app.
+      </div>
       <div class="u" data-url>https://studiosoulutions.com/salonplus/</div>
       <div class="rowbtns">
         <a class="mini filled" href="https://studiosoulutions.com/salonplus/">Open</a>
@@ -172,8 +352,17 @@
     </div>
 
     <div class="card">
-      <div class="t">A new studio wants listing</div>
-      <div class="d">Two minutes: name, suite, hours, services, photos. Free. It comes to us and we build their card.</div>
+      <div class="who-for">For a studio that isn't on it yet</div>
+      <div class="t">&ldquo;Put me on the map&rdquo;</div>
+      <div class="d">
+        About two minutes of their time: name, suite, hours, services, photos. It's
+        <strong>free</strong> to them &mdash; worth saying right out loud, because people always
+        assume there's a catch coming.
+      </div>
+      <div class="d">
+        It comes through to me, I build their card properly, and they're on. They get a note back
+        confirming we've got it, so there's no awkward silence where they wonder if anything happened.
+      </div>
       <div class="u" data-url>https://studiosoulutions.com/salonplus/#join</div>
       <div class="rowbtns">
         <a class="mini filled" href="https://studiosoulutions.com/salonplus/#join">Open</a>
@@ -182,15 +371,32 @@
     </div>
 
     <div class="card">
-      <div class="t">An existing studio wants a change, or new photos</div>
-      <div class="d">Same form, but it opens already switched to <strong>Update my listing</strong>. They tell us their suite and what to change. Up to <strong>4 photos</strong> &mdash; the first becomes the big one on their card.</div>
+      <div class="who-for">The new one you asked for</div>
+      <div class="t">&ldquo;I'm already listed, and something's changed&rdquo;</div>
+      <div class="d">
+        Same form &mdash; but this link opens it <strong>already switched over</strong> to
+        <em>Update my listing</em>, so they never have to find the right button or work out what to do.
+      </div>
+      <div class="d">
+        They give us their suite number, tell us in their own words what to change, and can attach up
+        to <strong>4 photos</strong>. We insist on the suite and a description because without those
+        two we'd genuinely just be guessing at what they meant &mdash; and a guess on someone's
+        business is worse than asking.
+      </div>
+      <div class="d">
+        New hours, a new photo, a name change, a phone number, socials, a whole new description
+        &mdash; it all comes through this one link, and it reaches me flagged as a change, so it never
+        gets muddled in with the new sign-ups.
+      </div>
       <div class="u" data-url>https://studiosoulutions.com/salonplus/?change#join</div>
       <div class="rowbtns">
         <a class="mini filled" href="https://studiosoulutions.com/salonplus/?change#join">Open</a>
         <button class="mini" data-copy>Copy link</button>
       </div>
       <div class="note" id="pickWrap" style="display:none;">
-        <strong>Sending it to one studio in particular?</strong> Pick them and the link fills their suite in, so they don't have to.
+        <strong>Texting one studio in particular?</strong> Pick them here and the link comes out with
+        their suite number already filled in &mdash; one less thing for them to get wrong, and one
+        less thing bouncing back to you.
         <select id="pickStudio" style="width:100%;margin-top:10px;padding:11px 13px;border-radius:10px;border:1px solid var(--silver);background:var(--surface);font:inherit;font-size:15px;color:var(--ink);"></select>
         <span class="u" style="margin-top:10px;display:block;" data-url id="pickUrl"></span>
         <button class="mini" data-copy style="margin-top:8px;">Copy their link</button>
@@ -198,56 +404,160 @@
     </div>
 
     <div class="card">
-      <div class="t">A studio wants to post a coupon</div>
-      <div class="d">They post their own specials. They need their suite number and a short code &mdash; ask Anne for any studio's code. They pick from dropdowns, so nothing can go up looking wrong, and <strong>every offer takes itself down</strong> when it runs out.</div>
+      <div class="who-for">For a studio running a special</div>
+      <div class="t">Post a coupon</div>
+      <div class="d">
+        Studios post their own offers here &mdash; it doesn't come through you or me at all. They need
+        two things: their suite number, and a short code that belongs to them alone.
+      </div>
+      <div class="d">
+        <strong>And you can look those codes up yourself now.</strong> They're all listed in the admin
+        panel under <em>Offers</em>, with a search box and a button that copies the whole message ready
+        to text. You'll also see a studio's code on their own listing. No need to ask me &mdash; though
+        if you haven't got the panel login yet, say the word and I'll set you up.
+      </div>
+      <div class="d">
+        They build the offer from dropdowns instead of typing it freehand, so nothing can go up looking
+        wrong or off-brand. And <strong>every offer takes itself down</strong> the moment it expires
+        &mdash; nobody has to remember to remove anything, which is precisely why you'll never see a
+        stale coupon sitting on this app in March.
+      </div>
       <div class="u" data-url>https://studiosoulutions.com/salonplus/offer/</div>
       <div class="rowbtns">
         <a class="mini filled" href="https://studiosoulutions.com/salonplus/offer/">Open</a>
         <button class="mini" data-copy>Copy link</button>
       </div>
     </div>
+
+    <div class="card">
+      <div class="who-for">For you and me</div>
+      <div class="t">The admin panel</div>
+      <div class="d">
+        Where the listings actually live. Every studio, every submission that's come in, every live
+        offer, everyone's coupon code, and a record of who changed what.
+      </div>
+      <div class="d">
+        There's a full written guide to it &mdash; every tab, every button, what each one does and
+        when you'd want it. It's a bit of a read, but it's there so neither of us has to remember
+        any of this.
+      </div>
+      <div class="u" data-url>https://studiosoulutions.com/leads/</div>
+      <div class="rowbtns">
+        <a class="mini filled" href="/leads/guide/">Read the guide</a>
+        <a class="mini" href="/leads/">Open the panel</a>
+        <button class="mini" data-copy>Copy link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ how it fits ============ -->
+  <div class="sec">
+    <h2>What actually happens when someone fills the form in</h2>
+    <p class="intro">
+      Worth knowing, so you can tell a studio with real confidence what to expect &mdash; and so it's
+      clear which bits are yours and which are mine.
+    </p>
+    <div class="how">
+      <div class="step">
+        <h3>1. <span class="you">You</span> get the link to them</h3>
+        <p>A text, usually. This is your whole part, and it's the part nobody else can do &mdash; they'll fill it in because <em>you</em> asked them to, not because a poster told them to.</p>
+      </div>
+      <div class="step">
+        <h3>2. They fill it in, from their phone</h3>
+        <p>Standing in their own studio, usually, taking the photos right there. Two minutes.</p>
+      </div>
+      <div class="step">
+        <h3>3. They get a note back straight away</h3>
+        <p>Automatic, within seconds. Just enough to say we've got it and someone's on it, so they're not left wondering.</p>
+      </div>
+      <div class="step">
+        <h3>4. It lands with <span class="me">me</span></h3>
+        <p>New studio or change request &mdash; and the two look completely different in my inbox, so a change can't get buried behind a pile of new sign-ups.</p>
+      </div>
+      <div class="step">
+        <h3>5. <span class="me">I</span> build or update the card</h3>
+        <p>Tidy the wording, crop the photos, check the suite against the map, publish. Usually same day.</p>
+      </div>
+      <div class="step">
+        <h3>6. It's live &mdash; and this page updates itself</h3>
+        <p>Those counts at the top move on their own. Nothing to refresh, nobody to tell.</p>
+      </div>
+    </div>
+    <div class="note">
+      <strong>So your part is really only ever step one.</strong> Everything after that is mine.
+      And if something looks wrong on the app &mdash; a typo, a wrong suite, a photo that's gone
+      sideways &mdash; please don't wrestle with it. Just tell me and it'll be sorted, usually before
+      you've finished telling me.
+    </div>
   </div>
 
   <!-- ============ what to send ============ -->
   <div class="sec">
-    <h2>What to send a studio</h2>
-    <p class="intro">Ready to copy and text.</p>
+    <h2>What to text a studio</h2>
+    <p class="intro">
+      Written to sound like a person rather than a company. Tap <strong>Copy message</strong>, paste
+      it into a text, and change whatever you like &mdash; you know how these women actually talk far
+      better than I do, so please do make them sound like you.
+    </p>
 
     <div class="say">
       <div class="who">Asking for photos</div>
+      <div class="when">For anyone in that gap between the first and second number up top. Genuinely the highest-value message on this page.</div>
       <div class="msg" data-say>Hi! Your studio's on the Salon Plus app but there's no photo on your card yet, and it makes a big difference. You can add up to 4 here, takes a minute: studiosoulutions.com/salonplus/?change#join</div>
-      <button class="mini" data-copy style="margin-top:10px;">Copy message</button>
+      <button class="mini" data-copy style="margin-top:11px;">Copy message</button>
     </div>
 
     <div class="say">
       <div class="who">Asking for hours</div>
+      <div class="when">This is what switches on the &ldquo;Open now&rdquo; badge. Without their actual times we only know their days, and the badge stays dark.</div>
       <div class="msg" data-say>Quick one — the app can show customers when you're open, but we only have your days, not your times. Send your opening and closing times here and your card will show "Open now" when you are: studiosoulutions.com/salonplus/?change#join</div>
-      <button class="mini" data-copy style="margin-top:10px;">Copy message</button>
+      <button class="mini" data-copy style="margin-top:11px;">Copy message</button>
     </div>
 
     <div class="say">
       <div class="who">Asking for socials</div>
+      <div class="when">The easiest yes you'll get all day &mdash; nearly all of them have an Instagram they're proud of already.</div>
       <div class="msg" data-say>Your card on the app can link straight to your Instagram, Facebook and website — we just need the handles. Add them here: studiosoulutions.com/salonplus/?change#join</div>
-      <button class="mini" data-copy style="margin-top:10px;">Copy message</button>
+      <button class="mini" data-copy style="margin-top:11px;">Copy message</button>
     </div>
 
     <div class="say">
       <div class="who">A studio that isn't listed yet</div>
+      <div class="when">Lead with &ldquo;it's free&rdquo;. It's the bit people don't quite believe until somebody says it plainly.</div>
       <div class="msg" data-say>We're putting every studio in the building on one app and map, so customers can actually find you. It's free. Two minutes to get on it: studiosoulutions.com/salonplus/#join</div>
-      <button class="mini" data-copy style="margin-top:10px;">Copy message</button>
+      <button class="mini" data-copy style="margin-top:11px;">Copy message</button>
     </div>
 
     <div class="say">
       <div class="who">Handing over a coupon code</div>
+      <div class="when">Swap in their real code first &mdash; look it up under Offers in the admin panel, or just ask me.</div>
       <div class="msg" data-say>Here's your code for posting specials: YOUR-CODE. Go to studiosoulutions.com/salonplus/offer/, put in your suite number and that code, and you can post an offer in about a minute. It comes down on its own when it runs out.</div>
-      <button class="mini" data-copy style="margin-top:10px;">Copy message</button>
-      <div class="note" style="margin-top:12px;">Swap <strong>YOUR-CODE</strong> for the studio's actual code first &mdash; ask Anne.</div>
+      <button class="mini" data-copy style="margin-top:11px;">Copy message</button>
     </div>
+  </div>
+
+  <!-- ============ sign off ============ -->
+  <div class="sec">
+    <h2>Anything at all</h2>
+    <p style="color:var(--ink-soft);font-size:16.5px;">
+      If something on here is worded oddly, or a studio asks you something this page doesn't answer,
+      or you just want a bit changed because it doesn't feel quite right &mdash; tell me. None of it
+      is precious and all of it is quick to change. That's rather the point of building it this way.
+    </p>
+    <p style="color:var(--ink-soft);font-size:16.5px;">
+      And keep coming back to this page rather than hunting for an old text &mdash; whenever I build
+      something new or change how something works, it gets written up here. This is the one link
+      you need.
+    </p>
+    <p style="color:var(--ink-soft);font-size:16.5px;">
+      And I did mean the coffee. Pick a morning. &#9749;
+    </p>
+    <p style="font-size:17.5px;margin-top:20px;">&mdash; Anne</p>
   </div>
 
   <footer>
     Salon Plus Studios &middot; listed by <a href="/">Studio Soulutions</a><br>
-    Anything you want changed, just say.
+    This page is just for you &mdash; it isn't linked from anywhere public.
   </footer>
 </div>
 
@@ -255,10 +565,10 @@
 
 <script>
 /* =====================================================================
-   Laura's page. The numbers are read from the live directory rather than
-   typed in, so this can't quietly go stale the way a printed sheet does.
-   If the directory can't be reached, the counts simply stay blank and
-   the page still works as a list of links.
+   Laura's page. Everything here is read from the live directory rather
+   than typed in, so it can't quietly go stale the way a printed sheet
+   does. If the directory can't be reached, the counts and the nudge list
+   simply hide themselves and the page still works as a list of links.
    ===================================================================== */
 const $ = id => document.getElementById(id);
 
@@ -267,26 +577,84 @@ function toast(msg) {
   clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('on'), 1800);
 }
 
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); toast('Copied'); return true; }
+  catch { return false; }
+}
+
 /* Copy buttons: the URL or message sits in the nearest marked element. */
 document.addEventListener('click', async e => {
+  /* A studio chip in the nudge list carries its own ready-made message. */
+  const chip = e.target.closest('[data-msg]');
+  if (chip) {
+    if (!(await copyText(chip.dataset.msg))) toast('Press and hold to copy');
+    return;
+  }
+
   const btn = e.target.closest('[data-copy]');
   if (!btn) return;
   const scope = btn.closest('.note') || btn.closest('.card') || btn.closest('.say');
   const src = scope && (scope.querySelector('[data-url]') || scope.querySelector('[data-say]'));
   if (!src) return;
   const text = src.textContent.trim();
-  try {
-    await navigator.clipboard.writeText(text);
-    toast('Copied');
-  } catch {
-    /* Older phones and any page not on https: select it so a long-press
-       copy still works rather than leaving them stuck. */
-    const r = document.createRange();
-    r.selectNodeContents(src);
-    const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
-    toast('Press and hold to copy');
-  }
+  if (await copyText(text)) return;
+  /* Older phones and any page not on https: select it so a long-press
+     copy still works rather than leaving them stuck. */
+  const r = document.createRange();
+  r.selectNodeContents(src);
+  const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+  toast('Press and hold to copy');
 });
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g,
+  c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+
+/* The nudge list. Counting is one thing, but "who exactly" is the bit that
+   turns a number into a text message, so the page works it out rather than
+   leaving Laura to cross-reference the app by hand. */
+const NUDGES = [
+  {
+    key: 'photo',
+    missing: r => !r.photo,
+    title: 'No photo yet',
+    why: 'Their card shows initials instead of a picture, and people scroll past it.',
+    msg: r => `Hi! Your studio's on the Salon Plus app but there's no photo on your card yet, and it makes a big difference. You can add up to 4 here, takes a minute: studiosoulutions.com/salonplus/?suite=${encodeURIComponent(r.suite)}&change#join`,
+  },
+  {
+    key: 'hours',
+    missing: r => !r.hours,
+    title: 'No opening times',
+    why: 'Without times their card can never show the "Open now" badge.',
+    msg: r => `Quick one — the app can show customers when you're open, but we don't have your times yet. Send your opening and closing times here and your card will show "Open now" when you are: studiosoulutions.com/salonplus/?suite=${encodeURIComponent(r.suite)}&change#join`,
+  },
+  {
+    key: 'social',
+    missing: r => !(r.instagram || r.facebook || r.tiktok || r.site),
+    title: 'No socials or website',
+    why: 'Easiest ask on the list — most of them already have an Instagram.',
+    msg: r => `Your card on the Salon Plus app can link straight to your Instagram, Facebook and website — we just need the handles. Add them here: studiosoulutions.com/salonplus/?suite=${encodeURIComponent(r.suite)}&change#join`,
+  },
+];
+
+function renderNudges(rows) {
+  const groups = NUDGES.map(n => ({ ...n, rows: rows.filter(n.missing) })).filter(g => g.rows.length);
+  if (!groups.length) {
+    $('todoList').innerHTML =
+      `<div class="grp"><h3>Nothing outstanding &mdash; every studio has a photo, hours and a link.</h3>
+       <div class="why">Which is genuinely rare. Enjoy it.</div></div>`;
+    $('todoWrap').style.display = 'block';
+    return;
+  }
+  $('todoList').innerHTML = groups.map(g => `
+    <div class="grp">
+      <h3>${esc(g.title)} &mdash; ${g.rows.length}</h3>
+      <div class="why">${esc(g.why)}</div>
+      <div class="chips">${g.rows.map(r =>
+        `<button class="chip" data-msg="${esc(g.msg(r))}">${esc(r.suite)} &middot; ${esc(r.name)}</button>`
+      ).join('')}</div>
+    </div>`).join('');
+  $('todoWrap').style.display = 'block';
+}
 
 (async function liveCounts() {
   try {
@@ -307,11 +675,13 @@ document.addEventListener('click', async e => {
     $('nSocial').textContent  = withSocial;
     $('snapNote').textContent = 'Live, straight from the directory.';
 
+    renderNudges(rows);
+
     /* Per-studio update links. Built from the real roster rather than typed
        by hand, so nobody can send one studio another studio's suite. */
     const pick = $('pickStudio');
     pick.innerHTML = rows.map(r =>
-      `<option value="${r.suite}">Suite ${r.suite} &middot; ${r.name}</option>`).join('');
+      `<option value="${esc(r.suite)}">Suite ${esc(r.suite)} &middot; ${esc(r.name)}</option>`).join('');
     const setPickUrl = () =>
       $('pickUrl').textContent =
         `https://studiosoulutions.com/salonplus/?suite=${encodeURIComponent(pick.value)}&change#join`;
