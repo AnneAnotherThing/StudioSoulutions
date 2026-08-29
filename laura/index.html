@@ -39,6 +39,26 @@
   .sec > p.intro { color:var(--ink-soft); margin-bottom:18px; font-size:15.5px; }
   p + p { margin-top:11px; }
 
+  /* Quick links. Sits under the intro so the things Laura opens most are
+     reachable without reading a word, while the cards further down stay
+     the place that explains what each one is actually for. */
+  /* Two up on a phone, three up from tablet width. Fixed counts rather
+     than auto-fit, because auto-fit lands on an ugly 4 + 2 on a wide
+     screen and these read best as even rows. */
+  .quick { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:26px; }
+  @media (min-width:560px) { .quick { grid-template-columns:repeat(3,1fr); } }
+  .quick a {
+    display:block; background:var(--surface); border:1px solid var(--line); border-radius:14px;
+    padding:14px 16px; text-decoration:none; color:inherit;
+    box-shadow:0 1px 2px rgba(51,49,45,.04);
+  }
+  .quick a:active { background:var(--bg-2); }
+  .quick .k { font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--bronze); font-weight:600; }
+  .quick .n { font-family:'Jost',sans-serif; font-size:17px; font-weight:500; margin-top:5px; }
+  .quick .s { font-size:12.5px; color:var(--ink-soft); margin-top:3px; line-height:1.45; }
+  .quick a.mine { background:#EFF2EA; border-color:#D8E0CE; }
+  .quick a.mine .k { color:var(--sage-deep); }
+
   /* Standing promise that this page is the changelog, not a one-off
      handout. Sage rather than bronze so it reads as a note from me
      rather than as another feature announcement. */
@@ -83,16 +103,6 @@
   .snap div { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 12px; text-align:center; }
   .snap .n { font-family:'Jost',sans-serif; font-size:30px; font-weight:400; color:var(--bronze-deep); line-height:1; }
   .snap .l { font-size:12px; color:var(--ink-soft); margin-top:6px; }
-
-  /* the to-do list, built from live data */
-  .todo { background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:6px 20px; margin-top:16px; }
-  .todo .grp { padding:16px 0; border-bottom:1px solid var(--line); }
-  .todo .grp:last-child { border-bottom:none; }
-  .todo .grp h3 { color:var(--bronze-deep); font-size:16px; }
-  .todo .grp .why { font-size:13.5px; color:var(--ink-soft); margin-bottom:9px; }
-  .chips { display:flex; gap:7px; flex-wrap:wrap; }
-  .chip { font-size:13px; background:var(--bg-2); border-radius:999px; padding:5px 12px; color:var(--ink); }
-  .chip.done { background:#EDF1E8; color:var(--sage-deep); }
 
   /* link cards */
   .card {
@@ -167,6 +177,39 @@
       can't quietly go out of date the way a printed sheet does. And you genuinely can't break
       anything from here, so press everything.
     </p>
+
+    <div class="quick">
+      <a href="https://studiosoulutions.com/salonplus/app/">
+        <div class="k">For customers</div>
+        <div class="n">The app</div>
+        <div class="s">What they see. Map, search, call, book.</div>
+      </a>
+      <a href="https://studiosoulutions.com/salonplus/">
+        <div class="k">For the lobby</div>
+        <div class="n">The directory</div>
+        <div class="s">Map and full roster. Good behind a QR code.</div>
+      </a>
+      <a href="https://studiosoulutions.com/salonplus/?change#join">
+        <div class="k">Already listed</div>
+        <div class="n">Send a change</div>
+        <div class="s">New photos, hours, socials. Opens ready to go.</div>
+      </a>
+      <a href="https://studiosoulutions.com/salonplus/#join">
+        <div class="k">Not listed yet</div>
+        <div class="n">Join the app</div>
+        <div class="s">Two minutes, and free to them.</div>
+      </a>
+      <a class="mine" href="/leads/">
+        <div class="k">You and me</div>
+        <div class="n">Admin panel</div>
+        <div class="s">Where the listings actually live.</div>
+      </a>
+      <a class="mine" href="/leads/guide/">
+        <div class="k">You and me</div>
+        <div class="n">The guide</div>
+        <div class="s">Every button, and what it does.</div>
+      </a>
+    </div>
 
     <div class="standing">
       <div class="eyebrow">Keep this one</div>
@@ -247,8 +290,8 @@
       <div class="note" style="margin-top:20px;">
         <strong>If you remember one thing off this whole page:</strong> the link in the
         <em>&ldquo;something's changed&rdquo;</em> card below does nearly all of it. It opens the form
-        already flipped to <strong>Update my listing</strong>, and if you pick a studio from the
-        dropdown, it fills their suite number in for them too.
+        already flipped to <strong>Update my listing</strong>, so the studio doesn't have to find
+        anything.
       </div>
     </div>
   </div>
@@ -277,7 +320,7 @@
       <li>We'll put a pretend studio through the form start to finish, so you see exactly what they see on their phone</li>
       <li>We'll send a change request and watch it land, so you know what I'm looking at on my end</li>
       <li>I'll walk you round the app the way a customer uses it: the map, the search, the &ldquo;open now&rdquo; badge</li>
-      <li>We'll post a coupon on a test studio and watch it take itself back down</li>
+      <li>We'll try the coupon thing for the very first time, and you tell me which way round it should work</li>
       <li>I'll get you into the admin panel and show you where everything lives, codes included</li>
       <li>And you tell me every single thing you'd word differently. You know these people. I don't.</li>
     </ul>
@@ -292,7 +335,7 @@
     <p class="intro">
       I'm not typing these numbers in. The page reads them live from the directory every single
       time you open it. So if a studio sent photos over breakfast, that middle number has already gone
-      up by the time you look. It's the fastest way to see who still needs a nudge.
+      up by the time you look.
     </p>
     <div class="snap">
       <div><div class="n" id="nStudios">&nbsp;</div><div class="l">studios listed</div></div>
@@ -304,17 +347,7 @@
     <div class="note">
       <strong>The gap between that first number and the other two is basically the whole job.</strong>
       A studio without a photo is a card people scroll straight past, and a studio without hours can
-      never show &ldquo;open now&rdquo;. So rather than leave you to work out who that is, I got the
-      page to just tell you. Look below.
-    </div>
-
-    <div id="todoWrap" style="display:none;">
-      <h3 style="margin-top:26px;">Who still needs a nudge</h3>
-      <p class="intro" style="margin-bottom:0;">
-        Straight from the live directory. Tap any name to copy a ready-written message for that
-        studio, with their suite already filled in.
-      </p>
-      <div class="todo" id="todoList"></div>
+      never show &ldquo;open now&rdquo;. The messages further down are for exactly that.
     </div>
   </div>
 
@@ -400,34 +433,29 @@
         <a class="mini filled" href="https://studiosoulutions.com/salonplus/?change#join">Open</a>
         <button class="mini" data-copy>Copy link</button>
       </div>
-      <div class="note" id="pickWrap" style="display:none;">
-        <strong>Texting one studio in particular?</strong> Pick them here and the link comes out with
-        their suite number already filled in. One less thing for them to get wrong, and one
-        less thing bouncing back to you.
-        <select id="pickStudio" style="width:100%;margin-top:10px;padding:11px 13px;border-radius:10px;border:1px solid var(--silver);background:var(--surface);font:inherit;font-size:15px;color:var(--ink);"></select>
-        <span class="u" style="margin-top:10px;display:block;" data-url id="pickUrl"></span>
-        <button class="mini" data-copy style="margin-top:8px;">Copy their link</button>
-      </div>
     </div>
 
     <div class="card">
-      <div class="who-for">For a studio running a special</div>
+      <div class="who-for">Built, but untested</div>
       <div class="t">Post a coupon</div>
       <div class="d">
-        Studios post their own offers here, and it doesn't come through you or me at all. They need
-        two things: their suite number, and a short code that belongs to them alone.
+        <strong>Being straight with you: I haven't tested this one at all.</strong> It's built and
+        as far as I know it works, but I've never put a real offer through it start to finish, and
+        I'd rather tell you that than have you find out in front of a studio. Let's be the first two
+        people to try it, together, before anyone else touches it.
       </div>
       <div class="d">
-        <strong>And you can look those codes up yourself now.</strong> They're all listed in the admin
-        panel under <em>Offers</em>, with a search box and a button that copies the whole message ready
-        to text. You'll also see a studio's code on their own listing. No need to ask me, though
-        if you haven't got the panel login yet, say the word and I'll set you up.
+        How it's meant to work: a studio posts their own specials here, and it doesn't come through
+        you or me at all. They need two things, their suite number and a short code that belongs to
+        them alone. They build the offer from dropdowns rather than typing it freehand, so nothing
+        can go up looking wrong, and every offer is supposed to take itself down when it expires.
       </div>
       <div class="d">
-        They build the offer from dropdowns instead of typing it freehand, so nothing can go up looking
-        wrong or off-brand. And <strong>every offer takes itself down</strong> the moment it expires
-        so nobody has to remember to remove anything, which is precisely why you'll never see a
-        stale coupon sitting on this app in March.
+        There's also a question in it that's more yours than mine: <strong>do the studios post their
+        own offers, or do we put them up for them?</strong> Them doing it is less work for everyone,
+        but each one needs a code and somebody has to hand those out. Us doing it stays tidy, but
+        every special comes through us. I genuinely don't know which is right here, and you do,
+        because you know who'd use it and who'd never open the link.
       </div>
       <div class="u" data-url>https://studiosoulutions.com/salonplus/offer/</div>
       <div class="rowbtns">
@@ -535,12 +563,6 @@
       <button class="mini" data-copy style="margin-top:11px;">Copy message</button>
     </div>
 
-    <div class="say">
-      <div class="who">Handing over a coupon code</div>
-      <div class="when">Swap in their real code first. Look it up under Offers in the admin panel, or just ask me.</div>
-      <div class="msg" data-say>Here's your code for posting specials: YOUR-CODE. Go to studiosoulutions.com/salonplus/offer/, put in your suite number and that code, and you can post an offer in about a minute. It comes down on its own when it runs out.</div>
-      <button class="mini" data-copy style="margin-top:11px;">Copy message</button>
-    </div>
   </div>
 
   <!-- ============ sign off ============ -->
@@ -574,8 +596,8 @@
 /* =====================================================================
    Laura's page. Everything here is read from the live directory rather
    than typed in, so it can't quietly go stale the way a printed sheet
-   does. If the directory can't be reached, the counts and the nudge list
-   simply hide themselves and the page still works as a list of links.
+   does. If the directory can't be reached, the counts simply hide
+   themselves and the page still works as a list of links.
    ===================================================================== */
 const $ = id => document.getElementById(id);
 
@@ -591,13 +613,6 @@ async function copyText(text) {
 
 /* Copy buttons: the URL or message sits in the nearest marked element. */
 document.addEventListener('click', async e => {
-  /* A studio chip in the nudge list carries its own ready-made message. */
-  const chip = e.target.closest('[data-msg]');
-  if (chip) {
-    if (!(await copyText(chip.dataset.msg))) toast('Press and hold to copy');
-    return;
-  }
-
   const btn = e.target.closest('[data-copy]');
   if (!btn) return;
   const scope = btn.closest('.note') || btn.closest('.card') || btn.closest('.say');
@@ -612,56 +627,6 @@ document.addEventListener('click', async e => {
   const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
   toast('Press and hold to copy');
 });
-
-const esc = s => String(s ?? '').replace(/[&<>"']/g,
-  c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
-
-/* The nudge list. Counting is one thing, but "who exactly" is the bit that
-   turns a number into a text message, so the page works it out rather than
-   leaving Laura to cross-reference the app by hand. */
-const NUDGES = [
-  {
-    key: 'photo',
-    missing: r => !r.photo,
-    title: 'No photo yet',
-    why: 'Their card shows initials instead of a picture, and people scroll past it.',
-    msg: r => `Hi! Your studio's on the Salon Plus app but there's no photo on your card yet, and it makes a big difference. You can add up to 4 here, takes a minute: studiosoulutions.com/salonplus/?suite=${encodeURIComponent(r.suite)}&change#join`,
-  },
-  {
-    key: 'hours',
-    missing: r => !r.hours,
-    title: 'No opening times',
-    why: 'Without times their card can never show the "Open now" badge.',
-    msg: r => `Quick one! The app can show customers when you're open, but we don't have your times yet. Send your opening and closing times here and your card will show "Open now" when you are: studiosoulutions.com/salonplus/?suite=${encodeURIComponent(r.suite)}&change#join`,
-  },
-  {
-    key: 'social',
-    missing: r => !(r.instagram || r.facebook || r.tiktok || r.site),
-    title: 'No socials or website',
-    why: 'Easiest ask on the list, most of them already have an Instagram.',
-    msg: r => `Your card on the Salon Plus app can link straight to your Instagram, Facebook and website. We just need the handles. Add them here: studiosoulutions.com/salonplus/?suite=${encodeURIComponent(r.suite)}&change#join`,
-  },
-];
-
-function renderNudges(rows) {
-  const groups = NUDGES.map(n => ({ ...n, rows: rows.filter(n.missing) })).filter(g => g.rows.length);
-  if (!groups.length) {
-    $('todoList').innerHTML =
-      `<div class="grp"><h3>Nothing outstanding. Every studio has a photo, hours and a link.</h3>
-       <div class="why">Which is genuinely rare. Enjoy it.</div></div>`;
-    $('todoWrap').style.display = 'block';
-    return;
-  }
-  $('todoList').innerHTML = groups.map(g => `
-    <div class="grp">
-      <h3>${esc(g.title)} (${g.rows.length})</h3>
-      <div class="why">${esc(g.why)}</div>
-      <div class="chips">${g.rows.map(r =>
-        `<button class="chip" data-msg="${esc(g.msg(r))}">${esc(r.suite)} &middot; ${esc(r.name)}</button>`
-      ).join('')}</div>
-    </div>`).join('');
-  $('todoWrap').style.display = 'block';
-}
 
 (async function liveCounts() {
   try {
@@ -681,20 +646,6 @@ function renderNudges(rows) {
     $('nPhotos').textContent  = withPhoto;
     $('nSocial').textContent  = withSocial;
     $('snapNote').textContent = 'Live, straight from the directory.';
-
-    renderNudges(rows);
-
-    /* Per-studio update links. Built from the real roster rather than typed
-       by hand, so nobody can send one studio another studio's suite. */
-    const pick = $('pickStudio');
-    pick.innerHTML = rows.map(r =>
-      `<option value="${esc(r.suite)}">Suite ${esc(r.suite)} &middot; ${esc(r.name)}</option>`).join('');
-    const setPickUrl = () =>
-      $('pickUrl').textContent =
-        `https://studiosoulutions.com/salonplus/?suite=${encodeURIComponent(pick.value)}&change#join`;
-    pick.addEventListener('change', setPickUrl);
-    setPickUrl();
-    $('pickWrap').style.display = 'block';
 
   } catch {
     $('snapNote').textContent = 'Counts are unavailable right now. Every link below still works.';
