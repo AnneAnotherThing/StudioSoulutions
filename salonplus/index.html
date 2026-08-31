@@ -272,7 +272,7 @@
     <div class="sec-head">
       <p class="eyebrow">For Salon Plus tenants</p>
       <h2>Get your studio on the map</h2>
-      <p>We're building a proper home for every business in this building: your own card, your services, your booking link, findable by anyone who walks in or searches. Listing is <strong>free</strong> while we build the neighborhood. Two minutes, and Laura takes it from there.</p>
+      <p>We're building a proper home for every business in this building: your own card, your services, your booking link, findable by anyone who walks in or searches. Listing is <strong>free</strong> while we build the neighborhood. Two minutes, and we take it from there.</p>
     </div>
 
     <div class="form-card">
@@ -392,12 +392,12 @@
 
         <button type="submit" class="btn btn-primary" id="submitBtn">Put me on the map</button>
         <p class="form-msg" id="formMsg"></p>
-        <p style="margin-top:10px; font-size:12.5px; color:var(--ink-faint);"><span class="req">*</span> required &middot; phone and email count as one: leave at least one so Laura can reach you.</p>
+        <p style="margin-top:10px; font-size:12.5px; color:var(--ink-faint);"><span class="req">*</span> required &middot; phone and email count as one: leave at least one so we can reach you.</p>
       </form>
 
       <div class="thanks" id="thanksBox">
-        <h3>You're on the list.</h3>
-        <p>Thank you! Laura will follow up soon to get your studio card just right. In the meantime, tell your suite neighbors, the map fills in fastest when everybody's on it.</p>
+        <h3>Got it, thank you.</h3>
+        <p>You're not on the map just yet &mdash; someone builds your card from what you sent, and it appears once that's done. The map fills in studio by studio, so tell your suite neighbours: it works best when everyone's on it.</p>
       </div>
     </div>
   </div>
@@ -637,7 +637,7 @@ form.addEventListener('submit', async e => {
     return;
   }
   if (!data.phone && !data.email) {
-    msg.textContent = 'Leave a phone number or an email so Laura can reach you.';
+    msg.textContent = 'Leave a phone number or an email so we can reach you.';
     msg.classList.add('err');
     return;
   }
@@ -654,7 +654,7 @@ form.addEventListener('submit', async e => {
     form.style.display = 'none';
     document.getElementById('thanksBox').style.display = 'block';
   } catch {
-    msg.textContent = "Hmm, that didn't go through. Try once more, or just hand your paper form to Laura.";
+    msg.textContent = "Hmm, that didn't go through. Try once more, or just hand in your paper form.";
     msg.classList.add('err');
     btn.disabled = false; btn.textContent = 'Put me on the map';
   }

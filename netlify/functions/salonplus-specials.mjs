@@ -2,7 +2,7 @@
    Studio Soulutions, Salon Plus offers (Netlify Function)
    Studio Soulutions platform build
    ---------------------------------------------------------------------
-   The whole point of this file: a studio can post a coupon without
+   The whole point of this file: a studio can post an offer without
    anyone approving it, and without being able to post anything ugly.
 
    It manages that by never accepting a written offer. The browser sends
@@ -204,7 +204,7 @@ async function postOffer(db, p) {
   /* Heads-up mail, deliberately after the offer is already live and
      deliberately not awaited into the response path: this is a courtesy,
      not an approval step. A Resend hiccup must never cost a studio its
-     coupon, so a failure only ever reaches the logs. */
+     offer, so a failure only ever reaches the logs. */
   emailOffer({ studio: s.studio, suite: s.suite, title, detail, expires: prettyDate(row.expires_at), id: row.id })
     .catch(e => console.error('specials: notify failed', e.message));
 
@@ -288,7 +288,7 @@ async function authStudio(db, p) {
     return { error: json(401, { error: "That suite and code don't match. Check the card Anne gave you." }) };
   }
   if (row.can_post === false) {
-    return { error: json(403, { error: 'Posting is paused for this studio. Give Anne a shout.' }) };
+    return { error: json(403, { error: 'Posting is paused for this studio. Get in touch.' }) };
   }
   return { row };
 }

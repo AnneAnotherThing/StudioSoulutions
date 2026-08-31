@@ -265,17 +265,17 @@ const vacancies = [];
 const didYouKnow = [
   { theme: 'sage', eyebrow: 'Worth the walk', text: 'Deuces Nail Studio is sage-walled, softly lit, and does nails with intention. Suite 301, watch it light up on the map.', link: 'See Deuces', linkId: '301' },
   { theme: 'clay', eyebrow: 'While you\'re here', text: 'Getting nails done? A fresh cut is thirty steps away. A facial, maybe forty. That\'s the whole point of this roof.', link: 'Meet the neighbors', view: 'directory' },
-  { theme: 'sand', eyebrow: 'The sweet stuff', text: 'Studios post coupons, welcome offers, and specials right here in the app as they move in.', link: 'Check the specials', view: 'specials' },
+  { theme: 'sand', eyebrow: 'The sweet stuff', text: 'Studios post offers, welcome offers, and specials right here in the app as they move in.', link: 'Check the specials', view: 'specials' },
   { theme: 'sage', eyebrow: 'Your studio here', text: 'Work in this building? Your listing is free while the neighborhood builds. Two minutes, and you\'re on the map.', link: 'Claim your card', href: '../#join' },
 ];
 
-/* ----- coupons & specials -------------------------------------------------
+/* ----- offers & specials -------------------------------------------------
    Studios post these themselves at /salonplus/offer/, assembled from
    dropdowns and composed server-side. Shape:
    { id, suite, title, detail, expires } — rendered newest-first.
 
    Nobody prunes this list. The endpoint only returns offers that are
-   still live and haven't run out, so an expired coupon leaves the app
+   still live and haven't run out, so an expired offer leaves the app
    without anyone touching it. */
 let SPECIALS = [];
 
@@ -581,8 +581,13 @@ function openFeatured() {
   openTenant(pickFeaturedTenant().id);
 }
 
+/* Both the directory view and the map view show the same rows, so the
+   markup is built once and painted into whichever lists exist. */
 function renderDirectory() {
-  const list = document.getElementById('directoryList');
+  const lists = ['directoryList', 'mapDirectoryList']
+    .map(id => document.getElementById(id)).filter(Boolean);
+  if (!lists.length) return;
+  const list = { set innerHTML(html) { lists.forEach(el => el.innerHTML = html); } };
   const filtered = tenants.filter(t => {
     if (activeFilter !== 'all' && t.category !== activeFilter) return false;
     if (searchTerm) {
@@ -727,6 +732,7 @@ function switchViewRaw(view) {
   if (view === 'specials') renderSpecials();
   if (view === 'map') {
     renderMap();
+    renderDirectory();   // paints the list under the map too
     // Only auto-expand to fullscreen when a route is active; browsing stays
     // inline so the map-view search box is discoverable.
     if (routeTarget && typeof window.openMapModal === 'function') {

@@ -7,6 +7,9 @@
    friendly), and returns them as JSON the admin can drop straight into
    the editor.
 
+   Gated by LEADS_CODE, the same passcode as the admin panel. Every call
+   costs money, so this must never be open to the internet.
+
    Required env var:  ANTHROPIC_API_KEY   (set in the Netlify dashboard,
                                           Site settings > Environment variables)
 
@@ -29,6 +32,16 @@ export default async function handler(request) {
   let payload;
   try { payload = await request.json(); }
   catch { return json(400, { error: 'Invalid JSON body' }); }
+
+  /* This endpoint spends real money on every call, and it had nothing on
+     the door. Anyone who found the URL could run it in a loop on Anne's
+     account. Its only caller is the admin panel, which already holds the
+     passcode, so the gate costs nothing and closes the hole. */
+  const expected = process.env.LEADS_CODE;
+  if (!expected) return json(500, { error: 'LEADS_CODE is not set on this deployment.' });
+  if (typeof payload.code !== 'string' || payload.code !== expected) {
+    return json(401, { error: 'Wrong passcode.' });
+  }
 
   const {
     name        = '',

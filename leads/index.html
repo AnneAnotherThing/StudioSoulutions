@@ -219,17 +219,17 @@
       <div id="tierList"></div>
       <button class="btn" id="saveTiersBtn">Save tiers</button>
 
-      <h2 style="margin-top:40px;">Coupon codes</h2>
+      <h2 style="margin-top:40px;">Offer codes</h2>
       <p class="sub" style="margin-bottom:14px;">What they are, when they matter, and when you can ignore them entirely.</p>
       <div class="tier-card">
         <dl class="rows" style="grid-template-columns:170px 1fr;gap:12px 16px;">
           <dt><strong>What a code is</strong></dt>
-          <dd>A short password for one studio, like <code>DEUCES-4417</code>. It lets that studio post its own coupon at
+          <dd>A short password for one studio, like <code>DEUCES-4417</code>. It lets that studio post its own offer at
             <a href="/salonplus/offer/" style="color:var(--sage-deep);">studiosoulutions.com/salonplus/offer/</a> and nothing else.
             It cannot see other studios, edit their listing, or reach this panel.</dd>
 
           <dt><strong>Where it comes from</strong></dt>
-          <dd>Made automatically the moment you publish a studio on a tier that allows coupons. You never write one by hand.
+          <dd>Made automatically the moment you publish a studio on a tier that allows offers. You never write one by hand.
             It appears in a popup right after you hit Publish.</dd>
 
           <dt><strong>When you care</strong></dt>
@@ -237,15 +237,15 @@
             <strong>Again</strong>, if they lose it and ask.</dd>
 
           <dt><strong>When you can ignore it</strong></dt>
-          <dd>Every other time. A studio that never posts a coupon simply never uses its code, and nothing breaks.
+          <dd>Every other time. A studio that never posts an offer simply never uses its code, and nothing breaks.
             Codes do not expire and there is nothing to renew.</dd>
 
           <dt><strong>If one leaks</strong></dt>
           <dd>The worst case is a fake offer on one studio's card. Hide it on the Offers tab, then move that studio to a
-            tier without coupons and back again &mdash; that mints a fresh code and the old one stops working.</dd>
+            tier without offers and back again &mdash; that mints a fresh code and the old one stops working.</dd>
 
           <dt><strong>Dropping a tier</strong></dt>
-          <dd>Move a studio to a tier that has coupons switched off and its code stops working straight away.
+          <dd>Move a studio to a tier that has offers switched off and its code stops working straight away.
             Move it back and it works again.</dd>
         </dl>
         <div style="margin-top:18px;padding:14px 16px;background:var(--bg-2);border-radius:12px;font-size:14px;">
@@ -503,13 +503,17 @@ function openDrawer(k) {
   const s = patched(row);
   drawerFor = k;
   const tierOf = state.tiers.find(t => t.tier === Number(s.tier)) || {};
+  /* Whatever they typed on the form. Kept out of the bio field but handed
+     to the writer, so the bio is built from their facts rather than ours. */
+  const lead = state.leads.find(l => l.id === row.source_lead);
+  const sourceNotes = lead ? (lead.notes || '') : '';
   const shots = [s.photo, ...(s.photos || [])].filter(Boolean);
 
   $('drawer').innerHTML = `
     <button class="btn btn-ghost btn-sm" id="drawerClose" style="float:right;">Close</button>
     <div class="eyebrow">${esc(s.building || '')} · Suite ${esc(s.suite || '—')}</div>
     <h2>${esc(s.name || 'New studio')}</h2>
-    <p class="hint">Tier ${esc(String(s.tier))} · ${esc(tierOf.label || '')} — ${tierOf.photos_max ? `up to ${tierOf.photos_max} photos` : 'no photos'}, ${tierOf.allow_coupons ? 'can post coupons' : 'no coupons'}.</p>
+    <p class="hint">Tier ${esc(String(s.tier))} · ${esc(tierOf.label || '')} — ${tierOf.photos_max ? `up to ${tierOf.photos_max} photos` : 'no photos'}, ${tierOf.allow_coupons ? 'can post offers' : 'no offers'}.</p>
 
     <div class="field"><label>Shopping center</label>
       <select data-d="building">${state.buildings.map(b => `<option value="${esc(b.slug)}"${b.slug === s.building ? ' selected' : ''}>${esc(b.name)}</option>`).join('')}</select></div>
@@ -519,9 +523,19 @@ function openDrawer(k) {
       <div class="field"><label>Hours</label><input data-d="hours" value="${esc(s.hours)}" placeholder="Tue–Sat 10–6"></div>
     </div>
 
-    <div class="field"><label>Bio</label><textarea data-d="bio">${esc(s.bio)}</textarea></div>
+    <div class="field">
+      <label style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        <span>Bio</span>
+        <button class="btn btn-ghost btn-sm" type="button" id="bioGen" style="font-weight:600;">Write one from their details</button>
+      </label>
+      <textarea data-d="bio" id="bioText">${esc(s.bio)}</textarea>
+      <div class="hint" id="bioNote">Written in the house voice from the facts on this studio’s record.${sourceNotes ? ' Their own words are below.' : ''}</div>
+      ${sourceNotes ? `<div class="note" style="margin-top:10px;">
+        <div class="eyebrow" style="margin-bottom:5px;">What they actually wrote</div>${esc(sourceNotes)}</div>` : ''}
+      <div id="bioPicks" style="margin-top:12px;"></div>
+    </div>
     <div class="field"><label>Tags</label><input data-d="tags" value="${esc((s.tags || []).join(', '))}" placeholder="Gel, Pedicure, Nail Art">
-      <div class="hint">Comma separated. These are also the services they can build a coupon from.</div></div>
+      <div class="hint">Comma separated. These are also the services they can build an offer from.</div></div>
 
     <div class="two">
       <div class="field"><label>Phone</label><input data-d="phone" value="${esc(fmtPhone(s.phone))}"></div>
@@ -549,15 +563,15 @@ function openDrawer(k) {
          different problems with different fixes. */
       const c = codeFor(s);
       if (!tierOf.allow_coupons) {
-        return `<div class="field"><label>Coupon code</label>
-          <div class="hint">Tier ${esc(String(s.tier))} can't post coupons, so this studio has no working code.
-          ${c ? `Its old code <code>${esc(c.code)}</code> is switched off and comes back if you move them to a coupon tier.` : 'Move them to a coupon tier and one is made automatically.'}</div></div>`;
+        return `<div class="field"><label>Offer code</label>
+          <div class="hint">Tier ${esc(String(s.tier))} can't post offers, so this studio has no working code.
+          ${c ? `Its old code <code>${esc(c.code)}</code> is switched off and comes back if you move them to an offer tier.` : 'Move them to an offer tier and one is made automatically.'}</div></div>`;
       }
       if (!c) {
-        return `<div class="field"><label>Coupon code</label>
-          <div class="hint">Not made yet &mdash; it appears the first time this studio is saved on a coupon tier.</div></div>`;
+        return `<div class="field"><label>Offer code</label>
+          <div class="hint">Not made yet &mdash; it appears the first time this studio is saved on an offer tier.</div></div>`;
       }
-      return `<div class="field"><label>Coupon code</label>
+      return `<div class="field"><label>Offer code</label>
         <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap;">
           <code style="font-size:17px;letter-spacing:.06em;background:var(--bg-2);padding:8px 14px;border-radius:9px;color:var(--clay-deep);">${esc(c.code)}</code>
           <button type="button" class="btn btn-ghost btn-sm" data-copycode="${esc(c.code)}">Copy code</button>
@@ -586,6 +600,41 @@ function openDrawer(k) {
   $('drawerBack').classList.add('open'); $('drawer').classList.add('open');
   $('drawerClose').onclick = $('drawerCancel').onclick = closeDrawer;
   $('drawerSave').onclick = saveDrawer;
+
+  $('bioGen').onclick = async () => {
+    const btn = $('bioGen'), picks = $('bioPicks');
+    btn.disabled = true; btn.textContent = 'Writing…';
+    picks.innerHTML = '<span class="hint">Thinking…</span>';
+    try {
+      const cur = patched(row);
+      const res = await fetch('/api/generate-bio', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          code: auth.code,
+          name: cur.name, suite: cur.suite, hours: cur.hours,
+          services: cur.tags || [],
+          /* their words first, then anything already in the field */
+          input: sourceNotes || cur.bio || '',
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Could not write a bio.');
+      const bios = data.bios || [];
+      if (!bios.length) throw new Error('Nothing came back. Try again.');
+      picks.innerHTML = bios.map((b, i) =>
+        `<div class="card" style="padding:13px 15px;margin-bottom:8px;cursor:pointer;" data-bio="${i}">
+           <div class="eyebrow" style="margin-bottom:5px;">${esc(b.tone || 'Option ' + (i + 1))}</div>
+           <div style="font-size:14.5px;">${esc(b.text || '')}</div>
+           <div class="hint" style="margin-top:7px;">Tap to use this one</div>
+         </div>`).join('');
+      picks.querySelectorAll('[data-bio]').forEach(el => el.onclick = () => {
+        $('bioText').value = bios[Number(el.dataset.bio)].text || '';
+        picks.innerHTML = '<span class="hint">Put in. Save the studio to keep it.</span>';
+      });
+    } catch (e) {
+      picks.innerHTML = '<span class="err" style="display:block;">' + esc(e.message) + '</span>';
+    } finally { btn.disabled = false; btn.textContent = 'Write one from their details'; }
+  };
 
   const shotList = $('shotList');
   if (shotList) shotList.addEventListener('click', e => {
@@ -656,15 +705,18 @@ function renderInbox() {
   const n = open.length;
   $('inboxPip').textContent = n; $('inboxPip').classList.toggle('hidden', n === 0);
 
+  const msgs    = shown.filter(l => l.kind === 'question' || l.kind === 'bug');
   const changes = shown.filter(l => l.kind === 'change');
-  const fresh   = shown.filter(l => l.kind !== 'change');
+  const fresh   = shown.filter(l => !['change', 'question', 'bug'].includes(l.kind));
 
   const section = (title, blurb, rows) => rows.length
     ? `<h2 style="margin-top:26px;">${title}</h2><p class="sub" style="margin-bottom:14px;">${blurb}</p>${rows.join('')}`
     : '';
 
   $('inboxList').innerHTML =
-    (section('Change requests', 'Studios already listed, asking for something to be fixed.',
+    (section('Questions and problems', 'Someone asked something or reported something broken. Nothing here changes a listing.',
+       msgs.map(msgCard)) +
+     section('Change requests', 'Studios already listed, asking for something to be fixed.',
        changes.map(changeCard)) +
      section('New submissions', 'Nobody has turned these into listings yet.',
        fresh.map(newCard)))
@@ -703,6 +755,35 @@ function doneCard(l, what) {
     ${leadShots(l)}
     ${leadRows(l)}
     ${l.notes ? `<dl class="rows"><dt>They said</dt><dd>${esc(l.notes)}</dd></dl>` : ''}
+  </div>`;
+}
+
+/* A question isn't a listing edit, so it gets no publish button and no
+   suite matching -- just the words, who said them, and a way to close it. */
+function msgCard(l) {
+  if (l.processed) return doneCard(l, 'Answered');
+  const isBug = l.kind === 'bug';
+  const accent = isBug ? 'var(--clay-deep)' : 'var(--sage-deep)';
+  return `<div class="card" style="border-left:3px solid ${accent};">
+    <div class="card-top">
+      <span class="biz">${esc(l.business || l.name || 'Someone')}</span>
+      <span class="suite-tag" style="color:${accent};border-color:${accent};background:${isBug ? '#FBF3EE' : '#EFF2EA'};">
+        ${isBug ? 'Problem' : 'Question'}${l.suite ? ' &middot; Suite ' + esc(l.suite) : ''}</span>
+      <span class="when">${esc(whenOf(l))}</span>
+    </div>
+    <div style="margin:13px 0;padding:14px 16px;background:${isBug ? '#FBF3EE' : '#EFF2EA'};border-left:3px solid ${accent};border-radius:0 10px 10px 0;">
+      <div style="font-size:15px;">${esc(l.notes || '(they left it blank)')}</div>
+    </div>
+    ${leadShots(l)}
+    <dl class="rows">
+      ${l.name ? `<dt>From</dt><dd>${esc(l.name)}</dd>` : ''}
+      ${l.phone ? `<dt>Phone</dt><dd>${esc(fmtPhone(l.phone))}</dd>` : ''}
+      ${l.email ? `<dt>Email</dt><dd><a href="mailto:${esc(l.email)}">${esc(l.email)}</a></dd>` : ''}
+    </dl>
+    <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+      ${l.email ? `<a class="btn btn-sm" href="mailto:${esc(l.email)}?subject=${encodeURIComponent('Re: your message about Salon Plus')}">Reply</a>` : ''}
+      <button class="btn btn-ghost btn-sm" data-handled="${esc(l.id)}">Mark done</button>
+    </div>
   </div>`;
 }
 
@@ -782,8 +863,8 @@ $('inboxList').addEventListener('click', async e => {
     state.studios.push(out.studio);
     const done = state.leads.find(l => l.id === id); if (done) done.processed = true;
     renderInbox(); renderStudios();
-    toast(out.couponCode ? `Live. Coupon code: ${out.couponCode}` : 'Live in the directory');
-    if (out.couponCode) alert(`${out.studio.name} is live.\n\nTheir coupon code is ${out.couponCode}\nSend it with studiosoulutions.com/salonplus/offer/`);
+    toast(out.couponCode ? `Live. Offer code: ${out.couponCode}` : 'Live in the directory');
+    if (out.couponCode) alert(`${out.studio.name} is live.\n\nTheir offer code is ${out.couponCode}\nSend it with studiosoulutions.com/salonplus/offer/`);
   } catch (err) {
     btn.disabled = false; btn.textContent = 'Publish to directory';
     alert(err.message);
@@ -822,7 +903,7 @@ $('offersList').addEventListener('click', async e => {
 
 /* ----- settings ----- */
 const TIER_SWITCHES = [
-  ['allow_coupons', 'Can post coupons'],
+  ['allow_coupons', 'Can post offers'],
   ['allow_contact', 'Call and text buttons'],
   ['allow_booking', 'Booking link and website'],
   ['allow_socials', 'Social links'],
@@ -906,7 +987,7 @@ function renderCodes() {
     </div>`).join('')
     || `<div class="empty">${(state.codes || []).length
           ? 'No studio matches that.'
-          : 'No codes yet. One is made automatically the first time you publish a studio on a tier that allows coupons.'}</div>`;
+          : 'No codes yet. One is made automatically the first time you publish a studio on a tier that allows offers.'}</div>`;
 }
 
 function renderBuildings() {

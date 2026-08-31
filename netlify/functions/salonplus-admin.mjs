@@ -7,7 +7,7 @@
 
    The rule that matters: TIER GATING HAPPENS HERE, not in the browser.
    A tier that isn't allowed photos doesn't get photos stripped by CSS,
-   it never receives the URLs. Same reasoning as the coupon composer,
+   it never receives the URLs. Same reasoning as the offer composer,
    the client is not where a rule gets to live.
 
    Actions (POST /api/salonplus-admin):
@@ -17,10 +17,14 @@
                  settings, studios, unconverted leads, recent changes.
      saveStudio  passcode. Insert or update one studio.
      publishLead passcode. Turn an interest-form row into a studio, and
-                 mint a coupon code if the tier allows offers.
+                 mint an offer code if the tier allows offers.
      setStatus   passcode. draft / live / hidden.
      saveTiers   passcode. Rewrite what each tier is allowed to show.
      saveBuilding passcode. Add or edit a shopping center.
+     studioPortal  SUITE CODE, not the passcode. A studio's own listing
+                   plus what its tier allows it to edit.
+     studioSave    SUITE CODE. The studio edits itself; applies at once,
+                   Anne is emailed the before-and-after.
      mailCheck   passcode. Asks Resend to send one message to LEAD_TO and
                  reports exactly what Resend said, so a mail problem is
                  diagnosed instead of guessed at.
@@ -57,6 +61,11 @@ export default async function handler(request) {
 
   // The only action that doesn't need the passcode.
   if (p.action === 'directory') return directory(db, p);
+
+  /* A studio signing in to its own listing uses its suite code, not the
+     admin passcode, so these are routed ahead of that gate. */
+  if (p.action === 'studioPortal') return studioPortal(db, p);
+  if (p.action === 'studioSave')   return studioSave(db, p);
 
   const expected = process.env.LEADS_CODE;
   if (!expected) return json(500, { error: 'LEADS_CODE is not set on this deployment.' });
@@ -146,7 +155,7 @@ async function unlock(db) {
   return json(200, {
     ok: true,
     buildings, tiers, studios,
-    /* Coupon codes come back with everything else. They used to be shown
+    /* Offer codes come back with everything else. They used to be shown
        once, in an alert at publish time, and were then unfindable — which
        made "what's Suite 4417's code again?" a question only the database
        could answer. A code is a posting password for one studio, not a
@@ -183,6 +192,7 @@ async function saveStudio(db, p) {
 
   await log(db, p, str(s.id) ? 'edit studio' : 'add studio', `${saved.building} ${saved.suite}`, { name: saved.name });
   await syncCouponCode(db, saved);
+  if (saved.status === 'live') emailWelcome(db, saved).catch(e => console.warn('admin: welcome mail failed', String(e).slice(0, 200)));
   return json(200, { ok: true, studio: saved });
 }
 
@@ -196,6 +206,9 @@ async function setStatus(db, p) {
   if (!saved) return json(502, { error: 'Could not change the status.' });
 
   await log(db, p, 'status ' + status, `${saved.building} ${saved.suite}`, { name: saved.name });
+  /* Going live is the moment worth telling them about, and it carries
+     their portal code. Fires once; notified_at makes sure of that. */
+  if (status === 'live') emailWelcome(db, saved).catch(e => console.warn('admin: welcome mail failed', String(e).slice(0, 200)));
   return json(200, { ok: true, studio: saved });
 }
 
@@ -221,7 +234,11 @@ async function publishLead(db, p) {
     ok_to_text:   edits.ok_to_text   ?? lead.ok_to_text ?? true,
     email:        edits.email        ?? lead.email ?? '',
     hours:        edits.hours        ?? lead.hours ?? '',
-    bio:          edits.bio          ?? lead.notes ?? '',
+    /* Their notes are raw material, not a bio. "Walk ins from 8am to noon"
+       is a useful fact and a terrible thing to print under a studio name,
+       so it stays in the submission and the bio is written from it in the
+       panel instead. */
+    bio:          edits.bio ?? '',
     instagram:    edits.instagram    ?? lead.instagram ?? '',
     facebook:     edits.facebook     ?? lead.facebook ?? '',
     tiktok:       edits.tiktok       ?? lead.tiktok ?? '',
@@ -246,6 +263,8 @@ async function publishLead(db, p) {
 
   await log(db, p, 'publish lead', `${saved.building} ${saved.suite}`, { name: saved.name, lead: leadId });
   const code = await syncCouponCode(db, saved);
+  /* After the code exists, so the welcome mail can carry it. */
+  if (saved.status === 'live') emailWelcome(db, saved).catch(e => console.warn('admin: welcome mail failed', String(e).slice(0, 200)));
   return json(200, { ok: true, studio: saved, couponCode: code });
 }
 
@@ -300,9 +319,9 @@ async function cleanStudio(db, s) {
   }};
 }
 
-/* A studio on a coupon tier needs a code to post with. Minting it here
+/* A studio on an offer tier needs a code to post with. Minting it here
    means nobody hand-writes SQL for it, and a studio dropped off the
-   coupon tier stops being able to post. */
+   offer tier stops being able to post. */
 async function syncCouponCode(db, studio) {
   const tiers = await db.get(TIERS, { tier: `eq.${studio.tier}`, limit: '1' });
   const allowed = tiers && tiers[0] && tiers[0].allow_coupons;
@@ -400,6 +419,235 @@ async function mailCheck(db, p) {
   return json(200, { ok: res.ok, status: res.status, env, verdict, resendSaid: body });
 }
 
+/* ============ the studio's own door ===================================
+   A studio signs in with its suite and the code from its welcome email,
+   and edits its own listing. Deliberately NOT the admin passcode: this
+   is a different person with a much smaller set of powers.
+
+   What a studio may never touch, whatever it sends:
+     suite, building   its identity and its address
+     tier              its price
+     status            whether it is live at all
+   Those belong to whoever runs the building. Everything else is theirs,
+   bounded by what their tier allows.
+
+   Changes apply immediately (Anne's call) and she is told afterwards,
+   with the previous values in the mail so a bad edit can be put back. */
+const STUDIO_EDITABLE = [
+  'name', 'contact_name', 'service', 'bio', 'hours', 'phone', 'ok_to_text',
+  'email', 'show_email', 'booking_url', 'booking_label', 'website',
+  'instagram', 'facebook', 'tiktok', 'photo', 'photos', 'tags',
+];
+
+/* One error for a bad suite and a bad code alike, so this can't be used
+   to work out which suites exist. */
+async function studioAuth(db, p) {
+  const suite = str(p.suite).toUpperCase();
+  const code  = str(p.code);
+  const building = str(p.building) || 'salonplus';
+  if (!suite || !code) return { error: json(400, { error: 'Suite and code are both required.' }) };
+
+  const rows = await db.get(CODES, { suite: `eq.${suite}`, limit: '1' });
+  if (!rows)  return { error: json(502, { error: 'Could not check that code.' }) };
+  const row = rows[0];
+  if (!row || row.code !== code) {
+    return { error: json(401, { error: "That suite and code don't match. Check the email we sent you." }) };
+  }
+  if (row.can_edit === false) {
+    return { error: json(403, { error: 'Editing is paused for this studio. Get in touch.' }) };
+  }
+
+  const studios = await db.get(STUDIOS, { suite: `eq.${suite}`, building: `eq.${building}`, limit: '1' });
+  if (!studios)     return { error: json(502, { error: 'Could not load your listing.' }) };
+  if (!studios[0])  return { error: json(404, { error: 'No listing found for that suite yet.' }) };
+  return { studio: studios[0] };
+}
+
+/* What the portal renders: their record, and the rules for their tier so
+   the page only offers fields they actually have. */
+async function studioPortal(db, p) {
+  const a = await studioAuth(db, p);
+  if (a.error) return a.error;
+  const s = a.studio;
+
+  const tiers = await db.get(TIERS, { tier: `eq.${s.tier}`, limit: '1' });
+  const tier = tiers && tiers[0];
+  if (!tier) return json(502, { error: 'Could not read your listing level.' });
+
+  return json(200, {
+    ok: true,
+    studio: {
+      suite: s.suite, name: s.name, contact_name: s.contact_name,
+      service: s.service, bio: s.bio, hours: s.hours, tags: s.tags || [],
+      phone: s.phone, ok_to_text: s.ok_to_text !== false,
+      email: s.email, show_email: s.show_email === true,
+      booking_url: s.booking_url, booking_label: s.booking_label, website: s.website,
+      instagram: s.instagram, facebook: s.facebook, tiktok: s.tiktok,
+      photo: s.photo, photos: s.photos || [],
+      status: s.status,
+    },
+    /* The page hides what the tier doesn't include rather than showing a
+       field that would be silently dropped on the way out. */
+    tier: {
+      number: tier.tier, label: tier.label, blurb: tier.blurb,
+      photos_max: tier.photos_max, offers: tier.allow_coupons === true,
+      contact: tier.allow_contact === true, booking: tier.allow_booking === true,
+      socials: tier.allow_socials === true, bio: tier.allow_bio === true,
+      hours: tier.allow_hours === true,
+    },
+  });
+}
+
+async function studioSave(db, p) {
+  const a = await studioAuth(db, p);
+  if (a.error) return a.error;
+  const before = a.studio;
+
+  const sent = p.studio && typeof p.studio === 'object' ? p.studio : {};
+  const tiers = await db.get(TIERS, { tier: `eq.${before.tier}`, limit: '1' });
+  const tier = tiers && tiers[0];
+  if (!tier) return json(502, { error: 'Could not read your listing level.' });
+
+  /* Anything the tier doesn't include is ignored rather than quietly
+     saved and then stripped by the directory endpoint, which would look
+     like the save silently failed. */
+  const blocked = {
+    phone: !tier.allow_contact, ok_to_text: !tier.allow_contact,
+    email: !tier.allow_contact, show_email: !tier.allow_contact,
+    booking_url: !tier.allow_booking, booking_label: !tier.allow_booking,
+    website: !tier.allow_booking,
+    instagram: !tier.allow_socials, facebook: !tier.allow_socials, tiktok: !tier.allow_socials,
+    bio: !tier.allow_bio, hours: !tier.allow_hours,
+    photo: (tier.photos_max | 0) < 1, photos: (tier.photos_max | 0) < 2,
+  };
+
+  const patch = {};
+  const changed = [];
+  for (const field of STUDIO_EDITABLE) {
+    if (!(field in sent)) continue;
+    if (blocked[field]) continue;
+    let v;
+    if (field === 'photos') v = arr(sent.photos).slice(0, Math.max(0, (tier.photos_max | 0) - 1));
+    else if (field === 'tags') v = arr(sent.tags);
+    else if (field === 'ok_to_text' || field === 'show_email') v = sent[field] === true;
+    else if (field === 'phone') v = fmtPhone(sent.phone);
+    else v = str(sent[field]);
+
+    const same = Array.isArray(v)
+      ? JSON.stringify(v) === JSON.stringify(before[field] || [])
+      : v === (before[field] ?? '');
+    if (same) continue;
+    patch[field] = v;
+    changed.push({ field, from: before[field], to: v });
+  }
+
+  if (!changed.length) return json(200, { ok: true, changed: [], message: 'Nothing changed.' });
+  if (!str(patch.name ?? before.name)) return json(400, { error: 'Your studio needs a name.' });
+
+  const saved = await db.patchReturning(STUDIOS, { id: `eq.${before.id}` },
+    { ...patch, updated_at: nowIso(), updated_by: `studio:${before.suite}` });
+  if (!saved) return json(502, { error: 'Could not save that. Try again in a moment.' });
+
+  await log(db, { who: `Suite ${before.suite}` }, 'studio edited own listing',
+    `${before.building} ${before.suite}`, { fields: changed.map(c => c.field) });
+
+  /* Told after the fact, with the old values, because the change is
+     already live and the only thing Anne needs is a way to undo it. */
+  emailStudioEdit(before, changed)
+    .catch(e => console.warn('admin: edit notice failed', String(e).slice(0, 200)));
+
+  return json(200, { ok: true, changed: changed.map(c => c.field), studio: saved });
+}
+
+/* ============ the two studio-facing emails ============================ */
+
+/* Sent once, the first time a studio goes live. It is the notification
+   AND the code handover: without it, every code has to be read out over
+   the phone by hand. */
+async function emailWelcome(db, studio) {
+  const key = process.env.RESEND_API_KEY;
+  if (!key || !studio || !studio.email || studio.notified_at) return;
+
+  const codes = await db.get(CODES, { suite: `eq.${studio.suite}`, limit: '1' });
+  const code = codes && codes[0] ? codes[0].code : '';
+  const first = studio.contact_name ? escHtml(String(studio.contact_name).split(' ')[0]) : '';
+
+  const html = `
+  <div style="font-family:Georgia,serif;max-width:520px;margin:0 auto;color:#33312D;">
+    <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:#9A6B45;">Salon Plus Studios</p>
+    <h2 style="font-weight:400;margin:6px 0 16px;">You're on the map</h2>
+    <p style="font-size:15px;line-height:1.6;">
+      ${first ? escHtml(first) + ', y' : 'Y'}our studio is live in the Salon Plus directory. Anyone who walks
+      into the building, or opens the app, can now find <strong>${escHtml(studio.name)}</strong> in Suite ${escHtml(studio.suite)}.
+    </p>
+    <p style="margin:22px 0;">
+      <a href="https://studiosoulutions.com/salonplus/app/" style="display:inline-block;padding:13px 26px;background:#33312D;color:#FAF8F4;text-decoration:none;border-radius:999px;font-family:Inter,sans-serif;font-size:15px;">See your card</a>
+    </p>
+    ${code ? `
+    <div style="border:1px solid #DCD6CA;border-radius:14px;padding:18px 20px;background:#FAF8F4;">
+      <div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#9A6B45;margin-bottom:8px;">Keep this</div>
+      <p style="margin:0 0 10px;font-size:15px;line-height:1.6;">
+        You can update your own listing any time &mdash; hours, photos, booking link &mdash; at
+        <a href="https://studiosoulutions.com/salonplus/offer/" style="color:#6B7A5F;">studiosoulutions.com/salonplus/offer</a>.
+      </p>
+      <p style="margin:0;font-size:15px;">
+        Suite <strong>${escHtml(studio.suite)}</strong> &nbsp;&middot;&nbsp; Code <strong style="font-family:ui-monospace,monospace;">${escHtml(code)}</strong>
+      </p>
+    </div>` : ''}
+    <p style="margin-top:22px;font-size:13px;color:#918C81;">
+      Listed by Studio Soulutions. Reply to this email if anything looks wrong.
+    </p>
+  </div>`;
+
+  await sendMail({ to: [studio.email], subject: `${studio.name} is on the map`, html });
+  await db.patch(STUDIOS, { id: `eq.${studio.id}` }, { notified_at: nowIso() });
+}
+
+/* Sent to Anne after a studio edits itself. Old value beside new, because
+   the point of this mail is to make an undo possible. */
+async function emailStudioEdit(before, changed) {
+  const to = process.env.LEAD_TO;
+  if (!process.env.RESEND_API_KEY || !to) return;
+
+  const show = v => Array.isArray(v) ? (v.length ? v.join(', ') : '(none)') : (String(v ?? '').trim() || '(empty)');
+  const rows = changed.map(c => `
+    <tr>
+      <td style="padding:8px 14px 8px 0;color:#6C685F;white-space:nowrap;vertical-align:top;">${escHtml(c.field.replace(/_/g, ' '))}</td>
+      <td style="padding:8px 0;color:#918C81;text-decoration:line-through;">${escHtml(show(c.from))}</td>
+      <td style="padding:8px 0 8px 14px;color:#33312D;font-weight:600;">${escHtml(show(c.to))}</td>
+    </tr>`).join('');
+
+  const html = `
+  <div style="font-family:Georgia,serif;max-width:600px;margin:0 auto;color:#33312D;">
+    <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:#6B7A5F;">Salon Plus Studios &middot; already live</p>
+    <h2 style="font-weight:400;margin:6px 0 6px;">${escHtml(before.name)} updated their own listing</h2>
+    <p style="margin:0 0 18px;color:#6C685F;font-size:14px;">Suite ${escHtml(before.suite)}. This is already on the app. Old values on the left, in case you want to put any of it back.</p>
+    <table style="font-size:15px;border-collapse:collapse;width:100%;">${rows}</table>
+    <p style="margin-top:24px;font-size:14px;color:#6C685F;">
+      Change it back in <a href="https://studiosoulutions.com/leads/" style="color:#6B7A5F;">the admin panel</a>.
+    </p>
+  </div>`;
+
+  await sendMail({ to: [to], subject: `Updated: ${before.name} (Suite ${before.suite})`, html });
+}
+
+async function sendMail({ to, subject, html }) {
+  const key = process.env.RESEND_API_KEY;
+  const from = process.env.RESEND_FROM;
+  if (!key)  throw new Error('RESEND_API_KEY is not set.');
+  if (!from) throw new Error('RESEND_FROM is not set; there is no test-sender fallback on purpose.');
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
+    body: JSON.stringify({ from, to, subject, html }),
+  });
+  if (!res.ok) throw new Error(`resend ${res.status}: ${(await res.text()).slice(0, 200)}`);
+}
+
+function escHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
 /* ============ settings ================================================ */
 async function saveTiers(db, p) {
   const rows = Array.isArray(p.tiers) ? p.tiers : null;
@@ -425,7 +673,7 @@ async function saveTiers(db, p) {
   }
   await log(db, p, 'edit tiers', '', { tiers: rows.map(t => t.tier) });
 
-  /* Turning coupons off for a tier has to reach the studios on it, or a
+  /* Turning offers off for a tier has to reach the studios on it, or a
      studio keeps a working code for a perk it no longer has. */
   const studios = await db.get(STUDIOS, { limit: '500' });
   for (const s of studios || []) await syncCouponCode(db, s);

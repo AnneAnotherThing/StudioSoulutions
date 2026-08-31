@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="../../assets/css/app.css?v=7">
 <style>
   /* Salon Plus override: the REAL breezeway hallway replaces the concept
-     render as the ambient backdrop. The wash stays thin at the top so the
-     hallway reads as THE hallway, and only firms up toward the bottom
-     where lists and cards need a calm surface.
+     render as the ambient backdrop. The wash is heavy enough that the
+     hallway reads as texture rather than a picture: it should suggest the
+     building without competing with the cards for attention.
      Painted on a fixed layer sized to the 440px app column (not the
      viewport), so desktop windows don't blow the photo up into a blur. */
   body { background: transparent; }
@@ -32,7 +32,7 @@
     pointer-events: none;
     background:
       radial-gradient(90% 60% at 80% 0%, rgba(139,154,126,0.10) 0%, transparent 60%),
-      linear-gradient(180deg, rgba(245,237,224,0.05) 0%, rgba(245,237,224,0.20) 45%, rgba(245,237,224,0.78) 100%),
+      linear-gradient(180deg, rgba(245,237,224,0.42) 0%, rgba(245,237,224,0.62) 45%, rgba(245,237,224,0.93) 100%),
       url('../../assets/photos/salonplus-hallway-2.png') center 42% / cover no-repeat;
   }
   /* the search hint sits bare over the photo; give it a frosted pill + real ink */
@@ -149,27 +149,27 @@
       </div>
     </button>
 
-    <!-- Coupons & specials -->
-    <button class="menu-card primary-card is-sage" type="button" onclick="switchView('specials')">
-      <div class="mc-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 12 22l-8.59-8.59A2 2 0 0 1 3 12V4a1 1 0 0 1 1-1h8a2 2 0 0 1 1.41.59L22 12a2 2 0 0 1-1.41 1.41z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>
-      </div>
-      <div class="mc-body">
-        <div class="mc-label">Coupons &amp; specials</div>
-        <div class="mc-meta open"><span class="pulse-dot"></span>The sweet stuff, straight from the studios</div>
-      </div>
-    </button>
-
-    <!-- Find someone new, opens the scrolling directory. Sits last on
-         purpose: you come in knowing who you're here to see, browsing is
-         the afterthought. -->
+    <!-- The directory, the full scrolling list. Second on purpose:
+         you arrive knowing who you're here to see, browsing is next, and a
+         offer is what you notice on the way past. -->
     <button class="menu-card primary-card" type="button" onclick="switchView('directory')">
       <div class="mc-icon">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
       </div>
       <div class="mc-body">
-        <div class="mc-label">Find someone new</div>
-        <div class="mc-meta">Hair · barber · nails · spa · cards filling in now</div>
+        <div class="mc-label">Directory</div>
+        <div class="mc-meta">Every studio in the building, by name</div>
+      </div>
+    </button>
+
+    <!-- Offers -->
+    <button class="menu-card primary-card is-sage" type="button" onclick="switchView('specials')">
+      <div class="mc-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 12 22l-8.59-8.59A2 2 0 0 1 3 12V4a1 1 0 0 1 1-1h8a2 2 0 0 1 1.41.59L22 12a2 2 0 0 1-1.41 1.41z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>
+      </div>
+      <div class="mc-body">
+        <div class="mc-label">Offers</div>
+        <div class="mc-meta open"><span class="pulse-dot"></span>The sweet stuff, straight from the studios</div>
       </div>
     </button>
 
@@ -293,6 +293,14 @@
     </button>
   </div>
   <div class="map-hint">Tap any suite to see who's inside. Unnamed suites just haven't claimed their card yet.</div>
+
+  <!-- The same studios again, as a list. Reading a floor plan is a skill;
+       scanning names isn't. Whichever way someone thinks, the answer to
+       "who am I here to see" is on this one screen. -->
+  <div class="discover-divider" style="margin-top:26px;">
+    <div class="line"></div><span class="lbl">Or find them by name</span><div class="line"></div>
+  </div>
+  <div id="mapDirectoryList" class="directory-list" style="margin-top:12px;"></div>
 </section>
 
 <!-- FROM LAURA VIEW -->
@@ -324,7 +332,7 @@
 <section class="view" id="view-specials">
   <div class="welcome" style="min-height: 200px; padding-top: 80px;">
     <div class="welcome-panel">
-      <div class="eyebrow">Coupons &amp; specials</div>
+      <div class="eyebrow">Offers</div>
       <h1 style="font-size: 28px;">The sweet <em>stuff</em></h1>
       <p>Deals, welcome offers, and specials from the studios, posted as they claim their cards.</p>
     </div>

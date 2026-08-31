@@ -73,13 +73,14 @@ export default async function handler(request) {
     notes:      clip(p.notes, 2000),
     /* 'new' or 'change'. One form, two jobs: a studio that isn't listed
        yet, and one that is and wants something fixed. */
-    kind:       p.kind === 'change' ? 'change' : 'new',
+    kind:       ['change', 'question', 'bug'].includes(p.kind) ? p.kind : 'new',
     building:   slug(clip(p.building, 60)) || 'salonplus',
     source:     clip(p.source, 40) || 'salonplus-web',
   };
   const buildingLabel = BUILDING_NAMES[row.building] || clip(p.building_label, 80) || row.building;
 
-  if (!row.business || !row.name) {
+  const isMessage = row.kind === 'question' || row.kind === 'bug';
+  if (!isMessage && (!row.business || !row.name)) {
     return json(400, { error: 'business and name are required' });
   }
   if (!row.phone && !row.email) {
@@ -87,6 +88,9 @@ export default async function handler(request) {
   }
   /* Without a suite we can't tell which listing to change, and without a
      description we'd be guessing at what they want. */
+  if (row.kind === 'question' || row.kind === 'bug') {
+    if (!row.notes) return json(400, { error: 'Tell us what you wanted to say.' });
+  }
   if (row.kind === 'change') {
     if (!row.suite) return json(400, { error: 'tell us your suite so we know which listing to change' });
     if (!row.notes) return json(400, { error: 'tell us what needs changing' });
@@ -117,7 +121,7 @@ export default async function handler(request) {
   /* Deliberately not awaited into the result: the studio's receipt is a
      courtesy, and a bounce at their end must never read as a failure at
      ours. */
-  emailConfirmation(row, buildingLabel)
+  if (!isMessage) emailConfirmation(row, buildingLabel)
     .catch(e => console.warn('interest: confirmation to submitter failed', String(e).slice(0, 200)));
 
   return json(200, { ok: true, saved, mailed, kind: row.kind, photos: photoUrls.length });
@@ -216,6 +220,20 @@ const KIND_STYLE = {
     subject: (r, b) => `${b} interest: ${r.business}${r.suite ? ` (Suite ${r.suite})` : ''}`,
     lead: '',
   },
+  question: {
+    accent: '#6B7A5F',
+    eyebrow: b => `${b} · question`,
+    heading: r => `A question from ${escHtml(r.business || r.name || 'a studio')}`,
+    subject: (r, b) => `[QUESTION] ${b}: ${r.business || r.name || 'a studio'}`,
+    lead: 'Someone asked something. Their question is below.',
+  },
+  bug: {
+    accent: '#A8593E',
+    eyebrow: b => `${b} · something is broken`,
+    heading: r => `Problem reported by ${escHtml(r.business || r.name || 'a studio')}`,
+    subject: (r, b) => `[BUG] ${b}: ${r.business || r.name || 'a studio'}`,
+    lead: 'Someone reported something not working. What they said is below.',
+  },
   change: {
     accent: '#A8593E',
     eyebrow: b => `${b} · change requested`,
@@ -248,9 +266,10 @@ async function emailLead(row, buildingLabel, photoUrls) {
 
   /* On a change request the description IS the message, so it gets its own
      block above the details rather than being buried in the table. */
-  const askHtml = isChange && row.notes
+  const isMsg = row.kind === 'question' || row.kind === 'bug';
+  const askHtml = (isChange || isMsg) && row.notes
     ? `<div style="margin:18px 0;padding:16px 18px;background:#FBF3EE;border-left:3px solid ${kind.accent};border-radius:0 10px 10px 0;">
-         <div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:${kind.accent};margin-bottom:6px;">What they want changed</div>
+         <div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:${kind.accent};margin-bottom:6px;">${isMsg ? (row.kind === 'bug' ? 'What is broken' : 'Their question') : 'What they want changed'}</div>
          <div style="font-size:15px;color:#33312D;font-weight:600;">${escHtml(row.notes)}</div>
        </div>`
     : '';
@@ -274,11 +293,13 @@ async function emailLead(row, buildingLabel, photoUrls) {
       ${line('TikTok', row.tiktok)}
       ${line('Website', row.website)}
       ${line('Booking', row.booking)}
-      ${isChange ? '' : line('Notes', row.notes)}
+      ${(isChange || isMsg) ? '' : line('Notes', row.notes)}
     </table>
     ${photosHtml}
     <p style="margin-top:24px;font-size:14px;color:#6C685F;">
-      ${isChange
+      ${isMsg
+        ? `It's waiting in <a href="https://studiosoulutions.com/leads/" style="color:#6B7A5F;">the admin panel</a> under Questions.`
+        : isChange
         ? `Open <a href="https://studiosoulutions.com/leads/" style="color:#6B7A5F;">the admin panel</a>, find Suite ${escHtml(row.suite || '')} and make the change.`
         : `Publish them from <a href="https://studiosoulutions.com/leads/" style="color:#6B7A5F;">the admin panel</a>.`}
     </p>
