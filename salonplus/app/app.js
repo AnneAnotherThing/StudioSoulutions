@@ -5,7 +5,7 @@
    ../data.js and a corridor-aware map for actual wayfinding.
    ===================================================================== */
 
-const { ROSTER, LAYOUT } = window.SALONPLUS;
+const { ROSTER } = window.SALONPLUS;
 
 /* ----- which building is this app dressed as? --------------------------
    /salonplus/app/ stays Salon Plus, untouched. /a/<slug> (a Netlify
@@ -23,6 +23,11 @@ const IS_HOME = APP_BUILDING === 'salonplus';
 let BUILDING_INFO = IS_HOME
   ? { slug: 'salonplus', name: 'Salon Plus Studios', city: 'Glendale, AZ', has_map: true }
   : { slug: APP_BUILDING, name: 'This Building', city: '', has_map: false };
+
+/* This building's floor plan, when one has been traced. Buildings not in
+   LAYOUTS fall back to the Salon Plus plan, which is harmless because
+   has_map keeps the map views off for them anyway. */
+const LAYOUT = (window.SALONPLUS.LAYOUTS || {})[APP_BUILDING] || window.SALONPLUS.LAYOUT;
 
 /* Everything visual that says "Salon Plus" flows through here, so a
    directory answer that names the building re-dresses the shell. */
@@ -43,10 +48,10 @@ function applyBuildingIdentity(b) {
   if (ownerNote) ownerNote.textContent = `${BUILDING_INFO.name} is home to independent artists, hair, barbering, nails, lash, skin, wellness. Each one runs their own studio, their own brand, their own way.`;
   const ownerSig = document.getElementById('ownerSig');
   if (ownerSig) ownerSig.textContent = `, ${BUILDING_INFO.name}`;
-  if (!BUILDING_INFO.has_map) {
-    const mapCard = document.getElementById('mapMenuCard');
-    if (mapCard) mapCard.style.display = 'none';
-  }
+  /* Both directions: the initial guess for a non-home building is "no
+     map", and the directory answer may say otherwise (the demo does). */
+  const mapCard = document.getElementById('mapMenuCard');
+  if (mapCard) mapCard.style.display = BUILDING_INFO.has_map ? '' : 'none';
 }
 
 /* ----- per-suite meta, category + service line -------------------------

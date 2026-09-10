@@ -150,4 +150,33 @@
     },
   };
 
+  /* ----- The Beauty Collective, the sales-demo floor plan --------------
+     Fictional on purpose: one hall, six suites, two common rooms, so the
+     map and wayfinding demo cleanly without borrowing Salon Plus's real
+     hallways. The app picks a layout per building from LAYOUTS; the
+     Salon Plus page keeps reading LAYOUT above, untouched. */
+  const demoRooms = [];
+  const droom = (s, x, y, common) => demoRooms.push(
+    common ? { s, x, y, w: 120, h: 64, cor: 'C', common: 1 }
+           : { s, x, y, w: 120, h: 64, cor: 'C' });
+  droom('101', 100, 100); droom('102', 340, 100);
+  droom('201', 100, 210); droom('202', 340, 210);
+  droom('301', 100, 320); droom('302', 340, 320);
+  droom('Waiting', 100, 430, 1); droom('Restroom', 340, 430, 1);
+
+  window.SALONPLUS.LAYOUTS = {
+    salonplus: window.SALONPLUS.LAYOUT,
+    demo: {
+      W: 560, H: 660,
+      entrance: { x: 280, y: 610 },
+      corridors: [
+        { id: 'C', band: { x: 250, y: 70, w: 60, h: 520 }, seg: { x1: 280, y1: 90, x2: 280, y2: 570 } },
+      ],
+      rooms: demoRooms,
+      labels: [
+        { text: 'MAIN ENTRANCE', x: 190, y: 648 },
+      ],
+    },
+  };
+
 })();
