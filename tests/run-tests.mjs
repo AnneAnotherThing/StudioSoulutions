@@ -305,6 +305,12 @@ for (const [label, src] of [['salonplus', page], ['join', joinPage]]) {
      `${label} page scopes the services collector to #svcRow`);
 }
 
+/* The early-days preview note named Deuces as the first verified card;
+   stale on Salon Plus and nonsense on any other building. Anne caught it
+   surfacing in the demo, Sep 9. Keep it gone. */
+const appShell = readFileSync(new URL('../salonplus/app/index.html', import.meta.url), 'utf8');
+ok(!appShell.includes('A note on this preview'), 'the stale preview note stays retired from the app shell');
+
 /* ----- verdict --------------------------------------------------------- */
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed ? 1 : 0);

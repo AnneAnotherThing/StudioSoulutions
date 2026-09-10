@@ -24,9 +24,12 @@ let BUILDING_INFO = IS_HOME
   ? { slug: 'salonplus', name: 'Salon Plus Studios', city: 'Glendale, AZ', has_map: true }
   : { slug: APP_BUILDING, name: 'This Building', city: '', has_map: false };
 
-/* This building's floor plan, when one has been traced. Buildings not in
-   LAYOUTS fall back to the Salon Plus plan, which is harmless because
-   has_map keeps the map views off for them anyway. */
+/* This building's floor plan, when one has been traced. The map exists
+   exactly when a plan ships in LAYOUTS for this slug: no database flag
+   to keep in step, and a building can never show a plan it doesn't
+   have. (The fallback LAYOUT below only feeds code paths that need a
+   shape; HAS_MAP keeps every map surface off for those buildings.) */
+const HAS_MAP = !!((window.SALONPLUS.LAYOUTS || {})[APP_BUILDING]);
 const LAYOUT = (window.SALONPLUS.LAYOUTS || {})[APP_BUILDING] || window.SALONPLUS.LAYOUT;
 
 /* Everything visual that says "Salon Plus" flows through here, so a
@@ -48,10 +51,8 @@ function applyBuildingIdentity(b) {
   if (ownerNote) ownerNote.textContent = `${BUILDING_INFO.name} is home to independent artists, hair, barbering, nails, lash, skin, wellness. Each one runs their own studio, their own brand, their own way.`;
   const ownerSig = document.getElementById('ownerSig');
   if (ownerSig) ownerSig.textContent = `, ${BUILDING_INFO.name}`;
-  /* Both directions: the initial guess for a non-home building is "no
-     map", and the directory answer may say otherwise (the demo does). */
   const mapCard = document.getElementById('mapMenuCard');
-  if (mapCard) mapCard.style.display = BUILDING_INFO.has_map ? '' : 'none';
+  if (mapCard) mapCard.style.display = HAS_MAP ? '' : 'none';
 }
 
 /* ----- per-suite meta, category + service line -------------------------
@@ -801,7 +802,7 @@ function switchView(view) {
 
 function switchViewRaw(view) {
   /* A building with no traced floor plan has no map view to land on. */
-  if (view === 'map' && !BUILDING_INFO.has_map) view = 'directory';
+  if (view === 'map' && !HAS_MAP) view = 'directory';
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById(`view-${view}`).classList.add('active');
   const primaryViews = ['discover', 'directory', 'saved'];
@@ -997,7 +998,7 @@ function renderContactActions(t, isSaved) {
 
   /* No wayfinding without a traced floor plan: a demo building's Suite
      103 must not route through Salon Plus's hallways. */
-  const suiteKey = BUILDING_INFO.has_map ? getSuiteKey(t) : null;
+  const suiteKey = HAS_MAP ? getSuiteKey(t) : null;
   const directionsHtml = suiteKey
     ? `<button class="btn btn-outline" type="button" onclick="showRouteTo('${t.id}')">
          ${ICONS.map} Show me on the map · ${escapeHtml(t.suite)}
