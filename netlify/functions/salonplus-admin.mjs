@@ -98,9 +98,14 @@ async function directory(db, p) {
   /* The app dresses itself from this: name in the header, has_map decides
      whether the floor-plan views exist at all. One app, any building. */
   const b = buildings && buildings[0];
+  /* Only the home building may fall back to the Salon Plus identity; an
+     unseeded slug must stay neutral rather than wear another building's
+     name. */
+  const home = building === 'salonplus';
   const buildingInfo = b
     ? { slug: b.slug, name: b.name, city: b.city || '', has_map: b.has_map === true }
-    : { slug: building, name: 'Salon Plus Studios', city: 'Glendale, AZ', has_map: building === 'salonplus' };
+    : { slug: building, name: home ? 'Salon Plus Studios' : 'This Building',
+        city: home ? 'Glendale, AZ' : '', has_map: home };
 
   const byTier = Object.fromEntries(tiers.map(t => [t.tier, t]));
   return json(200, { building: buildingInfo, rows: studios.map(s => publicShape(s, byTier[s.tier])) });

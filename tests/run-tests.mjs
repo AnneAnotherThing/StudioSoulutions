@@ -208,6 +208,12 @@ ok(deuces && deuces.call === '' && deuces.bio === '', 'tier 0 still strips gated
 ok(dir.building && dir.building.slug === 'salonplus' && dir.building.has_map === true,
    'directory answer names the building and its map');
 
+resetNet();
+res = await post(admin, { action: 'directory', building: 'demo' });
+const dirDemo = await res.json();
+ok(dirDemo.building && dirDemo.building.name === 'This Building' && dirDemo.building.has_map === false,
+   'an unseeded building falls back to a neutral identity, never Salon Plus');
+
 /* ===== multi-building: codes and portals stay in their building ======== */
 section('multi-building scoping');
 
