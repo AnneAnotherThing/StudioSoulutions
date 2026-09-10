@@ -7,6 +7,48 @@
 
 const { ROSTER, LAYOUT } = window.SALONPLUS;
 
+/* ----- which building is this app dressed as? --------------------------
+   /salonplus/app/ stays Salon Plus, untouched. /a/<slug> (a Netlify
+   rewrite back to this same file) or ?b=<slug> dresses the SAME app as
+   any building in ss_buildings: its name in the header, its studios from
+   the directory, and no floor-plan views unless the building has a
+   traced map. One app, every building Laura sells. */
+const APP_BUILDING = (() => {
+  const q = new URLSearchParams(location.search).get('b');
+  if (q) return q.toLowerCase().replace(/[^a-z0-9-]/g, '');
+  const m = location.pathname.match(/^\/a\/([a-z0-9-]+)/i);
+  return m ? m[1].toLowerCase() : 'salonplus';
+})();
+const IS_HOME = APP_BUILDING === 'salonplus';
+let BUILDING_INFO = IS_HOME
+  ? { slug: 'salonplus', name: 'Salon Plus Studios', city: 'Glendale, AZ', has_map: true }
+  : { slug: APP_BUILDING, name: 'This Building', city: '', has_map: false };
+
+/* Everything visual that says "Salon Plus" flows through here, so a
+   directory answer that names the building re-dresses the shell. */
+function applyBuildingIdentity(b) {
+  if (b && b.slug === BUILDING_INFO.slug) BUILDING_INFO = { ...BUILDING_INFO, ...b };
+  if (IS_HOME) return;
+  document.title = `${BUILDING_INFO.name} - Discover the studios under this roof`;
+  document.body.classList.add('generic-building');
+  const logo = document.getElementById('brandLogo');
+  if (logo) logo.style.display = 'none';
+  const fb = document.getElementById('brandFallback');
+  if (fb) {
+    fb.style.display = 'block';
+    const nameEl = fb.querySelector('.brand-name');
+    if (nameEl) nameEl.textContent = BUILDING_INFO.name;
+  }
+  const ownerNote = document.getElementById('ownerNote');
+  if (ownerNote) ownerNote.textContent = `${BUILDING_INFO.name} is home to independent artists, hair, barbering, nails, lash, skin, wellness. Each one runs their own studio, their own brand, their own way.`;
+  const ownerSig = document.getElementById('ownerSig');
+  if (ownerSig) ownerSig.textContent = `, ${BUILDING_INFO.name}`;
+  if (!BUILDING_INFO.has_map) {
+    const mapCard = document.getElementById('mapMenuCard');
+    if (mapCard) mapCard.style.display = 'none';
+  }
+}
+
 /* ----- per-suite meta, category + service line -------------------------
    Guessed from business names until interest forms confirm them.
    Fix a wrong guess here, one line, both the app and page read ROSTER. */
@@ -46,7 +88,11 @@ const SP_META = {
 
 const THEMES = ['av-sage','av-moss','av-clay','av-rose','av-stone','av-sand','av-rust','av-fern','av-amber'];
 const CAT_LABEL = { hair: 'Hair', barber: 'Barber', nails: 'Nails', spa: 'Spa & Beauty' };
-const CLAIM_URL = suite => `../?suite=${encodeURIComponent(suite)}#join`;
+/* Home links to the Salon Plus join form with the suite pre-filled; any
+   other building routes to the generic form with its name pre-filled. */
+const CLAIM_URL = suite => IS_HOME
+  ? `/salonplus/?suite=${encodeURIComponent(suite)}#join`
+  : `/join/?building=${encodeURIComponent(BUILDING_INFO.name)}`;
 
 // ============ DATA ============
 /* The directory now lives in Supabase and is edited from the admin panel,
@@ -75,7 +121,7 @@ const FALLBACK_TENANTS = Object.entries(ROSTER).map(([suite, name], i) => {
     // Deuces Nail Studio, the first real card
     Object.assign(base, {
       claimed: true,
-      photo: '../../assets/photos/1000040455.jpg',
+      photo: '/assets/photos/1000040455.jpg',
       bio: 'Sage-walled and softly lit, a quiet, careful place for nails done with intention. Gel, pedicures, nail art. Appointments preferred, walk-ins welcome when the chair is open.',
       tags: ['Gel', 'Pedicure', 'Nail Art', 'Structured Mani'],
       hours: 'Tue–Sat 10–6',
@@ -85,10 +131,10 @@ const FALLBACK_TENANTS = Object.entries(ROSTER).map(([suite, name], i) => {
     // Soul and Beauty Day Spa, claimed via the interest form 8/11/26
     Object.assign(base, {
       claimed: true,
-      photo: '../../assets/photos/salonplus-103-soulandbeauty.png',
+      photo: '/assets/photos/salonplus-103-soulandbeauty.png',
       photos: [
-        '../../assets/photos/salonplus-103-soulandbeauty-facial.jpg',
-        '../../assets/photos/salonplus-103-soulandbeauty-glow.jpg',
+        '/assets/photos/salonplus-103-soulandbeauty-facial.jpg',
+        '/assets/photos/salonplus-103-soulandbeauty-glow.jpg',
       ],
       bio: 'Christina specializes in therapeutic and medical massage, with anti-aging and hydra-facials and deep-clean facials alongside. Care that works below the surface.',
       instagram: 'soulandbeauty.dayspa',
@@ -133,9 +179,9 @@ const FALLBACK_TENANTS = Object.entries(ROSTER).map(([suite, name], i) => {
          shows it whole instead of cover-cropping it; the gallery copy is
          what makes it readable, tap it and the lightbox opens it full size.
          Waiting on the cropped scan, uncomment both once it's saved:
-      photo: '../../assets/photos/salonplus-312-arizonahair-card.jpg',
+      photo: '/assets/photos/salonplus-312-arizonahair-card.jpg',
       photoFit: 'card',
-      photos: ['../../assets/photos/salonplus-312-arizonahair-card.jpg'],
+      photos: ['/assets/photos/salonplus-312-arizonahair-card.jpg'],
       */
     });
   }
@@ -188,7 +234,9 @@ const FALLBACK_TENANTS = Object.entries(ROSTER).map(([suite, name], i) => {
 });
 
 /* The live directory, swapped in over the fallback the moment it arrives. */
-let tenants = FALLBACK_TENANTS;
+/* The baked-in fallback roster is Salon Plus's; any other building
+   starts empty and fills from its own directory answer. */
+let tenants = IS_HOME ? FALLBACK_TENANTS : [];
 
 const initialsOf = name =>
   name.replace(/[^A-Za-z ]/g, '').split(' ').slice(0, 2).map(w => w[0] || '').join('').toUpperCase();
@@ -202,6 +250,7 @@ function tenantFromRow(r, i) {
   return {
     id: r.suite,
     name: r.name,
+    tech: r.tech || undefined,
     service: r.service || 'Independent Studio',
     category: r.category || 'hair',
     suite: `Suite ${r.suite}`,
@@ -213,7 +262,11 @@ function tenantFromRow(r, i) {
     photos: (r.photos || []).length ? r.photos : undefined,
     photoFit: r.photoFit,
     bio: r.bio || `One of the independent studios that call Salon Plus home.`,
-    tags: (r.tags || []).length ? r.tags : [CAT_LABEL[r.category] || 'Studio', wingOf(r.suite)],
+    /* Wing names describe Salon Plus's floor plan; other buildings just
+       get the category until their tags arrive. */
+    tags: (r.tags || []).length ? r.tags
+        : IS_HOME ? [CAT_LABEL[r.category] || 'Studio', wingOf(r.suite)]
+        : [CAT_LABEL[r.category] || 'Studio'],
     hours: r.hours || '',
     book: r.book || undefined,
     bookLabel: r.bookLabel || undefined,
@@ -233,14 +286,22 @@ async function loadDirectory() {
     const res = await fetch('/api/salonplus-admin', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ action: 'directory', building: 'salonplus' }),
+      body: JSON.stringify({ action: 'directory', building: APP_BUILDING }),
     });
     if (!res.ok) return;
-    const rows = (await res.json()).rows || [];
-    /* An empty answer is more likely a misconfigured deploy than an empty
-       building, and showing nothing is worse than showing yesterday's
-       roster, so the fallback stands. */
-    if (!rows.length) return;
+    const data = await res.json();
+    /* The shell dresses itself from the answer even when the roster is
+       still empty, so a brand-new building shows its own name. */
+    applyBuildingIdentity(data.building);
+    const rows = data.rows || [];
+    /* For Salon Plus an empty answer is more likely a misconfigured
+       deploy than an empty building, and showing nothing is worse than
+       showing yesterday's roster, so the fallback stands there. A new
+       building genuinely starts empty. */
+    if (!rows.length) {
+      if (!IS_HOME) { tenants = []; renderDiscoverCards(); renderDirectory(); }
+      return;
+    }
 
     tenants = rows.map(tenantFromRow);
     renderDiscoverCards();
@@ -262,11 +323,15 @@ async function loadDirectory() {
 // nothing until the leasing office confirms what's actually open.
 const vacancies = [];
 
-const didYouKnow = [
+const didYouKnow = IS_HOME ? [
   { theme: 'sage', eyebrow: 'Worth the walk', text: 'Deuces Nail Studio is sage-walled, softly lit, and does nails with intention. Suite 301, watch it light up on the map.', link: 'See Deuces', linkId: '301' },
   { theme: 'clay', eyebrow: 'While you\'re here', text: 'Getting nails done? A fresh cut is thirty steps away. A facial, maybe forty. That\'s the whole point of this roof.', link: 'Meet the neighbors', view: 'directory' },
   { theme: 'sand', eyebrow: 'The sweet stuff', text: 'Studios post offers, welcome offers, and specials right here in the app as they move in.', link: 'Check the specials', view: 'specials' },
-  { theme: 'sage', eyebrow: 'Your studio here', text: 'Work in this building? Your listing is free while the neighborhood builds. Two minutes, and you\'re on the map.', link: 'Claim your card', href: '../#join' },
+  { theme: 'sage', eyebrow: 'Your studio here', text: 'Work in this building? Your listing is free while the neighborhood builds. Two minutes, and you\'re on the map.', link: 'Claim your card', href: '/salonplus/#join' },
+] : [
+  { theme: 'clay', eyebrow: 'While you\'re here', text: 'Getting nails done? A fresh cut might be thirty steps away. That\'s the whole point of a roof like this one.', link: 'Meet the neighbors', view: 'directory' },
+  { theme: 'sand', eyebrow: 'The sweet stuff', text: 'Studios post offers, welcome offers, and specials right here in the app as they move in.', link: 'Check the specials', view: 'specials' },
+  { theme: 'sage', eyebrow: 'Your studio here', text: 'Work in this building? Your listing is free while the neighborhood builds. Two minutes, and you\'re on the map.', link: 'Claim your card', href: 'CLAIM' },
 ];
 
 /* ----- offers & specials -------------------------------------------------
@@ -284,7 +349,7 @@ async function loadSpecials() {
     const res = await fetch('/api/salonplus-specials', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ action: 'list', building: 'salonplus' }),
+      body: JSON.stringify({ action: 'list', building: APP_BUILDING }),
     });
     if (!res.ok) return;
     SPECIALS = (await res.json()).rows || [];
@@ -488,9 +553,12 @@ function escapeHtml(s) {
 function renderDYK() {
   const wrap = document.getElementById('dykScroll');
   wrap.innerHTML = didYouKnow.map((d, i) => {
+    /* 'CLAIM' resolves at render time: the building's real name arrives
+       with the directory answer, after this array was built. */
+    const href = d.href === 'CLAIM' ? CLAIM_URL('') : d.href;
     const action = d.linkId ? `openTenant('${d.linkId}')`
                  : d.view   ? `switchView('${d.view}')`
-                 :            `location.href='${d.href}'`;
+                 :            `location.href='${href}'`;
     return `
     <div class="dyk-card" data-theme="${d.theme}" onclick="${action}">
       <div class="dyk-eyebrow">${d.eyebrow}</div>
@@ -516,11 +584,15 @@ function renderDiscoverCards() {
   const welcomeCount = document.getElementById('welcomeCount');
   if (welcomeCount) welcomeCount.textContent = tenants.length;
 
+  /* A brand-new building genuinely has zero tenants; Salon Plus never
+     did (the baked-in fallback), which is why this could crash unseen. */
   const featured = pickFeaturedTenant();
+  const featuredCard = document.getElementById('mcFeatured');
+  if (featuredCard) featuredCard.style.display = featured ? '' : 'none';
   const iconEl = document.getElementById('mcFeaturedIcon');
   const labelEl = document.getElementById('mcFeaturedLabel');
   const metaEl = document.getElementById('mcFeaturedMeta');
-  if (iconEl && labelEl && metaEl) {
+  if (featured && iconEl && labelEl && metaEl) {
     if (featured.photo) {
       iconEl.style.backgroundImage = `url('${featured.photo}')`;
       iconEl.innerHTML = '';
@@ -578,7 +650,8 @@ function openVacancyContact(id) {
 }
 
 function openFeatured() {
-  openTenant(pickFeaturedTenant().id);
+  const f = pickFeaturedTenant();
+  if (f) openTenant(f.id);
 }
 
 /* Both the directory view and the map view show the same rows, so the
@@ -593,6 +666,7 @@ function renderDirectory() {
     if (searchTerm) {
       const q = searchTerm.toLowerCase();
       return t.name.toLowerCase().includes(q) ||
+             (t.tech || '').toLowerCase().includes(q) ||
              t.service.toLowerCase().includes(q) ||
              t.suite.toLowerCase().includes(q) ||
              t.tags.some(tag => tag.toLowerCase().includes(q));
@@ -612,7 +686,7 @@ function renderDirectory() {
         <div class="tenant-name" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
           <span>${escapeHtml(t.name)}</span>${claimedPillHTML(t)}
         </div>
-        <div class="tenant-service">${t.service}</div>
+        <div class="tenant-service">${t.tech ? `${escapeHtml(t.tech)} · ` : ''}${t.service}</div>
         <div class="row-tags">
           <span class="row-tag">${t.suite}</span>
           <span class="row-tag">${CAT_LABEL[t.category] || 'Studio'}</span>
@@ -642,7 +716,7 @@ function renderSaved() {
         <div class="tenant-name" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
           <span>${escapeHtml(t.name)}</span>${claimedPillHTML(t)}
         </div>
-        <div class="tenant-service">${t.service}</div>
+        <div class="tenant-service">${t.tech ? `${escapeHtml(t.tech)} · ` : ''}${t.service}</div>
       </div>
       ${statusPillHTML(t)}
     </div>
@@ -721,6 +795,8 @@ function switchView(view) {
 }
 
 function switchViewRaw(view) {
+  /* A building with no traced floor plan has no map view to land on. */
+  if (view === 'map' && !BUILDING_INFO.has_map) view = 'directory';
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById(`view-${view}`).classList.add('active');
   const primaryViews = ['discover', 'directory', 'saved'];
@@ -765,7 +841,7 @@ function openTenant(id) {
     ${renderSocials(t)}
     <div class="profile-body">
       <div class="profile-name">${escapeHtml(t.name)}</div>
-      <div class="profile-service">${t.service}</div>
+      <div class="profile-service">${t.tech ? `${escapeHtml(t.tech)} · ` : ''}${t.service}</div>
       <div class="profile-meta">
         <span><strong>${t.suite}</strong></span>
         <span style="color: var(--cream-40)">•</span>
@@ -914,7 +990,9 @@ function renderContactActions(t, isSaved) {
       <svg width="18" height="18" viewBox="0 0 24 24" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
     </button>`;
 
-  const suiteKey = getSuiteKey(t);
+  /* No wayfinding without a traced floor plan: a demo building's Suite
+     103 must not route through Salon Plus's hallways. */
+  const suiteKey = BUILDING_INFO.has_map ? getSuiteKey(t) : null;
   const directionsHtml = suiteKey
     ? `<button class="btn btn-outline" type="button" onclick="showRouteTo('${t.id}')">
          ${ICONS.map} Show me on the map · ${escapeHtml(t.suite)}
@@ -1250,6 +1328,10 @@ document.getElementById('searchInput').addEventListener('input', e => {
 });
 
 // INIT
+/* Dress the shell before first paint on a non-home link, so a demo
+   building never flashes the Salon Plus lockup; the directory answer
+   refines the name a moment later. */
+applyBuildingIdentity(null);
 renderDYK();
 renderDiscoverCards();
 renderDirectory();

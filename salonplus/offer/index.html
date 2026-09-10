@@ -237,12 +237,18 @@
 
    The page never decides what a studio may edit. It renders the fields
    the server says their level includes, and the server refuses the rest
-   regardless of what gets sent — so a field hidden here is not a field
+   regardless of what gets sent, so a field hidden here is not a field
    protected here.
    ===================================================================== */
 const ADMIN_API = '/api/salonplus-admin';
 const OFFER_API = '/api/salonplus-specials';
-const SESSION = 'sp-studio-v1';
+/* Which building this portal signs into. Plain /salonplus/offer/ stays
+   Salon Plus; ?b=<slug> (the link the welcome email sends for any other
+   building) scopes the suite + code check to that building, because
+   suite numbers repeat across buildings. */
+const PORTAL_BUILDING = (new URLSearchParams(location.search).get('b') || 'salonplus')
+  .toLowerCase().replace(/[^a-z0-9-]/g, '') || 'salonplus';
+const SESSION = 'sp-studio-v1-' + PORTAL_BUILDING;
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -256,7 +262,7 @@ let template = 'amount_off';
 async function api(url, body) {
   const res = await fetch(url, {
     method: 'POST', headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ ...body, ...(auth || {}) }),
+    body: JSON.stringify({ building: PORTAL_BUILDING, ...body, ...(auth || {}) }),
   });
   let data = {}; try { data = await res.json(); } catch {}
   if (!res.ok) throw new Error(data.error || 'Something went wrong. Try again in a moment.');
@@ -509,7 +515,7 @@ async function setUpOffer() {
   try {
     const res = await fetch(OFFER_API, {
       method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ action: 'unlock', suite: auth.suite, code: auth.code }),
+      body: JSON.stringify({ action: 'unlock', building: PORTAL_BUILDING, suite: auth.suite, code: auth.code }),
     });
     const d = await res.json();
     if (!res.ok) throw new Error(d.error || 'Could not load your offer.');
@@ -580,7 +586,7 @@ $('postBtn').addEventListener('click', async () => {
 
     const res = await fetch(OFFER_API, {
       method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ action: 'post', suite: auth.suite, code: auth.code, parts }),
+      body: JSON.stringify({ action: 'post', building: PORTAL_BUILDING, suite: auth.suite, code: auth.code, parts }),
     });
     const d = await res.json();
     if (!res.ok) throw new Error(d.error || 'Could not post that.');
@@ -610,7 +616,7 @@ async function sendMessage(kind) {
     const res = await fetch('/api/salonplus-interest', {
       method: 'POST', headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
-        kind, notes: text, building: 'salonplus', source: 'studio-portal',
+        kind, notes: text, building: PORTAL_BUILDING, source: 'studio-portal',
         business: studio.name, suite: studio.suite,
         name: studio.contact_name || studio.name,
         email: studio.email, phone: studio.phone,

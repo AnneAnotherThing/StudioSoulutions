@@ -88,14 +88,22 @@ export default async function handler(request) {
 async function directory(db, p) {
   const building = str(p.building) || 'salonplus';
 
-  const [studios, tiers] = await Promise.all([
-    db.get(STUDIOS, { building: `eq.${building}`, status: 'eq.live', order: 'suite.asc', limit: '300' }),
-    db.get(TIERS,   { order: 'tier.asc' }),
+  const [studios, tiers, buildings] = await Promise.all([
+    db.get(STUDIOS,   { building: `eq.${building}`, status: 'eq.live', order: 'suite.asc', limit: '300' }),
+    db.get(TIERS,     { order: 'tier.asc' }),
+    db.get(BUILDINGS, { slug: `eq.${building}`, limit: '1' }),
   ]);
   if (!studios || !tiers) return json(502, { error: 'Could not load the directory.' });
 
+  /* The app dresses itself from this: name in the header, has_map decides
+     whether the floor-plan views exist at all. One app, any building. */
+  const b = buildings && buildings[0];
+  const buildingInfo = b
+    ? { slug: b.slug, name: b.name, city: b.city || '', has_map: b.has_map === true }
+    : { slug: building, name: 'Salon Plus Studios', city: 'Glendale, AZ', has_map: building === 'salonplus' };
+
   const byTier = Object.fromEntries(tiers.map(t => [t.tier, t]));
-  return json(200, { rows: studios.map(s => publicShape(s, byTier[s.tier])) });
+  return json(200, { building: buildingInfo, rows: studios.map(s => publicShape(s, byTier[s.tier])) });
 }
 
 /* Everything a tier isn't allowed to show is dropped before it leaves the
@@ -110,6 +118,10 @@ function publicShape(s, tier) {
   return {
     suite:     s.suite,
     name:      s.name,
+    /* The person behind the chair, on every card regardless of tier: a
+       name is identity like the studio name, not a paid contact channel.
+       Laura's ask, Sep 2026. */
+    tech:      s.contact_name || '',
     service:   s.service,
     category:  CATEGORIES.includes(s.category) ? s.category : 'hair',
     bio:       allow.allow_bio   ? s.bio   : '',
@@ -326,15 +338,18 @@ async function syncCouponCode(db, studio) {
   const tiers = await db.get(TIERS, { tier: `eq.${studio.tier}`, limit: '1' });
   const allowed = tiers && tiers[0] && tiers[0].allow_coupons;
 
-  const existing = await db.get(CODES, { suite: `eq.${studio.suite}`, limit: '1' });
+  /* Scoped by building: two buildings can both have a Suite 103, and one
+     studio's code must never resolve against the other's. */
+  const scope = { suite: `eq.${studio.suite}`, building: `eq.${studio.building}` };
+  const existing = await db.get(CODES, { ...scope, limit: '1' });
   const has = existing && existing[0];
 
   if (!allowed) {
-    if (has) await db.patch(CODES, { suite: `eq.${studio.suite}` }, { can_post: false });
+    if (has) await db.patch(CODES, scope, { can_post: false });
     return null;
   }
   if (has) {
-    await db.patch(CODES, { suite: `eq.${studio.suite}` },
+    await db.patch(CODES, scope,
       { can_post: true, studio: studio.name, services: studio.tags || [], studio_id: studio.id });
     return has.code;
   }
@@ -447,7 +462,8 @@ async function studioAuth(db, p) {
   const building = str(p.building) || 'salonplus';
   if (!suite || !code) return { error: json(400, { error: 'Suite and code are both required.' }) };
 
-  const rows = await db.get(CODES, { suite: `eq.${suite}`, limit: '1' });
+  /* Building-scoped: suite numbers repeat across buildings. */
+  const rows = await db.get(CODES, { suite: `eq.${suite}`, building: `eq.${building}`, limit: '1' });
   if (!rows)  return { error: json(502, { error: 'Could not check that code.' }) };
   const row = rows[0];
   if (!row || row.code !== code) {
@@ -553,7 +569,8 @@ async function studioSave(db, p) {
 
   /* Told after the fact, with the old values, because the change is
      already live and the only thing Anne needs is a way to undo it. */
-  emailStudioEdit(before, changed)
+  buildingLabel(db, before.building)
+    .then(label => emailStudioEdit(before, changed, label))
     .catch(e => console.warn('admin: edit notice failed', String(e).slice(0, 200)));
 
   return json(200, { ok: true, changed: changed.map(c => c.field), studio: saved });
@@ -568,27 +585,35 @@ async function emailWelcome(db, studio) {
   const key = process.env.RESEND_API_KEY;
   if (!key || !studio || !studio.email || studio.notified_at) return;
 
-  const codes = await db.get(CODES, { suite: `eq.${studio.suite}`, limit: '1' });
+  const codes = await db.get(CODES, { suite: `eq.${studio.suite}`, building: `eq.${studio.building}`, limit: '1' });
   const code = codes && codes[0] ? codes[0].code : '';
   const first = studio.contact_name ? escHtml(String(studio.contact_name).split(' ')[0]) : '';
+  const label = await buildingLabel(db, studio.building);
+  /* Salon Plus keeps its original short links; every other building gets
+     its own app link and a portal link that knows the building. */
+  const home = studio.building === 'salonplus';
+  const appUrl    = home ? 'https://studiosoulutions.com/salonplus/app/'
+                         : `https://studiosoulutions.com/a/${encodeURIComponent(studio.building)}`;
+  const portalUrl = home ? 'https://studiosoulutions.com/salonplus/offer/'
+                         : `https://studiosoulutions.com/salonplus/offer/?b=${encodeURIComponent(studio.building)}`;
 
   const html = `
   <div style="font-family:Georgia,serif;max-width:520px;margin:0 auto;color:#33312D;">
-    <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:#9A6B45;">Salon Plus Studios</p>
+    <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:#9A6B45;">${escHtml(label)}</p>
     <h2 style="font-weight:400;margin:6px 0 16px;">You're on the map</h2>
     <p style="font-size:15px;line-height:1.6;">
-      ${first ? escHtml(first) + ', y' : 'Y'}our studio is live in the Salon Plus directory. Anyone who walks
+      ${first ? escHtml(first) + ', y' : 'Y'}our studio is live in the ${escHtml(label)} directory. Anyone who walks
       into the building, or opens the app, can now find <strong>${escHtml(studio.name)}</strong> in Suite ${escHtml(studio.suite)}.
     </p>
     <p style="margin:22px 0;">
-      <a href="https://studiosoulutions.com/salonplus/app/" style="display:inline-block;padding:13px 26px;background:#33312D;color:#FAF8F4;text-decoration:none;border-radius:999px;font-family:Inter,sans-serif;font-size:15px;">See your card</a>
+      <a href="${appUrl}" style="display:inline-block;padding:13px 26px;background:#33312D;color:#FAF8F4;text-decoration:none;border-radius:999px;font-family:Inter,sans-serif;font-size:15px;">See your card</a>
     </p>
     ${code ? `
     <div style="border:1px solid #DCD6CA;border-radius:14px;padding:18px 20px;background:#FAF8F4;">
       <div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#9A6B45;margin-bottom:8px;">Keep this</div>
       <p style="margin:0 0 10px;font-size:15px;line-height:1.6;">
         You can update your own listing any time &mdash; hours, photos, booking link &mdash; at
-        <a href="https://studiosoulutions.com/salonplus/offer/" style="color:#6B7A5F;">studiosoulutions.com/salonplus/offer</a>.
+        <a href="${portalUrl}" style="color:#6B7A5F;">your studio portal</a>.
       </p>
       <p style="margin:0;font-size:15px;">
         Suite <strong>${escHtml(studio.suite)}</strong> &nbsp;&middot;&nbsp; Code <strong style="font-family:ui-monospace,monospace;">${escHtml(code)}</strong>
@@ -603,9 +628,15 @@ async function emailWelcome(db, studio) {
   await db.patch(STUDIOS, { id: `eq.${studio.id}` }, { notified_at: nowIso() });
 }
 
+/* The display name for a building slug, for email eyebrows and copy. */
+async function buildingLabel(db, slug) {
+  const rows = await db.get(BUILDINGS, { slug: `eq.${slug}`, limit: '1' });
+  return rows && rows[0] && rows[0].name ? rows[0].name : 'Salon Plus Studios';
+}
+
 /* Sent to Anne after a studio edits itself. Old value beside new, because
    the point of this mail is to make an undo possible. */
-async function emailStudioEdit(before, changed) {
+async function emailStudioEdit(before, changed, label = 'Salon Plus Studios') {
   const to = process.env.LEAD_TO;
   if (!process.env.RESEND_API_KEY || !to) return;
 
@@ -619,7 +650,7 @@ async function emailStudioEdit(before, changed) {
 
   const html = `
   <div style="font-family:Georgia,serif;max-width:600px;margin:0 auto;color:#33312D;">
-    <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:#6B7A5F;">Salon Plus Studios &middot; already live</p>
+    <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:#6B7A5F;">${escHtml(label)} &middot; already live</p>
     <h2 style="font-weight:400;margin:6px 0 6px;">${escHtml(before.name)} updated their own listing</h2>
     <p style="margin:0 0 18px;color:#6C685F;font-size:14px;">Suite ${escHtml(before.suite)}. This is already on the app. Old values on the left, in case you want to put any of it back.</p>
     <table style="font-size:15px;border-collapse:collapse;width:100%;">${rows}</table>

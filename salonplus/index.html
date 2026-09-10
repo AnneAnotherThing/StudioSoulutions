@@ -208,6 +208,16 @@
     border-color:#A8593E; box-shadow:0 0 0 1px #A8593E; background:#FBF3EE;
   }
   .mode-btn[data-mode="change"].is-on .dot { border-color:#A8593E; color:#A8593E; }
+  /* Same radio-card look for the bio choice, sage so it reads as its own
+     question rather than a third mode. Literal colours on purpose, same
+     lesson as the mode buttons. */
+  .bio-btn.is-on { border-color:#6B7A5F; box-shadow:0 0 0 1px #6B7A5F; background:#F1F4EE; }
+  .bio-btn.is-on .dot { border-color:#6B7A5F; color:#6B7A5F; }
+  .field select {
+    width:100%; padding:11px 14px; border-radius:12px; border:1px solid var(--line-2, #D4C4A8);
+    background:#FFFDF9; font:inherit; color:var(--ink);
+  }
+  .field select:focus { outline:none; border-color:var(--sage, #8B9A7E); }
 </style>
 </head>
 <body>
@@ -326,15 +336,41 @@
           </div>
         </div>
 
-        <div class="grid-2">
-          <div class="field">
-            <label for="f_email">Email <span class="req" title="Phone or email, at least one">*</span></label>
-            <input type="email" id="f_email" name="email" autocomplete="email">
+        <div class="field">
+          <label for="f_email">Email <span class="req" title="Phone or email, at least one">*</span></label>
+          <input type="email" id="f_email" name="email" autocomplete="email">
+        </div>
+
+        <!-- Hours were one free-text box and came back as anything from
+             "whenever" to a paragraph. Days are chips and times are two
+             pickers now, composed into the same hours string the rest of
+             the system already reads. The typed fallback stays for real
+             schedules the pickers can't say. Laura's ask, Sep 2026. -->
+        <div class="field">
+          <label>Days &amp; hours <span style="font-weight:400;">(tap your days)</span></label>
+          <div class="svc-row" id="dayRow">
+            <label class="svc"><input type="checkbox" value="Mon">Mon</label>
+            <label class="svc"><input type="checkbox" value="Tue">Tue</label>
+            <label class="svc"><input type="checkbox" value="Wed">Wed</label>
+            <label class="svc"><input type="checkbox" value="Thu">Thu</label>
+            <label class="svc"><input type="checkbox" value="Fri">Fri</label>
+            <label class="svc"><input type="checkbox" value="Sat">Sat</label>
+            <label class="svc"><input type="checkbox" value="Sun">Sun</label>
           </div>
-          <div class="field">
-            <label for="f_hours">Days &amp; hours <span style="font-weight:400;">(roughly)</span></label>
-            <input type="text" id="f_hours" name="hours" placeholder="e.g. Tue–Sat 10–6">
+          <div class="grid-2" id="timeRow" style="margin-top:10px;">
+            <div>
+              <label for="f_open" style="font-size:11.5px;">Opens</label>
+              <select id="f_open"><option value="">&mdash;</option></select>
+            </div>
+            <div>
+              <label for="f_close" style="font-size:11.5px;">Closes</label>
+              <select id="f_close"><option value="">&mdash;</option></select>
+            </div>
           </div>
+          <div id="hoursPreview" style="display:none;margin-top:8px;font-size:13.5px;color:var(--sage-deep);font-weight:600;"></div>
+          <button type="button" id="hoursVaryBtn" style="margin-top:8px;background:none;border:none;padding:0;font:inherit;font-size:12.5px;color:var(--ink-faint);text-decoration:underline;cursor:pointer;">My days vary, let me type them instead</button>
+          <input type="text" id="f_hours_free" style="display:none;margin-top:8px;" placeholder="e.g. Tue 10&ndash;6, Sat by appointment">
+          <input type="hidden" id="f_hours" name="hours">
         </div>
 
         <div class="field">
@@ -378,9 +414,27 @@
         </div>
 
 
+        <!-- "Anything else?" produced either nothing or a life story. Asking
+             for facts produces facts, and the toggle below settles up front
+             whether we polish them into a bio or print them untouched.
+             Laura's ask, Sep 2026. -->
         <div class="field">
-          <label for="f_notes">Anything else? <span style="font-weight:400;">(optional)</span></label>
-          <textarea id="f_notes" name="notes" rows="3" placeholder="Specialties, hours, how you'd like your studio described..."></textarea>
+          <label for="f_notes">The facts for your card <span style="font-weight:400;">(optional)</span></label>
+          <textarea id="f_notes" name="notes" rows="3" placeholder="e.g. 12 years behind the chair, balayage and color correction, Redken certified, quiet private suite..."></textarea>
+        </div>
+
+        <div class="field" id="bioHelpField">
+          <div class="modeq">Your card's write-up</div>
+          <div class="modepick" role="radiogroup" aria-label="Who writes your bio">
+            <button type="button" class="mode-btn bio-btn is-on" data-bio="help" role="radio" aria-checked="true">
+              <span class="dot"></span>
+              <span><span class="m-t">Write it for me</span><span class="m-d">We turn your facts into a short, polished bio</span></span>
+            </button>
+            <button type="button" class="mode-btn bio-btn" data-bio="asis" role="radio" aria-checked="false">
+              <span class="dot"></span>
+              <span><span class="m-t">Use my words</span><span class="m-d">Your facts go on the card just as you wrote them</span></span>
+            </button>
+          </div>
         </div>
 
         <div class="field">
@@ -540,6 +594,78 @@ document.querySelectorAll('.svc input').forEach(cb => {
   cb.addEventListener('change', () => cb.closest('.svc').classList.toggle('on', cb.checked));
 });
 
+/* ----- days & hours: chips + two pickers, composed into one string -----
+   The rest of the system (the card, the app, the portal) reads hours as a
+   single line like "Tue–Sat 10am–6pm", so the pickers write exactly that
+   into the hidden field the form already submits. The typed fallback is
+   for schedules a single range can't say. */
+const DAY_ORDER = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+(function () {
+  const openSel = document.getElementById('f_open');
+  const closeSel = document.getElementById('f_close');
+  if (!openSel || !closeSel) return;
+  for (let m = 6 * 60; m <= 22 * 60; m += 30) {
+    const label = fmtTime(m);
+    openSel.add(new Option(label, String(m)));
+    closeSel.add(new Option(label, String(m)));
+  }
+})();
+function fmtTime(mins) {
+  const h24 = Math.floor(mins / 60), mm = mins % 60;
+  const h12 = ((h24 + 11) % 12) + 1;
+  return h12 + (mm ? ':' + String(mm).padStart(2, '0') : '') + (h24 < 12 ? 'am' : 'pm');
+}
+function composeDays(days) {
+  const idx = days.map(d => DAY_ORDER.indexOf(d)).sort((a, b) => a - b);
+  if (!idx.length) return '';
+  const contiguous = idx.every((v, i) => i === 0 || v === idx[i - 1] + 1);
+  if (contiguous && idx.length > 2) return DAY_ORDER[idx[0]] + '–' + DAY_ORDER[idx[idx.length - 1]];
+  return idx.map(i => DAY_ORDER[i]).join(', ');
+}
+let hoursVary = false;
+function syncHours() {
+  const hidden = document.getElementById('f_hours');
+  const preview = document.getElementById('hoursPreview');
+  if (hoursVary) {
+    hidden.value = document.getElementById('f_hours_free').value.trim();
+    preview.style.display = 'none';
+    return;
+  }
+  const days = [...document.querySelectorAll('#dayRow input:checked')].map(c => c.value);
+  const o = document.getElementById('f_open').value;
+  const c = document.getElementById('f_close').value;
+  const time = o && c ? fmtTime(Number(o)) + '–' + fmtTime(Number(c)) : '';
+  hidden.value = [composeDays(days), time].filter(Boolean).join(' ');
+  preview.textContent = hidden.value;
+  preview.style.display = hidden.value ? 'block' : 'none';
+}
+document.getElementById('dayRow').addEventListener('change', syncHours);
+document.getElementById('f_open').addEventListener('change', syncHours);
+document.getElementById('f_close').addEventListener('change', syncHours);
+document.getElementById('f_hours_free').addEventListener('input', syncHours);
+document.getElementById('hoursVaryBtn').addEventListener('click', () => {
+  hoursVary = !hoursVary;
+  document.getElementById('dayRow').style.display = hoursVary ? 'none' : '';
+  document.getElementById('timeRow').style.display = hoursVary ? 'none' : '';
+  document.getElementById('f_hours_free').style.display = hoursVary ? 'block' : 'none';
+  document.getElementById('hoursVaryBtn').textContent = hoursVary
+    ? 'Back to the day picker'
+    : 'My days vary, let me type them instead';
+  syncHours();
+});
+
+/* ----- the bio choice: polish the facts, or print them untouched ----- */
+let bioHelp = true;
+document.querySelectorAll('.bio-btn').forEach(b =>
+  b.addEventListener('click', () => {
+    bioHelp = b.dataset.bio === 'help';
+    document.querySelectorAll('.bio-btn').forEach(x => {
+      const on = x === b;
+      x.classList.toggle('is-on', on);
+      x.setAttribute('aria-checked', String(on));
+    });
+  }));
+
 /* ----- photos: one profile shot plus three for the gallery. Compressed
    in the browser, both so uploads fit the function and so a 4MB phone
    snap can't end up as the thing the app has to download. ----- */
@@ -608,7 +734,9 @@ form.addEventListener('submit', async e => {
     ok_to_text: form.ok_to_text.checked,
     email:      form.email.value.trim(),
     hours:      form.hours.value.trim(),
-    services:   [...form.querySelectorAll('.svc input:checked')].map(c => c.value),
+    /* #svcRow scopes this to the service pills; the day chips reuse the
+       .svc class for styling and must not be swept up as services. */
+    services:   [...form.querySelectorAll('#svcRow .svc input:checked')].map(c => c.value),
     instagram:  form.instagram.value.trim(),
     facebook:   form.facebook.value.trim(),
     tiktok:     form.tiktok.value.trim(),
@@ -616,12 +744,16 @@ form.addEventListener('submit', async e => {
     notes:      form.notes.value.trim(),
     website:    form.website.value.trim(),
     kind:       formMode,
+    bio_help:   bioHelp,                      // polish the facts, or use them as-is
     photos:     pickedPhotos,                 // compressed data URLs, up to 3
     hp:         form.company.value,           // honeypot
     building:   'salonplus',                  // which building this lead belongs to
     source:     'salonplus-web',              // which channel it came in on
   };
-  if (!data.business || !data.name) {
+  /* Only a NEW listing needs the two names. A change request is matched by
+     suite, so demanding a business and contact name there was friction for
+     nothing. Laura's ask, Sep 2026. */
+  if (formMode === 'new' && (!data.business || !data.name)) {
     msg.textContent = 'Business name and your name are the only two we really need.';
     msg.classList.add('err');
     return;
@@ -667,7 +799,10 @@ form.addEventListener('submit', async e => {
 let formMode = 'new';
 function setFormMode(mode) {
   formMode = mode;
-  document.querySelectorAll('.mode-btn').forEach(b => {
+  /* [data-mode] keeps this away from the bio buttons, which share the
+     .mode-btn class for its styling only. Without the guard, a click on
+     a bio button ran this with mode undefined and lit both bio cards. */
+  document.querySelectorAll('.mode-btn[data-mode]').forEach(b => {
     const on = b.dataset.mode === mode;
     b.setAttribute('aria-checked', String(on));
     b.classList.toggle('is-on', on);
@@ -682,21 +817,38 @@ function setFormMode(mode) {
     const lab = document.querySelector('label[for="f_suite"]');
     if (lab) lab.innerHTML = isChange ? 'Suite number <span class="req">*</span>' : 'Suite number';
   }
+  /* A change is matched by suite, so the two names relax to optional
+     there; a new listing still needs both. */
+  const biz = document.getElementById('f_biz');
+  if (biz) {
+    biz.required = !isChange;
+    const lab = document.querySelector('label[for="f_biz"]');
+    if (lab) lab.innerHTML = isChange ? 'Business name' : 'Business name <span class="req">*</span>';
+  }
+  const who = document.getElementById('f_name');
+  if (who) {
+    who.required = !isChange;
+    const lab = document.querySelector('label[for="f_name"]');
+    if (lab) lab.innerHTML = isChange ? 'Your name' : 'Your name <span class="req">*</span>';
+  }
   const notes = document.getElementById('f_notes');
   if (notes) {
     notes.required = isChange;
     notes.placeholder = isChange
       ? 'e.g. "Please swap my profile photo for the new one, and my hours are now Tue-Sat 9-5."'
-      : "Specialties, hours, how you'd like your studio described...";
+      : 'e.g. 12 years behind the chair, balayage and color correction, Redken certified, quiet private suite...';
     const lab = document.querySelector('label[for="f_notes"]');
     if (lab) lab.innerHTML = isChange
       ? 'What needs changing? <span class="req">*</span>'
-      : 'Anything else? <span style="font-weight:400;">(optional)</span>';
+      : 'The facts for your card <span style="font-weight:400;">(optional)</span>';
   }
+  /* The write-up choice only means something on a new card. */
+  const bioField = document.getElementById('bioHelpField');
+  if (bioField) bioField.style.display = isChange ? 'none' : '';
   const btn = document.getElementById('submitBtn');
   if (btn) btn.textContent = isChange ? 'Send my change' : btn.dataset.newLabel || btn.textContent;
 }
-document.querySelectorAll('.mode-btn').forEach(b =>
+document.querySelectorAll('.mode-btn[data-mode]').forEach(b =>
   b.addEventListener('click', () => setFormMode(b.dataset.mode)));
 (function () {
   const btn = document.getElementById('submitBtn');

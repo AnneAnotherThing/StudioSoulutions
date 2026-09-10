@@ -10,7 +10,7 @@
    - BW: the breezeway between the buildings, runs to the entrance
    - JX: junction arm connecting the breezeway to hall B
    - B:  300s east hall, lower half (327/328/329 front it)
-   - BH: bottom hall above 305/303/302
+   - BH: bottom hall above 305/303/301
    - D:  200s hall, EAST of 214/205, wrapping down to 201-204
    - H2: hall north of 201-204
    - H3: hall between 103 and the 101D/C/B row
@@ -85,21 +85,24 @@
   const rowM = i => i === 0 ? 48 : 84 + i * 62; // middle/right stacks, shifted under T
   const Lcol = ['321','320','318',"Women's","Men's",'316','Break','312','310','308','306',"Women's",null];
   const Mcol = ['322','319','317','326','315','313','311','309','Break','307','304'];
-  const Rcol = ['323','324','325','Waiting',null,'327','328','329','330',null,'301'];
+  /* 302 sits at the bottom of the right stack and 301 in the bottom-hall
+     row. They were drawn the other way around until Laura caught it
+     (her notes, Aug 2026): the two suites were transposed on the map. */
+  const Rcol = ['323','324','325','Waiting',null,'327','328','329','330',null,'302'];
   const isCommon = s => !/^\d/.test(s || '');
   /* Right-stack doors per the traced hallways: top suite opens to the
      connector, most open EAST to the breezeway, 327-329 open WEST to B. */
-  const rcolCor = { '323':'T','324':'BW','325':'BW','Waiting':'BW','327':'B','328':'B','329':'B','330':'BW','301':'BW' };
+  const rcolCor = { '323':'T','324':'BW','325':'BW','Waiting':'BW','327':'B','328':'B','329':'B','330':'BW','302':'BW' };
   Lcol.forEach((s, i) => s && room(s,  40, rowL(i), 110, 56, 'A', isCommon(s)));
   Mcol.forEach((s, i) => s && room(s, 186, rowM(i), 110, 56, 'A', isCommon(s)));
   Rcol.forEach((s, i) => s && room(s, 332, rowM(i), 110, 56, rcolCor[s] || 'B', isCommon(s)));
   /* the Electric/Utility room fills the bottom-left corner, tall and narrow,
-     exactly as the floor plan shows; the 305/303/302 row sits to its right
+     exactly as the floor plan shows; the 305/303/301 row sits to its right
      and opens north onto the bottom hall */
   room('Electric', 40, 792, 110, 154, 'A', 1);
   room('305', 186, 890, 80, 56, 'BH');
   room('303', 272, 890, 80, 56, 'BH');
-  room('302', 358, 890, 84, 56, 'BH');
+  room('301', 358, 890, 84, 56, 'BH');
 
   /* 200s block. West stack opens onto the breezeway; 214/205 open EAST
      onto hall D, which wraps down toward 201-204. */

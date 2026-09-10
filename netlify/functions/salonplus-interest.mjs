@@ -71,6 +71,10 @@ export default async function handler(request) {
     booking:    clip(p.booking, 300),
     website:    clip(p.website, 300),
     notes:      clip(p.notes, 2000),
+    /* True when the studio asked us to turn their facts into a polished
+       bio; false when their words go on the card untouched. Old clients
+       don't send it, and "help them" is the safe default for those. */
+    bio_help:   p.bio_help !== false,
     /* 'new' or 'change'. One form, two jobs: a studio that isn't listed
        yet, and one that is and wants something fixed. */
     kind:       ['change', 'question', 'bug'].includes(p.kind) ? p.kind : 'new',
@@ -80,7 +84,10 @@ export default async function handler(request) {
   const buildingLabel = BUILDING_NAMES[row.building] || clip(p.building_label, 80) || row.building;
 
   const isMessage = row.kind === 'question' || row.kind === 'bug';
-  if (!isMessage && (!row.business || !row.name)) {
+  /* Only a NEW listing needs the two names. A change request is matched
+     by suite, so demanding a business and contact name there was friction
+     for nothing. Laura's ask, Sep 2026. */
+  if (row.kind === 'new' && (!row.business || !row.name)) {
     return json(400, { error: 'business and name are required' });
   }
   if (!row.phone && !row.email) {
@@ -194,8 +201,8 @@ async function saveToSupabase(row) {
     // list too -- without them a change request against an un-migrated
     // table failed twice and was never saved at all, and only the email
     // carried it.
-    const { photos, facebook, tiktok, kind, website, ...base } = row;
-    if (photos || facebook || tiktok || kind || website) {
+    const { photos, facebook, tiktok, kind, website, bio_help, ...base } = row;
+    if (photos || facebook || tiktok || kind || website || bio_help !== undefined) {
       console.warn('interest: full insert failed, retrying with base columns', res.status);
       res = await insert(base);
     }
@@ -237,8 +244,12 @@ const KIND_STYLE = {
   change: {
     accent: '#A8593E',
     eyebrow: b => `${b} · change requested`,
-    heading: r => `${escHtml(r.business)} wants a change`,
-    subject: (r, b) => `[CHANGE] ${b}: ${r.business}${r.suite ? ` (Suite ${r.suite})` : ''}`,
+    /* The business name is optional on a change now, so the suite carries
+       the identity when the name wasn't given. */
+    heading: r => `${escHtml(r.business || `Suite ${r.suite}`)} wants a change`,
+    subject: (r, b) => r.business
+      ? `[CHANGE] ${b}: ${r.business}${r.suite ? ` (Suite ${r.suite})` : ''}`
+      : `[CHANGE] ${b}: Suite ${r.suite}`,
     lead: 'This studio is already listed. What they asked for is in the box below.',
   },
 };
@@ -293,7 +304,10 @@ async function emailLead(row, buildingLabel, photoUrls) {
       ${line('TikTok', row.tiktok)}
       ${line('Website', row.website)}
       ${line('Booking', row.booking)}
-      ${(isChange || isMsg) ? '' : line('Notes', row.notes)}
+      ${(isChange || isMsg) ? '' : line('Facts', row.notes)}
+      ${(isChange || isMsg) ? '' : line('Write-up', row.bio_help
+        ? 'Write it for them: turn the facts into a bio (the admin panel button does it)'
+        : 'Use their words exactly as written')}
     </table>
     ${photosHtml}
     <p style="margin-top:24px;font-size:14px;color:#6C685F;">
@@ -323,6 +337,8 @@ async function emailConfirmation(row, buildingLabel) {
   const from = senderAddress();
   const isChange = row.kind === 'change';
   const first = row.name ? escHtml(row.name.split(' ')[0]) : '';
+  /* Business name is optional on a change, so the suite stands in. */
+  const who = row.business || (row.suite ? `Suite ${row.suite}` : 'your studio');
 
   const html = `
   <div style="font-family:Georgia,serif;max-width:520px;margin:0 auto;color:#33312D;">
@@ -330,7 +346,7 @@ async function emailConfirmation(row, buildingLabel) {
     <h2 style="font-weight:400;margin:6px 0 16px;">${isChange ? 'We got your update' : 'We got your details'}</h2>
     <p style="font-size:15px;line-height:1.6;">
       Thanks${first ? ', ' + first : ''}. ${isChange
-        ? `Your change for <strong>${escHtml(row.business)}</strong> is in, and someone will make it shortly.`
+        ? `Your change for <strong>${escHtml(who)}</strong> is in, and someone will make it shortly.`
         : `<strong>${escHtml(row.business)}</strong> is on the list. Someone will set your listing up shortly, and you'll be on the map and in the app.`}
     </p>
     <p style="font-size:15px;line-height:1.6;">Nothing more for you to do. If we need anything, we'll reach out directly.</p>
@@ -344,7 +360,7 @@ async function emailConfirmation(row, buildingLabel) {
     headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
     body: JSON.stringify({
       from, to: [row.email],
-      subject: isChange ? `We got your update, ${row.business}` : `We got your details, ${row.business}`,
+      subject: isChange ? `We got your update, ${who}` : `We got your details, ${row.business}`,
       html,
     }),
   });

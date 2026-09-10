@@ -120,7 +120,7 @@ async function unlock(db, p) {
     options: { amounts: AMOUNTS, percents: PERCENTS, days: DAYS, fineMax: FINE_MAX,
                templates: Object.keys(TEMPLATES),
                audiences: Object.keys(AUDIENCE) },
-    live: await liveFor(db, s.suite),
+    live: await liveFor(db, s.suite, s.building || 'salonplus'),
   });
 }
 
@@ -189,7 +189,9 @@ async function postOffer(db, p) {
      if the insert fails after this, the suite is left with no live offer
      and simply reposts. The partial unique index is what actually
      guarantees there is never more than one. */
-  const retired = await db.patch(SPECIALS, { suite: `eq.${s.suite}`, status: 'eq.live' }, { status: 'replaced' });
+  const retired = await db.patch(SPECIALS,
+    { suite: `eq.${s.suite}`, building: `eq.${s.building || 'salonplus'}`, status: 'eq.live' },
+    { status: 'replaced' });
   if (!retired) return json(502, { error: 'Could not replace the current offer.' });
 
   const row = await db.insert(SPECIALS, {
@@ -274,12 +276,16 @@ async function hideOffer(db, p) {
 async function authStudio(db, p) {
   const suite = str(p.suite).toUpperCase();
   const code  = str(p.code);
+  const building = str(p.building) || 'salonplus';
   if (!suite || !code) return { error: json(400, { error: 'Suite and code are both required.' }) };
 
+  /* Building-scoped: suite numbers repeat across buildings, and one
+     studio's code must never resolve against another building's. */
   const rows = await db.get(CODES, {
-    suite:  `eq.${suite}`,
-    select: 'suite,building,studio,code,services,can_post',
-    limit:  '1',
+    suite:    `eq.${suite}`,
+    building: `eq.${building}`,
+    select:   'suite,building,studio,code,services,can_post',
+    limit:    '1',
   });
   if (!rows) return { error: json(502, { error: 'Could not check that code.' }) };
 
@@ -293,9 +299,9 @@ async function authStudio(db, p) {
   return { row };
 }
 
-async function liveFor(db, suite) {
+async function liveFor(db, suite, building = 'salonplus') {
   const rows = await db.get(SPECIALS, {
-    suite: `eq.${suite}`, status: 'eq.live',
+    suite: `eq.${suite}`, building: `eq.${building}`, status: 'eq.live',
     select: 'id,title,detail,expires_at', limit: '1',
   });
   const r = rows && rows[0];

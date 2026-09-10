@@ -822,7 +822,10 @@ function newCard(l) {
     </div>
     ${leadShots(l)}
     ${leadRows(l)}
-    ${l.notes ? `<dl class="rows"><dt>Notes</dt><dd>${esc(l.notes)}</dd></dl>` : ''}
+    ${l.notes ? `<dl class="rows"><dt>Facts</dt><dd>${esc(l.notes)}</dd></dl>` : ''}
+    ${l.bio_help === false
+      ? `<dl class="rows"><dt>Write-up</dt><dd>Use their words exactly as written</dd></dl>`
+      : l.notes ? `<dl class="rows"><dt>Write-up</dt><dd>They asked us to write it from these facts &mdash; the Write one button in the studio drawer does it</dd></dl>` : ''}
     <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
       <select class="cell" style="max-width:210px;border-color:var(--line-2);" data-lead-building="${esc(l.id)}">
         ${state.buildings.map(b => `<option value="${esc(b.slug)}"${b.slug === l.building ? ' selected' : ''}>${esc(b.name)}</option>`).join('')}

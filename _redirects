@@ -8,6 +8,11 @@
 # SPA-style fallback for the phone view (handles deep links into tenant profiles later)
 /app/*      /app.html        200
 
+# One app, every building: /a/<slug> serves the real app dressed as that
+# building (app.js reads the slug from the path). /a/demo is the sales
+# demo Laura shows prospects.
+/a/*        /salonplus/app/index.html   200
+
 # Leads moved to one home for every building
 /salonplus/leads.html   /leads/   301
 /salonplus/leads        /leads/   301
