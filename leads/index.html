@@ -828,6 +828,10 @@ function newCard(l) {
       : l.notes ? `<dl class="rows"><dt>Write-up</dt><dd>They asked us to write it from these facts &mdash; the Write one button in the studio drawer does it</dd></dl>` : ''}
     <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
       <select class="cell" style="max-width:210px;border-color:var(--line-2);" data-lead-building="${esc(l.id)}">
+        ${/* A lead from the generic form carries a slug no building has yet.
+             Without this guard the browser silently picks the FIRST option,
+             and a stranger's studio lands in Salon Plus. */''}
+        ${state.buildings.some(b => b.slug === l.building) ? '' : `<option value="" selected>&mdash; pick the building (they wrote &ldquo;${esc(l.building)}&rdquo;) &mdash;</option>`}
         ${state.buildings.map(b => `<option value="${esc(b.slug)}"${b.slug === l.building ? ' selected' : ''}>${esc(b.name)}</option>`).join('')}
       </select>
       <input class="cell" style="max-width:110px;border-color:var(--line-2);" data-lead-suite="${esc(l.id)}" value="${esc(l.suite || '')}" placeholder="Suite">
@@ -860,6 +864,7 @@ $('inboxList').addEventListener('click', async e => {
   const building = $('inboxList').querySelector(`[data-lead-building="${CSS.escape(id)}"]`).value;
   const suite = $('inboxList').querySelector(`[data-lead-suite="${CSS.escape(id)}"]`).value.trim();
   if (!suite) return alert('Give them a suite number first.');
+  if (!building) return alert('Pick which building this studio belongs to first. If theirs is new, add it in Settings, then come back.');
   btn.disabled = true; btn.textContent = 'Publishing…';
   try {
     const out = await api({ action: 'publishLead', leadId: id, studio: { building, suite, status: 'live' } });

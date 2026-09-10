@@ -249,6 +249,36 @@ ok(composeDays(['Mon', 'Wed', 'Fri']) === 'Mon, Wed, Fri', 'gapped days list out
 ok(composeDays(['Sat', 'Mon']) === 'Mon, Sat', 'two days list out in week order');
 ok(composeDays([]) === '', 'no days composes to nothing');
 
+/* ===== the app's hours parser accepts everything the composer emits ==== */
+section("form: composed hours parse in the app's Open-now engine");
+
+const appSrc = readFileSync(new URL('../salonplus/app/app.js', import.meta.url), 'utf8');
+const grabFn = name => {
+  const m = appSrc.match(new RegExp('function ' + name + '\\([^)]*\\) \\{[\\s\\S]*?\\n\\}'));
+  return m ? m[0] : null;
+};
+const parserSrc = ['toMinutes', 'readDays', 'readTimes', 'parseHours'].map(grabFn);
+ok(parserSrc.every(Boolean), 'hours parser functions found in app.js');
+const { parseHours } = new Function(
+  "const DAY_KEYS = ['sun','mon','tue','wed','thu','fri','sat'];\n"
+  + parserSrc.join('\n') + '\nreturn { parseHours };')();
+for (const c of ['Tue–Sat 10am–6pm', 'Mon, Wed, Fri 9am–7pm', 'Wed–Sun 10:30am–5pm',
+                 'Mon–Fri 9am–5pm', 'Sat 6:30pm–10pm', 'Tue–Sat 10–6']) {
+  ok(parseHours(c) !== null, `Open-now engine reads "${c}"`);
+}
+const span = parseHours('Tue–Sat 10am–6pm')[0];
+ok(span.open === 600 && span.close === 1080, 'composed 10am–6pm lands as 10:00 to 18:00');
+
+/* ===== specials: portal auth scoped by building ======================== */
+section('specials: building scoping');
+
+const specials = (await import('../netlify/functions/salonplus-specials.mjs')).default;
+resetNet();
+res = await post(specials, { action: 'unlock', building: 'demo', suite: '301', code: 'x' });
+let specCodes = calls.find(c => c.url.includes('ss_suite_codes'));
+ok(specCodes && specCodes.url.includes('building=eq.demo'),
+   'offer sign-in checks the code inside the right building');
+
 /* ===== join page keeps the same composer =============================== */
 const joinPage = readFileSync(new URL('../join/index.html', import.meta.url), 'utf8');
 ok(joinPage.includes('function composeDays'), 'join page carries the composer too');

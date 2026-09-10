@@ -34,6 +34,14 @@
 const SPECIALS = 'ss_specials';
 const CODES    = 'ss_suite_codes';
 
+/* Display names per building slug, same convention as the interest
+   function. Buildings not listed here show their slug in the email
+   eyebrow, which is honest if unglamorous. */
+const BUILDING_LABELS = {
+  salonplus: 'Salon Plus Studios',
+  demo:      'The Beauty Collective',
+};
+
 /* ----- what a studio is allowed to say -------------------------------
    Three shapes, each a sentence with slots. "your" is doing quiet work
    here: it reads naturally in front of every service name, singular or
@@ -174,9 +182,11 @@ async function postOffer(db, p) {
   const detail = [AUDIENCE[audience], clean.fine].filter(Boolean).join(' · ');
 
   /* Light throttle. One live offer per suite already keeps the feed
-     tidy; this only stops someone rewriting it forty times an hour. */
+     tidy; this only stops someone rewriting it forty times an hour.
+     Building-scoped, so a demo studio never spends Salon Plus's bucket. */
   const todaysPosts = await db.get(SPECIALS, {
     suite:  `eq.${s.suite}`,
+    building: `eq.${s.building || 'salonplus'}`,
     select: 'id',
     created_at: `gte.${today()}T00:00:00Z`,
     limit:  String(POSTS_PER_DAY + 1),
@@ -207,7 +217,8 @@ async function postOffer(db, p) {
      deliberately not awaited into the response path: this is a courtesy,
      not an approval step. A Resend hiccup must never cost a studio its
      offer, so a failure only ever reaches the logs. */
-  emailOffer({ studio: s.studio, suite: s.suite, title, detail, expires: prettyDate(row.expires_at), id: row.id })
+  emailOffer({ studio: s.studio, suite: s.suite, building: s.building || 'salonplus',
+               title, detail, expires: prettyDate(row.expires_at), id: row.id })
     .catch(e => console.error('specials: notify failed', e.message));
 
   return json(200, {
@@ -228,7 +239,7 @@ async function emailOffer(o) {
 
   const html = `
   <div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;color:#33312D;">
-    <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:#9A6B45;">Salon Plus Studios</p>
+    <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:#9A6B45;">${esc(BUILDING_LABELS[o.building] || o.building || 'Salon Plus Studios')}</p>
     <h2 style="font-weight:400;margin:6px 0 4px;">${esc(o.studio)} posted an offer</h2>
     <p style="margin:0 0 20px;color:#918C81;font-size:14px;">Suite ${esc(o.suite)} &middot; it is already live in the app</p>
     <div style="border:1px solid #E5D9C3;border-radius:14px;padding:18px 20px;background:#FBF6EE;">
@@ -248,7 +259,7 @@ async function emailOffer(o) {
     headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
     body: JSON.stringify({
       from, to: [to],
-      subject: `Salon Plus offer: ${o.studio} (Suite ${o.suite})`,
+      subject: `${BUILDING_LABELS[o.building] || o.building || 'Salon Plus'} offer: ${o.studio} (Suite ${o.suite})`,
       html,
     }),
   });

@@ -36,6 +36,7 @@ const MAX_PHOTO_BYTES = 3 * 1024 * 1024;   // per photo, post-decode
    line here. The generic /join form sends a building_label instead. */
 const BUILDING_NAMES = {
   salonplus: 'Salon Plus Studios',
+  demo:      'The Beauty Collective',
 };
 
 export const config = { path: ['/api/salonplus-interest', '/api/interest'] };
