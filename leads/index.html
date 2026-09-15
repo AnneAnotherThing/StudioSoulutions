@@ -401,6 +401,7 @@ a { color: var(--sage-deep); }
           <table>
             <thead><tr>
               <th class="col-suite">Suite</th>
+              <th>Center</th>
               <th>Studio</th>
               <th>Service line</th>
               <th class="col-cat">Category</th>
@@ -734,8 +735,11 @@ function renderStudioSheet(shown) {
       `<option value="${v}"${s.status === v ? ' selected' : ''}>${v}</option>`).join('');
     const catOpts = ['hair','barber','nails','spa'].map(v =>
       `<option value="${v}"${s.category === v ? ' selected' : ''}>${v}</option>`).join('');
+    const bldgOpts = state.buildings.map(b =>
+      `<option value="${esc(b.slug)}"${b.slug === s.building ? ' selected' : ''}>${esc(b.name)}</option>`).join('');
     return `<tr class="${isDirty ? 'dirty' : ''} ${s.status === 'draft' ? 'draft' : ''} ${s.status === 'hidden' ? 'is-hidden' : ''}" data-k="${esc(k)}">
       <td><input class="cell" data-f="suite" value="${esc(s.suite)}" placeholder="000"></td>
+      <td><select class="cell" data-f="building">${bldgOpts}</select></td>
       <td class="cell-name"><input class="cell" data-f="name" value="${esc(s.name)}" placeholder="Studio name">${s.status === 'hidden' ? '<span class="off-tag">off the app</span>' : ''}</td>
       <td><input class="cell" data-f="service" value="${esc(s.service)}" placeholder="e.g. Cuts &amp; Styling"></td>
       <td><select class="cell" data-f="category">${catOpts}</select></td>
@@ -746,7 +750,7 @@ function renderStudioSheet(shown) {
         ${!s.id ? `<button class="rowbtn warn" data-act="drop">Remove</button>` : s.status === 'hidden' ? `<button class="rowbtn" data-act="restore">Restore</button>` : `<button class="rowbtn warn" data-act="hide">Hide</button>`}
       </td>
     </tr>`;
-  }).join('') || `<tr><td colspan="7"><div class="empty">Nothing here yet. Add a studio, or publish one from the Inbox.</div></td></tr>`;
+  }).join('') || `<tr><td colspan="8"><div class="empty">Nothing here yet. Add a studio, or publish one from the Inbox.</div></td></tr>`;
 }
 
 $('studioRows').addEventListener('input', e => {
