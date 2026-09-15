@@ -602,35 +602,80 @@ async function emailWelcome(db, studio) {
   const portalUrl = home ? 'https://studiosoulutions.com/salonplus/offer/'
                          : `https://studiosoulutions.com/salonplus/offer/?b=${encodeURIComponent(studio.building)}`;
 
-  const html = `
-  <div style="font-family:Georgia,serif;max-width:520px;margin:0 auto;color:#33312D;">
-    <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:#9A6B45;">${escHtml(label)}</p>
-    <h2 style="font-weight:400;margin:6px 0 16px;">You're on the map</h2>
-    <p style="font-size:15px;line-height:1.6;">
+  /* The welcome doubles as the studio's onboarding: what just happened,
+     how to get the app on their phone, how people will find them, and
+     how to keep their own card current. Detailed on purpose, Anne's ask,
+     waggle 2026-09-14: this is the one email every studio actually reads. */
+  const step = (n, title, body) => `
+    <table style="border-collapse:collapse;margin-top:16px;"><tr>
+      <td style="vertical-align:top;padding-right:14px;">
+        <div style="width:30px;height:30px;border-radius:50%;background:#9A6B45;color:#FBF6EE;font-family:Inter,sans-serif;font-size:15px;font-weight:600;text-align:center;line-height:30px;">${n}</div>
+      </td>
+      <td style="vertical-align:top;">
+        <div style="font-size:15.5px;font-weight:600;color:#33312D;">${title}</div>
+        <div style="font-size:14.5px;line-height:1.6;color:#6C685F;margin-top:3px;">${body}</div>
+      </td>
+    </tr></table>`;
+
+  const html = brandShell(label, `
+    <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:#9A6B45;margin:0;">${escHtml(label)}</p>
+    <h2 style="font-weight:400;margin:6px 0 14px;font-size:24px;">You're on the map</h2>
+    <p style="font-size:15px;line-height:1.6;margin:0;">
       ${first ? escHtml(first) + ', y' : 'Y'}our studio is live in the ${escHtml(label)} directory. Anyone who walks
       into the building, or opens the app, can now find <strong>${escHtml(studio.name)}</strong> in Suite ${escHtml(studio.suite)}.
+      Here is what happens now, and how to make the most of it.
     </p>
-    <p style="margin:22px 0;">
+
+    ${step(1, 'See your card',
+      `Open <a href="${appUrl}" style="color:#6B7A5F;">the directory app</a> and there you are: your name, your services, your photos, your suite on the building map.`)}
+    ${step(2, 'Put the app on your phone',
+      `Open that same link on your phone, then use your browser's <strong>Add to Home Screen</strong> (on Android the menu may say <strong>Install app</strong>). From then on it opens like an app, one tap from your home screen. Show it to your clients; it works the same for them.`)}
+    ${step(3, 'How people find you',
+      `Visitors search by name or service, filter by category, and tap your suite on the map to see who is inside. The <strong>Call</strong>, <strong>Text</strong> and <strong>Book</strong> buttons on your card ring your phone, message you, and open your booking page. The <strong>Open now</strong> badge comes straight from your listed hours, so hours that stay true keep you in that filter.`)}
+    ${code ? step(4, 'Your card is yours to update',
+      `Sign in to <a href="${portalUrl}" style="color:#6B7A5F;">your studio portal</a> with the suite and code below. Change your hours, photos, booking link or bio, and it is live in the app the moment you save. If your listing level includes offers, the <strong>My offer</strong> tab posts a special that shows in the app and takes itself down when it expires.`)
+    : step(4, 'Changing something later',
+      `Want different hours, a new photo, or a new booking link on your card? Ask at the front desk and it is done in a minute.`)}
+
+    <p style="margin:24px 0 0;">
       <a href="${appUrl}" style="display:inline-block;padding:13px 26px;background:#33312D;color:#FAF8F4;text-decoration:none;border-radius:999px;font-family:Inter,sans-serif;font-size:15px;">See your card</a>
     </p>
     ${code ? `
-    <div style="border:1px solid #DCD6CA;border-radius:14px;padding:18px 20px;background:#FAF8F4;">
+    <div style="border:1px solid #DCD6CA;border-radius:14px;padding:18px 20px;background:#FAF8F4;margin-top:22px;">
       <div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#9A6B45;margin-bottom:8px;">Keep this</div>
       <p style="margin:0 0 10px;font-size:15px;line-height:1.6;">
-        You can update your own listing any time &mdash; hours, photos, booking link &mdash; at
-        <a href="${portalUrl}" style="color:#6B7A5F;">your studio portal</a>.
+        Your sign-in for <a href="${portalUrl}" style="color:#6B7A5F;">the studio portal</a>. It only unlocks your own card, so it is safe to save in your notes.
       </p>
       <p style="margin:0;font-size:15px;">
         Suite <strong>${escHtml(studio.suite)}</strong> &nbsp;&middot;&nbsp; Code <strong style="font-family:ui-monospace,monospace;">${escHtml(code)}</strong>
       </p>
+      <p style="margin:10px 0 0;font-size:13px;color:#918C81;">Lose the code? Ask at the front desk and it is back in a minute.</p>
     </div>` : ''}
-    <p style="margin-top:22px;font-size:13px;color:#918C81;">
-      Listed by Studio Soulutions. Reply to this email if anything looks wrong.
-    </p>
-  </div>`;
+    <p style="margin-top:22px;font-size:13.5px;color:#918C81;">
+      Anything look wrong on your card? Reply to this email and it reaches a person, or ask at the front desk.
+    </p>`);
 
-  await sendMail({ to: [studio.email], subject: `${studio.name} is on the map`, html });
+  await sendMail({ to: [studio.email], subject: `${studio.name} is on the map`, html, replyTo: 'anne@hive-rise.com' });
   await db.patch(STUDIOS, { id: `eq.${studio.id}` }, { notified_at: nowIso() });
+}
+
+/* One shell for studio-facing mail: cream ground, soft card, the
+   building's name in the copy and the Studio Soulutions mark below, so
+   the mail reads as the same brand as the app. Twin of the shell in
+   salonplus-interest.mjs; email HTML stays inline per function. */
+function brandShell(buildingLabel, inner) {
+  return `
+  <div style="background:#F5EDE0;padding:28px 14px;">
+    <div style="max-width:560px;margin:0 auto;font-family:Georgia,serif;color:#33312D;">
+      <div style="background:#FBF6EE;border:1px solid #E5D9C3;border-radius:16px;padding:26px 28px;">
+        ${inner}
+      </div>
+      <p style="text-align:center;margin:18px 0 0;font-size:12.5px;color:#918C81;">
+        ${escHtml(buildingLabel)} &middot; powered by
+        <a href="https://studiosoulutions.com" style="color:#9A6B45;text-decoration:none;">Studio Soulutions</a>
+      </p>
+    </div>
+  </div>`;
 }
 
 /* The display name for a building slug, for email eyebrows and copy. */
@@ -667,7 +712,7 @@ async function emailStudioEdit(before, changed, label = 'Salon Plus Studios') {
   await sendMail({ to: [to], subject: `Updated: ${before.name} (Suite ${before.suite})`, html });
 }
 
-async function sendMail({ to, subject, html }) {
+async function sendMail({ to, subject, html, replyTo }) {
   const key = process.env.RESEND_API_KEY;
   const from = process.env.RESEND_FROM;
   if (!key)  throw new Error('RESEND_API_KEY is not set.');
@@ -675,7 +720,9 @@ async function sendMail({ to, subject, html }) {
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
-    body: JSON.stringify({ from, to, subject, html }),
+    /* The sender is a noreply address, so any mail that invites a reply
+       must say where the reply actually goes. */
+    body: JSON.stringify({ from, to, subject, html, reply_to: replyTo || undefined }),
   });
   if (!res.ok) throw new Error(`resend ${res.status}: ${(await res.text()).slice(0, 200)}`);
 }
