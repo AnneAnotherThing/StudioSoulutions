@@ -48,6 +48,8 @@
   .part { break-inside: avoid; background: var(--surface); border: 1px solid var(--line); border-radius: 11px; padding: 10px 13px; margin-bottom: 10px; }
   .part h2 { font-family:'Jost',sans-serif; font-weight: 500; font-size: 13px; color: var(--bronze-deep); display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
   .part h2 .url { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9px; color: var(--bronze-deep); font-weight: 600; }
+  .part .url a, .part li a { color: var(--bronze-deep); text-decoration: none; border-bottom: 1px solid var(--line); }
+  .part .url a:hover, .part li a:hover { border-bottom-color: var(--bronze-deep); }
   .part ul { margin: 5px 0 0; padding-left: 14px; }
   .part li { margin: 2px 0; color: var(--ink-soft); font-size: 10.8px; }
   .part li b { color: var(--ink); }
@@ -78,7 +80,7 @@
 
   <div class="cols">
     <div class="part">
-      <h2>The app <span class="url">/a/demo</span></h2>
+      <h2>The app <span class="url"><a href="/a/demo">/a/demo</a></span></h2>
       <ul>
         <li><b>Search</b> by studio, person, service, or suite</li>
         <li><b>Filters</b>: categories, Open now (runs on real hours), Available now</li>
@@ -91,7 +93,7 @@
     </div>
 
     <div class="part">
-      <h2>Getting a studio on <span class="url">/join/?building=The Beauty Collective</span></h2>
+      <h2>Getting a studio on <span class="url"><a href="/join/?building=The%20Beauty%20Collective">/join/?building=The Beauty Collective</a></span></h2>
       <ul>
         <li><b>Two minutes on a phone</b>, from their own suite</li>
         <li><b>Day chips compose the hours</b>; hours power Open now</li>
@@ -102,7 +104,7 @@
     </div>
 
     <div class="part">
-      <h2>The studio portal <span class="url">/portal/?b=demo</span></h2>
+      <h2>The studio portal <span class="url"><a href="/portal/?b=demo">/portal/?b=demo</a></span></h2>
       <ul>
         <li><b>Sign in</b>: suite + code, or the welcome email's Edit your card button</li>
         <li><b>Every studio has a code</b>; the level only decides fields</li>
@@ -114,7 +116,7 @@
     </div>
 
     <div class="part">
-      <h2>The admin panel <span class="url">/leads &middot; passcode &middot; pick The Beauty Collective</span></h2>
+      <h2>The admin panel <span class="url"><a href="/leads/">/leads</a> &middot; passcode &middot; pick The Beauty Collective</span></h2>
       <ul>
         <li><b>Studios</b>: card or sheet view, Center column, Hide, Delete, portal code with New code, the write-the-bio button</li>
         <li><b>Inbox</b>: publish sign-ups, answer questions, delete any record</li>
@@ -128,19 +130,19 @@
     <div class="part">
       <h2>The live building <span class="url">everything above, running today</span></h2>
       <ul>
-        <li><b>Salon Plus Studios</b> has every piece live: the app at /salonplus/app, the directory page at /salonplus, the studios' portal at /salonplus/offer</li>
-        <li><b>The owner hub</b> at /laura: every link, live counts, copy-paste texts; it updates itself with every change</li>
+        <li><b>Salon Plus Studios</b> has every piece live: the app at <a href="/salonplus/app/">/salonplus/app</a>, the directory page at <a href="/salonplus/">/salonplus</a>, the studios' portal at <a href="/salonplus/offer/">/salonplus/offer</a></li>
+        <li><b>The owner hub</b> at <a href="/laura/">/laura</a>: every link, live counts, copy-paste texts; it updates itself with every change</li>
       </ul>
     </div>
 
     <div class="part">
       <h2>The paper kit <span class="url">reprint any time</span></h2>
       <ul>
-        <li><b>The rollout</b>, eleven pages &middot; /salonplus/rollout</li>
-        <li><b>Portal cards</b>, one per studio &middot; /leads/portal-cards</li>
-        <li><b>Sign-up sheet</b> &middot; /signup-sheet.html</li>
+        <li><b>The rollout</b>, eleven pages &middot; <a href="/salonplus/rollout/">/salonplus/rollout</a></li>
+        <li><b>Portal cards</b>, one per studio &middot; <a href="/leads/portal-cards/">/leads/portal-cards</a></li>
+        <li><b>Sign-up sheet</b> &middot; <a href="/signup-sheet.html">/signup-sheet.html</a></li>
         <li><b>QR sheet</b> &middot; rollout page 11</li>
-        <li><b>This quickstart</b> &middot; /quickstart</li>
+        <li><b>This quickstart</b> &middot; <a href="/quickstart/">/quickstart</a></li>
       </ul>
     </div>
 
