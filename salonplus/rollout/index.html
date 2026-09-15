@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Salon Plus Studios - The rollout (print)</title>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root {
+    --bg: #F2EFE9; --surface: #FAF8F4; --ink: #33312D; --ink-soft: #6C685F;
+    --ink-faint: #918C81; --bronze: #9A6B45; --bronze-deep: #7C5334; --line: #DCD6CA;
+    --sage: #7C8B6E; --sage-deep: #5F6E52; --blush: #FBF3EE; --clay: #A8593E;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: #E5E1D8; color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.55; font-size: 12.5px;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .page {
+    width: 8.5in; min-height: 11in; margin: 24px auto; padding: 0.55in 0.6in;
+    background: var(--bg); box-shadow: 0 10px 40px rgba(0,0,0,.18);
+    display: flex; flex-direction: column;
+    break-after: page;
+  }
+  @page { size: letter portrait; margin: 0; }
+  @media print {
+    :root { --bg: #fff; --surface: #fff; }
+    body { background: none; }
+    .page { margin: 0; box-shadow: none; width: auto; min-height: auto; }
+    .screen-only { display: none !important; }
+  }
+  .printbar {
+    max-width: 8.5in; margin: 18px auto 0; display: flex; gap: 10px; align-items: center; justify-content: center;
+    font-size: 13.5px; color: var(--ink-soft);
+  }
+  .printbar button {
+    font: inherit; font-weight: 600; padding: 9px 22px; border: 0; border-radius: 999px;
+    background: var(--ink); color: #fff; cursor: pointer;
+  }
+  .eyebrow { font-family:'Jost',sans-serif; font-size: 11px; letter-spacing: .32em; text-transform: uppercase; font-weight: 500; color: var(--bronze); }
+  .head { display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid var(--ink); padding-bottom: 10px; }
+  .logo { height: 38px; }
+  .logo-sp { height: 46px; mix-blend-mode: multiply; }
+  h1 { font-family:'Jost',sans-serif; font-weight: 300; font-size: 28px; line-height: 1.12; margin: 16px 0 6px; }
+  h1 strong { font-weight: 500; color: var(--bronze-deep); }
+  h2 { font-family:'Jost',sans-serif; font-weight: 400; font-size: 19px; margin: 0 0 5px; }
+  h3 { font-family:'Jost',sans-serif; font-weight: 500; font-size: 14px; margin: 0 0 3px; color: var(--bronze-deep); }
+  .lede { color: var(--ink-soft); font-size: 13px; max-width: 52em; }
+  p + p { margin-top: 7px; }
+
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 13px; padding: 12px 15px; }
+  .panel p, .panel li { color: var(--ink-soft); font-size: 12px; }
+  .panel b { color: var(--ink); }
+  ul.clean { margin: 5px 0 0; padding-left: 16px; }
+  ul.clean li { margin: 2.5px 0; }
+  ol.clean { margin: 5px 0 0; padding-left: 18px; }
+  ol.clean li { margin: 2.5px 0; color: var(--ink-soft); font-size: 12px; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 11px; }
+
+  .howto { background: var(--blush); border-left: 3px solid var(--bronze); border-radius: 0 11px 11px 0; padding: 10px 14px; }
+  .howto .h { font-size: 9.5px; letter-spacing: .2em; text-transform: uppercase; font-weight: 700; color: var(--bronze); margin-bottom: 3px; }
+  .howto p, .howto li { font-size: 12px; color: var(--ink); }
+  .callout.sage { background: #EFF2EA; border-left: 3px solid var(--sage-deep); border-radius: 0 11px 11px 0; padding: 10px 14px; font-size: 12px; color: var(--ink); }
+
+  table { border-collapse: collapse; width: 100%; font-size: 11.5px; }
+  th { font-family:'Jost',sans-serif; font-weight: 500; text-align: left; padding: 6px 9px; border-bottom: 1.5px solid var(--ink); font-size: 12px; }
+  td { padding: 6px 9px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-soft); }
+  td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
+  .url { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10.5px; color: var(--bronze-deep); font-weight: 600; }
+
+  .qr-slot { width: 1.2in; height: 1.2in; background: #fff; padding: 5px; border: 1px solid var(--line); border-radius: 10px; }
+  .qr-slot img, .qr-slot canvas { width: 100%; height: 100%; }
+
+  .foot { margin-top: auto; padding-top: 11px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-size: 10px; color: var(--ink-faint); }
+  .pgnum { font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+
+<div class="printbar screen-only">
+  <span>Nine pages · Letter portrait</span>
+  <button type="button" onclick="window.print()">Print</button>
+</div>
+
+<!-- ================= PAGE 1: WELCOME TO YOUR PRODUCT ================= -->
+<div class="page">
+  <div class="head">
+    <img class="logo-sp" src="/assets/logo-salonplus.png" alt="Salon Plus Studios" />
+    <img class="logo" src="/assets/logo_ss_green_v5.png" alt="Studio Soulutions" />
+  </div>
+
+  <h1>Laura, meet <strong>your new product.</strong></h1>
+  <p class="lede">
+    This is the complete tour, written as if you've never seen a single piece of it. Salon Plus
+    Studios now has its own app: every studio in the building on one screen, findable by name,
+    person, or service, with a live map, real hours, booking buttons, and specials. Around the app
+    sits a whole system: forms that bring studios on, a portal where they run their own cards, an
+    admin panel where you and Anne run the building, and printables for the front desk. Every piece
+    gets its own page in this rollout, each with the how-to spelled out.
+  </p>
+
+  <div style="margin-top: 14px;">
+    <div class="eyebrow" style="margin-bottom: 7px;">The tour, page by page</div>
+    <table>
+      <tr><th style="width:0.5in;">Page</th><th style="width:2.3in;">The piece</th><th>What you'll know by the end of it</th></tr>
+      <tr><td>2</td><td>The app: finding people</td><td>How customers browse, search, and see who's open right now</td></tr>
+      <tr><td>3</td><td>The app: cards and the map</td><td>What a studio's card can do, and how the map walks people to a door</td></tr>
+      <tr><td>4</td><td>Getting a studio on</td><td>The join form, field by field, and the change form for studios already listed</td></tr>
+      <tr><td>5</td><td>The studio portal</td><td>How a studio edits its own card and posts specials, safely</td></tr>
+      <tr><td>6</td><td>The emails</td><td>Every email the system sends, what each means, and what to do about it</td></tr>
+      <tr><td>7</td><td>The admin panel</td><td>The five tabs, the three everyday jobs, and the level switches</td></tr>
+      <tr><td>8</td><td>Your toolkit</td><td>The hub, the printables, the QRs, and the demo building for prospects</td></tr>
+      <tr><td>9</td><td>Your first week</td><td>A suggested order for rolling it out to your studios</td></tr>
+    </table>
+  </div>
+
+  <div class="callout sage" style="margin-top: 13px;">
+    <b>The one idea underneath everything:</b> a single directory database. The app, the map, the
+    directory page, and the counts on your hub all read from it. Change a card once, anywhere, and
+    every screen agrees a moment later.
+  </div>
+
+  <div class="panel" style="margin-top: 11px;">
+    <h3>What it never touches</h3>
+    <p>Each studio keeps its own booking system, prices, and way of working. This is the discovery
+    layer: the Book button on a card goes straight to whatever the studio already uses. Nobody has
+    to change how they work to be part of it.</p>
+  </div>
+
+  <div class="foot">
+    <span>Salon Plus Studios &middot; the rollout &middot; listed by Studio Soulutions</span>
+    <span class="pgnum">1 of 9</span>
+  </div>
+</div>
+
+<!-- ================= PAGE 2: THE APP, FINDING PEOPLE ================= -->
+<div class="page">
+  <div class="head">
+    <img class="logo-sp" src="/assets/logo-salonplus.png" alt="Salon Plus Studios" />
+    <img class="logo" src="/assets/logo_ss_green_v5.png" alt="Studio Soulutions" />
+  </div>
+
+  <h1>The app: <strong>finding people.</strong></h1>
+  <p class="lede">
+    Open <span class="url">studiosoulutions.com/salonplus/app</span> on any phone. This is what a
+    customer sees, and everything on this page is worth trying yourself before you show anyone.
+  </p>
+
+  <div class="grid2" style="margin-top: 13px;">
+    <div class="panel">
+      <h3>The Discover screen</h3>
+      <p>The front door. A welcome that counts the building's studios, a search bar, and big cards:
+      <b>Directory</b> (everyone), <b>Open right now</b> (who's open this minute, and who can take
+      you), and the <b>Suite map</b>. Below them: a featured studio that rotates daily, available
+      suites when any are listed, and a note from the owner.</p>
+    </div>
+    <div class="panel">
+      <h3>Search finds people, not just studios</h3>
+      <p>The search bar matches the studio's name, the <b>person behind the chair</b>, the services,
+      and the suite number. "Christina", "barber", "lash", or "103" all land in the right place.
+      Every card also shows the person's name next to the studio's, because people come back to
+      people.</p>
+    </div>
+    <div class="panel">
+      <h3>The Directory, with filters</h3>
+      <p>The full roster as a scrolling list. Chips across the top narrow it: All, Open now,
+      Available now, and the service categories. <b>Open now</b> means the doors are open;
+      <b>Available now</b> means open and not marked busy with a client.</p>
+    </div>
+    <div class="panel">
+      <h3>"Open now" runs on real hours</h3>
+      <p>A card only earns the live Open badge when we have the studio's actual opening and closing
+      times, not just their days. That is why the hours question matters so much on the forms: no
+      times, no badge, ever. The badge checks the clock in Phoenix time.</p>
+    </div>
+  </div>
+
+  <div class="howto" style="margin-top: 13px;">
+    <div class="h">How to: answer "who does lashes here?"</div>
+    <ol class="clean">
+      <li>Open the app, type "lash" in the search bar</li>
+      <li>Every matching studio appears with its suite number; tap one</li>
+      <li>The card shows their photos, hours, and a Book or Call button</li>
+      <li>Tap "Show me on the map" and the suite lights up on the floor plan</li>
+    </ol>
+  </div>
+
+  <div class="howto" style="margin-top: 10px;">
+    <div class="h">How to: see who could take a walk-in right now</div>
+    <ol class="clean">
+      <li>Discover screen, tap <b>Open right now</b></li>
+      <li>The Directory opens pre-filtered; the count line says how many are open and how many can take you now</li>
+      <li>Switch the chip to <b>Available now</b> to hide anyone marked "with a client"</li>
+    </ol>
+  </div>
+
+  <div class="foot">
+    <span>Salon Plus Studios &middot; the rollout &middot; listed by Studio Soulutions</span>
+    <span class="pgnum">2 of 9</span>
+  </div>
+</div>
+
+<!-- ================= PAGE 3: CARDS AND THE MAP ================= -->
+<div class="page">
+  <div class="head">
+    <img class="logo-sp" src="/assets/logo-salonplus.png" alt="Salon Plus Studios" />
+    <img class="logo" src="/assets/logo_ss_green_v5.png" alt="Studio Soulutions" />
+  </div>
+
+  <h1>The app: <strong>cards, the map, specials.</strong></h1>
+
+  <div class="grid2" style="margin-top: 13px;">
+    <div class="panel">
+      <h3>Anatomy of a card</h3>
+      <ul class="clean">
+        <li><b>Hero photo</b> plus a small gallery; tap a gallery shot to see it full screen</li>
+        <li><b>Name, person, suite, hours</b>, and the live status pill</li>
+        <li><b>Bio</b>: one to three warm sentences</li>
+        <li><b>Action buttons</b>: Book (their own system), Call, Text, website, email, whichever they've listed</li>
+        <li><b>Social icons</b>: Instagram, Facebook, TikTok</li>
+        <li><b>"While you're at..."</b>: other open studios, the cross-promotion moment</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>The claim button</h3>
+      <p>A card nobody has claimed yet carries a dashed button: <b>"This is my studio, claim my free
+      card."</b> It leads straight to the join form. The app recruits your tenants for you, right at
+      the moment they're looking at their own half-empty card. Once claimed, the button disappears;
+      customers never see it on a finished card.</p>
+    </div>
+    <div class="panel">
+      <h3>The map, and "show me on the map"</h3>
+      <p>The Map tab draws the real building: both wings, the breezeway, the entrance star. Suites
+      with studios are filled; tap one to open its card. From any card, <b>Show me on the map</b>
+      flips to the map with that suite glowing, so "where is she?" is answered by pointing at a lit
+      room. Start at the entrance pin, walk to the glow.</p>
+    </div>
+    <div class="panel">
+      <h3>The Specials tab</h3>
+      <p>Every live offer in the building, newest first, each with its expiry date. Offers come from
+      the studios themselves through their portal (page 5), are built from safe pre-set pieces, and
+      take themselves down when they expire. Nothing here needs your approval.</p>
+    </div>
+  </div>
+
+  <div class="howto" style="margin-top: 13px;">
+    <div class="h">How to: put the app on a phone like a real app</div>
+    <ol class="clean">
+      <li><b>Android (Chrome):</b> open the app link, tap the &#8942; menu, tap <b>Install app</b>, confirm. The Salon Plus icon lands on the home screen</li>
+      <li><b>iPhone (Safari):</b> open the app link, tap <b>Share</b>, tap <b>Add to Home Screen</b>, tap Add</li>
+      <li>Either way it opens full screen with its own icon from then on. Teach every studio this; it makes them your best advertisers</li>
+    </ol>
+  </div>
+
+  <div class="callout sage" style="margin-top: 10px;">
+    <b>Also in the family:</b> the directory page at <span class="url">studiosoulutions.com/salonplus</span>
+    is the map and full roster on one page, made to sit behind a QR code on lobby signs and flyers.
+    It explains the building to someone who has never set foot in it, then hands them to the app.
+  </div>
+
+  <div class="foot">
+    <span>Salon Plus Studios &middot; the rollout &middot; listed by Studio Soulutions</span>
+    <span class="pgnum">3 of 9</span>
+  </div>
+</div>
+
+<!-- ================= PAGE 4: GETTING A STUDIO ON ================= -->
+<div class="page">
+  <div class="head">
+    <img class="logo-sp" src="/assets/logo-salonplus.png" alt="Salon Plus Studios" />
+    <img class="logo" src="/assets/logo_ss_green_v5.png" alt="Studio Soulutions" />
+  </div>
+
+  <h1>Getting a studio <strong>on the app.</strong></h1>
+  <p class="lede">
+    One form does two jobs, and the link decides which side it opens on. New studio:
+    <span class="url">studiosoulutions.com/salonplus/#join</span> &middot; Already listed, something
+    changed: <span class="url">studiosoulutions.com/salonplus/?change</span>
+  </p>
+
+  <div class="grid2" style="margin-top: 13px;">
+    <div class="panel">
+      <h3>The join form, field by field</h3>
+      <ul class="clean">
+        <li><b>Business and contact name</b>: required for a new studio, that's how the card gets its identity</li>
+        <li><b>Suite</b>, <b>phone or email</b> (one of the two, so we can reach them)</li>
+        <li><b>Hours, done properly</b>: tap-able day chips and two time pickers, with a little preview that composes the line as they tap. "My days vary" exists for the odd schedules. Clean hours are what power the Open now badge</li>
+        <li><b>Services</b>: tap to choose, these become their search tags and offer menu</li>
+        <li><b>Socials, booking link, website</b>: whatever they have</li>
+        <li><b>The facts for your card</b>, then their choice: <b>Write it for me</b> (we turn facts into a polished bio) or <b>Use my words</b> (their text, untouched)</li>
+        <li><b>Photos</b>: up to four, straight from the camera roll</li>
+      </ul>
+    </div>
+    <div>
+      <div class="panel">
+        <h3>The change form asks almost nothing</h3>
+        <p>A studio that's already listed just gives their <b>suite</b> and <b>what to change</b>, in
+        their own words, with up to four photos. No business name, no contact name, no friction. It
+        reaches us flagged as a change, so it never gets muddled with new sign-ups.</p>
+      </div>
+      <div class="panel" style="margin-top: 10px;">
+        <h3>What happens the moment they hit send</h3>
+        <ol class="clean">
+          <li>They get an instant email receipt: "we got it, someone's on it"</li>
+          <li>It lands in the admin Inbox and in the email, labeled by kind</li>
+          <li>We build or fix the card and <b>publish</b>: nothing appears in your building without that step</li>
+          <li>On first publish, their <b>welcome email</b> fires, once, with their card link and their portal code</li>
+        </ol>
+      </div>
+      <div class="callout sage" style="margin-top: 10px;">
+        <b>Your part is step zero:</b> handing them the link. A text from you gets a form filled the
+        same day. The exact words to send are on your hub, ready to copy.
+      </div>
+    </div>
+  </div>
+
+  <div class="howto" style="margin-top: 13px;">
+    <div class="h">How to: get a brand-new studio on, start to finish</div>
+    <ol class="clean">
+      <li>Text them: "We're putting every studio on one app and map, so customers can actually find you. It's free. Two minutes: studiosoulutions.com/salonplus/#join"</li>
+      <li>They fill it in from their suite, photos and all</li>
+      <li>You or Anne publish it from the admin Inbox (page 7), usually same day</li>
+      <li>Their welcome email delivers their portal code; they're live on the map and running their own card</li>
+    </ol>
+  </div>
+
+  <div class="foot">
+    <span>Salon Plus Studios &middot; the rollout &middot; listed by Studio Soulutions</span>
+    <span class="pgnum">4 of 9</span>
+  </div>
+</div>
+
+<!-- ================= PAGE 5: THE STUDIO PORTAL ================= -->
+<div class="page">
+  <div class="head">
+    <img class="logo-sp" src="/assets/logo-salonplus.png" alt="Salon Plus Studios" />
+    <img class="logo" src="/assets/logo_ss_green_v5.png" alt="Studio Soulutions" />
+  </div>
+
+  <h1>The <strong>studio portal.</strong></h1>
+  <p class="lede">
+    Each studio's own door, at <span class="url">studiosoulutions.com/salonplus/offer</span>. They
+    sign in with their <b>suite number</b> and their <b>code</b>, which arrived in their welcome
+    email and is printed on the portal cards you hand out. A code opens only that studio's card, so
+    it's safe to text to its owner.
+  </p>
+
+  <div class="grid2" style="margin-top: 13px;">
+    <div class="panel">
+      <h3>The My listing tab</h3>
+      <p>Their card, editable: hours, photos, phone and whether texting is okay, booking link,
+      website, email, socials, bio. <b>Saves go live in the app immediately.</b> The page only shows
+      each studio the fields their level includes, and tells anyone below Featured what moving up
+      would add.</p>
+    </div>
+    <div class="panel">
+      <h3>Nothing can be quietly broken</h3>
+      <p>Every portal edit sends us an email showing the <b>old value next to the new one</b>. A bad
+      edit is a two-minute restore, never a mystery. If a studio says "it looked better before,"
+      the before is sitting in the inbox.</p>
+    </div>
+    <div class="panel">
+      <h3>The My offer tab</h3>
+      <p>Specials are composed, not typed. They pick a shape: <b>dollars off</b>, <b>percent off</b>,
+      or <b>free add-on</b> with one of their own services, then how long it runs (14 to 90 days,
+      no forever option) and who it's for. A short fine-print line is allowed; links, phone numbers
+      and shouting are stripped automatically. One live offer per studio; posting a new one replaces
+      the old; five changes a day at most.</p>
+    </div>
+    <div class="panel">
+      <h3>Send a question · Report a problem</h3>
+      <p>Two buttons at the bottom of the portal. Whatever they write lands in the admin Inbox in
+      its own lane and reaches the email flagged <b>[QUESTION]</b> or <b>[BUG]</b>. It's the fastest
+      path from "something's off" to "fixed," and it saves your hallway from becoming the ticket
+      system.</p>
+    </div>
+  </div>
+
+  <div class="howto" style="margin-top: 13px;">
+    <div class="h">How to: walk a studio through their first special</div>
+    <ol class="clean">
+      <li>Portal, sign in, <b>My offer</b> tab</li>
+      <li>Pick the shape: say, "$10 off" plus their "Gel manicure" service</li>
+      <li>Pick 30 days and "New clients," add fine print if any, post</li>
+      <li>Open the app's Specials tab together: it's already there, expiry shown. It takes itself down on day 30</li>
+    </ol>
+  </div>
+
+  <div class="callout sage" style="margin-top: 10px;">
+    <b>Lost code?</b> It's on their listing in the admin panel's Studios tab. Text it over, done.
+  </div>
+
+  <div class="foot">
+    <span>Salon Plus Studios &middot; the rollout &middot; listed by Studio Soulutions</span>
+    <span class="pgnum">5 of 9</span>
+  </div>
+</div>
+
+<!-- ================= PAGE 6: THE EMAILS ================= -->
+<div class="page">
+  <div class="head">
+    <img class="logo-sp" src="/assets/logo-salonplus.png" alt="Salon Plus Studios" />
+    <img class="logo" src="/assets/logo_ss_green_v5.png" alt="Studio Soulutions" />
+  </div>
+
+  <h1>Every email the system sends, <strong>decoded.</strong></h1>
+  <p class="lede">
+    The system talks in email so nothing depends on anyone remembering to check a screen. Here is
+    every message it can send, what each one means, and what, if anything, to do about it.
+  </p>
+
+  <div style="margin-top: 13px;">
+    <table>
+      <tr><th style="width:2.1in;">The email</th><th style="width:1.15in;">Who gets it</th><th>What it means, and your move</th></tr>
+      <tr><td>"We got your details"</td><td>The studio</td><td>Their form went through. No move needed; it exists so they're never left wondering.</td></tr>
+      <tr><td>New interest: [studio name]</td><td>You and Anne</td><td>A new sign-up waits in the Inbox. Move: publish it (page 7), usually same day.</td></tr>
+      <tr><td>[CHANGE] Salon Plus Studios: ...</td><td>You and Anne</td><td>An existing studio wants something fixed, matched by suite. Move: open their listing, make the change.</td></tr>
+      <tr><td>[QUESTION] / [BUG] ...</td><td>You and Anne</td><td>Something asked or something broken, from the portal buttons. Move: it's waiting in the Inbox's own lane with Reply and Mark done.</td></tr>
+      <tr><td>The welcome email</td><td>The studio</td><td>Fires once, at first publish: card link plus portal code. Never fires again on later edits, so codes don't leak into inboxes repeatedly.</td></tr>
+      <tr><td>The before-and-after</td><td>You and Anne</td><td>A studio edited their own card; old value beside new. Move: usually none, it's the safety net.</td></tr>
+      <tr><td>Offer posted: [studio]</td><td>You and Anne</td><td>A special just went live. Move: none needed; the rare bad one gets Hide in the Offers tab.</td></tr>
+    </table>
+  </div>
+
+  <div class="grid2" style="margin-top: 13px;">
+    <div class="panel">
+      <h3>Why a change never gets lost</h3>
+      <p>New sign-ups and changes look completely different in the inbox, on purpose: different
+      colors, different subjects, bracketed prefixes that sort and search cleanly. A change request
+      can't drown in a pile of new sign-ups.</p>
+    </div>
+    <div class="panel">
+      <h3>If a submission ever seems missing</h3>
+      <p>Every submission lands in two places at once: the database (the Inbox) and the email. A
+      hiccup in one never loses the lead, because the other carries it. Check the Inbox first; it's
+      the fuller record.</p>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>Salon Plus Studios &middot; the rollout &middot; listed by Studio Soulutions</span>
+    <span class="pgnum">6 of 9</span>
+  </div>
+</div>
+
+<!-- ================= PAGE 7: THE ADMIN PANEL ================= -->
+<div class="page">
+  <div class="head">
+    <img class="logo-sp" src="/assets/logo-salonplus.png" alt="Salon Plus Studios" />
+    <img class="logo" src="/assets/logo_ss_green_v5.png" alt="Studio Soulutions" />
+  </div>
+
+  <h1>The admin panel, <strong>tab by tab.</strong></h1>
+  <p class="lede">
+    <span class="url">studiosoulutions.com/leads</span> &middot; It asks for the passcode (Anne
+    gives it to you in person, never in print) and your first name, so every change carries a
+    signature. You cannot break anything here: everything is logged and everything can be put back.
+  </p>
+
+  <div style="margin-top: 13px;">
+    <table>
+      <tr><th style="width:1.2in;">Tab</th><th>What lives there, and what you'd do in it</th></tr>
+      <tr><td>Studios</td><td>Every listing, every building. Open one to edit any field on its card, read its portal code, or set its status: <b>draft</b> (being built), <b>live</b> (in the app), <b>hidden</b> (pulled, kept).</td></tr>
+      <tr><td>Inbox</td><td>Everything studios send: new sign-ups, change requests, questions, problem reports, each in its own lane. The tab shows a count when something waits.</td></tr>
+      <tr><td>Offers</td><td>Every special, live and past. The one control that matters is <b>Hide</b>, the off switch for the rare offer that shouldn't be up. No approval queue, by design.</td></tr>
+      <tr><td>Settings</td><td>The three levels as switches: what <b>On the map</b>, <b>Listed</b>, and <b>Featured</b> each include (photos, contact, booking, socials, bio, hours, offers). Flip a switch and every card at that level obeys on its next load. At Salon Plus today, everyone has Featured.</td></tr>
+      <tr><td>Changes</td><td>The ledger: who changed what, when, everywhere in the system. When something looks different and nobody knows why, the answer is here.</td></tr>
+    </table>
+  </div>
+
+  <div class="grid3" style="margin-top: 13px;">
+    <div class="howto">
+      <div class="h">Job one: publish a sign-up</div>
+      <ol class="clean">
+        <li>Inbox, open the new entry</li>
+        <li>Check the card over, pick the level</li>
+        <li>Publish. Their welcome email fires with their code</li>
+      </ol>
+    </div>
+    <div class="howto">
+      <div class="h">Job two: fix a card</div>
+      <ol class="clean">
+        <li>Studios tab, open the listing</li>
+        <li>Change the field, save</li>
+        <li>It's live in the app immediately</li>
+      </ol>
+    </div>
+    <div class="howto">
+      <div class="h">Job three: handle a question</div>
+      <ol class="clean">
+        <li>Inbox, Questions lane</li>
+        <li>Reply from right there</li>
+        <li>Mark done when it's settled</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="callout sage" style="margin-top: 12px;">
+    <b>The full manual:</b> every button and edge case is written down at
+    <span class="url">studiosoulutions.com/leads/guide</span>. This page is the working knowledge;
+    that one is the reference. The panel itself also links every printable in this kit.
+  </div>
+
+  <div class="foot">
+    <span>Salon Plus Studios &middot; the rollout &middot; listed by Studio Soulutions</span>
+    <span class="pgnum">7 of 9</span>
+  </div>
+</div>
+
+<!-- ================= PAGE 8: THE TOOLKIT ================= -->
+<div class="page">
+  <div class="head">
+    <img class="logo-sp" src="/assets/logo-salonplus.png" alt="Salon Plus Studios" />
+    <img class="logo" src="/assets/logo_ss_green_v5.png" alt="Studio Soulutions" />
+  </div>
+
+  <h1>Your <strong>toolkit.</strong></h1>
+  <p class="lede">
+    Everything that isn't a screen: the pages made for you, the paper made for the building, and the
+    demo made for selling.
+  </p>
+
+  <div class="grid2" style="margin-top: 13px;">
+    <div class="panel">
+      <h3>Your hub · the one link to keep</h3>
+      <p><span class="url">studiosoulutions.com/laura</span> &middot; Private to you. Every link with
+      what it's for, live counts read straight from the directory (studios, with photos, with
+      socials), hallway answers, and the exact words to text a studio, with copy buttons. Whenever
+      anything changes in the system, the write-up lands here. Save it to your home screen.</p>
+    </div>
+    <div class="panel">
+      <h3>The printables</h3>
+      <ul class="clean">
+        <li><b>Portal cards</b>: cut-out cards, one per studio, each with their own code and sign-in steps, plus a photocopy master. Prints from the admin panel's link, always current</li>
+        <li><b>The sign-up sheet</b>: pitch, QR to the join form, and ruled lines for handwriters. Print a stack for the front desk</li>
+        <li><b>The owner's guide</b>: the six-page version of this system for a calm read</li>
+        <li><b>This rollout</b>: reprint any time from the same links</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>QRs and where they point</h3>
+      <p>The kit's QR codes route to three places: the <b>app</b> (for customers), the
+      <b>directory page</b> (for lobby signs), and the <b>join form</b> (for recruiting). When in
+      doubt about a printed QR, scan it yourself; it should land exactly where its sign promises.</p>
+    </div>
+    <div class="panel">
+      <h3>The demo building · for selling</h3>
+      <p><span class="url">studiosoulutions.com/a/demo</span> &middot; The Beauty Collective: a
+      fictional building running on the real machinery, built for showing a prospect owner what
+      their building would get. Same app, same portal system, its own floor plan. The honest pitch
+      is that this isn't a mockup: when a building signs, they get exactly this, wearing their name,
+      the same day their tenant list arrives.</p>
+    </div>
+  </div>
+
+  <div class="howto" style="margin-top: 13px;">
+    <div class="h">How to: show the product to a prospect owner in ninety seconds</div>
+    <ol class="clean">
+      <li>Hand them your phone with <span class="url">studiosoulutions.com/a/demo</span> open</li>
+      <li>Let them tap a card, then "Show me on the map," then the Specials tab</li>
+      <li>Say: "this is a pretend building on the real product. Yours would look like this with your name and your tenants, and every studio runs its own card."</li>
+      <li>Their tenants would join through the same two-minute form yours did</li>
+    </ol>
+  </div>
+
+  <div class="foot">
+    <span>Salon Plus Studios &middot; the rollout &middot; listed by Studio Soulutions</span>
+    <span class="pgnum">8 of 9</span>
+  </div>
+</div>
+
+<!-- ================= PAGE 9: THE FIRST WEEK ================= -->
+<div class="page">
+  <div class="head">
+    <img class="logo-sp" src="/assets/logo-salonplus.png" alt="Salon Plus Studios" />
+    <img class="logo" src="/assets/logo_ss_green_v5.png" alt="Studio Soulutions" />
+  </div>
+
+  <h1>Your <strong>first week</strong> with it.</h1>
+  <p class="lede">
+    A suggested order, tuned so every step makes the next one easier. None of it is homework; each
+    item is a text or a hallway moment.
+  </p>
+
+  <div class="panel" style="margin-top: 13px;">
+    <h3>Day one: make it yours</h3>
+    <ul class="clean">
+      <li>Install the app on your own phone (page 3), and save your hub to the home screen</li>
+      <li>Walk the app once as a customer: search someone, follow the map, open the Specials tab</li>
+      <li>Sign into the admin panel with Anne once, just to see the five tabs with your own eyes</li>
+    </ul>
+  </div>
+  <div class="panel" style="margin-top: 10px;">
+    <h3>Days two and three: the studios that are already on</h3>
+    <ul class="clean">
+      <li>Hand each listed studio their portal card (the cut-outs), with one sentence: "this is your sign-in, you can change your own card now"</li>
+      <li>Text the photo-less studios the photos ask from your hub; a card with photos gets looked at, one without gets scrolled past</li>
+      <li>Text the hours ask to anyone whose card can't show Open now yet</li>
+    </ul>
+  </div>
+  <div class="panel" style="margin-top: 10px;">
+    <h3>Days four and five: the ones not on yet</h3>
+    <ul class="clean">
+      <li>Send the join link with the it's-free text; pin the sign-up sheet where studios gather</li>
+      <li>Watch the Inbox fill, and publish as they come in</li>
+    </ul>
+  </div>
+  <div class="panel" style="margin-top: 10px;">
+    <h3>Whenever it happens: the first special</h3>
+    <ul class="clean">
+      <li>Walk one willing studio through posting an offer (page 5). Once one special is live in the app, the second studio asks how to do it on their own</li>
+    </ul>
+  </div>
+
+  <div class="callout sage" style="margin-top: 13px;">
+    <b>And the standing promise:</b> anything odd, anything worded wrong, anything you wish worked
+    differently: tell Anne and it changes, usually same day. The system is soft clay on purpose.
+    Nothing about it is precious except that it works for your building.
+  </div>
+
+  <div style="display: flex; gap: 16px; align-items: center; margin-top: 14px;">
+    <div class="qr-slot" id="qrApp"></div>
+    <div>
+      <p style="font-size: 12.5px; color: var(--ink-soft); max-width: 34em;">
+        The whole product, one scan away. Welcome to it, Laura. It was built around your building,
+        your notes, and your hallway questions, and it keeps getting better the same way.
+      </p>
+      <p style="margin-top: 8px; font-family: 'Jost', sans-serif; font-size: 15px;">Anne</p>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>Salon Plus Studios &middot; the rollout &middot; listed by Studio Soulutions</span>
+    <span class="pgnum">9 of 9</span>
+  </div>
+</div>
+
+<script>
+  new QRCode(document.getElementById('qrApp'), {
+    text: 'https://studiosoulutions.com/salonplus/app/',
+    width: 300, height: 300, correctLevel: QRCode.CorrectLevel.M
+  });
+</script>
+</body>
+</html>
