@@ -1,7 +1,11 @@
 # Studio Soulutions, Netlify redirects
 # Pretty URLs for the entry points
 /kiosk      /kiosk.html      200
-/admin      /admin.html      200
+
+# The old localStorage demo admin retired 2026-09-14; /leads/ wears its
+# look now and carries all the live plumbing. One admin, one address.
+/admin        /leads/   301
+/admin.html   /leads/   301
 
 # The old concept demo at /app retired 2026-09-14; the real app dressed
 # as the demonstration building is the demo now.
