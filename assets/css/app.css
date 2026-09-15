@@ -1215,22 +1215,25 @@ body {
   stroke-dasharray: 4 3;
 }
 .map-svg .suite.is-vacant text { fill: var(--clay-deep); }
+/* The destination suite pulses on the full map, no route line, no zoom:
+   "it's that one" reads instantly in a building this size. */
 .map-svg .suite.is-target rect {
   fill: var(--sage-deep);
   stroke: var(--sage-deep);
   filter: drop-shadow(0 4px 14px rgba(107,122,95,0.45));
-  animation: suiteTargetPulse 1.8s ease-in-out infinite;
+  animation: suiteTargetPulse 1.6s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 .map-svg .suite.is-target text { fill: var(--surface-2); font-weight: 700; }
 @keyframes suiteTargetPulse {
-  0%, 100% { stroke-width: 1.5; }
-  50%      { stroke-width: 6; }
+  0%, 100% { stroke-width: 1.5; transform: scale(1);    filter: drop-shadow(0 4px 14px rgba(107,122,95,0.45)); }
+  50%      { stroke-width: 7;   transform: scale(1.06); filter: drop-shadow(0 6px 22px rgba(107,122,95,0.70)); }
 }
-/* "You are here", outer ring pulses softly; the inner core stays put in
-   browse mode. In route mode (.has-target on the group), the inner core
-   instead "leans" toward the destination once per cycle, like a person about
-   to step in that direction. The lean direction is set by --lean-x/y on the
-   group, computed by JS from the route geometry. */
+@media (prefers-reduced-motion: reduce) {
+  .map-svg .suite.is-target rect { animation: none; }
+}
+/* "You are here", the outer ring pulses softly. */
 .map-svg .you-are-here circle:first-child {
   animation: yahPulse 2.4s ease-out infinite;
   transform-box: fill-box;
@@ -1240,49 +1243,10 @@ body {
   0%   { transform: scale(0.6); opacity: 0.55; }
   100% { transform: scale(2.6); opacity: 0; }
 }
-.map-svg .you-are-here.has-target circle:nth-child(2) {
-  animation: yahLean 1.6s ease-in-out infinite;
-  transform-box: fill-box;
-  transform-origin: center;
-}
-@keyframes yahLean {
-  /* Small nudge, just enough to read as a directional cue, not a wandering dot. */
-  0%, 100% { transform: translate(0, 0); }
-  55%      { transform: translate(calc(var(--lean-x, 6px) * 0.55), calc(var(--lean-y, 0) * 0.55)); }
-}
-/* Outer ring also nudges in the lean direction, more subtly, so the whole
-   pin reads as "leaning that way." */
-.map-svg .you-are-here.has-target circle:first-child {
-  animation: yahPulseLean 1.6s ease-in-out infinite;
-  transform-box: fill-box;
-  transform-origin: center;
-}
-@keyframes yahPulseLean {
-  0%, 100% { transform: translate(0, 0) scale(0.6); opacity: 0.55; }
-  55%      { transform: translate(calc(var(--lean-x, 10px) * 0.5), calc(var(--lean-y, 0) * 0.5)) scale(2.2); opacity: 0; }
-}
 .map-svg .you-are-here .yah-label {
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 11px; font-weight: 700; letter-spacing: 1.6px;
   fill: var(--clay-deep);
-}
-/* Route line, static dashed sage trail. Used to be marching, but a moving
-   dash looked like a stray animated dot floating across the floor plan. */
-.map-svg .route-line {
-  fill: none;
-  stroke: var(--sage-deep);
-  stroke-width: 5;
-  stroke-linecap: round; stroke-linejoin: round;
-  stroke-dasharray: 10 8;
-  filter: drop-shadow(0 1px 2px rgba(107,122,95,0.25));
-  opacity: 0.85;
-}
-.map-svg .route-glow {
-  fill: none;
-  stroke: var(--sage-deep);
-  stroke-width: 14;
-  stroke-linecap: round; stroke-linejoin: round;
-  opacity: 0.10;
 }
 /* the grid display below beats the [hidden] attribute's display:none,
    so restate it: no route selected, no card. */

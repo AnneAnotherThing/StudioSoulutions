@@ -90,10 +90,10 @@ const didYouKnow = [
 ];
 
 // ============ STATE ============
-let savedIds = new Set();
 let activeFilter = 'all';
 let searchTerm = '';
 let currentTenant = null;
+let currentView = 'discover';
 
 // ============ HELPERS ============
 function testPillHTML(t, variant) {
@@ -194,10 +194,6 @@ function renderDiscoverCards() {
     labelEl.textContent = featured.name;
     metaEl.textContent = `Featured today · ${featured.service.split('·')[0].split('&')[0].split(',')[0].trim()}`;
   }
-
-  // Saved count card
-  const elSaved = document.getElementById('mc-saved-count');
-  if (elSaved) elSaved.textContent = savedIds.size;
 
   // Available suites count card
   const elVacancy = document.getElementById('mc-vacancy-count');
@@ -326,56 +322,20 @@ ${statusPillHTML(t)}
   }).join('');
 }
 
-function renderSaved() {
-  const list = document.getElementById('savedList');
-  const empty = document.getElementById('savedEmpty');
-  const saved = tenants.filter(t => savedIds.has(t.id));
-
-  if (saved.length === 0) {
-    list.style.display = 'none';
-    empty.style.display = 'block';
-    return;
-  }
-  list.style.display = 'flex';
-  empty.style.display = 'none';
-  list.innerHTML = saved.map(t => {
-    const open = isOpenNow(t);
-    return `
-    <div class="directory-row" onclick="openTenant('${t.id}')">
-      ${avatarHTML(t, 'row')}
-      <div class="row-meta">
-        <div class="tenant-name" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-          <span>${t.name}</span>${testPillHTML(t)}
-        </div>
-        <div class="tenant-service">${t.service}</div>
-      </div>
-${statusPillHTML(t)}
-    </div>
-  `;
-  }).join('');
-}
-
-function updateSavedBadge() {
-  const badge = document.getElementById('savedCount');
-  if (savedIds.size > 0) {
-    badge.style.display = 'grid';
-    badge.textContent = savedIds.size;
-  } else {
-    badge.style.display = 'none';
-  }
-  const splashCount = document.getElementById('mc-saved-count');
-  if (splashCount) splashCount.textContent = savedIds.size;
-}
-
 // ============ INTERACTIONS ============
-function switchView(view) {
+/* push=false is the back/forward path: apply the view without writing a
+   new history entry, or the back button would fight itself. */
+function switchView(view, push = true) {
+  if (push && view !== currentView) {
+    history.pushState({ view }, '');
+  }
+  currentView = view;
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById(`view-${view}`).classList.add('active');
-  // Bottom-nav only highlights the three primary tabs; map/owner show "Discover" as the active parent
-  const primaryViews = ['discover', 'directory', 'saved'];
+  // Bottom-nav only highlights the three primary tabs; owner/vacancies show "Discover" as the active parent
+  const primaryViews = ['discover', 'directory', 'map'];
   const parent = primaryViews.includes(view) ? view : 'discover';
   document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.view === parent));
-  if (view === 'saved') renderSaved();
   if (view === 'discover') renderDiscoverCards();
   if (view === 'vacancies') renderVacancies();
   if (view === 'map') {
@@ -383,8 +343,8 @@ function switchView(view) {
     // Auto-expand so the visitor sees the full floor plan immediately, not
     // the inline preview that gets clipped on smaller screens.
     if (typeof window.openMapModal === 'function') {
-      // Defer so renderMap finishes painting the suites + route before we clone.
-      setTimeout(function() { window.openMapModal(); }, 0);
+      // Defer so renderMap finishes painting the suites before we clone.
+      setTimeout(function() { if (currentView === 'map') window.openMapModal(); }, 0);
     }
   }
   window.scrollTo(0, 0);
@@ -393,8 +353,11 @@ function switchView(view) {
 function openTenant(id) {
   const t = tenants.find(x => x.id === id);
   if (!t) return;
+  const sheetWasOpen = !!currentTenant;
   currentTenant = t;
-  const isSaved = savedIds.has(t.id);
+  // The phone's back button closes the sheet instead of leaving the app.
+  if (!sheetWasOpen) history.pushState({ view: currentView, sheet: id }, '');
+  else history.replaceState({ view: currentView, sheet: id }, '');
   // "While you're here", prefer other studios that are OPEN RIGHT NOW and in a different category.
   // This is the cross-pollination moment: someone came for one thing, here are alternatives a few doors down.
   const openOthers = tenants.filter(p => p.id !== t.id && isOpenNow(p) && p.category !== t.category);
@@ -433,7 +396,7 @@ function openTenant(id) {
         ${t.tags.map(tag => `<span class="profile-tag">${tag}</span>`).join('')}
       </div>
       <div class="profile-actions">
-        ${renderContactActions(t, isSaved)}
+        ${renderContactActions(t)}
       </div>
       <div class="pair-with">
         <h3>While you're at <em>${t.name.split(' ')[0]}</em>…</h3>
@@ -458,30 +421,21 @@ function openTenant(id) {
   document.getElementById('sheetBackdrop').classList.add('open');
 }
 
-function closeSheet() {
+/* fromPop=true means the back button already ate the sheet's history
+   entry, so only the DOM needs closing. A tap on the X or the backdrop
+   goes through history.back() so the entry and the sheet leave together. */
+function closeSheet(fromPop = false) {
+  if (!fromPop && history.state && history.state.sheet) { history.back(); return; }
   document.getElementById('sheet').classList.remove('open');
   document.getElementById('sheetBackdrop').classList.remove('open');
   currentTenant = null;
 }
 
-function toggleSave(id) {
-  if (savedIds.has(id)) {
-    savedIds.delete(id);
-    showToast('Removed from saved');
-  } else {
-    savedIds.add(id);
-    showToast('Saved');
-  }
-  updateSavedBadge();
-  if (currentTenant && currentTenant.id === id) openTenant(id);
-}
-
 /* ============ CONTACT BUTTONS ============================================
    Each tenant chooses which contact methods to surface (book / call / text).
    Buttons render only for what they\'ve set, in priority order book → call → text.
-   First method is the primary CTA next to the Save heart; the rest stack as
-   outline buttons. "Show me the way" follows when the tenant has a real suite. */
-function renderContactActions(t, isSaved) {
+   "Show me on the map" follows when the tenant has a real suite. */
+function renderContactActions(t) {
   const ICONS = {
     book: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
     call: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
@@ -495,24 +449,16 @@ function renderContactActions(t, isSaved) {
   if (t.call) methods.push({ key:'call', href:`tel:${t.call.replace(/[^0-9+]/g, '')}`, label:`Call ${t.call}` });
   if (t.text) methods.push({ key:'text', href:`sms:${t.text.replace(/[^0-9+]/g, '')}`, label:`Text ${t.text}` });
 
-  const saveBtn = `
-    <button class="btn btn-secondary ${isSaved ? 'saved' : ''}" onclick="toggleSave('${t.id}')" aria-label="${isSaved ? 'Unsave' : 'Save'}">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-    </button>`;
-
   const suiteKey = getSuiteKey(t);
   const directionsHtml = suiteKey
-    ? `<button class="btn btn-outline" type="button" onclick="showRouteTo('${t.id}')">
-         ${ICONS.map} Show me the way · ${escapeHtml(t.suite)}
+    ? `<button class="btn btn-outline" type="button" onclick="showOnMap('${t.id}')">
+         ${ICONS.map} Show me on the map · ${escapeHtml(t.suite)}
        </button>`
     : '';
 
   if (methods.length === 0) {
     return `
-      <div class="profile-actions-row">
-        <button class="btn btn-primary" disabled style="opacity:.55; cursor:default;">No contact method listed yet</button>
-        ${saveBtn}
-      </div>
+      <button class="btn btn-primary" disabled style="opacity:.55; cursor:default;">No contact method listed yet</button>
       ${directionsHtml}`;
   }
   const [primary, ...rest] = methods;
@@ -525,10 +471,7 @@ function renderContactActions(t, isSaved) {
       ${ICONS[m.key]} ${m.label}
     </a>`).join('');
   return `
-    <div class="profile-actions-row">
-      ${primaryHtml}
-      ${saveBtn}
-    </div>
+    ${primaryHtml}
     ${restHtml}
     ${directionsHtml}
   `;
@@ -551,11 +494,9 @@ function statusPillHTML(t) {
 }
 
 /* ============ FLOOR-PLAN MAP ============================================
-   Browse mode = full building. Route mode = entered via "Show me the way",
-   zooms the SVG viewBox onto the route and draws a sage dashed walking line. */
-const YAH = { x: 80, y: 260 };
-const NORTH_CORRIDOR_Y = 199;
-const SOUTH_CORRIDOR_Y = 323;
+   Browse mode = full building. "Show me on the map" highlights the one
+   suite with a pulse instead of drawing a walking route: the buildings are
+   small enough that "it's that one, pulsing" beats turn-by-turn lines. */
 let routeTarget = null;
 let mapInitialized = false;
 
@@ -567,52 +508,6 @@ function getSuiteKey(t) {
 }
 function cssEscape(s) {
   return (typeof CSS !== 'undefined' && CSS.escape) ? CSS.escape(s) : String(s).replace(/(["\\])/g, '\\$1');
-}
-function getSuiteCenter(suiteKey) {
-  const g = document.querySelector(`#phoneMapSuites .suite[data-suite="${cssEscape(suiteKey)}"]`);
-  if (!g) return null;
-  const r = g.querySelector('rect');
-  const x = parseFloat(r.getAttribute('x'));
-  const y = parseFloat(r.getAttribute('y'));
-  const w = parseFloat(r.getAttribute('width'));
-  const h = parseFloat(r.getAttribute('height'));
-  return { x: x + w/2, y: y + h/2, top: y, bottom: y + h, left: x, right: x + w };
-}
-function buildRoutePoints(suiteKey) {
-  const c = getSuiteCenter(suiteKey);
-  if (!c) return null;
-  const sx = c.x;
-  const points = [{ x: YAH.x, y: YAH.y }];
-  if (c.bottom <= 170) {
-    points.push({ x: YAH.x, y: NORTH_CORRIDOR_Y });
-    points.push({ x: sx,    y: NORTH_CORRIDOR_Y });
-    points.push({ x: sx,    y: c.bottom });
-  } else if (c.top >= 358) {
-    points.push({ x: YAH.x, y: SOUTH_CORRIDOR_Y });
-    points.push({ x: sx,    y: SOUTH_CORRIDOR_Y });
-    points.push({ x: sx,    y: c.top });
-  } else {
-    points.push({ x: YAH.x, y: SOUTH_CORRIDOR_Y });
-    points.push({ x: sx,    y: SOUTH_CORRIDOR_Y });
-    points.push({ x: sx,    y: c.bottom });
-  }
-  return points;
-}
-function pointsToPath(points) {
-  return points.map((p, i) => (i === 0 ? 'M' : 'L') + p.x + ',' + p.y).join(' ');
-}
-function computeRouteViewBox(points) {
-  const xs = points.map(p => p.x), ys = points.map(p => p.y);
-  const PAD = 70;
-  let x = Math.min(...xs) - PAD, y = Math.min(...ys) - PAD;
-  let w = (Math.max(...xs) - Math.min(...xs)) + PAD * 2;
-  let h = (Math.max(...ys) - Math.min(...ys)) + PAD * 2;
-  const desiredAspect = 1.05;
-  if (w / h < desiredAspect) { const nw = h * desiredAspect; x -= (nw - w) / 2; w = nw; }
-  else if (w / h > 2.4)      { const nh = w / 2.4;          y -= (nh - h) / 2; h = nh; }
-  x = Math.max(0, x); y = Math.max(0, y);
-  w = Math.min(1200 - x, w); h = Math.min(520 - y, h);
-  return `${x} ${y} ${w} ${h}`;
 }
 function paintSuiteStates() {
   const byKey = {};
@@ -647,23 +542,14 @@ function renderMap() {
   initMap();
   paintSuiteStates();
   const svg = document.getElementById('phoneMapSvg');
-  const routeLayer = document.getElementById('routeLayer');
   const card = document.getElementById('mapRouteCard');
   const eyebrow = document.getElementById('mapEyebrow');
   const headline = document.getElementById('mapHeadline');
   const subline = document.getElementById('mapSubline');
-  if (!svg || !routeLayer) return;
+  if (!svg) return;
+  svg.setAttribute('viewBox', '0 0 1200 520');
   document.querySelectorAll('#phoneMapSuites .suite.is-target').forEach(s => s.classList.remove('is-target'));
-  routeLayer.innerHTML = '';
-  // Reset the YAH lean state, browse mode = no target = no lean.
-  const yahEl = svg.querySelector('.you-are-here');
-  if (yahEl) {
-    yahEl.classList.remove('has-target');
-    yahEl.style.removeProperty('--lean-x');
-    yahEl.style.removeProperty('--lean-y');
-  }
   if (!routeTarget) {
-    svg.setAttribute('viewBox', '0 0 1200 520');
     if (card) card.hidden = true;
     if (eyebrow)  eyebrow.textContent = 'Suite map';
     if (headline) headline.innerHTML = 'You are <em>here</em>';
@@ -672,32 +558,12 @@ function renderMap() {
   }
   const t = tenants.find(x => x.id === routeTarget);
   const suiteKey = t ? getSuiteKey(t) : null;
-  const points = suiteKey ? buildRoutePoints(suiteKey) : null;
-  if (!t || !points) { routeTarget = null; return renderMap(); }
-  const pathD = pointsToPath(points);
-  routeLayer.innerHTML =
-    `<path class="route-glow" d="${pathD}"/>` +
-    `<path class="route-line" d="${pathD}"/>`;
-  const targetSuite = document.querySelector(`#phoneMapSuites .suite[data-suite="${cssEscape(suiteKey)}"]`);
-  if (targetSuite) targetSuite.classList.add('is-target');
+  const targetSuite = suiteKey
+    ? document.querySelector(`#phoneMapSuites .suite[data-suite="${cssEscape(suiteKey)}"]`)
+    : null;
+  if (!t || !targetSuite) { routeTarget = null; return renderMap(); }
+  targetSuite.classList.add('is-target');
 
-  // Make the YAH dot "lean" toward the destination, a directional nudge that
-  // reads as "step this way" without the marching-dash gimmick. Magnitude is
-  // a few user-units; direction is the unit vector from YAH to suite center.
-  if (yahEl) {
-    const suiteC = getSuiteCenter(suiteKey);
-    if (suiteC) {
-      const dx = suiteC.x - YAH.x;
-      const dy = suiteC.y - YAH.y;
-      const dist = Math.hypot(dx, dy) || 1;
-      const LEAN = 12; // user units in the SVG viewBox
-      yahEl.style.setProperty('--lean-x', (dx / dist * LEAN).toFixed(2) + 'px');
-      yahEl.style.setProperty('--lean-y', (dy / dist * LEAN).toFixed(2) + 'px');
-      yahEl.classList.add('has-target');
-    }
-  }
-
-  svg.setAttribute('viewBox', computeRouteViewBox(points));
   if (card) {
     card.hidden = false;
     const av = document.getElementById('mrcAvatar');
@@ -706,11 +572,11 @@ function renderMap() {
       else { av.style.backgroundImage = ''; av.style.background = themeBg(t.theme); av.textContent = t.avatar || (t.name || '?')[0]; }
     }
     const nm = document.getElementById('mrcName'); if (nm) nm.textContent = t.name;
-    const sb = document.getElementById('mrcSub');  if (sb) sb.textContent = `${t.suite} · follow the line`;
+    const sb = document.getElementById('mrcSub');  if (sb) sb.textContent = `${t.suite} · the pulsing suite`;
   }
-  if (eyebrow)  eyebrow.textContent = 'On your way to';
+  if (eyebrow)  eyebrow.textContent = 'Looking for';
   if (headline) headline.innerHTML = `<em>${escapeHtml(t.name)}</em>`;
-  if (subline)  subline.textContent = `${t.suite} · the sage line shows the walking route from the lobby.`;
+  if (subline)  subline.textContent = `${t.suite} · it's the pulsing suite on the map.`;
 }
 function themeBg(theme) {
   const map = {'av-sage':'#8B9A7E','av-moss':'#6B7A5F','av-clay':'#C97B5A','av-rose':'#C9928C',
@@ -718,15 +584,18 @@ function themeBg(theme) {
     'av-bone':'#E8DECA','av-amber':'#D4A574'};
   return map[theme] || '#8B7E70';
 }
-function showRouteTo(tenantId) {
-  // Route directly to the fullscreen modal, no more cramped inline view.
+function showOnMap(tenantId) {
+  // Straight to the fullscreen modal with the destination suite pulsing.
   // The modal header shows tenant info + "View profile" so the customer sees
-  // the profile AND the map together, exactly as Anne wanted.
+  // the profile AND the map together.
   routeTarget = tenantId;
-  closeSheet();
-  // renderMap() preps the inline SVG (paints target, draws route, sets viewBox),
-  // then we clone it into the modal so the modal shows the routed state.
-  switchView('map');
+  // Close the sheet DOM-only and fold its history entry into the map's,
+  // so back from the map lands on the view the sheet was opened from.
+  closeSheet(true);
+  history.replaceState({ view: 'map' }, '');
+  // renderMap() preps the inline SVG (paints states, marks the target),
+  // then we clone it into the modal so the modal shows the same state.
+  switchView('map', false);
   if (typeof window.openMapModal === 'function') window.openMapModal();
 }
 function clearRoute() { routeTarget = null; renderMap(); }
@@ -762,7 +631,17 @@ renderDYK();
 renderDiscoverCards();
 renderDirectory();
 renderVacancies();
-updateSavedBadge();
+
+/* Back-button support: each view (and an open profile sheet) is a history
+   entry, so the phone's back button walks back through the app instead of
+   leaving it on the first press. */
+history.replaceState({ view: 'discover' }, '');
+window.addEventListener('popstate', e => {
+  const s = e.state || { view: 'discover' };
+  if (s.view !== 'map' && typeof window.closeMapModal === 'function') window.closeMapModal();
+  if (currentTenant) closeSheet(true);
+  switchView(s.view || 'discover', false);
+});
 
 /* Kiosk-style hero search on the Discover view, mirrors kiosk.html */
 (function wireKioskSearch() {
@@ -885,7 +764,7 @@ updateSavedBadge();
     document.body.style.overflow = '';
   }
 
-  // Expose for switchView('map') and showRouteTo() to call.
+  // Expose for switchView('map') and showOnMap() to call.
   window.openMapModal = openModal;
   window.closeMapModal = closeModal;
 

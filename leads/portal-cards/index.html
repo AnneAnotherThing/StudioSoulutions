@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Studio Soulutions - Portal cards (print)</title>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root {
+    --bg: #F2EFE9; --surface: #FAF8F4; --ink: #33312D; --ink-soft: #6C685F;
+    --ink-faint: #918C81; --bronze: #9A6B45; --bronze-deep: #7C5334; --line: #DCD6CA;
+    --sage: #5F6E52;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: #E5E1D8; color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.5;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .page {
+    width: 8.5in; min-height: 11in; margin: 24px auto; padding: 0.5in 0.55in;
+    background: var(--bg); box-shadow: 0 10px 40px rgba(0,0,0,.18);
+    display: flex; flex-direction: column;
+    break-after: page;
+  }
+  @page { size: letter portrait; margin: 0; }
+  @media print {
+    :root { --bg: #fff; --surface: #fff; }
+    body { background: none; }
+    .page { margin: 0; box-shadow: none; width: auto; min-height: auto; }
+    .screen-only { display: none !important; }
+  }
+  .eyebrow { font-family:'Jost',sans-serif; font-size: 11px; letter-spacing: .34em; text-transform: uppercase; font-weight: 500; color: var(--bronze); }
+  .head { display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid var(--ink); padding-bottom: 10px; }
+  .logo { height: 40px; }
+  .logo-sp { height: 46px; mix-blend-mode: multiply; }
+  h1 { font-family:'Jost',sans-serif; font-weight: 300; font-size: 27px; line-height: 1.12; margin: 16px 0 4px; }
+  h1 strong { font-weight: 500; color: var(--bronze-deep); }
+  .intro { color: var(--ink-soft); font-size: 12.5px; max-width: 46em; }
+
+  /* ---- the passcode gate (screen only; codes never live in this file) ---- */
+  .gate {
+    max-width: 420px; margin: 60px auto; background: var(--surface);
+    border: 1px solid var(--line); border-radius: 16px; padding: 26px 28px; text-align: center;
+  }
+  .gate h1 { margin-top: 0; }
+  .gate input {
+    width: 100%; font: inherit; font-size: 16px; padding: 11px 14px; margin-top: 14px;
+    border: 1px solid var(--line); border-radius: 10px; text-align: center;
+  }
+  .gate button {
+    width: 100%; font: inherit; font-weight: 600; font-size: 15px; margin-top: 10px;
+    padding: 12px; border: 0; border-radius: 999px; background: var(--ink); color: #fff; cursor: pointer;
+  }
+  .gate .err { color: #A8593E; font-size: 13px; margin-top: 10px; min-height: 18px; }
+  .printbar {
+    max-width: 8.5in; margin: 18px auto 0; display: flex; gap: 10px; align-items: center; justify-content: center;
+    font-size: 13.5px; color: var(--ink-soft);
+  }
+  .printbar button {
+    font: inherit; font-weight: 600; padding: 9px 22px; border: 0; border-radius: 999px;
+    background: var(--ink); color: #fff; cursor: pointer;
+  }
+
+  /* ---- page 1: the photocopy master ---- */
+  .steps { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 18px; }
+  .step-card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+  .step-card .n {
+    width: 26px; height: 26px; border-radius: 50%; background: var(--bg); color: var(--bronze-deep);
+    border: 1px solid var(--line); font-family: 'Jost', sans-serif; font-weight: 600; font-size: 14px;
+    display: flex; align-items: center; justify-content: center; margin-bottom: 8px;
+  }
+  .step-card b { font-family:'Jost',sans-serif; font-weight: 500; font-size: 14.5px; display: block; }
+  .step-card p { font-size: 11.5px; color: var(--ink-soft); margin-top: 4px; }
+  .two-col { display: grid; grid-template-columns: 1.5fr 1fr; gap: 14px; margin-top: 16px; }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 15px 17px; font-size: 11.5px; color: var(--ink-soft); }
+  .panel b { font-family:'Jost',sans-serif; font-weight: 500; color: var(--ink); font-size: 13px; display: block; margin-bottom: 5px; }
+  .panel ul { margin: 4px 0 0; padding-left: 16px; }
+  .panel li { margin: 3px 0; }
+  .qr-hero { text-align: center; }
+  .qr-hero .qr-slot { width: 1.7in; height: 1.7in; margin: 6px auto 0; background: #fff; padding: 6px; border: 1px solid var(--line); border-radius: 10px; }
+  .qr-hero .qr-slot img, .qr-hero .qr-slot canvas { width: 100%; height: 100%; }
+  .url { font-size: 12px; color: var(--bronze-deep); font-weight: 600; margin-top: 8px; word-break: break-all; }
+  .foot { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-size: 10.5px; color: var(--ink-faint); }
+
+  /* ---- card sheets ---- */
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 14px; }
+  .card {
+    border: 1.5px dashed var(--ink-faint); border-radius: 2px;
+    padding: 16px 18px; min-height: 2.95in; display: flex; flex-direction: column;
+    break-inside: avoid;
+  }
+  .card .eyebrow { font-size: 9.5px; letter-spacing: .26em; }
+  .card .name { font-family:'Jost',sans-serif; font-weight: 500; font-size: 17.5px; line-height: 1.2; margin-top: 5px; }
+  .creds {
+    display: flex; gap: 10px; margin-top: 9px;
+  }
+  .cred {
+    flex: 1; background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 7px 10px;
+  }
+  .cred .k { font-size: 8.5px; letter-spacing: .18em; text-transform: uppercase; font-weight: 600; color: var(--ink-faint); }
+  .cred .v { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 16px; font-weight: 600; color: var(--bronze-deep); margin-top: 1px; letter-spacing: .04em; }
+  .card .how { display: flex; gap: 11px; margin-top: 10px; align-items: flex-start; }
+  .card .how ol { margin: 0; padding-left: 15px; font-size: 10.5px; color: var(--ink-soft); }
+  .card .how li { margin: 2.5px 0; }
+  .card .qr-slot { width: 0.95in; height: 0.95in; flex-shrink: 0; background: #fff; padding: 3px; border: 1px solid var(--line); border-radius: 8px; }
+  .card .qr-slot img, .card .qr-slot canvas { width: 100%; height: 100%; }
+  .card .fine { margin-top: auto; padding-top: 8px; font-size: 9px; color: var(--ink-faint); }
+  .scissors { text-align: center; font-size: 10px; color: var(--ink-faint); margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<!-- Passcode gate: this page holds no codes. It asks for the admin
+     passcode and reads the live directory, same as /leads/, so what
+     prints is always current and nothing secret sits in a file. -->
+<div class="gate screen-only" id="gate">
+  <p class="eyebrow">Studio portal cards</p>
+  <h1>Print <strong>every studio's card</strong></h1>
+  <p class="intro">One cut-out card per live studio: their suite, their code, and how to sign in. Plus a photocopy master explaining the portal. Enter the admin passcode to pull the live list.</p>
+  <input type="password" id="codeInput" placeholder="Admin passcode" autocomplete="off" />
+  <button id="unlockBtn" type="button">Load the cards</button>
+  <p class="err" id="gateErr"></p>
+</div>
+
+<div class="printbar screen-only" id="printbar" hidden>
+  <span id="countNote"></span>
+  <button type="button" onclick="window.print()">Print</button>
+</div>
+
+<div id="pages"></div>
+
+<script>
+const PORTAL_URL = 'https://studiosoulutions.com/salonplus/offer/';
+/* Off-domain (a local checkout, a preview), the functions don't exist,
+   so ask the live site directly. Its CORS allows it. */
+const API = /studiosoulutions\.com$|netlify\.app$/.test(location.hostname)
+  ? '/api/salonplus-admin'
+  : 'https://studiosoulutions.com/api/salonplus-admin';
+const BUILDING = (new URLSearchParams(location.search).get('b') || 'salonplus')
+  .toLowerCase().replace(/[^a-z0-9-]/g, '') || 'salonplus';
+const CARDS_PER_PAGE = 6;
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* One QR, drawn once, stamped onto every slot as an image. */
+let qrDataUrl = '';
+function makeQr() {
+  const holder = document.createElement('div');
+  new QRCode(holder, { text: PORTAL_URL, width: 320, height: 320, correctLevel: QRCode.CorrectLevel.M });
+  const canvas = holder.querySelector('canvas');
+  qrDataUrl = canvas ? canvas.toDataURL('image/png') : '';
+}
+function qrImg() { return qrDataUrl ? '<img src="' + qrDataUrl + '" alt="QR to the studio portal" />' : ''; }
+
+function masterPage(buildingLabel) {
+  return `
+  <div class="page">
+    <div class="head">
+      <img class="logo-sp" src="/assets/logo-salonplus.png" alt="${esc(buildingLabel)}" />
+      <img class="logo" src="/assets/logo_ss_green_v5.png" alt="Studio Soulutions" />
+    </div>
+    <h1>Your card in the app is <strong>yours to run.</strong></h1>
+    <p class="intro">Every studio in the building has a card in the ${esc(buildingLabel)} app: your photos, hours, phone, booking link, socials, and bio. The studio portal lets you change any of it yourself, from your phone, and it goes live the moment you save. No waiting on anyone.</p>
+
+    <div class="steps">
+      <div class="step-card"><div class="n">1</div><b>Open the portal</b><p>Scan the code on this page or your card, or type the address into your phone's browser.</p></div>
+      <div class="step-card"><div class="n">2</div><b>Sign in</b><p>Your suite number and your studio code. They're printed on the card that came with this sheet. The code opens only your own card.</p></div>
+      <div class="step-card"><div class="n">3</div><b>Edit and save</b><p>My listing is your card: hours, photos, contact, socials, bio. Save, and it's live in the app immediately.</p></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="panel">
+          <b>Post a special, right from your phone</b>
+          The My offer tab builds your offer from a few taps: dollars off, percent off, or a free add-on with a service you offer. Pick how long it runs and who it's for.
+          <ul>
+            <li>It shows in the app's Specials the moment you post it.</li>
+            <li>It expires on its own. Nothing to remember to take down.</li>
+            <li>One live offer at a time; posting a new one replaces the old.</li>
+          </ul>
+        </div>
+        <div class="panel" style="margin-top: 12px;">
+          <b>Good to know</b>
+          <ul>
+            <li>Lost your code? Ask the front desk or Anne, it's a ten-second fix.</li>
+            <li>Questions or something broken? The buttons at the bottom of the portal send it straight to us.</li>
+            <li>No portal? The paper way still works: tell the front desk what to change.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="panel qr-hero">
+        <b>The studio portal</b>
+        <div class="qr-slot">${qrImg()}</div>
+        <p class="url">studiosoulutions.com/salonplus/offer</p>
+        <p style="margin-top:8px;">Save it to your home screen and it's one tap from now on.</p>
+      </div>
+    </div>
+
+    <div class="foot">
+      <span>${esc(buildingLabel)} &middot; listed by Studio Soulutions</span>
+      <span>Photocopy this page freely</span>
+    </div>
+  </div>`;
+}
+
+function cardHtml(row, buildingLabel) {
+  return `
+  <div class="card">
+    <p class="eyebrow">${esc(buildingLabel)} &middot; studio portal</p>
+    <p class="name">${esc(row.studio)}</p>
+    <div class="creds">
+      <div class="cred"><div class="k">Suite</div><div class="v">${esc(row.suite)}</div></div>
+      <div class="cred"><div class="k">Your code</div><div class="v">${esc(row.code)}</div></div>
+    </div>
+    <div class="how">
+      <div class="qr-slot">${qrImg()}</div>
+      <ol>
+        <li>Scan, or go to <b>studiosoulutions.com/salonplus/offer</b></li>
+        <li>Sign in with your suite and code</li>
+        <li>Edit your card, or post an offer</li>
+      </ol>
+    </div>
+    <p class="fine">This code opens only your studio's card. Changes go live right away.</p>
+  </div>`;
+}
+
+function cardPages(rows, buildingLabel) {
+  let html = '';
+  for (let i = 0; i < rows.length; i += CARDS_PER_PAGE) {
+    const chunk = rows.slice(i, i + CARDS_PER_PAGE);
+    html += `
+    <div class="page">
+      <div class="head">
+        <img class="logo-sp" src="/assets/logo-salonplus.png" alt="${esc(buildingLabel)}" />
+        <img class="logo" src="/assets/logo_ss_green_v5.png" alt="Studio Soulutions" />
+      </div>
+      <h1>Portal cards, <strong>cut and hand out.</strong></h1>
+      <p class="intro">One per studio. Each card carries that studio's own sign-in, so hand them to the right person.</p>
+      <div class="cards">${chunk.map(r => cardHtml(r, buildingLabel)).join('')}</div>
+      <p class="scissors">&#9986; cut along the dashed lines</p>
+      <div class="foot">
+        <span>${esc(buildingLabel)} &middot; listed by Studio Soulutions</span>
+        <span>Page ${Math.floor(i / CARDS_PER_PAGE) + 2}</span>
+      </div>
+    </div>`;
+  }
+  return html;
+}
+
+async function unlock() {
+  const code = $('codeInput').value.trim();
+  if (!code) { $('gateErr').textContent = 'Enter the passcode.'; return; }
+  $('gateErr').textContent = '';
+  $('unlockBtn').disabled = true;
+  try {
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'unlock', code }),
+    });
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || 'Could not load.');
+
+    const live = new Map((data.studios || [])
+      .filter(s => s.building === BUILDING && s.status === 'live')
+      .map(s => [String(s.suite), s]));
+    const rows = (data.codes || [])
+      .filter(c => c.building === BUILDING && live.has(String(c.suite)))
+      .sort((a, b) => String(a.suite).localeCompare(String(b.suite), undefined, { numeric: true }));
+    if (!rows.length) throw new Error('No live studios with codes found for "' + BUILDING + '".');
+
+    const b = (data.buildings || []).find(x => x.slug === BUILDING);
+    const label = b ? b.name : 'Salon Plus Studios';
+
+    makeQr();
+    $('pages').innerHTML = masterPage(label) + cardPages(rows, label);
+    $('gate').hidden = true;
+    $('printbar').hidden = false;
+    $('countNote').textContent = rows.length + ' live studios · ' + (1 + Math.ceil(rows.length / CARDS_PER_PAGE)) + ' pages · Letter portrait';
+  } catch (e) {
+    $('gateErr').textContent = String(e.message || e);
+  } finally {
+    $('unlockBtn').disabled = false;
+  }
+}
+$('unlockBtn').addEventListener('click', unlock);
+$('codeInput').addEventListener('keydown', e => { if (e.key === 'Enter') unlock(); });
+</script>
+</body>
+</html>

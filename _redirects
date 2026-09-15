@@ -13,6 +13,13 @@
 # demo Laura shows prospects.
 /a/*        /salonplus/app/index.html   200
 
+# Community and pricing are parked until we expand; pages stay in the
+# repo, just unreachable. Drop these two lines to bring them back.
+/community      /   302
+/community.html /   302
+/pricing        /   302
+/pricing/*      /   302
+
 # Leads moved to one home for every building
 /salonplus/leads.html   /leads/   301
 /salonplus/leads        /leads/   301
