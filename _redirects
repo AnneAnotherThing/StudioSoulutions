@@ -32,12 +32,15 @@
 /features/*              /   301
 /salonplus/features      /   301
 /salonplus/features/*    /   301
-# The meeting sheet became the quickstart (2026-09-15); every earlier
-# address for it lands there.
-/meeting                 /salonplus/quickstart/   301
-/meeting/*               /salonplus/quickstart/   301
-/salonplus/meeting       /salonplus/quickstart/   301
-/salonplus/meeting/*     /salonplus/quickstart/   301
+# The meeting sheet became the quickstart, which lives at the product
+# root per the placement rule (2026-09-15). Every earlier address lands
+# there.
+/meeting                 /quickstart/   301
+/meeting/*               /quickstart/   301
+/salonplus/meeting       /quickstart/   301
+/salonplus/meeting/*     /quickstart/   301
+/salonplus/quickstart    /quickstart/   301
+/salonplus/quickstart/*  /quickstart/   301
 
 # Community and pricing are parked until we expand; pages stay in the
 # repo, just unreachable. The ! forces the redirect even though the
