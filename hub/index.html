@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#F5EDE0" />
+<title>Studio Soulutions - The hub</title>
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon-64.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:#F5EDE0; --bg-2:#EFE4D2; --surface:#FBF6EE; --surface-2:#FFFBF4;
+    --ink:#3D3530; --ink-soft:#6B6357; --ink-faint:#8B7E70;
+    --sage:#8B9A7E; --sage-deep:#6B7A5F; --clay:#C97B5A; --clay-deep:#A8593E;
+    --taupe-deep:#8B7E6A; --line:#E5D9C3; --line-2:#D4C4A8;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased; line-height: 1.6;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; padding-block: 0 70px; padding-inline: 18px; }
+  header { padding: 30px 0 18px; border-bottom: 1px solid var(--line); }
+  .lockup { display: flex; align-items: center; gap: 10px; }
+  .lockup img { height: 34px; }
+  .lockup .name { font-family: 'Fraunces', serif; font-weight: 600; font-size: 18px; }
+  .lockup .name em { font-style: italic; font-weight: 500; color: var(--taupe-deep); }
+  .eyebrow { font-size: 11px; letter-spacing: .3em; text-transform: uppercase; font-weight: 700; color: var(--sage-deep); }
+  h1 { font-family: 'Fraunces', serif; font-weight: 600; font-size: clamp(28px, 5vw, 38px); letter-spacing: -0.02em; margin-top: 8px; }
+  h1 em { font-style: italic; font-weight: 500; color: var(--taupe-deep); }
+  .lede { color: var(--ink-soft); margin-top: 12px; font-size: 15.5px; max-width: 62ch; }
+  h2 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 21px; margin: 0 0 4px; }
+  .sec { margin-top: 42px; }
+  .sec > p.intro { color: var(--ink-soft); font-size: 14px; margin-bottom: 14px; }
+
+  .card {
+    display: block; background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    padding: 14px 17px; margin-bottom: 10px; text-decoration: none; color: inherit;
+    box-shadow: 0 1px 2px rgba(61,53,48,.05);
+  }
+  a.card:hover { border-color: var(--line-2); }
+  .card .row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .card .t { font-family: 'Fraunces', serif; font-size: 16.5px; font-weight: 600; }
+  .card .tag {
+    font-size: 9.5px; letter-spacing: .16em; text-transform: uppercase; font-weight: 700;
+    border: 1px solid var(--line-2); border-radius: 999px; padding: 2px 9px; color: var(--ink-soft);
+  }
+  .card .tag.live { color: var(--sage-deep); border-color: rgba(107,122,95,.4); }
+  .card .tag.parked { color: var(--clay-deep); border-color: rgba(168,89,62,.35); }
+  .card .u { margin-left: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; color: var(--sage-deep); word-break: break-all; }
+  .card .d { color: var(--ink-soft); font-size: 13.5px; margin-top: 4px; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 13px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .tblwrap { overflow-x: auto; border-radius: 14px; }
+  th { text-align: left; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); font-weight: 700; padding: 10px 12px; background: var(--bg-2); }
+  td { padding: 9px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+  td:first-child { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; white-space: nowrap; color: var(--clay-deep); }
+  td a { color: var(--sage-deep); }
+
+  .note { background: var(--bg-2); border-radius: 12px; padding: 13px 16px; font-size: 13.5px; color: var(--ink-soft); margin-top: 12px; }
+  .note strong { color: var(--ink); }
+  footer { margin-top: 50px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-faint); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="lockup">
+      <img src="/assets/logo_ss_green_v5.png" alt="">
+      <span class="name">Studio Soul<em>utions</em></span>
+    </div>
+  </header>
+
+  <div style="padding-top: 26px;">
+    <div class="eyebrow">Anne's hub · internal</div>
+    <h1>Everything, <em>one page.</em></h1>
+    <p class="lede">
+      The master reference: every live surface, tool, printable and QR on the platform, what each is
+      for, and where it points. Culled 2026-09-15 so it lists only what survives. Laura's version of
+      this page is her hub; this one is yours.
+    </p>
+  </div>
+
+  <div class="sec">
+    <h2>Customer-facing</h2>
+    <a class="card" href="/">
+      <div class="row"><span class="t">The homepage</span><span class="tag live">live</span><span class="u">studiosoulutions.com</span></div>
+      <div class="d">App-first since 2026-09-14: the real demo building runs in the phone frame, kiosk in its own section. Community and Pricing are parked (redirect home; two _redirects lines revive them).</div>
+    </a>
+    <a class="card" href="/a/demo">
+      <div class="row"><span class="t">The demo building</span><span class="tag live">live</span><span class="u">/a/demo</span></div>
+      <div class="d">The Beauty Collective: the sales demo AND the homepage preview. /app and /app.html land here too. Any building gets its own /a/&lt;slug&gt;.</div>
+    </a>
+    <a class="card" href="/salonplus/">
+      <div class="row"><span class="t">Salon Plus directory page</span><span class="tag live">live</span><span class="u">/salonplus/</span></div>
+      <div class="d">Map plus roster for lobby QRs. The join form lives at #join; ?change opens it in update mode.</div>
+    </a>
+    <a class="card" href="/salonplus/app/">
+      <div class="row"><span class="t">Salon Plus app</span><span class="tag live">live</span><span class="u">/salonplus/app/</span></div>
+      <div class="d">The product. Installable PWA (manifest live). Nav: Discover, Directory, Map.</div>
+    </a>
+    <a class="card" href="/kiosk">
+      <div class="row"><span class="t">The kiosk</span><span class="tag live">live</span><span class="u">/kiosk</span></div>
+      <div class="d">The lobby touchscreen demo. Referenced from the homepage's kiosk section; still runs concept seed data (parity with the real app is parked with the kiosk push).</div>
+    </a>
+    <a class="card" href="/join/">
+      <div class="row"><span class="t">Generic join form</span><span class="tag live">live</span><span class="u">/join/</span></div>
+      <div class="d">Any building's studios sign up here; ?building= prefills the name. Feeds the same inbox.</div>
+    </a>
+    <a class="card" href="/salonplus/offer/">
+      <div class="row"><span class="t">Studio portal</span><span class="tag live">live</span><span class="u">/salonplus/offer/</span></div>
+      <div class="d">Suite + code: My listing, My offer, question and problem buttons. ?b=&lt;slug&gt; scopes it to another building.</div>
+    </a>
+  </div>
+
+  <div class="sec">
+    <h2>Owner and internal</h2>
+    <a class="card" href="/leads/">
+      <div class="row"><span class="t">The admin panel</span><span class="tag live">live</span><span class="u">/leads/ (also /admin)</span></div>
+      <div class="d">Merged 2026-09-14: sidebar, studio cards, Buildings section. Passcode is the LEADS_CODE value on Netlify, never written down.</div>
+    </a>
+    <a class="card" href="/leads/guide/">
+      <div class="row"><span class="t">The admin manual</span><span class="tag live">live</span><span class="u">/leads/guide/</span></div>
+      <div class="d">Every button, written down. The rollout and owner's guide are the friendly versions.</div>
+    </a>
+    <a class="card" href="/laura/">
+      <div class="row"><span class="t">Laura's hub</span><span class="tag live">live</span><span class="u">/laura/</span></div>
+      <div class="d">Her one link: live counts, every link explained, copy-paste texts. Every Salon Plus change ships an update here, standing rule.</div>
+    </a>
+    <a class="card" href="/hub/">
+      <div class="row"><span class="t">This page</span><span class="tag live">live</span><span class="u">/hub/</span></div>
+      <div class="d">Kept current by the sessions: when a surface is added, parked or culled, this page changes in the same push.</div>
+    </a>
+  </div>
+
+  <div class="sec">
+    <h2>Printables</h2>
+    <p class="intro">Open, then the browser's Print for paper or PDF. Every salonplus handout stays alive on purpose: printed QRs may be in the wild, and paper pointing at a dead page is a trap.</p>
+    <a class="card" href="/salonplus/rollout/">
+      <div class="row"><span class="t">The rollout</span><span class="u">/salonplus/rollout/</span></div>
+      <div class="d">Nine pages: every feature and how-to, for Laura as a first-timer.</div>
+    </a>
+    <a class="card" href="/salonplus/guide/">
+      <div class="row"><span class="t">The owner's guide</span><span class="u">/salonplus/guide/</span></div>
+      <div class="d">Six pages: what it is, benefits both ways, the flow, admin in five minutes, install steps.</div>
+    </a>
+    <a class="card" href="/leads/portal-cards/">
+      <div class="row"><span class="t">Portal cards</span><span class="u">/leads/portal-cards/</span></div>
+      <div class="d">Passcode-gated: a photocopy master plus cut-out per-studio code cards, pulled live at print time.</div>
+    </a>
+    <a class="card" href="/signup-sheet.html">
+      <div class="row"><span class="t">Sign-up sheet</span><span class="u">/signup-sheet.html</span></div>
+      <div class="d">QR to the join form plus ruled lines for handwriters. Blank building line, works anywhere.</div>
+    </a>
+    <a class="card" href="/salonplus/handout-laura-kit.html">
+      <div class="row"><span class="t">Laura's QR kit</span><span class="u">/salonplus/handout-laura-kit.html</span></div>
+      <div class="d">Her pocket page of QRs. Also alive: <a href="/salonplus/handout-flyer.html">door flyer</a>, <a href="/salonplus/handout-lobby-sign.html">lobby sign</a>, <a href="/salonplus/handout-interest-form.html">paper interest form</a>, <a href="/salonplus/handout-pricing.html">pricing sheet</a> (tier prices predate the paid-tier decision, re-check before circulating), <a href="/salonplus/board-roster-worksheet.html">board roster worksheet</a>, <a href="/salonplus/map-export.html">map export</a>.</div>
+    </a>
+  </div>
+
+  <div class="sec">
+    <h2>QR assets</h2>
+    <p class="intro">The png files in /assets, and what each encodes. When paper matters, scan before you print a stack.</p>
+    <div class="tblwrap"><table>
+      <tr><th>File</th><th>Points at</th></tr>
+      <tr><td>qr-salonplus.png</td><td>The Salon Plus directory page, /salonplus/</td></tr>
+      <tr><td>qr-salonplus-app.png</td><td>The app, /salonplus/app/</td></tr>
+      <tr><td>qr-salonplus-form.png</td><td>The join form (the #join section)</td></tr>
+      <tr><td>qr-salonplus-flyer.png</td><td>The printable door flyer page</td></tr>
+      <tr><td>qr-salonplus-pricing.png</td><td>The printable pricing sheet page</td></tr>
+      <tr><td>qr-join.png</td><td>The generic /join/ form</td></tr>
+      <tr><td>qr-studiosoulutions.png</td><td>studiosoulutions.com</td></tr>
+      <tr><td>qr-studiosoulutions-interest.png</td><td>The prospect interest form at hive-rise.com/interest-StudioSoulutions</td></tr>
+      <tr><td>StudioSoulutions-Capture-QR.png</td><td>The kiosk's phone-handoff QR (in live use on /kiosk)</td></tr>
+    </table></div>
+  </div>
+
+  <div class="sec">
+    <h2>Boards and memory</h2>
+    <a class="card" href="https://claude.ai/artifact/Bi3DD2myb74jYoNZvgHwZg">
+      <div class="row"><span class="t">The waggle board</span><span class="u">claude.ai artifact</span></div>
+      <div class="d">This project's live test board: walkthrough, scout reports, Go buttons. Say "grab my findings" in any session.</div>
+    </a>
+    <div class="card">
+      <div class="row"><span class="t">The vault records</span></div>
+      <div class="d">Punchlist: <span style="font-family:ui-monospace,monospace;font-size:11.5px;">Hive Vault\punchlists\studio-soulutions-punchlist.md</span> (decisions, build queue, launch checks). The waggle system itself: <span style="font-family:ui-monospace,monospace;font-size:11.5px;">waggle-punchlist.md</span>. Client note: Laura Ortega. The skill: <span style="font-family:ui-monospace,monospace;font-size:11.5px;">~\.claude\skills\waggle\</span>, invoked as /waggle in any repo.</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>Parked and culled</h2>
+    <div class="card">
+      <div class="row"><span class="t">Parked</span><span class="tag parked">revivable</span></div>
+      <div class="d"><strong>/community</strong> and <strong>/pricing</strong>: unlinked and redirected home 2026-09-14, files intact; four _redirects lines bring them back. The <strong>kiosk parity</strong> work is parked with the kiosk push. <strong>Available suites</strong> is paused until a building owner comes aboard.</div>
+    </div>
+    <div class="card">
+      <div class="row"><span class="t">Culled 2026-09-15</span><span class="tag">git history keeps all</span></div>
+      <div class="d">The old launch-pad page (redirects to /laura/) and its back-pills, the /app concept demo (redirects to /a/demo), the v1 prototype, the demo admin shell (/admin redirects to /leads/), logo concepts and placeholders, root-level duplicate images and QR.</div>
+    </div>
+  </div>
+
+  <footer>
+    Studio Soulutions · Anne's master hub · not linked from anywhere public.
+    Sessions update this page in the same push as any surface change.
+  </footer>
+</div>
+</body>
+</html>
