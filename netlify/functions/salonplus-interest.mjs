@@ -344,15 +344,40 @@ async function emailConfirmation(row, buildingLabel) {
   /* Business name is optional on a change, so the suite stands in. */
   const who = row.business || (row.suite ? `Suite ${row.suite}` : 'your studio');
 
-  const html = brandShell(buildingLabel, `
+  /* The receipt is warm and concrete on purpose: it promises the welcome
+     email by name, so nobody sits wondering whether anything is actually
+     happening. Anne's note from the waggle run: "formlike, no you'll
+     hear from us when you're added". */
+  const nextStep = (n, text) => `
+    <table style="border-collapse:collapse;margin-top:12px;"><tr>
+      <td style="vertical-align:top;padding-right:12px;">
+        <div style="width:26px;height:26px;border-radius:50%;background:#9A6B45;color:#FBF6EE;font-family:Inter,sans-serif;font-size:14px;font-weight:600;text-align:center;line-height:26px;">${n}</div>
+      </td>
+      <td style="vertical-align:top;font-size:14.5px;line-height:1.6;color:#33312D;">${text}</td>
+    </tr></table>`;
+
+  const html = brandShell(buildingLabel, isChange ? `
     <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:#9A6B45;margin:0;">${escHtml(buildingLabel)}</p>
-    <h2 style="font-weight:400;margin:6px 0 16px;font-size:24px;">${isChange ? 'We got your update' : "You're on the list"}</h2>
+    <h2 style="font-weight:400;margin:6px 0 16px;font-size:24px;">We got your update</h2>
     <p style="font-size:15px;line-height:1.6;margin:0 0 12px;">
-      Thanks${first ? ', ' + first : ''}. ${isChange
-        ? `Your change for <strong>${escHtml(who)}</strong> is in, and someone will make it shortly.`
-        : `<strong>${escHtml(row.business)}</strong> is on the list. We'll set your listing up shortly, and your card goes on the map and in the app for everyone who walks in the door.`}
+      Thanks${first ? ', ' + first : ''}. Your change for <strong>${escHtml(who)}</strong> is in, and someone will make it shortly.
     </p>
-    <p style="font-size:15px;line-height:1.6;margin:0 0 12px;">Nothing more for you to do. If we need anything to get your card just right, we'll reach out directly.</p>
+    <p style="font-size:15px;line-height:1.6;margin:0 0 12px;">Nothing more for you to do. If we need anything, we'll reach out directly.</p>
+    <p style="font-size:14px;line-height:1.6;color:#6C685F;margin:0;">
+      Questions in the meantime? Email the developer any time:
+      <a href="mailto:anne@hive-rise.com" style="color:#6B7A5F;">anne@hive-rise.com</a>.
+    </p>` : `
+    <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:#9A6B45;margin:0;">${escHtml(buildingLabel)}</p>
+    <h2 style="font-weight:400;margin:6px 0 14px;font-size:24px;">Welcome${first ? ', ' + first : ''}. You're on the way to the map.</h2>
+    <p style="font-size:15px;line-height:1.6;margin:0;">
+      <strong>${escHtml(row.business)}</strong> is in, photos and all. Here's exactly what happens now:
+    </p>
+    ${nextStep(1, `We build your card from what you just sent: your photos, your services, your hours. A real person does this, usually the same day.`)}
+    ${nextStep(2, `The moment your card goes live, <strong>you'll hear from us</strong>: one more email, your welcome letter, with a link to see your card in the app and your personal sign-in code.`)}
+    ${nextStep(3, `That code makes the card yours: from then on you can change your photos, hours and links yourself, any time, and it's live the moment you save.`)}
+    <p style="font-size:15px;line-height:1.6;margin:14px 0 12px;">
+      Until then there's nothing more for you to do. If we need anything to get your card just right, we'll reach out directly.
+    </p>
     <p style="font-size:14px;line-height:1.6;color:#6C685F;margin:0;">
       Questions in the meantime? Email the developer any time:
       <a href="mailto:anne@hive-rise.com" style="color:#6B7A5F;">anne@hive-rise.com</a>.
