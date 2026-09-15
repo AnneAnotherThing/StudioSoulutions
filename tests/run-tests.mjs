@@ -331,6 +331,18 @@ ok(res.status === 200 && !!rem.code, 'remintCode answers with a fresh code');
 ok(calls.some(c => c.method === 'DELETE' && c.url.includes('ss_suite_codes')),
    'the old code row dies before the new one is minted');
 
+/* ===== the neutral portal path ========================================= */
+section('portal: neutral path');
+
+const { readFileSync: rfs } = await import('node:fs');
+const redirects = rfs(new URL('../_redirects', import.meta.url), 'utf8');
+ok(/\/portal\s+\/salonplus\/offer\/index\.html\s+200/.test(redirects)
+   && /\/portal\/\*\s+\/salonplus\/offer\/index\.html\s+200/.test(redirects),
+   'the /portal rewrite serves the portal page for every building');
+const offerPage = rfs(new URL('../salonplus/offer/index.html', import.meta.url), 'utf8');
+ok(!/(href|src)="\.\.?\//.test(offerPage),
+   'the portal page has no relative links, so it survives any path');
+
 /* ===== mail: a broken RESEND_FROM repairs itself ======================= */
 section('mail: sender repair');
 

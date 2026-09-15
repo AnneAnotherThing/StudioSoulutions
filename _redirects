@@ -18,6 +18,13 @@
 # demo Laura shows prospects.
 /a/*        /salonplus/app/index.html   200
 
+# One portal, every building, without Salon Plus in the address bar:
+# /portal/?b=<slug> serves the same page, which dresses itself in that
+# building's name. Salon Plus's own printed path stays canonical, so
+# nothing in the wild breaks. Anne's ask, waggle 2026-09-15.
+/portal      /salonplus/offer/index.html   200
+/portal/*    /salonplus/offer/index.html   200
+
 # Community and pricing are parked until we expand; pages stay in the
 # repo, just unreachable. The ! forces the redirect even though the
 # files exist, which plain rules never override. Drop this block to

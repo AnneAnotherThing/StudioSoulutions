@@ -677,8 +677,10 @@ async function emailWelcome(db, studio) {
   const home = studio.building === 'salonplus';
   const appUrl    = home ? 'https://studiosoulutions.com/salonplus/app/'
                          : `https://studiosoulutions.com/a/${encodeURIComponent(studio.building)}`;
+  /* Other buildings get the neutral address, so their welcome never
+     shows another building's name in the URL. */
   const portalUrl = home ? 'https://studiosoulutions.com/salonplus/offer/'
-                         : `https://studiosoulutions.com/salonplus/offer/?b=${encodeURIComponent(studio.building)}`;
+                         : `https://studiosoulutions.com/portal/?b=${encodeURIComponent(studio.building)}`;
   /* The one-tap edit link: suite and code in the URL, which the portal
      consumes and immediately strips. No new exposure: the code is plain
      text in this same email either way. */
