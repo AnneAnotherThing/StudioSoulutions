@@ -126,13 +126,20 @@ export default async function handler(request) {
   if (!saved)  console.warn('interest: supabase failed, email carried it', String(results[0].reason).slice(0, 300));
   if (!mailed) console.warn('interest: email failed, supabase carried it', String(results[1].reason).slice(0, 300));
 
-  /* Deliberately not awaited into the result: the studio's receipt is a
-     courtesy, and a bounce at their end must never read as a failure at
-     ours. */
-  if (!isMessage) emailConfirmation(row, buildingLabel)
-    .catch(e => console.warn('interest: confirmation to submitter failed', String(e).slice(0, 200)));
+  /* The receipt is a courtesy and must never fail the submission, but it
+     failed invisibly once too often (Anne, waggle 2026-09-15: "customer
+     emails aren't going out"), so it is awaited and its outcome rides
+     along in the response where a test can read it. */
+  let receipt = 'skipped';
+  if (!isMessage) {
+    try { await emailConfirmation(row, buildingLabel); receipt = row.email ? 'sent' : 'no email given'; }
+    catch (e) {
+      receipt = 'failed: ' + String(e).slice(0, 300);
+      console.warn('interest: confirmation to submitter failed', String(e).slice(0, 300));
+    }
+  }
 
-  return json(200, { ok: true, saved, mailed, kind: row.kind, photos: photoUrls.length });
+  return json(200, { ok: true, saved, mailed, receipt, kind: row.kind, photos: photoUrls.length });
 }
 
 /* ----- photos ---------------------------------------------------------- */
@@ -384,18 +391,26 @@ async function emailConfirmation(row, buildingLabel) {
     </p>`,
     `If this wasn't you, ignore this note and nothing happens.`);
 
-  const res = await fetch('https://api.resend.com/emails', {
+  const body = JSON.stringify({
+    from, to: [row.email],
+    /* The sender is a noreply address, so a natural reply still lands
+       somewhere a person reads. */
+    reply_to: 'anne@hive-rise.com',
+    subject: isChange ? `We got your update, ${who}` : `We got your details, ${row.business}`,
+    html,
+  });
+  const send = () => fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
-    body: JSON.stringify({
-      from, to: [row.email],
-      /* The sender is a noreply address, so a natural reply still lands
-         somewhere a person reads. */
-      reply_to: 'anne@hive-rise.com',
-      subject: isChange ? `We got your update, ${who}` : `We got your details, ${row.business}`,
-      html,
-    }),
+    body,
   });
+  let res = await send();
+  /* The receipt follows the lead email within the same second, which can
+     trip Resend's per-second rate limit. One polite retry covers it. */
+  if (res.status === 429) {
+    await new Promise(r => setTimeout(r, 700));
+    res = await send();
+  }
   if (!res.ok) throw new Error(`resend ${res.status}: ${(await res.text()).slice(0, 200)}`);
 }
 
