@@ -354,8 +354,8 @@ async function emailConfirmation(row, buildingLabel) {
     </p>
     <p style="font-size:15px;line-height:1.6;margin:0 0 12px;">Nothing more for you to do. If we need anything to get your card just right, we'll reach out directly.</p>
     <p style="font-size:14px;line-height:1.6;color:#6C685F;margin:0;">
-      Questions in the meantime? Ask at the front desk any time, or write to
-      <a href="mailto:anne@hive-rise.com" style="color:#6B7A5F;">anne@hive-rise.com</a> and it finds the right person.
+      Questions in the meantime? Email the developer any time:
+      <a href="mailto:anne@hive-rise.com" style="color:#6B7A5F;">anne@hive-rise.com</a>.
     </p>`,
     `If this wasn't you, ignore this note and nothing happens.`);
 

@@ -682,7 +682,7 @@ async function emailWelcome(db, studio) {
     ${code ? step(4, 'Your card is yours to update',
       `Sign in to <a href="${portalUrl}" style="color:#6B7A5F;">your studio portal</a> with the suite and code below. Change your hours, photos, booking link or bio, and it is live in the app the moment you save. If your listing level includes offers, the <strong>My offer</strong> tab posts a special that shows in the app and takes itself down when it expires.`)
     : step(4, 'Changing something later',
-      `Want different hours, a new photo, or a new booking link on your card? Ask at the front desk and it is done in a minute.`)}
+      `Want different hours, a new photo, or a new booking link on your card? Email the developer at <a href="mailto:anne@hive-rise.com" style="color:#6B7A5F;">anne@hive-rise.com</a> and it is done in a minute.`)}
 
     <p style="margin:24px 0 0;">
       <a href="${appUrl}" style="display:inline-block;padding:13px 26px;background:#33312D;color:#FAF8F4;text-decoration:none;border-radius:999px;font-family:Inter,sans-serif;font-size:15px;">See your card</a>
@@ -696,10 +696,10 @@ async function emailWelcome(db, studio) {
       <p style="margin:0;font-size:15px;">
         Suite <strong>${escHtml(studio.suite)}</strong> &nbsp;&middot;&nbsp; Code <strong style="font-family:ui-monospace,monospace;">${escHtml(code)}</strong>
       </p>
-      <p style="margin:10px 0 0;font-size:13px;color:#918C81;">Lose the code? Ask at the front desk and it is back in a minute.</p>
+      <p style="margin:10px 0 0;font-size:13px;color:#918C81;">Lose the code? Ask the developer: <a href="mailto:anne@hive-rise.com" style="color:#6B7A5F;">anne@hive-rise.com</a>, and it is back in a minute.</p>
     </div>` : ''}
     <p style="margin-top:22px;font-size:13.5px;color:#918C81;">
-      Anything look wrong on your card? Reply to this email and it reaches a person, or ask at the front desk.
+      Anything look wrong on your card? Reply to this email and it reaches a person, straight away.
     </p>`);
 
   await sendMail({ to: [studio.email], subject: `${studio.name} is on the map`, html, replyTo: 'anne@hive-rise.com' });
