@@ -446,12 +446,13 @@ async function deleteStudio(db, p) {
    like a Resend key. */
 async function mailCheck(db, p) {
   const key  = process.env.RESEND_API_KEY || '';
-  const from = process.env.RESEND_FROM || '';
+  const raw  = process.env.RESEND_FROM || '';
+  const from = repairFrom(raw);
   const to   = process.env.LEAD_TO || '';
 
   const env = {
     RESEND_API_KEY: key ? (key.startsWith('re_') ? 'set, looks like a Resend key' : 'set, but does NOT start with re_') : 'MISSING',
-    RESEND_FROM: from || 'MISSING',
+    RESEND_FROM: from ? (from === raw.trim() ? from : `${from} (repaired from "${raw}", which has no address)`) : 'MISSING',
     LEAD_TO: to || 'MISSING',
     LEAD_CC: process.env.LEAD_CC || '(not set)',
     OFFER_TO: process.env.OFFER_TO || '(not set, falls back to LEAD_TO)',
@@ -759,9 +760,19 @@ async function emailStudioEdit(before, changed, label = 'Salon Plus Studios') {
   await sendMail({ to: [to], subject: `Updated: ${before.name} (Suite ${before.suite})`, html });
 }
 
+/* A from with no address 422s every send. It happened for real: Netlify
+   ended up holding just "Studio Soulutions" and all mail died quietly.
+   A name-only value gets the product address attached instead. */
+function repairFrom(v) {
+  const from = String(v || '').trim().replace(/^"+|"+$/g, '');
+  if (!from) return '';
+  if (!from.includes('@')) return `${from.replace(/[<>"]/g, '').trim()} <studiosoulutions@hive-rise.com>`;
+  return from;
+}
+
 async function sendMail({ to, subject, html, replyTo }) {
   const key = process.env.RESEND_API_KEY;
-  const from = process.env.RESEND_FROM;
+  const from = repairFrom(process.env.RESEND_FROM);
   if (!key)  throw new Error('RESEND_API_KEY is not set.');
   if (!from) throw new Error('RESEND_FROM is not set; there is no test-sender fallback on purpose.');
   const res = await fetch('https://api.resend.com/emails', {

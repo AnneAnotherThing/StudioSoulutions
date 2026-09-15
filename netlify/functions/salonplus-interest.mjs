@@ -409,11 +409,15 @@ function escHtml(s) {
    (Anne's call, waggle 2026-09-14): no mailbox behind it, so it acts as
    noreply, and every email sets reply_to somewhere a person reads. */
 function senderAddress() {
-  const from = process.env.RESEND_FROM;
+  const from = (process.env.RESEND_FROM || '').trim().replace(/^"+|"+$/g, '');
   if (!from) throw new Error(
     'RESEND_FROM is not set, so mail would go out from the shared Resend test sender, ' +
     'which only delivers to the Resend account owner. Set RESEND_FROM to an address on ' +
-    'a domain verified in Resend, e.g. "Studio Soulutions <studiosoulutions@hive-rise.com>".');
+    'a domain verified in Resend, e.g. Studio Soulutions <studiosoulutions@hive-rise.com>.');
+  /* A from with no address 422s every send. It happened for real: Netlify
+     ended up holding just "Studio Soulutions" and all mail died quietly.
+     A name-only value now gets the product address attached instead. */
+  if (!from.includes('@')) return `${from.replace(/[<>"]/g, '').trim()} <studiosoulutions@hive-rise.com>`;
   return from;
 }
 

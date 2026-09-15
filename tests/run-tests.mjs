@@ -270,6 +270,27 @@ res = await post(admin, { action: 'deleteStudio', code: 'test-passcode', id: 'no
 ok(res.status === 400, 'a malformed studio id is refused');
 ok(!calls.some(c => c.method === 'DELETE'), 'nothing was deleted on the bad studio id');
 
+/* ===== mail: a broken RESEND_FROM repairs itself ======================= */
+section('mail: sender repair');
+
+/* It happened for real: Netlify ended up holding just "Studio Soulutions"
+   and Resend 422'd every send. A name-only value now goes out with the
+   product address attached instead of killing all mail. */
+const OLD_FROM = process.env.RESEND_FROM;
+process.env.RESEND_FROM = 'Studio Soulutions';
+resetNet();
+res = await post(interest, { ...NEW_LEAD });
+await settle();
+ok(resendCalls().every(c => c.body.from === 'Studio Soulutions <studiosoulutions@hive-rise.com>'),
+   'a name-only RESEND_FROM goes out with the product address attached');
+process.env.RESEND_FROM = '"Studio Soulutions <hello@test.local>"';
+resetNet();
+res = await post(interest, { ...NEW_LEAD });
+await settle();
+ok(resendCalls().every(c => c.body.from === 'Studio Soulutions <hello@test.local>'),
+   'stray wrapping quotes on RESEND_FROM are stripped');
+process.env.RESEND_FROM = OLD_FROM;
+
 /* ===== the hours composer (extracted from the live page) =============== */
 section('form: hours composer');
 
