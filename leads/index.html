@@ -565,6 +565,24 @@ const fmtPhone = v => {
   return String(v || '').trim();
 };
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/* Phone fields behave like phone fields: the tel keypad on phones, and a
+   US number takes the (602) 555-1234 shape as it is typed. Anything that
+   is not a plain US number is left exactly as entered. */
+function phoneFieldize(el) {
+  if (!el) return;
+  el.type = 'tel'; el.inputMode = 'tel'; el.autocomplete = 'tel';
+  el.addEventListener('input', () => {
+    const raw = el.value;
+    if (/[a-z]/i.test(raw) || (/^\s*\+/.test(raw) && !/^\s*\+1\b/.test(raw))) return;
+    let d = raw.replace(/\D/g, '');
+    if (d.length === 11 && d[0] === '1') d = d.slice(1);
+    if (d.length > 10) return;
+    const out = d.length < 4 ? d
+      : d.length < 7 ? '(' + d.slice(0, 3) + ') ' + d.slice(3)
+      : '(' + d.slice(0, 3) + ') ' + d.slice(3, 6) + '-' + d.slice(6);
+    if (out !== raw) { el.value = out; try { el.setSelectionRange(out.length, out.length); } catch {} }
+  });
+}
 /* A studio's posting code, looked up by where it lives. Codes are keyed on
    suite + building because that pair is what a studio types into the offer
    form — it is the same identity from both ends. */
@@ -905,6 +923,7 @@ function openDrawer(k) {
   $('drawerBack').classList.add('open'); $('drawer').classList.add('open');
   $('drawerClose').onclick = $('drawerCancel').onclick = closeDrawer;
   $('drawerSave').onclick = saveDrawer;
+  phoneFieldize($('drawer').querySelector('[data-d="phone"]'));
 
   $('bioGen').onclick = async () => {
     const btn = $('bioGen'), picks = $('bioPicks');
@@ -1045,6 +1064,10 @@ function leadShots(l) {
 function whenOf(l) {
   return l.created_at ? new Date(l.created_at).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : '';
 }
+/* Every inbox card can be deleted for good, processed or not: test rows
+   from a walkthrough should not live in the record forever. The Changes
+   log keeps who deleted what. Anne's ask, waggle 2026-09-14. */
+const delBtn = l => `<button class="btn btn-ghost btn-sm" data-delete="${esc(l.id)}" style="color:var(--clay-deep);">Delete</button>`;
 
 /* Already dealt with: kept for the record, deliberately quiet. */
 function doneCard(l, what) {
@@ -1058,6 +1081,7 @@ function doneCard(l, what) {
     ${leadShots(l)}
     ${leadRows(l)}
     ${l.notes ? `<dl class="rows"><dt>They said</dt><dd>${esc(l.notes)}</dd></dl>` : ''}
+    <div style="margin-top:12px;display:flex;justify-content:flex-end;">${delBtn(l)}</div>
   </div>`;
 }
 
@@ -1086,6 +1110,7 @@ function msgCard(l) {
     <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
       ${l.email ? `<a class="btn btn-sm" href="mailto:${esc(l.email)}?subject=${encodeURIComponent('Re: your message about Salon Plus')}">Reply</a>` : ''}
       <button class="btn btn-ghost btn-sm" data-handled="${esc(l.id)}">Mark done</button>
+      ${delBtn(l)}
     </div>
   </div>`;
 }
@@ -1111,6 +1136,7 @@ function changeCard(l) {
         ? `<button class="btn btn-sm" data-openstudio="${esc(match.id)}">Open ${esc(match.name)}</button>`
         : `<span class="when" style="color:var(--clay-deep);">No live studio in ${esc(l.building)} suite ${esc(l.suite || '?')} &mdash; check the suite they gave.</span>`}
       <button class="btn btn-ghost btn-sm" data-handled="${esc(l.id)}">Mark done</button>
+      ${delBtn(l)}
     </div>
   </div>`;
 }
@@ -1139,6 +1165,7 @@ function newCard(l) {
       </select>
       <input class="cell" style="max-width:110px;border-color:var(--line-2);background:var(--surface);" data-lead-suite="${esc(l.id)}" value="${esc(l.suite || '')}" placeholder="Suite">
       <button class="btn btn-sm" data-publish="${esc(l.id)}">Publish to directory</button>
+      ${delBtn(l)}
     </div>
   </div>`;
 }
@@ -1148,6 +1175,22 @@ $('inboxList').addEventListener('click', async e => {
   if (openBtn) {
     document.querySelector('.tab[data-tab="studios"]').click();
     return openDrawer(openBtn.dataset.openstudio);
+  }
+  const delB = e.target.closest('[data-delete]');
+  if (delB) {
+    const l = state.leads.find(x => x.id === delB.dataset.delete);
+    const who = l ? (l.business || l.name || (l.suite ? 'Suite ' + l.suite : 'this submission')) : 'this submission';
+    if (!confirm(`Delete ${who} from the records for good?\n\nThis removes the submission itself, never a published studio. There is no undo; the Changes log keeps a line saying it happened.`)) return;
+    delB.disabled = true; delB.textContent = 'Deleting…';
+    try {
+      await api({ action: 'deleteLead', id: delB.dataset.delete });
+      state.leads = state.leads.filter(x => x.id !== delB.dataset.delete);
+      renderInbox(); toast('Deleted');
+    } catch (err) {
+      delB.disabled = false; delB.textContent = 'Delete';
+      alert(err.message);
+    }
+    return;
   }
   const doneBtn = e.target.closest('[data-handled]');
   if (doneBtn) {

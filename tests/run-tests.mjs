@@ -42,6 +42,11 @@ globalThis.fetch = async (url, opts = {}) => {
   const u = rec.url;
 
   if (u.includes('/rest/v1/ss_interest')) {
+    /* Reads answer with one stored lead (deleteLead looks the row up
+       before removing it); deletes succeed; inserts follow the plan. */
+    if (rec.method === 'GET') return mockRes(200, JSON.stringify([
+      { id: '11111111-2222-3333-4444-555555555555', business: 'Test Studio', kind: 'new', building: 'salonplus' }]));
+    if (rec.method === 'DELETE') return mockRes(204, '');
     const status = supabaseInsertPlan.length ? supabaseInsertPlan.shift() : 201;
     return mockRes(status, status < 300 ? '' : '{"message":"column does not exist"}');
   }
@@ -228,6 +233,26 @@ res = await post(admin, { action: 'studioPortal', suite: '103', code: 'x' });
 codesCall = calls.find(c => c.url.includes('ss_suite_codes'));
 ok(codesCall && codesCall.url.includes('building=eq.salonplus'),
    'portal code lookup defaults to salonplus when no building is sent');
+
+/* ===== admin: deleting a submission ==================================== */
+section('admin: lead deletion');
+
+const LEAD_ID = '11111111-2222-3333-4444-555555555555';
+resetNet();
+res = await post(admin, { action: 'deleteLead', code: 'test-passcode', id: LEAD_ID });
+ok(res.status === 200, 'deleteLead answers ok');
+const delCall = calls.find(c => c.method === 'DELETE' && c.url.includes('ss_interest'));
+ok(delCall && delCall.url.includes(`id=eq.${LEAD_ID}`), 'the DELETE hits exactly that submission row');
+ok(calls.some(c => c.url.includes('ss_admin_log')), 'the deletion is written to the Changes log');
+
+resetNet();
+res = await post(admin, { action: 'deleteLead', code: 'test-passcode', id: 'not-a-uuid' });
+ok(res.status === 400, 'a malformed id is refused before touching the database');
+ok(!calls.some(c => c.method === 'DELETE'), 'nothing was deleted on the bad id');
+
+resetNet();
+res = await post(admin, { action: 'deleteLead', code: 'wrong', id: LEAD_ID });
+ok(res.status === 401, 'no passcode, no deletion');
 
 /* ===== the hours composer (extracted from the live page) =============== */
 section('form: hours composer');

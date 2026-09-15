@@ -77,6 +77,7 @@ export default async function handler(request) {
     case 'publishLead':  return publishLead(db, p);
     case 'setStatus':    return setStatus(db, p);
     case 'markHandled':  return markHandled(db, p);
+    case 'deleteLead':   return deleteLead(db, p);
     case 'mailCheck':    return mailCheck(db, p);
     case 'saveTiers':    return saveTiers(db, p);
     case 'saveBuilding': return saveBuilding(db, p);
@@ -383,6 +384,25 @@ async function markHandled(db, p) {
     { handled_at: nowIso(), handled_by: str(p.who) });
   if (!ok) return json(502, { error: 'Could not close that request.' });
   await log(db, p, 'handled change request', '', { lead: id });
+  return json(200, { ok: true });
+}
+
+/* Removes a submission row for good, any kind: new, change, question,
+   bug, processed or not. Publishing already copied what mattered onto
+   the studio, and test rows from a walkthrough should not live in the
+   record forever. The Changes log keeps who deleted what, so the row
+   can vanish without the history doing the same. Anne's ask, waggle
+   2026-09-14. */
+async function deleteLead(db, p) {
+  const id = str(p.id);
+  if (!isUuid(id)) return json(400, { error: 'Bad submission id.' });
+  const rows = await db.get(LEADS, { id: `eq.${id}`, limit: '1' });
+  const gone = rows && rows[0];
+  if (!gone) return json(404, { error: 'That submission is already gone.' });
+  const ok = await db.del(LEADS, { id: `eq.${id}` });
+  if (!ok) return json(502, { error: 'Could not delete that submission.' });
+  await log(db, p, 'deleted submission', gone.business || gone.name || `Suite ${gone.suite}` || id,
+    { kind: gone.kind || 'new', building: gone.building || '', lead: id });
   return json(200, { ok: true });
 }
 
@@ -855,6 +875,13 @@ function supabase(url, key) {
       if (!res.ok) { await fail('insert ' + table, res); return null; }
       const out = await res.json();
       return Array.isArray(out) ? out[0] : out;
+    },
+    async del(table, match) {
+      const res = await fetch(`${url}/rest/v1/${table}?${qs(match)}`, {
+        method: 'DELETE', headers,
+      });
+      if (!res.ok) { await fail('delete ' + table, res); return false; }
+      return true;
     },
   };
 }
