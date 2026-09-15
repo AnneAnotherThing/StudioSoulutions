@@ -18,6 +18,15 @@
 # demo Laura shows prospects.
 /a/*        /salonplus/app/index.html   200
 
+# The directory page retired 2026-09-15: the app IS the directory now.
+# Old texted change links go to the portal, the texted join link keeps a
+# short alias, and every printed lobby QR lands on the app.
+/salonplus  change=:change  /salonplus/offer/   301
+/salonplus/join   /join/?building=Salon%20Plus%20Studios   301
+/salonplus        /salonplus/app/   301
+/salonplus/rollout     /rollout/   301
+/salonplus/rollout/*   /rollout/   301
+
 # One portal, every building, without Salon Plus in the address bar:
 # /portal/?b=<slug> serves the same page, which dresses itself in that
 # building's name. Salon Plus's own printed path stays canonical, so

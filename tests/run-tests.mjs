@@ -398,11 +398,12 @@ ok(resendCalls().every(c => c.body.from === 'Studio Soulutions <hello@test.local
    'stray wrapping quotes on RESEND_FROM are stripped');
 process.env.RESEND_FROM = OLD_FROM;
 
-/* ===== the hours composer (extracted from the live page) =============== */
+/* ===== the hours composer (extracted from the live join page; the
+   directory page that first carried it was culled 2026-09-15) ========== */
 section('form: hours composer');
 
 const { readFileSync } = await import('node:fs');
-const page = readFileSync(new URL('../salonplus/index.html', import.meta.url), 'utf8');
+const page = readFileSync(new URL('../join/index.html', import.meta.url), 'utf8');
 const fmtSrc = page.match(/function fmtTime\(mins\) \{[\s\S]*?\n\}/)?.[0];
 const daydefSrc = page.match(/const DAY_ORDER = \[[^\]]*\];/)?.[0];
 const compSrc = page.match(/function composeDays\(days\) \{[\s\S]*?\n\}/)?.[0];
@@ -457,20 +458,19 @@ ok(joinPage.includes('function composeDays'), 'join page carries the composer to
    already-listed studios at the portal, and the ?change deep links that
    are printed and texted in the world land there too. Anne's call,
    waggle 2026-09-14. */
-for (const [label, src] of [['salonplus', page], ['join', joinPage]]) {
+for (const [label, src] of [['join', joinPage]]) {
   ok(!src.includes('data-mode="change"'), `${label} page has no update mode on the form`);
   ok(!src.includes('setFormMode'), `${label} page carries no mode script`);
   ok(/kind:\s*'new'/.test(src), `${label} page always submits kind new`);
   ok(/Already listed\?/.test(src), `${label} page points already-listed studios at the portal`);
   ok(/[?&]change/.test(src) && src.includes('location.replace'), `${label} page redirects ?change links to the portal`);
 }
-ok(page.includes('href="offer/"'), 'salonplus portal pointer links to the portal');
 ok(joinPage.includes('/salonplus/offer/'), 'join portal pointer links to the portal');
 
 /* The day chips also wear .svc for styling, so the services collector
    must scope to #svcRow or the chosen days arrive as services. Found in
    the Sep 9 browser run; kept here so it stays found. */
-for (const [label, src] of [['salonplus', page], ['join', joinPage]]) {
+for (const [label, src] of [['join', joinPage]]) {
   ok(src.includes("querySelectorAll('#svcRow .svc input:checked')"),
      `${label} page scopes the services collector to #svcRow`);
 }
