@@ -34,3 +34,6 @@
 # Laura's page moved out from under the building it started in
 /salonplus/laura     /laura/   301
 /salonplus/laura/*   /laura/   301
+
+# The old launch-pad page retired 2026-09-15; the hub replaced it long ago
+/Laura-Walkthrough.html   /laura/   301
