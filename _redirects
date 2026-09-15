@@ -32,8 +32,12 @@
 /features/*              /   301
 /salonplus/features      /   301
 /salonplus/features/*    /   301
-/salonplus/meeting       /meeting/   301
-/salonplus/meeting/*     /meeting/   301
+# The meeting sheet became the quickstart (2026-09-15); every earlier
+# address for it lands there.
+/meeting                 /salonplus/quickstart/   301
+/meeting/*               /salonplus/quickstart/   301
+/salonplus/meeting       /salonplus/quickstart/   301
+/salonplus/meeting/*     /salonplus/quickstart/   301
 
 # Community and pricing are parked until we expand; pages stay in the
 # repo, just unreachable. The ! forces the redirect even though the
