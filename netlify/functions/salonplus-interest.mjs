@@ -82,6 +82,12 @@ export default async function handler(request) {
     building:   slug(clip(p.building, 60)) || 'salonplus',
     source:     clip(p.source, 40) || 'salonplus-web',
   };
+  /* The form's building is free text; the buildings table is the truth.
+     "The Beauty Collective" must land as its real slug (demo), not as
+     slugified text no table knows, or the panel's dropdown can't
+     preselect it and every generic-form lead asks to be re-picked.
+     Anne's catch, waggle 2026-09-15. */
+  row.building = await resolveBuilding(row.building);
   const buildingLabel = BUILDING_NAMES[row.building] || clip(p.building_label, 80) || row.building;
 
   const isMessage = row.kind === 'question' || row.kind === 'bug';
@@ -435,6 +441,25 @@ function brandShell(buildingLabel, inner, footNote) {
 }
 
 /* ----- utils ----------------------------------------------------------- */
+
+/* Maps a slugified free-text building to a real building's slug, matching
+   by slug or by slugified name. Any failure keeps the typed value: a lead
+   is never blocked or lost over a nicety. */
+async function resolveBuilding(candidate) {
+  try {
+    const url = process.env.SUPABASE_URL;
+    const key = process.env.SUPABASE_SERVICE_KEY;
+    if (!url || !key || !candidate) return candidate;
+    const res = await fetch(`${url}/rest/v1/ss_buildings?select=slug,name&limit=100`, {
+      headers: { apikey: key, authorization: `Bearer ${key}` },
+    });
+    if (!res.ok) return candidate;
+    const rows = await res.json();
+    if (!Array.isArray(rows)) return candidate;
+    const hit = rows.find(b => b.slug === candidate || slug(b.name || '') === candidate);
+    return hit ? hit.slug : candidate;
+  } catch { return candidate; }
+}
 
 function clip(v, n) { return typeof v === 'string' ? v.trim().slice(0, n) : ''; }
 function slug(v) { return v.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40); }

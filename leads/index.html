@@ -1162,6 +1162,12 @@ function changeCard(l) {
 
 function newCard(l) {
   if (l.processed) return doneCard(l, 'Published');
+  /* The generic form's building arrives as slugified text, and a real
+     building's slug can differ ("The Beauty Collective" is slug demo).
+     Match by name too, so the dropdown preselects instead of asking. */
+  const bmatch = state.buildings.find(b => b.slug === l.building
+    || String(b.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') === l.building);
+  const bslug = bmatch ? bmatch.slug : l.building;
   return `<div class="card">
     <div class="card-top">
       <span class="biz">${esc(l.business)}</span>
@@ -1179,8 +1185,8 @@ function newCard(l) {
         ${/* A lead from the generic form carries a slug no building has yet.
              Without this guard the browser silently picks the FIRST option,
              and a stranger's studio lands in Salon Plus. */''}
-        ${state.buildings.some(b => b.slug === l.building) ? '' : `<option value="" selected>&mdash; pick the building (they wrote &ldquo;${esc(l.building)}&rdquo;) &mdash;</option>`}
-        ${state.buildings.map(b => `<option value="${esc(b.slug)}"${b.slug === l.building ? ' selected' : ''}>${esc(b.name)}</option>`).join('')}
+        ${bmatch ? '' : `<option value="" selected>&mdash; pick the building (they wrote &ldquo;${esc(l.building)}&rdquo;) &mdash;</option>`}
+        ${state.buildings.map(b => `<option value="${esc(b.slug)}"${b.slug === bslug ? ' selected' : ''}>${esc(b.name)}</option>`).join('')}
       </select>
       <input class="cell" style="max-width:110px;border-color:var(--line-2);background:var(--surface);" data-lead-suite="${esc(l.id)}" value="${esc(l.suite || '')}" placeholder="Suite">
       <button class="btn btn-sm" data-publish="${esc(l.id)}">Publish to directory</button>

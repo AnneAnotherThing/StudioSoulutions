@@ -68,10 +68,14 @@ globalThis.fetch = async (url, opts = {}) => {
   }
   if (u.includes('/rest/v1/ss_buildings')) {
     /* Respects the slug filter: the unseeded-building test depends on
-       'demo' coming back empty. */
+       'demo' coming back empty. An unfiltered list (the interest
+       function's building resolution) sees both centers. */
     if (u.includes('slug=eq.salonplus')) return mockRes(200, JSON.stringify([
       { slug: 'salonplus', name: 'Salon Plus Studios', city: 'Glendale, AZ', has_map: true, default_tier: 2 }]));
-    return mockRes(200, '[]');
+    if (u.includes('slug=eq.')) return mockRes(200, '[]');
+    return mockRes(200, JSON.stringify([
+      { slug: 'salonplus', name: 'Salon Plus Studios' },
+      { slug: 'demo', name: 'The Beauty Collective' }]));
   }
   if (u.includes('/rest/v1/ss_tier_settings')) {
     return mockRes(200, JSON.stringify([
@@ -277,6 +281,26 @@ resetNet();
 res = await post(admin, { action: 'deleteStudio', code: 'test-passcode', id: 'nope' });
 ok(res.status === 400, 'a malformed studio id is refused');
 ok(!calls.some(c => c.method === 'DELETE'), 'nothing was deleted on the bad studio id');
+
+/* ===== interest: a typed building name resolves to its real slug ======= */
+section('interest: building resolution');
+
+/* "The Beauty Collective" slugifies to the-beauty-collective, but the
+   building's real slug is demo. Storing the typed slug left the panel's
+   dropdown unmatched and asking (Anne's catch, waggle 2026-09-15). */
+resetNet();
+res = await post(interest, { ...NEW_LEAD, building: 'The Beauty Collective', building_label: 'The Beauty Collective' });
+await settle();
+const resolvedRow = supabaseCalls().find(c => c.method === 'POST');
+ok(res.status === 200 && resolvedRow && resolvedRow.body.building === 'demo',
+   'a typed building name lands as the real building slug');
+
+resetNet();
+res = await post(interest, { ...NEW_LEAD, building: 'Some Unknown Building', building_label: 'Some Unknown Building' });
+await settle();
+const unknownRow = supabaseCalls().find(c => c.method === 'POST');
+ok(res.status === 200 && unknownRow && unknownRow.body.building === 'some-unknown-building',
+   'an unknown building keeps its typed slug rather than being lost');
 
 /* ===== admin: publishing sends the welcome and says so ================= */
 section('admin: welcome at publish');
