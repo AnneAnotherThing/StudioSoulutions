@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Studio Soulutions - The meeting walkthrough (print)</title>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #F2EFE9; --surface: #FAF8F4; --ink: #33312D; --ink-soft: #6C685F;
+    --ink-faint: #918C81; --bronze: #9A6B45; --bronze-deep: #7C5334; --line: #DCD6CA;
+    --sage-deep: #5F6E52; --blush: #FBF3EE;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: #E5E1D8; color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.45; font-size: 11.5px;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .page {
+    width: 8.5in; min-height: 11in; margin: 24px auto; padding: 0.5in 0.55in;
+    background: var(--bg); box-shadow: 0 10px 40px rgba(0,0,0,.18);
+    display: flex; flex-direction: column; break-after: page;
+  }
+  @page { size: letter portrait; margin: 0; }
+  @media print {
+    :root { --bg: #fff; --surface: #fff; }
+    body { background: none; }
+    .page { margin: 0; box-shadow: none; width: auto; min-height: auto; }
+    .screen-only { display: none !important; }
+  }
+  .printbar {
+    max-width: 8.5in; margin: 18px auto 0; display: flex; gap: 10px; align-items: center; justify-content: center;
+    font-size: 13.5px; color: var(--ink-soft);
+  }
+  .printbar button {
+    font: inherit; font-weight: 600; padding: 9px 22px; border: 0; border-radius: 999px;
+    background: var(--ink); color: #fff; cursor: pointer;
+  }
+  .head { display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid var(--ink); padding-bottom: 9px; }
+  .logo { height: 38px; }
+  .head .tagline { font-family:'Jost',sans-serif; font-size: 11.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--ink-faint); }
+  h1 { font-family:'Jost',sans-serif; font-weight: 300; font-size: 24px; line-height: 1.1; margin: 12px 0 4px; }
+  h1 strong { font-weight: 500; color: var(--bronze-deep); }
+  .lede { color: var(--ink-soft); font-size: 11.5px; max-width: 58em; }
+  h2 { font-family:'Jost',sans-serif; font-weight: 500; font-size: 13px; color: var(--bronze-deep); margin: 12px 0 4px; letter-spacing: .04em; }
+  .item { display: flex; gap: 9px; align-items: flex-start; padding: 5px 0; border-bottom: 1px solid var(--line); break-inside: avoid; }
+  .item:last-child { border-bottom: none; }
+  .tick { width: 13px; height: 13px; border: 1.5px solid var(--ink-soft); border-radius: 3px; flex-shrink: 0; margin-top: 2px; }
+  .item .what { flex: 1; }
+  .item b { color: var(--ink); }
+  .item .say { color: var(--ink-soft); }
+  .url { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9px; color: var(--bronze-deep); font-weight: 600; white-space: nowrap; margin-top: 2px; }
+  .creds { background: var(--blush); border-left: 3px solid var(--bronze); border-radius: 0 10px 10px 0; padding: 8px 12px; margin-top: 10px; font-size: 11px; }
+  .creds b { color: var(--bronze-deep); }
+  .closeout { background: #EFF2EA; border-left: 3px solid var(--sage-deep); border-radius: 0 10px 10px 0; padding: 8px 12px; margin-top: 10px; font-size: 11px; }
+  .foot { margin-top: auto; padding-top: 9px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-size: 9.5px; color: var(--ink-faint); }
+</style>
+</head>
+<body>
+
+<div class="printbar screen-only">
+  <span>One page &middot; Letter portrait</span>
+  <button type="button" onclick="window.print()">Print</button>
+</div>
+
+<div class="page">
+  <div class="head">
+    <img class="logo" src="/assets/logo_ss_green_v5.png" alt="Studio Soulutions" />
+    <span class="tagline">Anne's meeting walkthrough</span>
+  </div>
+
+  <h1>Demo the demo, <strong>then hand her the keys.</strong></h1>
+  <p class="lede">
+    The whole walk happens in The Beauty Collective, the demo building, so nothing touches Salon Plus
+    until the reveal at the end. Tick as you go; every stop has its link. Phone for the first half,
+    her laptop for the admin half, paper to finish.
+  </p>
+
+  <h2>Part one &middot; the app, in the demo building</h2>
+  <div class="item"><span class="tick"></span><div class="what"><b>Open the demo app on your phone.</b> <span class="say">One building, one screen. Search a studio by name, then by a service like nails.</span></div><span class="url">/a/demo</span></div>
+  <div class="item"><span class="tick"></span><div class="what"><b>Open Bloom's card.</b> <span class="say">Photos and gallery, bio, hours, and the buttons: Call rings them, Book opens their own booking system. Nothing replaces how a studio already works.</span></div></div>
+  <div class="item"><span class="tick"></span><div class="what"><b>Show me on the map.</b> <span class="say">From the card, the suite glows on the floor plan, entrance to door. Every building gets its own traced map.</span></div></div>
+  <div class="item"><span class="tick"></span><div class="what"><b>Open now, for real.</b> <span class="say">The badge runs on actual hours, live clock. Which is why the hours question matters on every form.</span></div></div>
+  <div class="item"><span class="tick"></span><div class="what"><b>Specials, everywhere they sell.</b> <span class="say">The Specials tab, the offer tag riding a studio's row, the Right now banner on the profile.</span></div></div>
+  <div class="item"><span class="tick"></span><div class="what"><b>The claim button.</b> <span class="say">A bare pin carries &ldquo;This is my studio&rdquo;: the app recruits tenants by itself.</span></div></div>
+
+  <h2>Part two &middot; a studio's life, start to finish</h2>
+  <div class="item"><span class="tick"></span><div class="what"><b>The join form, on the phone.</b> <span class="say">Day chips composing the hours line, the bio choice, photos from the camera roll. Two minutes, from their own suite.</span></div><span class="url">/join/?building=The Beauty Collective</span></div>
+  <div class="item"><span class="tick"></span><div class="what"><b>Sign into the portal as Bloom.</b> <span class="say">Change the hours, save, refresh the app: live. Post an offer, then Take it down. Studios run their own cards; the tier only decides fields.</span></div><span class="url">/portal/?b=demo</span></div>
+  <div class="item"><span class="tick"></span><div class="what"><b>The safety net.</b> <span class="say">Every portal edit emails a before-and-after, so nothing changes without the owner knowing, and any edit is a two-minute undo.</span></div></div>
+  <div class="item"><span class="tick"></span><div class="what"><b>Already listed?</b> <span class="say">The pointers on the directory and join form, and the old texted change links, all land a studio in its own portal.</span></div></div>
+
+  <h2>Part three &middot; the owner's side, on the laptop</h2>
+  <div class="item"><span class="tick"></span><div class="what"><b>The admin panel, filtered to the demo building.</b> <span class="say">Passcode in person. The six sections, then the job that matters: publish the sign-up from part two and watch the welcome email go out with the code and the one-tap edit link.</span></div><span class="url">/leads</span></div>
+  <div class="item"><span class="tick"></span><div class="what"><b>The write-the-bio button.</b> <span class="say">Publishing a write-up lead opens the studio's drawer; one tap, three bios in different tones.</span></div></div>
+  <div class="item"><span class="tick"></span><div class="what"><b>Codes without fear.</b> <span class="say">Every studio's portal code on its listing, copy buttons, New code if one leaks. Hide and Delete both exist; hide is the everyday one.</span></div></div>
+
+  <h2>Part four &middot; the reveal: this is already hers</h2>
+  <div class="item"><span class="tick"></span><div class="what"><b>Open HER app.</b> <span class="say">Everything she just watched in the demo is live for Salon Plus today, with her real roster and her corrected map.</span></div><span class="url">/salonplus/app</span></div>
+  <div class="item"><span class="tick"></span><div class="what"><b>Install it on her phone together.</b> <span class="say">Add to Home Screen: her building, her icon, one tap from now on.</span></div></div>
+  <div class="item"><span class="tick"></span><div class="what"><b>Her hub, saved next to it.</b> <span class="say">Every link, live counts, the copy-paste texts for photos, hours and socials, and the promise that every change writes itself up there.</span></div><span class="url">/laura</span></div>
+  <div class="item"><span class="tick"></span><div class="what"><b>Paper in hand.</b> <span class="say">The rollout, eleven pages, her reference (page 9 is her first week; page 11 the cut-out QRs). Portal cards, one per studio with its code. The sign-up sheet for the front desk.</span></div><span class="url">/salonplus/rollout &middot; /leads/portal-cards &middot; /signup-sheet.html</span></div>
+
+  <div class="creds">
+    <b>Demo sign-ins, The Beauty Collective:</b> Bloom Nails &middot; suite 301 &middot; BLOOM-2026 (Featured, offers) &nbsp;&middot;&nbsp;
+    Hale &amp; Hearty Spa &middot; suite 302 &middot; HALEH-5713 (Featured) &nbsp;&middot;&nbsp; Velvet Root &middot; suite 201 &middot; ROOT-2026 (Listed).
+    The admin passcode is spoken, never printed.
+  </div>
+
+  <div class="closeout">
+    <b>Close with the standing promise:</b> anything odd, anything worded wrong, anything she wishes worked
+    differently, she tells you and it changes, usually same day. Then set her first week in motion and
+    leave the paper with her.
+  </div>
+
+  <div class="foot">
+    <span>Studio Soulutions &middot; Anne's meeting walkthrough</span>
+    <span>Reprint any time: studiosoulutions.com/meeting/</span>
+  </div>
+</div>
+
+</body>
+</html>

@@ -25,10 +25,15 @@
 /portal      /salonplus/offer/index.html   200
 /portal/*    /salonplus/offer/index.html   200
 
-# The feature sheet moved to the product level 2026-09-15 (product-wide
-# things live at the root; building things live under the building).
-/salonplus/features      /features/   301
-/salonplus/features/*    /features/   301
+# The feature sheet was built and culled the same night (2026-09-15);
+# anything pointing at it lands on the homepage. Anne's meeting sheet
+# moved to the product root minutes after it was born under salonplus.
+/features                /   301
+/features/*              /   301
+/salonplus/features      /   301
+/salonplus/features/*    /   301
+/salonplus/meeting       /meeting/   301
+/salonplus/meeting/*     /meeting/   301
 
 # Community and pricing are parked until we expand; pages stay in the
 # repo, just unreachable. The ! forces the redirect even though the
