@@ -352,6 +352,19 @@ res = await post(specialsFn, { action: 'post', building: 'salonplus', suite: '20
   parts: { template: 'free_addon', addon: 'x', service: 'y', days: 30, audience: 'all' } });
 ok(res.status === 400, 'the free add-on shape is refused without services');
 
+/* A studio ends its own offer with its own code. */
+resetNet();
+res = await post(specialsFn, { action: 'takedown', building: 'salonplus', suite: '201', code: 'BLANK-0000' });
+ok(res.status === 200, 'a studio takes its own offer down');
+const tdPatch = calls.find(c => c.method === 'PATCH' && c.url.includes('ss_specials'));
+ok(tdPatch && tdPatch.url.includes('suite=eq.201') && tdPatch.url.includes('status=eq.live')
+   && tdPatch.body && tdPatch.body.status === 'retired',
+   'the takedown retires only that suite\'s live offer');
+
+resetNet();
+res = await post(specialsFn, { action: 'takedown', building: 'salonplus', suite: '201', code: 'nope' });
+ok(res.status === 401, 'no code, no takedown');
+
 /* ===== the neutral portal path ========================================= */
 section('portal: neutral path');
 

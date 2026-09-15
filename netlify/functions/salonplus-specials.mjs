@@ -89,7 +89,8 @@ export default async function handler(request) {
     case 'list':   return listOffers(db, p);
     case 'unlock': return unlock(db, p);
     case 'post':   return postOffer(db, p);
-    case 'hide':   return hideOffer(db, p);
+    case 'hide':     return hideOffer(db, p);
+    case 'takedown': return takeDownOffer(db, p);
     default:       return json(400, { error: 'Unknown action.' });
   }
 }
@@ -274,6 +275,21 @@ async function emailOffer(o) {
     }),
   });
   if (!res.ok) throw new Error(`resend ${res.status}: ${(await res.text()).slice(0, 200)}`);
+}
+
+/* ============ take down, the studio's own off switch ================== */
+/* A studio ends its own offer with its own code, no waiting on anyone.
+   Anne's ask, waggle 2026-09-15. Scoped exactly like posting: the code
+   only ever touches that one suite's live offer. */
+async function takeDownOffer(db, p) {
+  const studio = await authStudio(db, p);
+  if (studio.error) return studio.error;
+  const s = studio.row;
+  const ok = await db.patch(SPECIALS,
+    { suite: `eq.${s.suite}`, building: `eq.${s.building || 'salonplus'}`, status: 'eq.live' },
+    { status: 'retired' });
+  if (!ok) return json(502, { error: 'Could not take the offer down. Try again in a moment.' });
+  return json(200, { ok: true });
 }
 
 /* ============ hide, Anne's off switch ================================= */

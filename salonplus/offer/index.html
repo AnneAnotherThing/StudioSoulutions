@@ -586,8 +586,7 @@ async function setUpOffer() {
     fill($('audienceSel'), d.options.audiences, v => AUD_LABEL[v] || v, 'all');
     fill($('daysSel'),     d.options.days, v => DAY_LABEL[v] || `${v} days`, 30);
     if (d.live) {
-      $('replacing').classList.remove('hidden');
-      $('replacing').innerHTML = `Running now: <strong>${esc(d.live.title)}</strong>, through ${esc(d.live.expires)}. Posting a new one replaces it.`;
+      showRunning(d.live.title, d.live.expires);
     }
     setTemplate('amount_off');
     $('offerBuilder').classList.remove('hidden');
@@ -596,6 +595,32 @@ async function setUpOffer() {
     $('offerLocked').textContent = e.message;
   }
 }
+
+/* The running-offer box, with the studio's own off switch. Ending an
+   offer early is their call, same as posting one. */
+function showRunning(title, expires) {
+  $('replacing').classList.remove('hidden');
+  $('replacing').innerHTML = `Running now: <strong>${esc(title)}</strong>, through ${esc(expires)}. Posting a new one replaces it.
+    <button class="btn btn-ghost btn-sm" id="takeDownBtn" type="button" style="margin-left:10px;">Take it down</button>`;
+}
+$('replacing').addEventListener('click', async e => {
+  const btn = e.target.closest('#takeDownBtn'); if (!btn) return;
+  if (!confirm('Take your offer down now?\n\nIt comes off the app right away. You can post a new one any time.')) return;
+  btn.disabled = true; btn.textContent = 'Taking it down…';
+  try {
+    const res = await fetch(OFFER_API, {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'takedown', building: PORTAL_BUILDING, suite: auth.suite, code: auth.code }),
+    });
+    const d = await res.json();
+    if (!res.ok) throw new Error(d.error || 'Could not take it down.');
+    $('replacing').innerHTML = 'Nothing running right now. Post one below whenever you like.';
+    toast('Taken down. It is off the app.');
+  } catch (err) {
+    btn.disabled = false; btn.textContent = 'Take it down';
+    alert(err.message);
+  }
+});
 
 function setTemplate(tpl) {
   template = tpl;
@@ -651,8 +676,7 @@ $('postBtn').addEventListener('click', async () => {
     });
     const d = await res.json();
     if (!res.ok) throw new Error(d.error || 'Could not post that.');
-    $('replacing').classList.remove('hidden');
-    $('replacing').innerHTML = `Running now: <strong>${esc(d.offer.title)}</strong>, through ${esc(d.offer.expires)}. Posting a new one replaces it.`;
+    showRunning(d.offer.title, d.offer.expires);
     toast('Posted. It is live in the app.');
   } catch (e) {
     $('postErr').style.display = 'block'; $('postErr').textContent = e.message;
