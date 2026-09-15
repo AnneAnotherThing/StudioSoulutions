@@ -915,15 +915,34 @@ function openDrawer(k) {
       ` : `<div class="hint">Tier ${esc(String(s.tier))} doesn't include photos. Change the tier, or change what the tier allows in Settings.</div>`}
     </div>
 
-    <div style="margin-top:26px;display:flex;gap:10px;">
+    <div style="margin-top:26px;display:flex;gap:10px;align-items:center;">
       <button class="btn" id="drawerSave">Save this studio</button>
       <button class="btn btn-ghost" id="drawerCancel">Cancel</button>
+      ${row.id ? `<button class="btn btn-ghost" id="drawerDelete" style="margin-left:auto;color:var(--clay-deep);">Delete studio</button>` : ''}
     </div>`;
 
   $('drawerBack').classList.add('open'); $('drawer').classList.add('open');
   $('drawerClose').onclick = $('drawerCancel').onclick = closeDrawer;
   $('drawerSave').onclick = saveDrawer;
   phoneFieldize($('drawer').querySelector('[data-d="phone"]'));
+
+  /* Deletion is the loud option, so the quiet one is named first. */
+  const delStudioBtn = $('drawerDelete');
+  if (delStudioBtn) delStudioBtn.onclick = async () => {
+    if (!confirm(`Delete ${s.name || 'this studio'} for good?\n\nThe card comes off the app immediately and their portal code stops working. If you only want it off the app for now, Cancel and set it to hidden instead.\n\nThere is no undo; the Changes log keeps a line saying it happened.`)) return;
+    delStudioBtn.disabled = true; delStudioBtn.textContent = 'Deleting…';
+    try {
+      await api({ action: 'deleteStudio', id: row.id });
+      state.studios = state.studios.filter(x => x.id !== row.id);
+      state.codes = (state.codes || []).filter(c => !(String(c.suite) === String(s.suite) && c.building === s.building));
+      edits.delete(k);
+      closeDrawer(); renderStudios(); renderInbox();
+      toast('Deleted');
+    } catch (err) {
+      delStudioBtn.disabled = false; delStudioBtn.textContent = 'Delete studio';
+      alert(err.message);
+    }
+  };
 
   $('bioGen').onclick = async () => {
     const btn = $('bioGen'), picks = $('bioPicks');

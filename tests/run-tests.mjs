@@ -254,6 +254,22 @@ resetNet();
 res = await post(admin, { action: 'deleteLead', code: 'wrong', id: LEAD_ID });
 ok(res.status === 401, 'no passcode, no deletion');
 
+/* Studios can be deleted too, and the portal code dies with the card so
+   a future studio in that suite starts fresh. */
+resetNet();
+res = await post(admin, { action: 'deleteStudio', code: 'test-passcode', id: LEAD_ID });
+ok(res.status === 200, 'deleteStudio answers ok');
+const sDel = calls.find(c => c.method === 'DELETE' && c.url.includes('ss_studios'));
+ok(sDel && sDel.url.includes(`id=eq.${LEAD_ID}`), 'the DELETE hits exactly that studio row');
+ok(calls.some(c => c.method === 'DELETE' && c.url.includes('ss_suite_codes')),
+   'the studio portal code is deleted with the card');
+ok(calls.some(c => c.url.includes('ss_admin_log')), 'the studio deletion is logged');
+
+resetNet();
+res = await post(admin, { action: 'deleteStudio', code: 'test-passcode', id: 'nope' });
+ok(res.status === 400, 'a malformed studio id is refused');
+ok(!calls.some(c => c.method === 'DELETE'), 'nothing was deleted on the bad studio id');
+
 /* ===== the hours composer (extracted from the live page) =============== */
 section('form: hours composer');
 

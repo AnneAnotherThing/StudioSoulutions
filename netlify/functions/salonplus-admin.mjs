@@ -78,6 +78,7 @@ export default async function handler(request) {
     case 'setStatus':    return setStatus(db, p);
     case 'markHandled':  return markHandled(db, p);
     case 'deleteLead':   return deleteLead(db, p);
+    case 'deleteStudio': return deleteStudio(db, p);
     case 'mailCheck':    return mailCheck(db, p);
     case 'saveTiers':    return saveTiers(db, p);
     case 'saveBuilding': return saveBuilding(db, p);
@@ -403,6 +404,32 @@ async function deleteLead(db, p) {
   if (!ok) return json(502, { error: 'Could not delete that submission.' });
   await log(db, p, 'deleted submission', gone.business || gone.name || `Suite ${gone.suite}` || id,
     { kind: gone.kind || 'new', building: gone.building || '', lead: id });
+  return json(200, { ok: true });
+}
+
+/* Removes a studio for good: the card, and its portal code so the code
+   stops opening anything and a future studio in that suite gets a fresh
+   one. Softer options exist (hidden, draft) and the panel says so before
+   this runs. The original submission stays in the Inbox records, closed
+   rather than resurrected, and the Changes log keeps who deleted what.
+   Anne's ask, waggle 2026-09-14. */
+async function deleteStudio(db, p) {
+  const id = str(p.id);
+  if (!isUuid(id)) return json(400, { error: 'Bad studio id.' });
+  const rows = await db.get(STUDIOS, { id: `eq.${id}`, limit: '1' });
+  const gone = rows && rows[0];
+  if (!gone) return json(404, { error: 'That studio is already gone.' });
+  /* The lead this studio came from counts as open again the moment the
+     studio stops pointing back at it, so close it first. */
+  if (gone.source_lead && isUuid(str(gone.source_lead))) {
+    await db.patch(LEADS, { id: `eq.${gone.source_lead}` },
+      { handled_at: nowIso(), handled_by: str(p.who) || 'studio deletion' });
+  }
+  await db.del(CODES, { suite: `eq.${gone.suite}`, building: `eq.${gone.building}` });
+  const ok = await db.del(STUDIOS, { id: `eq.${id}` });
+  if (!ok) return json(502, { error: 'Could not delete that studio.' });
+  await log(db, p, 'deleted studio', `${gone.building} ${gone.suite}`,
+    { name: gone.name || '', suite: gone.suite || '', building: gone.building || '' });
   return json(200, { ok: true });
 }
 
