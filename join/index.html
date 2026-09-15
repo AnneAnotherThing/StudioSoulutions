@@ -306,6 +306,9 @@
 /* ----- ?building= prefill, for QR codes and links per building ----- */
 const buildingParam = new URLSearchParams(location.search).get('building');
 if (buildingParam) document.getElementById('f_building').value = buildingParam;
+/* The app's claim button carries the suite it was tapped on. */
+const suiteParam = new URLSearchParams(location.search).get('suite');
+if (suiteParam) document.getElementById('f_suite').value = suiteParam;
 
 /* ----- service pills ----- */
 document.querySelectorAll('.svc input').forEach(cb => {

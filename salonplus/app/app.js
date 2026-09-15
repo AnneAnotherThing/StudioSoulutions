@@ -109,11 +109,12 @@ const SP_META = {
 
 const THEMES = ['av-sage','av-moss','av-clay','av-rose','av-stone','av-sand','av-rust','av-fern','av-amber'];
 const CAT_LABEL = { hair: 'Hair', barber: 'Barber', nails: 'Nails', spa: 'Spa & Beauty' };
-/* Home links to the Salon Plus join form with the suite pre-filled; any
-   other building routes to the generic form with its name pre-filled. */
-const CLAIM_URL = suite => IS_HOME
-  ? `/salonplus/?suite=${encodeURIComponent(suite)}#join`
-  : `/join/?building=${encodeURIComponent(BUILDING_INFO.name)}`;
+/* Every building's claim goes to the generic join form with the building
+   and suite pre-filled. The old home branch pointed at the directory
+   page, which retired 2026-09-15; that link looped back to the app and
+   Anne caught it. */
+const CLAIM_URL = suite =>
+  `/join/?building=${encodeURIComponent(BUILDING_INFO.name)}${suite ? '&suite=' + encodeURIComponent(suite) : ''}`;
 
 // ============ DATA ============
 /* The directory now lives in Supabase and is edited from the admin panel,
@@ -347,7 +348,7 @@ const didYouKnow = IS_HOME ? [
   { theme: 'sage', eyebrow: 'Worth the walk', text: 'Deuces Nail Studio is sage-walled, softly lit, and does nails with intention. Suite 301, watch it light up on the map.', link: 'See Deuces', linkId: '301' },
   { theme: 'clay', eyebrow: 'While you\'re here', text: 'Getting nails done? A fresh cut is thirty steps away. A facial, maybe forty. That\'s the whole point of this roof.', link: 'Meet the neighbors', view: 'directory' },
   { theme: 'sand', eyebrow: 'The sweet stuff', text: 'Studios post offers, welcome offers, and specials right here in the app as they move in.', link: 'Check the specials', view: 'specials' },
-  { theme: 'sage', eyebrow: 'Your studio here', text: 'Work in this building? Your listing is free while the neighborhood builds. Two minutes, and you\'re on the map.', link: 'Claim your card', href: '/salonplus/#join' },
+  { theme: 'sage', eyebrow: 'Your studio here', text: 'Work in this building? Your listing is free while the neighborhood builds. Two minutes, and you\'re on the map.', link: 'Claim your card', href: 'CLAIM' },
 ] : [
   { theme: 'clay', eyebrow: 'While you\'re here', text: 'Getting nails done? A fresh cut might be thirty steps away. That\'s the whole point of a roof like this one.', link: 'Meet the neighbors', view: 'directory' },
   { theme: 'sand', eyebrow: 'The sweet stuff', text: 'Studios post offers, welcome offers, and specials right here in the app as they move in.', link: 'Check the specials', view: 'specials' },
