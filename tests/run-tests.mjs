@@ -66,6 +66,11 @@ globalThis.fetch = async (url, opts = {}) => {
         instagram: '', facebook: '', tiktok: '', status: 'live' },
     ]));
   }
+  if (u.includes('/rest/v1/ss_suite_codes')) {
+    if (rec.method === 'GET') return mockRes(200, JSON.stringify([
+      { suite: '103', building: 'salonplus', studio: 'Test Studio', code: 'TESTS-1234', services: ['Hair'], can_post: false }]));
+    return mockRes(200, '{}');
+  }
   if (u.includes('/rest/v1/ss_buildings')) {
     /* Respects the slug filter: the unseeded-building test depends on
        'demo' coming back empty. An unfiltered list (the interest
@@ -313,6 +318,18 @@ ok(res.status === 200 && pub.welcome === 'sent',
    'publishing reports the welcome outcome (got: ' + (pub.welcome || pub.error || res.status) + ')');
 ok(resendCalls().some(c => /is on the map/.test(c.body.subject)),
    'the welcome email actually goes out at publish');
+/* The mock's tier lookup answers with a no-offers tier, so this also
+   proves every studio gets a portal code regardless of level. */
+ok(!!pub.couponCode, 'a studio on a no-offers level still gets a portal code');
+ok(resendCalls().some(c => /suite=103/.test(c.body.html) && /code=TESTS-1234/.test(c.body.html)),
+   'the welcome carries the one-tap edit link with suite and code');
+
+resetNet();
+res = await post(admin, { action: 'remintCode', code: 'test-passcode', id: LEAD_ID });
+const rem = await res.json();
+ok(res.status === 200 && !!rem.code, 'remintCode answers with a fresh code');
+ok(calls.some(c => c.method === 'DELETE' && c.url.includes('ss_suite_codes')),
+   'the old code row dies before the new one is minted');
 
 /* ===== mail: a broken RESEND_FROM repairs itself ======================= */
 section('mail: sender repair');

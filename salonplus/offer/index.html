@@ -665,10 +665,22 @@ $('signOutBtn').addEventListener('click', () => {
   $('codeInput').value = '';
 });
 
-const qsSuite = new URLSearchParams(location.search).get('suite');
+/* The welcome email's one-tap edit link carries ?suite and ?code. The
+   code leaves the address bar immediately; the session keeps it exactly
+   like a typed sign-in. Anne's call, waggle 2026-09-15: every studio
+   gets a direct link to edit their own card. */
+const qsParams = new URLSearchParams(location.search);
+const qsSuite = qsParams.get('suite');
+const qsCode = qsParams.get('code');
 if (qsSuite) $('suiteInput').value = qsSuite;
-const saved = JSON.parse(sessionStorage.getItem(SESSION) || 'null');
-if (saved) unlock(saved.suite, saved.code, { silent: true });
+if (qsSuite && qsCode) {
+  qsParams.delete('suite'); qsParams.delete('code');
+  history.replaceState(null, '', location.pathname + (qsParams.toString() ? '?' + qsParams.toString() : ''));
+  unlock(qsSuite.trim(), qsCode.trim());
+} else {
+  const saved = JSON.parse(sessionStorage.getItem(SESSION) || 'null');
+  if (saved) unlock(saved.suite, saved.code, { silent: true });
+}
 </script>
 </body>
 </html>

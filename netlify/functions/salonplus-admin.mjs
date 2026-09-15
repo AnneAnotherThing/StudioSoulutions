@@ -79,6 +79,7 @@ export default async function handler(request) {
     case 'markHandled':  return markHandled(db, p);
     case 'deleteLead':   return deleteLead(db, p);
     case 'deleteStudio': return deleteStudio(db, p);
+    case 'remintCode':   return remintCode(db, p);
     case 'mailCheck':    return mailCheck(db, p);
     case 'saveTiers':    return saveTiers(db, p);
     case 'saveBuilding': return saveBuilding(db, p);
@@ -353,12 +354,15 @@ async function cleanStudio(db, s) {
   }};
 }
 
-/* A studio on an offer tier needs a code to post with. Minting it here
-   means nobody hand-writes SQL for it, and a studio dropped off the
-   offer tier stops being able to post. */
+/* EVERY studio gets a code: the portal is how a studio edits its own
+   card, whatever its level, so tying the code to the offer tiers locked
+   lower levels out of their own listings and made the welcome email
+   fall back to "email the developer" (Anne caught it, waggle
+   2026-09-15). can_post gates only the offer tab; the tier switches
+   decide everything else. */
 async function syncCouponCode(db, studio) {
   const tiers = await db.get(TIERS, { tier: `eq.${studio.tier}`, limit: '1' });
-  const allowed = tiers && tiers[0] && tiers[0].allow_coupons;
+  const allowed = !!(tiers && tiers[0] && tiers[0].allow_coupons);
 
   /* Scoped by building: two buildings can both have a Suite 103, and one
      studio's code must never resolve against the other's. */
@@ -366,21 +370,32 @@ async function syncCouponCode(db, studio) {
   const existing = await db.get(CODES, { ...scope, limit: '1' });
   const has = existing && existing[0];
 
-  if (!allowed) {
-    if (has) await db.patch(CODES, scope, { can_post: false });
-    return null;
-  }
   if (has) {
     await db.patch(CODES, scope,
-      { can_post: true, studio: studio.name, services: studio.tags || [], studio_id: studio.id });
+      { can_post: allowed, studio: studio.name, services: studio.tags || [], studio_id: studio.id });
     return has.code;
   }
   const code = mintCode(studio.name);
   await db.insert(CODES, {
     suite: studio.suite, building: studio.building, studio: studio.name,
-    code, services: studio.tags || [], can_post: true, studio_id: studio.id,
+    code, services: studio.tags || [], can_post: allowed, studio_id: studio.id,
   });
   return code;
+}
+
+/* A leaked or lost-beyond-recovery code gets a fresh one: the old row
+   dies, syncCouponCode mints anew, and the old code stops opening
+   anything the same second. */
+async function remintCode(db, p) {
+  const id = str(p.id);
+  if (!isUuid(id)) return json(400, { error: 'Bad studio id.' });
+  const rows = await db.get(STUDIOS, { id: `eq.${id}`, limit: '1' });
+  const studio = rows && rows[0];
+  if (!studio) return json(404, { error: 'No such studio.' });
+  await db.del(CODES, { suite: `eq.${studio.suite}`, building: `eq.${studio.building}` });
+  const code = await syncCouponCode(db, studio);
+  await log(db, p, 'reminted code', `${studio.building} ${studio.suite}`, { name: studio.name });
+  return json(200, { ok: true, code });
 }
 
 /* Readable enough to say over the phone, random enough not to guess.
@@ -664,6 +679,12 @@ async function emailWelcome(db, studio) {
                          : `https://studiosoulutions.com/a/${encodeURIComponent(studio.building)}`;
   const portalUrl = home ? 'https://studiosoulutions.com/salonplus/offer/'
                          : `https://studiosoulutions.com/salonplus/offer/?b=${encodeURIComponent(studio.building)}`;
+  /* The one-tap edit link: suite and code in the URL, which the portal
+     consumes and immediately strips. No new exposure: the code is plain
+     text in this same email either way. */
+  const editUrl = code
+    ? `${portalUrl}${portalUrl.includes('?') ? '&' : '?'}suite=${encodeURIComponent(studio.suite)}&code=${encodeURIComponent(code)}`
+    : portalUrl;
 
   /* The welcome doubles as the studio's onboarding: what just happened,
      how to get the app on their phone, how people will find them, and
@@ -702,12 +723,13 @@ async function emailWelcome(db, studio) {
 
     <p style="margin:24px 0 0;">
       <a href="${appUrl}" style="display:inline-block;padding:13px 26px;background:#33312D;color:#FAF8F4;text-decoration:none;border-radius:999px;font-family:Inter,sans-serif;font-size:15px;">See your card</a>
+      ${code ? `&nbsp;&nbsp;<a href="${editUrl}" style="display:inline-block;padding:13px 26px;background:#6B7A5F;color:#FAF8F4;text-decoration:none;border-radius:999px;font-family:Inter,sans-serif;font-size:15px;">Edit your card</a>` : ''}
     </p>
     ${code ? `
     <div style="border:1px solid #DCD6CA;border-radius:14px;padding:18px 20px;background:#FAF8F4;margin-top:22px;">
       <div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#9A6B45;margin-bottom:8px;">Keep this</div>
       <p style="margin:0 0 10px;font-size:15px;line-height:1.6;">
-        Your sign-in for <a href="${portalUrl}" style="color:#6B7A5F;">the studio portal</a>. It only unlocks your own card, so it is safe to save in your notes.
+        The <strong>Edit your card</strong> button above signs you straight in, no typing; keep this email and it always works. Your sign-in for <a href="${portalUrl}" style="color:#6B7A5F;">the studio portal</a>, for any other device, is below. It only unlocks your own card, so it is safe to save in your notes.
       </p>
       <p style="margin:0;font-size:15px;">
         Suite <strong>${escHtml(studio.suite)}</strong> &nbsp;&middot;&nbsp; Code <strong style="font-family:ui-monospace,monospace;">${escHtml(code)}</strong>

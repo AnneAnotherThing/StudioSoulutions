@@ -441,7 +441,7 @@ a { color: var(--sage-deep); }
       </div></div>
       <div id="offersList"></div>
 
-      <h2 style="margin-top:44px;">Everyone's posting code</h2>
+      <h2 style="margin-top:44px;">Everyone's portal code</h2>
       <p class="sub" style="margin-bottom:14px;">Look up any studio's code here rather than asking anyone for it. Tap a code to copy it, or copy the whole message ready to text.</p>
       <input class="cell" id="codeSearch" placeholder="Type a suite number or a studio name" style="max-width:340px;border-color:var(--line-2);margin-bottom:16px;background:var(--surface);">
       <div id="codeList"></div>
@@ -480,7 +480,7 @@ a { color: var(--sage-deep); }
       <div id="tierList"></div>
       <button class="btn" id="saveTiersBtn">Save tiers</button>
 
-      <h2 style="margin-top:40px;">Offer codes</h2>
+      <h2 style="margin-top:40px;">Portal codes</h2>
       <p class="sub" style="margin-bottom:14px;">What they are, when they matter, and when you can ignore them entirely.</p>
       <div class="tier-card">
         <dl class="rows" style="grid-template-columns:170px 1fr;gap:12px 16px;">
@@ -490,7 +490,7 @@ a { color: var(--sage-deep); }
             It cannot see other studios, edit their listing, or reach this panel.</dd>
 
           <dt><strong>Where it comes from</strong></dt>
-          <dd>Made automatically the moment you publish a studio on a tier that allows offers. You never write one by hand.
+          <dd>Made automatically for every studio the moment it is saved or published; you never write one by hand. The code opens that studio's own card editor whatever its level; the offer tab inside only works on levels with offers.
             It appears in a popup right after you hit Publish.</dd>
 
           <dt><strong>When you care</strong></dt>
@@ -583,7 +583,7 @@ function phoneFieldize(el) {
     if (out !== raw) { el.value = out; try { el.setSelectionRange(out.length, out.length); } catch {} }
   });
 }
-/* A studio's posting code, looked up by where it lives. Codes are keyed on
+/* A studio's portal code, looked up by where it lives. Codes are keyed on
    suite + building because that pair is what a studio types into the offer
    form — it is the same identity from both ends. */
 const codeFor = s => (state.codes || []).find(c =>
@@ -880,27 +880,22 @@ function openDrawer(k) {
       <div class="hint">Handles or full links, either works. These become the round icons under their photo &mdash; ${[s.instagram, s.facebook, s.tiktok].filter(Boolean).length} showing now.</div></div>
 
     ${(() => {
-      /* The one place someone will look for it: on the studio itself.
-         Shown whether or not it is currently usable, because "there is a
-         code but the tier switched it off" and "there is no code" are
-         different problems with different fixes. */
+      /* Every studio has a portal code now: the portal is how a studio
+         edits its own card, whatever the level; the tier only decides
+         whether the offer tab works. (Anne's call, waggle 2026-09-15.) */
       const c = codeFor(s);
-      if (!tierOf.allow_coupons) {
-        return `<div class="field"><label>Offer code</label>
-          <div class="hint">Tier ${esc(String(s.tier))} can't post offers, so this studio has no working code.
-          ${c ? `Its old code <code>${esc(c.code)}</code> is switched off and comes back if you move them to an offer tier.` : 'Move them to an offer tier and one is made automatically.'}</div></div>`;
-      }
       if (!c) {
-        return `<div class="field"><label>Offer code</label>
-          <div class="hint">Not made yet &mdash; it appears the first time this studio is saved on an offer tier.</div></div>`;
+        return `<div class="field"><label>Portal code</label>
+          <div class="hint">Not made yet &mdash; it appears the next time this studio is saved or published.</div></div>`;
       }
-      return `<div class="field"><label>Offer code</label>
+      return `<div class="field"><label>Portal code</label>
         <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap;">
           <code style="font-size:17px;letter-spacing:.06em;background:var(--bg-2);padding:8px 14px;border-radius:9px;color:var(--clay-deep);">${esc(c.code)}</code>
           <button type="button" class="btn btn-ghost btn-sm" data-copycode="${esc(c.code)}">Copy code</button>
-          <button type="button" class="btn btn-ghost btn-sm" data-copycode="Here's your code for posting specials: ${esc(c.code)}. Go to studiosoulutions.com/salonplus/offer/, put in your suite number and that code, and you can post an offer in about a minute. It comes down on its own when it runs out.">Copy the whole message</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-copycode="Here's your sign-in for your studio card: go to studiosoulutions.com/salonplus/offer/, enter suite ${esc(s.suite)} and code ${esc(c.code)}, and you can update your card yourself. Changes are live the moment you save.">Copy the whole message</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="remintBtn" style="color:var(--clay-deep);">New code</button>
         </div>
-        <div class="hint">They type this plus their suite number at /salonplus/offer/. Safe to text &mdash; it only lets them post their own offers.</div></div>`;
+        <div class="hint">Their sign-in at /salonplus/offer/: suite plus this code opens their own card editor${tierOf.allow_coupons ? ' and their offer tab' : '; their level has offers switched off, the editor still works'}. Safe to text. New code kills the old one the same second, for a leak or a lost-beyond-finding.</div></div>`;
     })()}
 
     <div class="field"><label>Photos</label>
@@ -925,6 +920,23 @@ function openDrawer(k) {
   $('drawerClose').onclick = $('drawerCancel').onclick = closeDrawer;
   $('drawerSave').onclick = saveDrawer;
   phoneFieldize($('drawer').querySelector('[data-d="phone"]'));
+
+  const remintBtn = $('remintBtn');
+  if (remintBtn) remintBtn.onclick = async () => {
+    if (!confirm(`Mint a new portal code for ${s.name}?\n\nThe old one stops working the same second, so only do this for a leak or a code lost beyond finding, and text them the new one right after.`)) return;
+    remintBtn.disabled = true; remintBtn.textContent = 'Minting…';
+    try {
+      const out = await api({ action: 'remintCode', id: row.id });
+      const cc = codeFor(s);
+      if (cc) cc.code = out.code;
+      else (state.codes = state.codes || []).push({ suite: s.suite, building: s.building, studio: s.name, code: out.code, can_post: true });
+      openDrawer(k);
+      toast('New code minted');
+    } catch (err) {
+      remintBtn.disabled = false; remintBtn.textContent = 'New code';
+      alert(err.message);
+    }
+  };
 
   /* Deletion is the loud option, so the quiet one is named first. */
   const delStudioBtn = $('drawerDelete');
@@ -1242,8 +1254,8 @@ $('inboxList').addEventListener('click', async e => {
     state.studios.push(out.studio);
     const done = state.leads.find(l => l.id === id); if (done) done.processed = true;
     renderInbox(); renderStudios();
-    toast(out.couponCode ? `Live. Offer code: ${out.couponCode}` : 'Live in the directory');
-    if (out.couponCode) alert(`${out.studio.name} is live.\n\nTheir offer code is ${out.couponCode}\nSend it with studiosoulutions.com/salonplus/offer/`);
+    toast(out.couponCode ? `Live. Portal code: ${out.couponCode}` : 'Live in the directory');
+    if (out.couponCode) alert(`${out.studio.name} is live.\n\nTheir portal code is ${out.couponCode}\nTheir welcome email delivers it with a one-tap edit link; the portal cards print it too.`);
     /* The welcome outcome comes back named; a failure is worth a loud box,
        because the studio is now live and silently uninvited. */
     if (out.welcome && out.welcome.indexOf('failed') === 0) {
@@ -1367,7 +1379,7 @@ $('mailCheckBtn').addEventListener('click', async () => {
   } finally { btn.disabled = false; btn.textContent = 'Send a test email'; }
 });
 
-/* ----- posting codes ---------------------------------------------------
+/* ----- portal codes ----------------------------------------------------
    Deliberately a plain, searchable list. The question this answers is
    always "what is Suite 4417's code" or "what is Deuces' code", asked in
    a corridor, on a phone. */
@@ -1389,7 +1401,7 @@ function renderCodes() {
     </div>`).join('')
     || `<div class="empty">${(state.codes || []).length
           ? 'No studio matches that.'
-          : 'No codes yet. One is made automatically the first time you publish a studio on a tier that allows offers.'}</div>`;
+          : 'No codes yet. One is made automatically the first time a studio is saved or published.'}</div>`;
 }
 
 /* ----- buildings: each center as a card with its numbers and links ----- */
