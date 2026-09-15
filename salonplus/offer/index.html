@@ -173,10 +173,14 @@
           <label>Free add-on</label>
           <select id="addonSel"></select>
         </div>
-        <div class="field">
+        <div class="field" id="serviceField">
           <label id="serviceLabel">On which service</label>
           <select id="serviceSel"></select>
           <div class="note">Only the services on your card.</div>
+        </div>
+        <div class="note hidden" id="noSvcNote" style="margin-top:-6px;">
+          No services on your card yet, so this runs as a blanket offer, like &ldquo;10% off&rdquo;.
+          Want it tied to a service? Add your services on the My listing tab, save, and come back.
         </div>
         <div class="two">
           <div class="field"><label>Who it's for</label><select id="audienceSel"></select></div>
@@ -287,6 +291,7 @@ let auth = null;        // { suite, code }
 let studio = null;      // their record as the server sees it
 let tier = null;        // what their level allows
 let offerOpts = null;
+let hasServices = false; // no services on the card means blanket offers
 let template = 'amount_off';
 
 async function api(url, body) {
@@ -570,8 +575,14 @@ async function setUpOffer() {
     const d = await res.json();
     if (!res.ok) throw new Error(d.error || 'Could not load your offer.');
     offerOpts = d.options;
+    hasServices = !!(d.services && d.services.length);
     fill($('serviceSel'), d.services, v => v);
     fill($('addonSel'),   d.services, v => v);
+    /* No services: dollars and percent run as blanket offers, the
+       add-on shape hides, and a note says how to get services on. */
+    $('serviceField').classList.toggle('hidden', !hasServices);
+    $('noSvcNote').classList.toggle('hidden', hasServices);
+    $('types').querySelector('[data-tpl="free_addon"]').style.display = hasServices ? '' : 'none';
     fill($('audienceSel'), d.options.audiences, v => AUD_LABEL[v] || v, 'all');
     fill($('daysSel'),     d.options.days, v => DAY_LABEL[v] || `${v} days`, 30);
     if (d.live) {
@@ -598,9 +609,9 @@ function setTemplate(tpl) {
   preview();
 }
 function compose() {
-  const service = $('serviceSel').value, v = $('valueSel').value;
-  if (template === 'amount_off')  return `$${v} off your ${service}`;
-  if (template === 'percent_off') return `${v}% off your ${service}`;
+  const service = hasServices ? $('serviceSel').value : '', v = $('valueSel').value;
+  if (template === 'amount_off')  return `$${v} off` + (service ? ` your ${service}` : '');
+  if (template === 'percent_off') return `${v}% off` + (service ? ` your ${service}` : '');
   return `Free ${$('addonSel').value} with your ${service}`;
 }
 function preview() {

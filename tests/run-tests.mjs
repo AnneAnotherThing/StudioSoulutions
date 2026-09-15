@@ -67,8 +67,13 @@ globalThis.fetch = async (url, opts = {}) => {
     ]));
   }
   if (u.includes('/rest/v1/ss_suite_codes')) {
-    if (rec.method === 'GET') return mockRes(200, JSON.stringify([
-      { suite: '103', building: 'salonplus', studio: 'Test Studio', code: 'TESTS-1234', services: ['Hair'], can_post: false }]));
+    if (rec.method === 'GET') {
+      /* Suite 201 is the services-less studio for the blanket-offer tests. */
+      if (u.includes('suite=eq.201')) return mockRes(200, JSON.stringify([
+        { suite: '201', building: 'salonplus', studio: 'Blank Menu Studio', code: 'BLANK-0000', services: [], can_post: true }]));
+      return mockRes(200, JSON.stringify([
+        { suite: '103', building: 'salonplus', studio: 'Test Studio', code: 'TESTS-1234', services: ['Hair'], can_post: false }]));
+    }
     return mockRes(200, '{}');
   }
   if (u.includes('/rest/v1/ss_buildings')) {
@@ -330,6 +335,21 @@ const rem = await res.json();
 ok(res.status === 200 && !!rem.code, 'remintCode answers with a fresh code');
 ok(calls.some(c => c.method === 'DELETE' && c.url.includes('ss_suite_codes')),
    'the old code row dies before the new one is minted');
+
+/* ===== specials: blanket offers when the card has no services ========== */
+section('specials: blanket offers');
+
+resetNet();
+res = await post(specials, { action: 'post', building: 'salonplus', suite: '201', code: 'BLANK-0000',
+  parts: { template: 'percent_off', percent: 10, days: 30, audience: 'all', fine: '' } });
+const blanket = await res.json();
+ok(res.status === 200 && blanket.offer && blanket.offer.title === '10% off',
+   'no services on the card means a clean blanket offer (got: ' + (blanket.offer ? blanket.offer.title : blanket.error) + ')');
+
+resetNet();
+res = await post(specials, { action: 'post', building: 'salonplus', suite: '201', code: 'BLANK-0000',
+  parts: { template: 'free_addon', addon: 'x', service: 'y', days: 30, audience: 'all' } });
+ok(res.status === 400, 'the free add-on shape is refused without services');
 
 /* ===== the neutral portal path ========================================= */
 section('portal: neutral path');

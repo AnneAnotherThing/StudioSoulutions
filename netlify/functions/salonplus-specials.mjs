@@ -46,9 +46,13 @@ const BUILDING_LABELS = {
    Three shapes, each a sentence with slots. "your" is doing quiet work
    here: it reads naturally in front of every service name, singular or
    plural, vowel or consonant, so there's no a/an problem to solve. */
+/* A studio with no services on its card still gets to run a blanket
+   offer: the sentence stays whole ("$10 off") instead of dangling
+   "off your ...". The add-on shape is the one that genuinely needs a
+   service to exist. Anne's catch, waggle 2026-09-15. */
 const TEMPLATES = {
-  amount_off:  { needs: ['amount', 'service'],       say: p => `$${p.amount} off your ${p.service}` },
-  percent_off: { needs: ['percent', 'service'],      say: p => `${p.percent}% off your ${p.service}` },
+  amount_off:  { needs: ['amount', 'service'],       say: p => p.service ? `$${p.amount} off your ${p.service}` : `$${p.amount} off` },
+  percent_off: { needs: ['percent', 'service'],      say: p => p.service ? `${p.percent}% off your ${p.service}` : `${p.percent}% off` },
   free_addon:  { needs: ['addon', 'service'],        say: p => `Free ${p.addon} with your ${p.service}` },
 };
 
@@ -158,6 +162,12 @@ async function postOffer(db, p) {
     }
     if (need === 'service' || need === 'addon') {
       const v = str(parts[need]);
+      /* No services on the card: dollars and percent run as blanket
+         offers, and the add-on shape is honestly impossible. */
+      if (!menu.length) {
+        if (need === 'addon') return json(400, { error: 'A free add-on needs services on your card. Add your services on the My listing tab first, or run a dollars or percent offer.' });
+        continue;
+      }
       /* the tight loop: the menu came from this studio's own row, so a
          studio can only ever advertise work it actually does */
       if (!menu.includes(v)) return json(400, { error: 'Pick a service from your list.' });
