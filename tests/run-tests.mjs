@@ -282,20 +282,21 @@ ok(specCodes && specCodes.url.includes('building=eq.demo'),
 /* ===== join page keeps the same composer =============================== */
 const joinPage = readFileSync(new URL('../join/index.html', import.meta.url), 'utf8');
 ok(joinPage.includes('function composeDays'), 'join page carries the composer too');
-ok(/formMode === 'new' && \(!data\.business \|\| !data\.name\)/.test(page),
-   'salonplus page only enforces the two names in new mode');
-ok(!/if \(!data\.business \|\| !data\.name\)/.test(joinPage.replace(/formMode === 'new' &&[^)]*\)/g, '')),
-   'join page has no unconditional name check');
 
-/* The bio buttons share .mode-btn for styling only. The mode script must
-   bind by [data-mode] or a bio click runs setFormMode(undefined), which
-   lights both bio cards and clears the form mode. Found in the Sep 9
-   browser run; kept here so it stays found. */
+/* The forms are for NEW studios only now: updates are edit-in-place in
+   the portal, so the old two-mode picker is gone, both pages point
+   already-listed studios at the portal, and the ?change deep links that
+   are printed and texted in the world land there too. Anne's call,
+   waggle 2026-09-14. */
 for (const [label, src] of [['salonplus', page], ['join', joinPage]]) {
-  const scoped = (src.match(/\.mode-btn\[data-mode\]/g) || []).length;
-  const bare = (src.match(/querySelectorAll\('\.mode-btn'\)/g) || []).length;
-  ok(scoped >= 2 && bare === 0, `${label} page scopes the mode script to [data-mode] buttons`);
+  ok(!src.includes('data-mode="change"'), `${label} page has no update mode on the form`);
+  ok(!src.includes('setFormMode'), `${label} page carries no mode script`);
+  ok(/kind:\s*'new'/.test(src), `${label} page always submits kind new`);
+  ok(/Already listed\?/.test(src), `${label} page points already-listed studios at the portal`);
+  ok(/[?&]change/.test(src) && src.includes('location.replace'), `${label} page redirects ?change links to the portal`);
 }
+ok(page.includes('href="offer/"'), 'salonplus portal pointer links to the portal');
+ok(joinPage.includes('/salonplus/offer/'), 'join portal pointer links to the portal');
 
 /* The day chips also wear .svc for styling, so the services collector
    must scope to #svcRow or the chosen days arrive as services. Found in

@@ -200,14 +200,6 @@
   }
   .mode-btn .m-t { display:block; font-size:15px; font-weight:600; color:#33312D; }
   .mode-btn .m-d { display:block; font-size:12.5px; font-weight:400; color:#918C81; margin-top:2px; line-height:1.4; }
-  .mode-btn[data-mode="new"].is-on {
-    border-color:#9A6B45; box-shadow:0 0 0 1px #9A6B45; background:#FBF6F0;
-  }
-  .mode-btn[data-mode="new"].is-on .dot { border-color:#9A6B45; color:#9A6B45; }
-  .mode-btn[data-mode="change"].is-on {
-    border-color:#A8593E; box-shadow:0 0 0 1px #A8593E; background:#FBF3EE;
-  }
-  .mode-btn[data-mode="change"].is-on .dot { border-color:#A8593E; color:#A8593E; }
   /* Same radio-card look for the bio choice, sage so it reads as its own
      question rather than a third mode. Literal colours on purpose, same
      lesson as the mode buttons. */
@@ -243,6 +235,7 @@
     <p>Salon Plus Studios is home to independent stylists, barbers, nail artists, and wellness pros, each running their own studio. This page is where the whole neighborhood becomes findable, starting with the map below.</p>
     <div class="cta-row">
       <a class="btn btn-primary" href="#join">Get your studio listed, free</a>
+      <a class="btn btn-ghost" href="offer/">Already listed? Update your listing</a>
       <a class="btn btn-ghost" href="#map">See the map</a>
       <a class="btn btn-ghost" href="app/">Open the directory app</a>
     </div>
@@ -289,24 +282,13 @@
       <form id="interestForm">
         <div class="hp"><label>Leave this empty<input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
 
-        <!-- One form, two jobs. A studio that isn't listed yet and one that
-             is and wants something fixed need different things from us, so
-             the form asks for different things back. -->
-        <div class="field" style="margin-bottom:22px;">
-          <div class="modeq">First up, which of these are you?</div>
-          <div class="modepick" role="radiogroup" aria-label="New listing, or an update to one">
-            <button type="button" class="mode-btn" data-mode="new" role="radio" aria-checked="true">
-              <span class="dot"></span>
-              <span><span class="m-t">I'm new here</span><span class="m-d">Get my studio on the app</span></span>
-            </button>
-            <button type="button" class="mode-btn" data-mode="change" role="radio" aria-checked="false">
-              <span class="dot"></span>
-              <span><span class="m-t">Update my listing</span><span class="m-d">Change details or add photos</span></span>
-            </button>
-          </div>
-          <div id="modeNote" style="display:none;margin-top:12px;padding:12px 15px;background:#FBF3EE;border-left:3px solid #A8593E;border-radius:0 10px 10px 0;font-size:13.5px;color:var(--ink-soft);">
-            Already listed? Tell us your suite and <strong>exactly what to change</strong> below, and add any new photos. You don't need to fill in the parts that aren't changing.
-          </div>
+        <!-- This form is for NEW studios only. An already-listed studio
+             edits its own card live in the portal, so the old update mode
+             is gone and the pointer below sends them there instead.
+             Anne's call, waggle 2026-09-14. -->
+        <div style="margin-bottom:22px;padding:13px 16px;background:#F1F4EE;border-left:3px solid #6B7A5F;border-radius:0 10px 10px 0;font-size:13.5px;color:var(--ink-soft);">
+          <strong style="color:#33312D;">Already listed?</strong> Don't fill this in again.
+          <a href="offer/" style="color:#6B7A5F;font-weight:600;">Open your studio portal</a> with your suite and code, and your edits go live the moment you save. Lost your code? Ask at the front desk and it's back in a minute.
         </div>
 
 
@@ -743,28 +725,15 @@ form.addEventListener('submit', async e => {
     booking:    form.booking.value.trim(),
     notes:      form.notes.value.trim(),
     website:    form.website.value.trim(),
-    kind:       formMode,
+    kind:       'new',                        // updates go through the portal now
     bio_help:   bioHelp,                      // polish the facts, or use them as-is
     photos:     pickedPhotos,                 // compressed data URLs, up to 3
     hp:         form.company.value,           // honeypot
     building:   'salonplus',                  // which building this lead belongs to
     source:     'salonplus-web',              // which channel it came in on
   };
-  /* Only a NEW listing needs the two names. A change request is matched by
-     suite, so demanding a business and contact name there was friction for
-     nothing. Laura's ask, Sep 2026. */
-  if (formMode === 'new' && (!data.business || !data.name)) {
+  if (!data.business || !data.name) {
     msg.textContent = 'Business name and your name are the only two we really need.';
-    msg.classList.add('err');
-    return;
-  }
-  if (formMode === 'change' && !data.suite) {
-    msg.textContent = 'Which suite are you? We need it to find your listing.';
-    msg.classList.add('err');
-    return;
-  }
-  if (formMode === 'change' && !data.notes) {
-    msg.textContent = 'Tell us what to change, in your own words.';
     msg.classList.add('err');
     return;
   }
@@ -792,79 +761,14 @@ form.addEventListener('submit', async e => {
   }
 });
 
-/* ----- new listing vs. change request ---------------------------------
-   The difference isn't cosmetic: a change request is useless without a
-   suite to attach it to and a sentence saying what to change, so those
-   two become required and everything else relaxes. */
-let formMode = 'new';
-function setFormMode(mode) {
-  formMode = mode;
-  /* [data-mode] keeps this away from the bio buttons, which share the
-     .mode-btn class for its styling only. Without the guard, a click on
-     a bio button ran this with mode undefined and lit both bio cards. */
-  document.querySelectorAll('.mode-btn[data-mode]').forEach(b => {
-    const on = b.dataset.mode === mode;
-    b.setAttribute('aria-checked', String(on));
-    b.classList.toggle('is-on', on);
-  });
-  const isChange = mode === 'change';
-  const note = document.getElementById('modeNote');
-  if (note) note.style.display = isChange ? 'block' : 'none';
-
-  const suite = document.getElementById('f_suite');
-  if (suite) {
-    suite.required = isChange;
-    const lab = document.querySelector('label[for="f_suite"]');
-    if (lab) lab.innerHTML = isChange ? 'Suite number <span class="req">*</span>' : 'Suite number';
-  }
-  /* A change is matched by suite, so the two names relax to optional
-     there; a new listing still needs both. */
-  const biz = document.getElementById('f_biz');
-  if (biz) {
-    biz.required = !isChange;
-    const lab = document.querySelector('label[for="f_biz"]');
-    if (lab) lab.innerHTML = isChange ? 'Business name' : 'Business name <span class="req">*</span>';
-  }
-  const who = document.getElementById('f_name');
-  if (who) {
-    who.required = !isChange;
-    const lab = document.querySelector('label[for="f_name"]');
-    if (lab) lab.innerHTML = isChange ? 'Your name' : 'Your name <span class="req">*</span>';
-  }
-  const notes = document.getElementById('f_notes');
-  if (notes) {
-    notes.required = isChange;
-    notes.placeholder = isChange
-      ? 'e.g. "Please swap my profile photo for the new one, and my hours are now Tue-Sat 9-5."'
-      : 'e.g. 12 years behind the chair, balayage and color correction, Redken certified, quiet private suite...';
-    const lab = document.querySelector('label[for="f_notes"]');
-    if (lab) lab.innerHTML = isChange
-      ? 'What needs changing? <span class="req">*</span>'
-      : 'The facts for your card <span style="font-weight:400;">(optional)</span>';
-  }
-  /* The write-up choice only means something on a new card. */
-  const bioField = document.getElementById('bioHelpField');
-  if (bioField) bioField.style.display = isChange ? 'none' : '';
-  const btn = document.getElementById('submitBtn');
-  if (btn) btn.textContent = isChange ? 'Send my change' : btn.dataset.newLabel || btn.textContent;
+/* ----- old ?change links land in the portal now -----------------------
+   The texted "update your listing" links (…/salonplus/?change#join) used
+   to flip this form into a change-request mode. Updates are self-serve in
+   the portal today, so those links, which are printed and texted and out
+   in the world, go straight there instead. Anne's call, waggle 2026-09-14. */
+if (/[?&]change/.test(location.search) || /change/.test(location.hash)) {
+  location.replace('offer/');
 }
-document.querySelectorAll('.mode-btn[data-mode]').forEach(b =>
-  b.addEventListener('click', () => setFormMode(b.dataset.mode)));
-(function () {
-  const btn = document.getElementById('submitBtn');
-  if (btn) btn.dataset.newLabel = btn.textContent.trim();
-  /* Deep link straight to the change form: ...#join?change or ?change=1 */
-  const wantsChange = () =>
-    /[?&]change/.test(location.search) || /change/.test(location.hash);
-  const applyFromUrl = () => setFormMode(wantsChange() ? 'change' : 'new');
-
-  applyFromUrl();
-  /* Re-applied on these events as well: the mode must survive a bfcache
-     restore (back button) and a hash change, and re-running it is
-     idempotent. */
-  window.addEventListener('pageshow', applyFromUrl);
-  window.addEventListener('hashchange', applyFromUrl);
-})();
 
 </script>
 </body>

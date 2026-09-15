@@ -286,10 +286,9 @@ async function emailLead(row, buildingLabel, photoUrls) {
        </div>`
     : '';
 
-  const html = `
-  <div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;color:#33312D;">
-    <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:${kind.accent};">${escHtml(kind.eyebrow(buildingLabel))}</p>
-    <h2 style="font-weight:400;margin:6px 0 12px;">${kind.heading(row)}</h2>
+  const html = brandShell(buildingLabel, `
+    <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:${kind.accent};margin:0;">${escHtml(kind.eyebrow(buildingLabel))}</p>
+    <h2 style="font-weight:400;margin:6px 0 12px;font-size:24px;">${kind.heading(row)}</h2>
     ${kind.lead ? `<p style="margin:0 0 4px;color:#6C685F;font-size:14px;">${kind.lead}</p>` : ''}
     ${askHtml}
     <table style="font-size:15px;border-collapse:collapse;">
@@ -317,14 +316,18 @@ async function emailLead(row, buildingLabel, photoUrls) {
         : isChange
         ? `Open <a href="https://studiosoulutions.com/leads/" style="color:#6B7A5F;">the admin panel</a>, find Suite ${escHtml(row.suite || '')} and make the change.`
         : `Publish them from <a href="https://studiosoulutions.com/leads/" style="color:#6B7A5F;">the admin panel</a>.`}
-    </p>
-    <p style="margin-top:14px;font-size:13px;color:#918C81;">Submitted through studiosoulutions.com</p>
-  </div>`;
+    </p>`);
 
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
-    body: JSON.stringify({ from, to: [to], cc, subject: kind.subject(row, buildingLabel), html }),
+    body: JSON.stringify({
+      from, to: [to], cc,
+      /* Replying to a lead should reach the person who filled the form,
+         not bounce off the noreply sender. */
+      reply_to: row.email || undefined,
+      subject: kind.subject(row, buildingLabel), html,
+    }),
   });
   if (!res.ok) throw new Error(`resend ${res.status}: ${(await res.text()).slice(0, 200)}`);
 }
@@ -341,31 +344,54 @@ async function emailConfirmation(row, buildingLabel) {
   /* Business name is optional on a change, so the suite stands in. */
   const who = row.business || (row.suite ? `Suite ${row.suite}` : 'your studio');
 
-  const html = `
-  <div style="font-family:Georgia,serif;max-width:520px;margin:0 auto;color:#33312D;">
-    <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:#9A6B45;">${escHtml(buildingLabel)}</p>
-    <h2 style="font-weight:400;margin:6px 0 16px;">${isChange ? 'We got your update' : 'We got your details'}</h2>
-    <p style="font-size:15px;line-height:1.6;">
+  const html = brandShell(buildingLabel, `
+    <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:#9A6B45;margin:0;">${escHtml(buildingLabel)}</p>
+    <h2 style="font-weight:400;margin:6px 0 16px;font-size:24px;">${isChange ? 'We got your update' : "You're on the list"}</h2>
+    <p style="font-size:15px;line-height:1.6;margin:0 0 12px;">
       Thanks${first ? ', ' + first : ''}. ${isChange
         ? `Your change for <strong>${escHtml(who)}</strong> is in, and someone will make it shortly.`
-        : `<strong>${escHtml(row.business)}</strong> is on the list. Someone will set your listing up shortly, and you'll be on the map and in the app.`}
+        : `<strong>${escHtml(row.business)}</strong> is on the list. We'll set your listing up shortly, and your card goes on the map and in the app for everyone who walks in the door.`}
     </p>
-    <p style="font-size:15px;line-height:1.6;">Nothing more for you to do. If we need anything, we'll reach out directly.</p>
-    <p style="margin-top:22px;font-size:13px;color:#918C81;">
-      Salon Plus Studios is listed by Studio Soulutions. If this wasn't you, ignore this note and nothing happens.
-    </p>
-  </div>`;
+    <p style="font-size:15px;line-height:1.6;margin:0 0 12px;">Nothing more for you to do. If we need anything to get your card just right, we'll reach out directly.</p>
+    <p style="font-size:14px;line-height:1.6;color:#6C685F;margin:0;">
+      Questions in the meantime? Ask at the front desk any time, or write to
+      <a href="mailto:hello@hive-rise.com" style="color:#6B7A5F;">hello@hive-rise.com</a> and it finds the right person.
+    </p>`,
+    `If this wasn't you, ignore this note and nothing happens.`);
 
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
     body: JSON.stringify({
       from, to: [row.email],
+      /* The sender is a noreply address, so a natural reply still lands
+         somewhere a person reads. */
+      reply_to: 'hello@hive-rise.com',
       subject: isChange ? `We got your update, ${who}` : `We got your details, ${row.business}`,
       html,
     }),
   });
   if (!res.ok) throw new Error(`resend ${res.status}: ${(await res.text()).slice(0, 200)}`);
+}
+
+/* One shell for every message this function sends: cream ground, soft
+   card, the building's name up top and the Studio Soulutions mark below,
+   so the mail reads as the same brand as the page they just used.
+   Email-safe: tables and inline styles only, Georgia for the serif. */
+function brandShell(buildingLabel, inner, footNote) {
+  return `
+  <div style="background:#F5EDE0;padding:28px 14px;">
+    <div style="max-width:560px;margin:0 auto;font-family:Georgia,serif;color:#33312D;">
+      <div style="background:#FBF6EE;border:1px solid #E5D9C3;border-radius:16px;padding:26px 28px;">
+        ${inner}
+      </div>
+      <p style="text-align:center;margin:18px 0 0;font-size:12.5px;color:#918C81;">
+        ${escHtml(buildingLabel)} &middot; powered by
+        <a href="https://studiosoulutions.com" style="color:#9A6B45;text-decoration:none;">Studio Soulutions</a>
+        ${footNote ? `<br>${footNote}` : ''}
+      </p>
+    </div>
+  </div>`;
 }
 
 /* ----- utils ----------------------------------------------------------- */
@@ -378,13 +404,16 @@ function escHtml(s) {
 /* No silent fallback to Resend's shared test sender. It only ever delivers
    to the Resend account owner, so using it looks like working mail right up
    until someone else is meant to receive something. Better to fail in the
-   log with a sentence that says what to do. */
+   log with a sentence that says what to do.
+   The product sender is "Studio Soulutions <studiosoulutions@hive-rise.com>"
+   (Anne's call, waggle 2026-09-14): no mailbox behind it, so it acts as
+   noreply, and every email sets reply_to somewhere a person reads. */
 function senderAddress() {
   const from = process.env.RESEND_FROM;
   if (!from) throw new Error(
     'RESEND_FROM is not set, so mail would go out from the shared Resend test sender, ' +
     'which only delivers to the Resend account owner. Set RESEND_FROM to an address on ' +
-    'a domain verified in Resend, e.g. "Salon Plus Studios <hello@hive-rise.com>".');
+    'a domain verified in Resend, e.g. "Studio Soulutions <studiosoulutions@hive-rise.com>".');
   return from;
 }
 

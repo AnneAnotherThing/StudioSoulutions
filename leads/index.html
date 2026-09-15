@@ -1128,7 +1128,7 @@ function newCard(l) {
     ${l.notes ? `<dl class="rows"><dt>Facts</dt><dd>${esc(l.notes)}</dd></dl>` : ''}
     ${l.bio_help === false
       ? `<dl class="rows"><dt>Write-up</dt><dd>Use their words exactly as written</dd></dl>`
-      : l.notes ? `<dl class="rows"><dt>Write-up</dt><dd>They asked us to write it from these facts &mdash; the Write one button in the studio drawer does it</dd></dl>` : ''}
+      : l.notes ? `<dl class="rows"><dt>Write-up</dt><dd>They asked us to write it from these facts &mdash; publishing opens their studio drawer, where the Write one button does it</dd></dl>` : ''}
     <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
       <select class="cell" style="max-width:210px;border-color:var(--line-2);background:var(--surface);" data-lead-building="${esc(l.id)}">
         ${/* A lead from the generic form carries a slug no building has yet.
@@ -1176,6 +1176,14 @@ $('inboxList').addEventListener('click', async e => {
     renderInbox(); renderStudios();
     toast(out.couponCode ? `Live. Offer code: ${out.couponCode}` : 'Live in the directory');
     if (out.couponCode) alert(`${out.studio.name} is live.\n\nTheir offer code is ${out.couponCode}\nSend it with studiosoulutions.com/salonplus/offer/`);
+    /* They asked for a write-up, so land where the Write one button is:
+       the new studio's drawer. Nobody hunts for it again. (Anne looked
+       for it in this publish flow and it wasn't here, waggle 2026-09-14.) */
+    if (done && done.bio_help !== false && done.notes) {
+      document.querySelector('.tab[data-tab="studios"]').click();
+      openDrawer(rowKey(out.studio));
+      toast('Their facts are in the drawer. The Write one button turns them into a bio.');
+    }
   } catch (err) {
     btn.disabled = false; btn.textContent = 'Publish to directory';
     alert(err.message);
