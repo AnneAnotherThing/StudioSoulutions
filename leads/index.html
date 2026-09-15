@@ -748,6 +748,7 @@ function renderStudioSheet(shown) {
       <td>
         <button class="rowbtn" data-act="detail">Details</button>
         ${!s.id ? `<button class="rowbtn warn" data-act="drop">Remove</button>` : s.status === 'hidden' ? `<button class="rowbtn" data-act="restore">Restore</button>` : `<button class="rowbtn warn" data-act="hide">Hide</button>`}
+        ${s.id ? `<button class="rowbtn warn" data-act="delete">Delete</button>` : ''}
       </td>
     </tr>`;
   }).join('') || `<tr><td colspan="8"><div class="empty">Nothing here yet. Add a studio, or publish one from the Inbox.</div></td></tr>`;
@@ -786,6 +787,23 @@ $('studioRows').addEventListener('click', async e => {
     try { await api({ action: 'setStatus', id: row.id, status: 'hidden' });
       row.status = 'hidden'; renderStudios(); toast('Hidden'); }
     catch (err) { alert(err.message); }
+    return;
+  }
+  if (btn.dataset.act === 'delete') {
+    const s = patched(row);
+    if (!confirm(`Delete ${s.name || 'this studio'} for good?\n\nThe card comes off the app immediately and their portal code stops working. If you only want it off the app for now, Cancel and use Hide instead.\n\nThere is no undo; the Changes log keeps a line saying it happened.`)) return;
+    btn.disabled = true; btn.textContent = 'Deleting…';
+    try {
+      await api({ action: 'deleteStudio', id: row.id });
+      state.studios = state.studios.filter(x => x.id !== row.id);
+      state.codes = (state.codes || []).filter(c => !(String(c.suite) === String(s.suite) && c.building === s.building));
+      edits.delete(k);
+      renderStudios(); renderInbox();
+      toast('Deleted');
+    } catch (err) {
+      btn.disabled = false; btn.textContent = 'Delete';
+      alert(err.message);
+    }
   }
 });
 
