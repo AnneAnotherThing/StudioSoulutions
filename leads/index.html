@@ -1182,19 +1182,29 @@ $('inboxList').addEventListener('click', async e => {
   }
 });
 
-/* ----- offers ----- */
+/* ----- offers -----------------------------------------------------------
+   The panel spans every building, so offers are gathered from all of them,
+   not just Salon Plus. The specials API answers one building at a time, so
+   we ask each in parallel and tag every offer with where it lives. (Anne
+   caught the old salonplus-only version missing a live demo offer, waggle
+   2026-09-15.) */
 async function loadOffers() {
-  let offers = [];
-  try {
-    const res = await fetch(OFFERS_API, { method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ action: 'list', building: 'salonplus' }) });
-    if (res.ok) offers = (await res.json()).rows || [];
-  } catch {}
+  const builds = state.buildings.length ? state.buildings : [{ slug: 'salonplus', name: 'Salon Plus Studios' }];
+  const offers = [];
+  await Promise.all(builds.map(async b => {
+    try {
+      const res = await fetch(OFFERS_API, { method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ action: 'list', building: b.slug }) });
+      if (res.ok) (await res.json()).rows?.forEach(r => offers.push({ ...r, _b: b.name }));
+    } catch {}
+  }));
+  const multi = builds.length > 1;
   $('offersList').innerHTML = offers.map(o => `
     <div class="card" style="padding:14px 18px;">
       <div class="card-top">
         <span class="biz" style="font-size:17px;">${esc(o.title)}</span>
         <span class="suite-tag">Suite ${esc(o.suite)}</span>
+        ${multi ? `<span class="suite-tag" style="color:var(--ink-faint);">${esc(o._b)}</span>` : ''}
         <span class="when">${o.detail ? esc(o.detail) + ' &middot; ' : ''}through ${esc(o.expires)}</span>
         <button class="rowbtn warn" data-hide="${esc(o.id)}" style="margin-left:auto;">Hide</button>
       </div>
