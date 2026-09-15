@@ -339,15 +339,16 @@ ok(calls.some(c => c.method === 'DELETE' && c.url.includes('ss_suite_codes')),
 /* ===== specials: blanket offers when the card has no services ========== */
 section('specials: blanket offers');
 
+const specialsFn = (await import('../netlify/functions/salonplus-specials.mjs')).default;
 resetNet();
-res = await post(specials, { action: 'post', building: 'salonplus', suite: '201', code: 'BLANK-0000',
+res = await post(specialsFn, { action: 'post', building: 'salonplus', suite: '201', code: 'BLANK-0000',
   parts: { template: 'percent_off', percent: 10, days: 30, audience: 'all', fine: '' } });
 const blanket = await res.json();
 ok(res.status === 200 && blanket.offer && blanket.offer.title === '10% off',
    'no services on the card means a clean blanket offer (got: ' + (blanket.offer ? blanket.offer.title : blanket.error) + ')');
 
 resetNet();
-res = await post(specials, { action: 'post', building: 'salonplus', suite: '201', code: 'BLANK-0000',
+res = await post(specialsFn, { action: 'post', building: 'salonplus', suite: '201', code: 'BLANK-0000',
   parts: { template: 'free_addon', addon: 'x', service: 'y', days: 30, audience: 'all' } });
 ok(res.status === 400, 'the free add-on shape is refused without services');
 
