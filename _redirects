@@ -2,10 +2,12 @@
 # Pretty URLs for the entry points
 /kiosk      /kiosk.html      200
 /admin      /admin.html      200
-/app        /app.html        200
 
-# SPA-style fallback for the phone view (handles deep links into tenant profiles later)
-/app/*      /app.html        200
+# The old concept demo at /app retired 2026-09-14; the real app dressed
+# as the demonstration building is the demo now.
+/app        /a/demo   301
+/app.html   /a/demo   301
+/app/*      /a/demo   301
 
 # One app, every building: /a/<slug> serves the real app dressed as that
 # building (app.js reads the slug from the path). /a/demo is the sales

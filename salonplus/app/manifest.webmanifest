@@ -1,0 +1,14 @@
+{
+  "name": "Salon Plus Studios",
+  "short_name": "Salon Plus",
+  "description": "Every studio in the building: findable, mappable, bookable.",
+  "start_url": "/salonplus/app/",
+  "scope": "/salonplus/app/",
+  "display": "standalone",
+  "background_color": "#F2EFE9",
+  "theme_color": "#F2EFE9",
+  "icons": [
+    { "src": "/salonplus/app/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/salonplus/app/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

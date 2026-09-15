@@ -32,6 +32,19 @@ let BUILDING_INFO = IS_HOME
 const HAS_MAP = !!((window.SALONPLUS.LAYOUTS || {})[APP_BUILDING]);
 const LAYOUT = (window.SALONPLUS.LAYOUTS || {})[APP_BUILDING] || window.SALONPLUS.LAYOUT;
 
+/* PWA: the manifest is injected only for the home building, because the
+   HTML is shared with every /a/<slug> building and an install from the
+   demo must not claim the Salon Plus name and icon. Other buildings get
+   their own manifest when they get their own identity pass. */
+if (IS_HOME) {
+  const mf = document.createElement('link');
+  mf.rel = 'manifest';
+  mf.href = '/salonplus/app/manifest.webmanifest';
+  document.head.appendChild(mf);
+  const touch = document.querySelector('link[rel="apple-touch-icon"]');
+  if (touch) touch.href = '/salonplus/app/icon-192.png';
+}
+
 /* Everything visual that says "Salon Plus" flows through here, so a
    directory answer that names the building re-dresses the shell. */
 function applyBuildingIdentity(b) {
