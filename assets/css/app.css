@@ -841,8 +841,16 @@ body {
 
 .sheet {
   position: fixed;
-  bottom: 0; left: 50%;
-  transform: translateX(-50%) translateY(100%);
+  bottom: 0; left: 0; right: 0;
+  margin-inline: auto;
+  transform: translateY(100%);
+  /* A scrollable fixed element held under an active transform is the
+     classic iOS paint-dropout: children randomly fail to paint until a
+     scroll or tap (Anne's waggle 3.1, buttons vanishing at random).
+     Centering moved off translateX onto auto margins so Y is the only
+     transform, and will-change keeps the layer pre-promoted instead of
+     juggled. */
+  will-change: transform;
   width: 100%;
   max-width: 440px;
   max-height: 92vh;
@@ -857,7 +865,7 @@ body {
      needs room to clear it */
   padding-bottom: calc(78px + env(safe-area-inset-bottom));
 }
-.sheet.open { transform: translateX(-50%) translateY(0); }
+.sheet.open { transform: translateY(0); }
 
 .sheet-handle {
   position: sticky;
