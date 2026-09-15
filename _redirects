@@ -25,6 +25,11 @@
 /portal      /salonplus/offer/index.html   200
 /portal/*    /salonplus/offer/index.html   200
 
+# The feature sheet moved to the product level 2026-09-15 (product-wide
+# things live at the root; building things live under the building).
+/salonplus/features      /features/   301
+/salonplus/features/*    /features/   301
+
 # Community and pricing are parked until we expand; pages stay in the
 # repo, just unreachable. The ! forces the redirect even though the
 # files exist, which plain rules never override. Drop this block to
