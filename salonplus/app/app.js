@@ -364,6 +364,11 @@ const didYouKnow = IS_HOME ? [
    without anyone touching it. */
 let SPECIALS = [];
 
+/* The studio's live special, if any: offers wear their suite. */
+function specialFor(t) {
+  return SPECIALS.find(sp => String(sp.suite) === String(t.suite)) || null;
+}
+
 async function loadSpecials() {
   try {
     const res = await fetch('/api/salonplus-specials', {
@@ -374,8 +379,10 @@ async function loadSpecials() {
     if (!res.ok) return;
     SPECIALS = (await res.json()).rows || [];
     /* Re-render only if they're already looking at the tab; otherwise
-       switchView will render it fresh when they get there. */
+       switchView will render it fresh when they get there. The directory
+       re-renders too, because rows wear their studio's live offer. */
     if (document.querySelector('#view-specials.active')) renderSpecials();
+    renderDirectory();
   } catch {
     /* Offline, or a local static preview with no function runtime. The
        empty state already says the right thing, so say nothing. */
@@ -707,6 +714,7 @@ function renderDirectory() {
         <div class="row-tags">
           <span class="row-tag">${t.suite}</span>
           <span class="row-tag">${CAT_LABEL[t.category] || 'Studio'}</span>
+          ${specialFor(t) ? `<span class="row-tag offer-tag">${escapeHtml(specialFor(t).title)}</span>` : ''}
         </div>
       </div>
       ${statusPillHTML(t)}
@@ -824,6 +832,14 @@ function openTenant(id) {
         <span style="color: var(--cream-40)">•</span>
         <span>${t.hours || (t.call ? 'Call for hours' : 'Hours coming soon')}</span>
       </div>
+      ${(() => {
+        const sp = specialFor(t);
+        return sp ? `<div class="profile-offer">
+          <div class="po-eyebrow">Right now</div>
+          <div class="po-title">${escapeHtml(sp.title)}</div>
+          <div class="po-detail">${sp.detail ? escapeHtml(sp.detail) + ' · ' : ''}Through ${escapeHtml(sp.expires)} · Mention it when you book</div>
+        </div>` : '';
+      })()}
       <div class="profile-bio">${t.bio}</div>
       <div class="profile-tags">
         ${t.tags.map(tag => `<span class="profile-tag">${escapeHtml(tag)}</span>`).join('')}
