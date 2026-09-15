@@ -18,7 +18,7 @@
      RESEND_API_KEY         Anne's Resend key
      LEAD_TO                who the lead email goes to
      RESEND_FROM            An address on a domain verified in Resend,
-                            e.g. "Salon Plus Studios <hello@hive-rise.com>".
+                            e.g. "Studio Soulutions <studiosoulutions@hive-rise.com>".
                             There is no fallback on purpose: the shared
                             Resend test sender only reaches the Resend
                             account owner, which looks like working mail
@@ -355,7 +355,7 @@ async function emailConfirmation(row, buildingLabel) {
     <p style="font-size:15px;line-height:1.6;margin:0 0 12px;">Nothing more for you to do. If we need anything to get your card just right, we'll reach out directly.</p>
     <p style="font-size:14px;line-height:1.6;color:#6C685F;margin:0;">
       Questions in the meantime? Ask at the front desk any time, or write to
-      <a href="mailto:hello@hive-rise.com" style="color:#6B7A5F;">hello@hive-rise.com</a> and it finds the right person.
+      <a href="mailto:anne@hive-rise.com" style="color:#6B7A5F;">anne@hive-rise.com</a> and it finds the right person.
     </p>`,
     `If this wasn't you, ignore this note and nothing happens.`);
 
@@ -366,7 +366,7 @@ async function emailConfirmation(row, buildingLabel) {
       from, to: [row.email],
       /* The sender is a noreply address, so a natural reply still lands
          somewhere a person reads. */
-      reply_to: 'hello@hive-rise.com',
+      reply_to: 'anne@hive-rise.com',
       subject: isChange ? `We got your update, ${who}` : `We got your details, ${row.business}`,
       html,
     }),

@@ -394,7 +394,7 @@ function senderAddress() {
   if (!from) throw new Error(
     'RESEND_FROM is not set, so mail would go out from the shared Resend test sender, ' +
     'which only delivers to the Resend account owner. Set RESEND_FROM to an address on ' +
-    'a domain verified in Resend, e.g. "Salon Plus Studios <hello@hive-rise.com>".');
+    'a domain verified in Resend, e.g. "Studio Soulutions <studiosoulutions@hive-rise.com>".');
   return from;
 }
 
