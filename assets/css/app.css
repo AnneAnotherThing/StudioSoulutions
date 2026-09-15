@@ -1066,12 +1066,12 @@ body {
   color: var(--ink-on-cream);
 }
 .btn-secondary {
-  background: var(--cream-10);
-  color: var(--cream);
+  background: var(--surface-2);
+  color: var(--ink);
   border: 1px solid var(--line-2);
   width: 54px;
   padding: 15px;
-  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 2px rgba(61,53,48,0.08);
 }
 .btn-secondary.saved {
   background: var(--clay);
@@ -1164,11 +1164,14 @@ body {
   grid-template-columns: 1fr auto;
   gap: 10px;
 }
+/* Solid surface, no alpha, no blur: the 18%-tint + backdrop-filter version
+   read as nearly invisible on phones in bright light and rendered
+   unevenly on mobile GPUs (Anne's waggle 3.1 finding, 2026-09-15). */
 .btn-outline {
-  background: var(--cream-10);
-  color: var(--cream);
+  background: var(--surface-2);
+  color: var(--ink);
   border: 1px solid var(--line-2);
-  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 2px rgba(61,53,48,0.08);
 }
 
 /* ============ FLOOR-PLAN MAP ============================================ */

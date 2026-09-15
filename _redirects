@@ -37,3 +37,11 @@
 
 # The old launch-pad page retired 2026-09-15; the hub replaced it long ago
 /Laura-Walkthrough.html   /laura/   301
+
+# One document now: the owner's guide and the admin manual retired into
+# the rollout 2026-09-15 (Anne's call, the manual's unique content folded
+# into rollout page 10 first)
+/salonplus/guide     /salonplus/rollout/   301
+/salonplus/guide/*   /salonplus/rollout/   301
+/leads/guide         /salonplus/rollout/   301
+/leads/guide/*       /salonplus/rollout/   301
