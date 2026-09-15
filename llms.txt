@@ -1,0 +1,17 @@
+# Studio Soulutions
+
+> Studio Soulutions makes every studio in a salon-suite building discoverable: a mobile web app for visitors and tenants, an optional lobby kiosk, and a self-serve portal for studio owners, all white-labeled to the building's own brand. Built and run by Hive-Rise in Surprise, Arizona.
+
+Salon-suite buildings hold dozens of independent studios behind one front door, and a walk-in has no way to know who is inside. Studio Soulutions gives the building one link: a directory app with every studio's card, services, hours, booking links and an interactive suite map. Studio owners keep their own cards current through a code-protected portal, and the building owner approves every change before it goes live.
+
+## Pages
+
+- [Home](https://studiosoulutions.com/): what the product is and who it is for
+- [Salon Plus Studios directory](https://studiosoulutions.com/salonplus/): the first live building, in Surprise, Arizona
+- [Join a directory](https://studiosoulutions.com/join/): how a studio gets its card
+
+## Facts
+
+- The product is sold to salon-suite building owners; each building gets its own fully branded app.
+- Visitors install nothing: the app is a web app, installable from the browser on request.
+- Contact and sales run through Hive-Rise (hive-rise.com), the agency behind the product.

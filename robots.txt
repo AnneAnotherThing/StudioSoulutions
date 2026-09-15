@@ -1,0 +1,8 @@
+# Studio Soulutions - crawlers welcome, AI crawlers included.
+User-agent: *
+Allow: /
+
+# The admin panel has nothing for an index.
+Disallow: /leads/
+
+Sitemap: https://studiosoulutions.com/sitemap.xml
