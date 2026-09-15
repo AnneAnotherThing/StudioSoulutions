@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Salon Plus Studios - The feature sheet (print)</title>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #F2EFE9; --surface: #FAF8F4; --ink: #33312D; --ink-soft: #6C685F;
+    --ink-faint: #918C81; --bronze: #9A6B45; --bronze-deep: #7C5334; --line: #DCD6CA;
+    --sage-deep: #5F6E52; --blush: #FBF3EE;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: #E5E1D8; color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.5; font-size: 11.5px;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .page {
+    width: 8.5in; min-height: 11in; margin: 24px auto; padding: 0.5in 0.55in;
+    background: var(--bg); box-shadow: 0 10px 40px rgba(0,0,0,.18);
+    display: flex; flex-direction: column; break-after: page;
+  }
+  @page { size: letter portrait; margin: 0; }
+  @media print {
+    :root { --bg: #fff; --surface: #fff; }
+    body { background: none; }
+    .page { margin: 0; box-shadow: none; width: auto; min-height: auto; }
+    .screen-only { display: none !important; }
+  }
+  .printbar {
+    max-width: 8.5in; margin: 18px auto 0; display: flex; gap: 10px; align-items: center; justify-content: center;
+    font-size: 13.5px; color: var(--ink-soft);
+  }
+  .printbar button {
+    font: inherit; font-weight: 600; padding: 9px 22px; border: 0; border-radius: 999px;
+    background: var(--ink); color: #fff; cursor: pointer;
+  }
+  .head { display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid var(--ink); padding-bottom: 9px; }
+  .logo { height: 34px; }
+  .logo-sp { height: 42px; mix-blend-mode: multiply; }
+  h1 { font-family:'Jost',sans-serif; font-weight: 300; font-size: 25px; line-height: 1.1; margin: 12px 0 4px; }
+  h1 strong { font-weight: 500; color: var(--bronze-deep); }
+  .lede { color: var(--ink-soft); font-size: 12px; max-width: 56em; }
+  .cols { column-count: 2; column-gap: 0.3in; margin-top: 12px; }
+  .part { break-inside: avoid; background: var(--surface); border: 1px solid var(--line); border-radius: 11px; padding: 10px 13px; margin-bottom: 10px; }
+  .part h2 { font-family:'Jost',sans-serif; font-weight: 500; font-size: 13.5px; color: var(--bronze-deep); }
+  .part .url { display: block; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9.5px; color: var(--bronze-deep); font-weight: 600; margin: 2px 0 5px; }
+  .part ul { margin: 0; padding-left: 14px; }
+  .part li { margin: 1.5px 0; color: var(--ink-soft); font-size: 10.8px; }
+  .part li b { color: var(--ink); }
+  .part.owner { border-left: 3px solid var(--sage-deep); }
+  .part.owner h2 { color: var(--sage-deep); }
+  .foot { margin-top: auto; padding-top: 9px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-size: 9.5px; color: var(--ink-faint); }
+</style>
+</head>
+<body>
+
+<div class="printbar screen-only">
+  <span>One page · Letter portrait</span>
+  <button type="button" onclick="window.print()">Print</button>
+</div>
+
+<div class="page">
+  <div class="head">
+    <img class="logo-sp" src="/assets/logo-salonplus.png" alt="Salon Plus Studios" />
+    <img class="logo" src="/assets/logo_ss_green_v5.png" alt="Studio Soulutions" />
+  </div>
+
+  <h1>Every part, every feature, <strong>one page.</strong></h1>
+  <p class="lede">
+    The whole platform as a checklist: what each piece does and where it lives. Deep how-tos are in
+    the rollout; this is the sheet to keep by the desk. Green-edged boxes are owner tools.
+  </p>
+
+  <div class="cols">
+    <div class="part">
+      <h2>The app &middot; for customers</h2>
+      <span class="url">studiosoulutions.com/salonplus/app</span>
+      <ul>
+        <li><b>Search finds people</b>: studio, person behind the chair, service, or suite number</li>
+        <li><b>Category chips</b> plus Open now and Available now filters</li>
+        <li><b>Open now runs on real hours</b>, Phoenix clock</li>
+        <li><b>Cards</b>: photos and gallery, bio, Call, Text, Book, website, socials</li>
+        <li><b>Live specials on the card</b>: an offer tag on the row, a Right now banner on the profile</li>
+        <li><b>Suite map</b> with "Show me on the map" and the entrance-to-door glow</li>
+        <li><b>Claim button</b> on unclaimed cards recruits tenants by itself</li>
+        <li><b>Installs like an app</b>: Add to Home Screen, its own icon</li>
+      </ul>
+    </div>
+
+    <div class="part">
+      <h2>The directory page &middot; for the lobby</h2>
+      <span class="url">studiosoulutions.com/salonplus</span>
+      <ul>
+        <li><b>Map plus full roster</b> on one page, made for QR signs</li>
+        <li><b>Join section</b> at #join for new studios</li>
+        <li><b>Already listed? pointer</b> sends existing studios to their portal</li>
+      </ul>
+    </div>
+
+    <div class="part">
+      <h2>The kiosk &middot; for the lobby screen</h2>
+      <span class="url">studiosoulutions.com/kiosk</span>
+      <ul>
+        <li><b>Attract loop</b> when idle, a tap wakes it</li>
+        <li><b>Search, open-now pills, suite map</b>, and a QR handoff to the phone</li>
+      </ul>
+    </div>
+
+    <div class="part">
+      <h2>The join form &middot; new studios only</h2>
+      <span class="url">studiosoulutions.com/salonplus/#join</span>
+      <ul>
+        <li><b>Two minutes on a phone</b>: identity, suite, phone or email</li>
+        <li><b>Hours done properly</b>: day chips, time pickers, live preview line</li>
+        <li><b>Bio choice</b>: Write it for me, or Use my words</li>
+        <li><b>Up to four photos</b> straight from the camera roll</li>
+        <li><b>Instant receipt email</b> that names what happens next</li>
+        <li>Old change links now land in the portal, nothing breaks</li>
+      </ul>
+    </div>
+
+    <div class="part">
+      <h2>The studio portal &middot; their own door</h2>
+      <span class="url">studiosoulutions.com/salonplus/offer</span>
+      <ul>
+        <li><b>Sign in</b>: suite + code, or the one-tap Edit your card link in the welcome email</li>
+        <li><b>Every studio has a code</b>, whatever its level; the level only decides fields</li>
+        <li><b>Edit in place</b>: hours, photos, contact, booking, bio, live on save</li>
+        <li><b>Offers</b>: composed from safe pieces, blanket offers with no services, one live per studio, posting replaces, <b>Take it down</b> ends it early</li>
+        <li><b>Send a question / Report a problem</b> buttons reach the inbox flagged</li>
+        <li><b>Safety net</b>: every edit sends a before-and-after email</li>
+      </ul>
+    </div>
+
+    <div class="part">
+      <h2>The emails &middot; nobody watches a screen</h2>
+      <span class="url">rollout page 6 decodes each one</span>
+      <ul>
+        <li><b>Receipt</b> at submission, warm, promises the welcome</li>
+        <li><b>Welcome</b> at first publish: onboarding letter, card link, install steps, code, edit link</li>
+        <li><b>Lead, question, bug, offer, before-and-after</b> mails to you and Anne, labeled</li>
+      </ul>
+    </div>
+
+    <div class="part owner">
+      <h2>The admin panel &middot; owner tool</h2>
+      <span class="url">studiosoulutions.com/leads &middot; passcode</span>
+      <ul>
+        <li><b>Six sections</b>: Studios, Inbox, Offers, Buildings, Settings, Changes</li>
+        <li><b>Studios</b>: photo cards, edit drawer, Sheet view with a Center column, Hide, Delete, portal code with New code re-mint, the AI Write one bio button</li>
+        <li><b>Inbox</b>: publish sign-ups (write-up leads open the drawer themselves), answer questions, delete any record</li>
+        <li><b>Offers</b>: every building's offers, Hide switch</li>
+        <li><b>Settings</b>: the level switches and the mail test</li>
+        <li><b>Changes</b>: who changed what, when, always</li>
+      </ul>
+    </div>
+
+    <div class="part owner">
+      <h2>Hubs &middot; owner tools</h2>
+      <span class="url">studiosoulutions.com/laura &middot; /hub for Anne</span>
+      <ul>
+        <li><b>Laura's hub</b>: every link, live counts, the copy-paste texts, the FAQ answers; updates itself with every change</li>
+        <li><b>Anne's hub</b>: the whole platform's asset ledger</li>
+      </ul>
+    </div>
+
+    <div class="part owner">
+      <h2>The paper kit &middot; print any time</h2>
+      <span class="url">always current at their links</span>
+      <ul>
+        <li><b>The rollout</b> &middot; /salonplus/rollout/ &middot; eleven pages, the one reference</li>
+        <li><b>Portal cards</b> &middot; /leads/portal-cards/ &middot; one per studio with its code</li>
+        <li><b>Sign-up sheet</b> &middot; /signup-sheet.html &middot; QR plus paper lines</li>
+        <li><b>QR sheet</b> &middot; rollout page 11 &middot; the four codes, cut-out sized</li>
+        <li><b>This feature sheet</b> &middot; /salonplus/features/</li>
+      </ul>
+    </div>
+
+    <div class="part">
+      <h2>The demo building &middot; for selling</h2>
+      <span class="url">studiosoulutions.com/a/demo</span>
+      <ul>
+        <li><b>The Beauty Collective</b>: a fictional building on the real machinery</li>
+        <li><b>The pitch</b>: yours would look like this, your name, your tenants, same day</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>Salon Plus Studios &middot; the feature sheet &middot; listed by Studio Soulutions</span>
+    <span>Reprint any time: studiosoulutions.com/salonplus/features/</span>
+  </div>
+</div>
+
+</body>
+</html>
