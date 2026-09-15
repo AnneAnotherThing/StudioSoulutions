@@ -45,7 +45,8 @@ globalThis.fetch = async (url, opts = {}) => {
     /* Reads answer with one stored lead (deleteLead looks the row up
        before removing it); deletes succeed; inserts follow the plan. */
     if (rec.method === 'GET') return mockRes(200, JSON.stringify([
-      { id: '11111111-2222-3333-4444-555555555555', business: 'Test Studio', kind: 'new', building: 'salonplus' }]));
+      { id: '11111111-2222-3333-4444-555555555555', business: 'Test Studio', kind: 'new', building: 'salonplus',
+        name: 'Pat Tester', email: 'pat@test.local', suite: '103' }]));
     if (rec.method === 'DELETE') return mockRes(204, '');
     const status = supabaseInsertPlan.length ? supabaseInsertPlan.shift() : 201;
     return mockRes(status, status < 300 ? '' : '{"message":"column does not exist"}');
@@ -64,6 +65,13 @@ globalThis.fetch = async (url, opts = {}) => {
         email: 'd@y.z', show_email: true, booking_url: 'b2', booking_label: '', website: '',
         instagram: '', facebook: '', tiktok: '', status: 'live' },
     ]));
+  }
+  if (u.includes('/rest/v1/ss_buildings')) {
+    /* Respects the slug filter: the unseeded-building test depends on
+       'demo' coming back empty. */
+    if (u.includes('slug=eq.salonplus')) return mockRes(200, JSON.stringify([
+      { slug: 'salonplus', name: 'Salon Plus Studios', city: 'Glendale, AZ', has_map: true, default_tier: 2 }]));
+    return mockRes(200, '[]');
   }
   if (u.includes('/rest/v1/ss_tier_settings')) {
     return mockRes(200, JSON.stringify([
@@ -269,6 +277,18 @@ resetNet();
 res = await post(admin, { action: 'deleteStudio', code: 'test-passcode', id: 'nope' });
 ok(res.status === 400, 'a malformed studio id is refused');
 ok(!calls.some(c => c.method === 'DELETE'), 'nothing was deleted on the bad studio id');
+
+/* ===== admin: publishing sends the welcome and says so ================= */
+section('admin: welcome at publish');
+
+resetNet();
+res = await post(admin, { action: 'publishLead', code: 'test-passcode', leadId: LEAD_ID,
+  studio: { building: 'salonplus', suite: '103', status: 'live' } });
+const pub = await res.json();
+ok(res.status === 200 && pub.welcome === 'sent',
+   'publishing reports the welcome outcome (got: ' + (pub.welcome || pub.error || res.status) + ')');
+ok(resendCalls().some(c => /is on the map/.test(c.body.subject)),
+   'the welcome email actually goes out at publish');
 
 /* ===== mail: a broken RESEND_FROM repairs itself ======================= */
 section('mail: sender repair');

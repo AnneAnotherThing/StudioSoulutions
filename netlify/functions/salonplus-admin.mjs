@@ -211,8 +211,23 @@ async function saveStudio(db, p) {
 
   await log(db, p, str(s.id) ? 'edit studio' : 'add studio', `${saved.building} ${saved.suite}`, { name: saved.name });
   await syncCouponCode(db, saved);
-  if (saved.status === 'live') emailWelcome(db, saved).catch(e => console.warn('admin: welcome mail failed', String(e).slice(0, 200)));
-  return json(200, { ok: true, studio: saved });
+  const welcome = await tryWelcome(db, saved);
+  return json(200, { ok: true, studio: saved, welcome });
+}
+
+/* The welcome used to be fire-and-forget, which meant a failure was a
+   console line nobody reads while the studio quietly got nothing (found
+   in Anne's waggle run, 2026-09-15). Awaited now, with the outcome named
+   in the response so a failure can never hide. */
+async function tryWelcome(db, saved) {
+  if (saved.status !== 'live')  return 'skipped: not live';
+  if (!saved.email)             return 'skipped: the studio has no email on file';
+  if (saved.notified_at)        return 'skipped: already welcomed once';
+  try { await emailWelcome(db, saved); return 'sent'; }
+  catch (e) {
+    console.warn('admin: welcome mail failed', String(e).slice(0, 300));
+    return 'failed: ' + String(e).slice(0, 300);
+  }
 }
 
 async function setStatus(db, p) {
@@ -227,8 +242,8 @@ async function setStatus(db, p) {
   await log(db, p, 'status ' + status, `${saved.building} ${saved.suite}`, { name: saved.name });
   /* Going live is the moment worth telling them about, and it carries
      their portal code. Fires once; notified_at makes sure of that. */
-  if (status === 'live') emailWelcome(db, saved).catch(e => console.warn('admin: welcome mail failed', String(e).slice(0, 200)));
-  return json(200, { ok: true, studio: saved });
+  const welcome = await tryWelcome(db, saved);
+  return json(200, { ok: true, studio: saved, welcome });
 }
 
 /* Turn a submission into a listing. The panel sends any corrections
@@ -283,8 +298,8 @@ async function publishLead(db, p) {
   await log(db, p, 'publish lead', `${saved.building} ${saved.suite}`, { name: saved.name, lead: leadId });
   const code = await syncCouponCode(db, saved);
   /* After the code exists, so the welcome mail can carry it. */
-  if (saved.status === 'live') emailWelcome(db, saved).catch(e => console.warn('admin: welcome mail failed', String(e).slice(0, 200)));
-  return json(200, { ok: true, studio: saved, couponCode: code });
+  const welcome = await tryWelcome(db, saved);
+  return json(200, { ok: true, studio: saved, couponCode: code, welcome });
 }
 
 /* Validation is shared by save and publish so a hand-typed row and a

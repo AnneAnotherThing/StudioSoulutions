@@ -1238,6 +1238,11 @@ $('inboxList').addEventListener('click', async e => {
     renderInbox(); renderStudios();
     toast(out.couponCode ? `Live. Offer code: ${out.couponCode}` : 'Live in the directory');
     if (out.couponCode) alert(`${out.studio.name} is live.\n\nTheir offer code is ${out.couponCode}\nSend it with studiosoulutions.com/salonplus/offer/`);
+    /* The welcome outcome comes back named; a failure is worth a loud box,
+       because the studio is now live and silently uninvited. */
+    if (out.welcome && out.welcome.indexOf('failed') === 0) {
+      alert(`Published, but their welcome email did NOT go out:\n\n${out.welcome}\n\nTheir card is live either way. Hand them a portal card so they have their code, and report the reason above so the cause gets fixed.`);
+    }
     /* They asked for a write-up, so land where the Write one button is:
        the new studio's drawer. Nobody hunts for it again. (Anne looked
        for it in this publish flow and it wasn't here, waggle 2026-09-14.) */
