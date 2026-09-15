@@ -53,6 +53,8 @@ function applyBuildingIdentity(b) {
   if (ownerSig) ownerSig.textContent = `, ${BUILDING_INFO.name}`;
   const mapCard = document.getElementById('mapMenuCard');
   if (mapCard) mapCard.style.display = HAS_MAP ? '' : 'none';
+  const navMap = document.getElementById('navMapItem');
+  if (navMap) navMap.style.display = HAS_MAP ? '' : 'none';
 }
 
 /* ----- per-suite meta, category + service line -------------------------
@@ -314,7 +316,6 @@ async function loadDirectory() {
     renderDirectory();
     const view = activeViewName();
     if (view === 'specials') renderSpecials();
-    if (view === 'saved') renderSaved();
     if (currentTenant) {
       const still = tenants.find(t => t.id === currentTenant.id);
       if (still) openTenant(still.id); else closeSheetRaw();
@@ -398,7 +399,6 @@ function renderSpecials() {
 }
 
 // ============ STATE ============
-let savedIds = new Set();
 let activeFilter = 'all';
 let searchTerm = '';
 let currentTenant = null;
@@ -610,8 +610,6 @@ function renderDiscoverCards() {
     metaEl.textContent = `Featured today · ${featured.service.split('·')[0].split('&')[0].split(',')[0].trim()}`;
   }
 
-  const elSaved = document.getElementById('mc-saved-count');
-  if (elSaved) elSaved.textContent = savedIds.size;
   const elVacancy = document.getElementById('mc-vacancy-count');
   if (elVacancy) elVacancy.textContent = vacancies.length;
 }
@@ -703,44 +701,6 @@ function renderDirectory() {
   `).join('');
 }
 
-function renderSaved() {
-  const list = document.getElementById('savedList');
-  const empty = document.getElementById('savedEmpty');
-  const saved = tenants.filter(t => savedIds.has(t.id));
-
-  if (saved.length === 0) {
-    list.style.display = 'none';
-    empty.style.display = 'block';
-    return;
-  }
-  list.style.display = 'flex';
-  empty.style.display = 'none';
-  list.innerHTML = saved.map(t => `
-    <div class="directory-row" onclick="openTenant('${t.id}')">
-      ${avatarHTML(t, 'row')}
-      <div class="row-meta">
-        <div class="tenant-name" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-          <span>${escapeHtml(t.name)}</span>${claimedPillHTML(t)}
-        </div>
-        <div class="tenant-service">${t.tech ? `${escapeHtml(t.tech)} · ` : ''}${t.service}</div>
-      </div>
-      ${statusPillHTML(t)}
-    </div>
-  `).join('');
-}
-
-function updateSavedBadge() {
-  const badge = document.getElementById('savedCount');
-  if (savedIds.size > 0) {
-    badge.style.display = 'grid';
-    badge.textContent = savedIds.size;
-  } else {
-    badge.style.display = 'none';
-  }
-  const splashCount = document.getElementById('mc-saved-count');
-  if (splashCount) splashCount.textContent = savedIds.size;
-}
-
 // ============ BACK BUTTON =================================================
 // The phone's back button peels UI layers (lightbox → map modal → sheet →
 // view) instead of leaving the site; only the discover screen backs out.
@@ -805,10 +765,9 @@ function switchViewRaw(view) {
   if (view === 'map' && !HAS_MAP) view = 'directory';
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById(`view-${view}`).classList.add('active');
-  const primaryViews = ['discover', 'directory', 'saved'];
+  const primaryViews = ['discover', 'directory', 'map'];
   const parent = primaryViews.includes(view) ? view : 'discover';
   document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.view === parent));
-  if (view === 'saved') renderSaved();
   if (view === 'discover') renderDiscoverCards();
   if (view === 'vacancies') renderVacancies();
   if (view === 'specials') renderSpecials();
@@ -828,7 +787,6 @@ function openTenant(id) {
   const t = tenants.find(x => x.id === id);
   if (!t) return;
   currentTenant = t;
-  const isSaved = savedIds.has(t.id);
   // "While you're here", other studios in a different category, cross-pollination.
   const others = tenants.filter(p => p.id !== t.id && p.category !== t.category);
   const sameCat = tenants.filter(p => p.id !== t.id && p.category === t.category);
@@ -862,11 +820,11 @@ function openTenant(id) {
         ${t.photos.map(p => `<button class="pg-shot" type="button" style="background-image:url('${p}')" onclick="openLightbox('${p}')" aria-label="View photo full size"></button>`).join('')}
       </div>` : ''}
       <div class="profile-actions">
-        ${renderContactActions(t, isSaved)}
+        ${renderContactActions(t)}
       </div>
       <div class="pair-with">
         <h3>While you're at <em>${escapeHtml(t.name.split(' ')[0])}</em>…</h3>
-        <div class="sub">Other studios under this roof. Walk over after, or save them for next time.</div>
+        <div class="sub">Other studios under this roof, worth the walk over after.</div>
         <div class="pair-scroll">
           ${pairs.map(p => `
             <div class="pair-card" onclick="openTenant('${p.id}')">
@@ -953,23 +911,11 @@ function closeSheetRaw() {
   currentTenant = null;
 }
 
-function toggleSave(id) {
-  if (savedIds.has(id)) {
-    savedIds.delete(id);
-    showToast('Removed from saved');
-  } else {
-    savedIds.add(id);
-    showToast('Saved');
-  }
-  updateSavedBadge();
-  if (currentTenant && currentTenant.id === id) openTenant(id);
-}
-
 /* ============ CONTACT BUTTONS ============================================
    Booking/call/text buttons render when a tenant has claimed their card and
    listed them. Until then the primary CTA is claiming the card, that's the
    whole recruiting motion, in the product itself. */
-function renderContactActions(t, isSaved) {
+function renderContactActions(t) {
   const ICONS = {
     book: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
     call: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
@@ -990,11 +936,6 @@ function renderContactActions(t, isSaved) {
   if (t.site)  methods.push({ key:'site', href:t.site, target:'_blank', rel:'noopener noreferrer',
     label: t.siteLabel ? escapeHtml(t.siteLabel) : 'Visit the website' });
   if (t.email) methods.push({ key:'email', href:`mailto:${t.email}`, label:`Email ${escapeHtml(t.email)}` });
-
-  const saveBtn = `
-    <button class="btn btn-secondary ${isSaved ? 'saved' : ''}" onclick="toggleSave('${t.id}')" aria-label="${isSaved ? 'Unsave' : 'Save'}">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-    </button>`;
 
   /* No wayfinding without a traced floor plan: a demo building's Suite
      103 must not route through Salon Plus's hallways. */
@@ -1017,12 +958,9 @@ function renderContactActions(t, isSaved) {
 
   if (methods.length === 0) {
     return `
-      <div class="profile-actions-row">
-        <button class="btn btn-primary" type="button" onclick="showRouteTo('${t.id}')" ${suiteKey ? '' : 'disabled style="opacity:.55;cursor:default;"'}>
-          ${ICONS.map} Show me on the map
-        </button>
-        ${saveBtn}
-      </div>
+      <button class="btn btn-primary" type="button" onclick="showRouteTo('${t.id}')" ${suiteKey ? '' : 'disabled style="opacity:.55;cursor:default;"'}>
+        ${ICONS.map} Show me on the map
+      </button>
       ${claimHtml}`;
   }
   const [primary, ...rest] = methods;
@@ -1035,10 +973,7 @@ function renderContactActions(t, isSaved) {
       ${ICONS[m.key]} ${m.label}
     </a>`).join('');
   return `
-    <div class="profile-actions-row">
-      ${primaryHtml}
-      ${saveBtn}
-    </div>
+    ${primaryHtml}
     ${restHtml}
     ${directionsHtml}
     ${claimHtml}
@@ -1342,7 +1277,6 @@ renderDYK();
 renderDiscoverCards();
 renderDirectory();
 renderVacancies();
-updateSavedBadge();
 loadSpecials();
 /* Paints from the data.js fallback first so the building is never blank,
    then swaps in the live directory when it lands. */
