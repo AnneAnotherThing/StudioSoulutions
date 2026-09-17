@@ -33,14 +33,18 @@ export default async function handler(request) {
   try { payload = await request.json(); }
   catch { return json(400, { error: 'Invalid JSON body' }); }
 
-  /* This endpoint spends real money on every call, and it had nothing on
-     the door. Anyone who found the URL could run it in a loop on Anne's
-     account. Its only caller is the admin panel, which already holds the
-     passcode, so the gate costs nothing and closes the hole. */
+  /* This endpoint spends real money on every call. Two doors: the admin
+     passcode (the panel and the portal-side callers), or the public
+     join-form lane, added 2026-09-17 so a studio picks its own bio while
+     signing up. The public lane is capped hard per day and fails closed,
+     because an open generation endpoint is a bill waiting to happen. */
   const expected = process.env.LEADS_CODE;
   if (!expected) return json(500, { error: 'LEADS_CODE is not set on this deployment.' });
-  if (typeof payload.code !== 'string' || payload.code !== expected) {
-    return json(401, { error: 'Wrong passcode.' });
+  const isAdmin = typeof payload.code === 'string' && payload.code === expected;
+  if (!isAdmin) {
+    if (payload.public !== true) return json(401, { error: 'Wrong passcode.' });
+    const gate = await publicGate();
+    if (!gate.ok) return json(429, { error: gate.error });
   }
 
   const {
@@ -132,6 +136,32 @@ export default async function handler(request) {
 
   } catch (err) {
     return json(500, { error: 'Network / function error', detail: String(err).slice(0, 500) });
+  }
+}
+
+/* The public lane's daily cap, counted in the admin Changes log so no
+   new table is needed. Fails closed: no ledger, no free generations. */
+const PUBLIC_BIOS_PER_DAY = 50;
+async function publicGate() {
+  try {
+    const url = process.env.SUPABASE_URL;
+    const key = process.env.SUPABASE_SERVICE_KEY;
+    if (!url || !key) return { ok: false, error: 'The write-it-now helper is resting. Type your facts and we polish them after you submit.' };
+    const headers = { apikey: key, authorization: `Bearer ${key}`, 'content-type': 'application/json' };
+    const today = new Date().toISOString().slice(0, 10);
+    const res = await fetch(`${url}/rest/v1/ss_admin_log?action=eq.public%20bio&at=gte.${today}T00:00:00Z&select=id&limit=${PUBLIC_BIOS_PER_DAY + 1}`, { headers });
+    if (!res.ok) return { ok: false, error: 'The write-it-now helper is resting. Type your facts and we polish them after you submit.' };
+    const rows = await res.json();
+    if (Array.isArray(rows) && rows.length >= PUBLIC_BIOS_PER_DAY) {
+      return { ok: false, error: 'The write-it-now helper has done its work for today. Type your facts and we polish them after you submit.' };
+    }
+    await fetch(`${url}/rest/v1/ss_admin_log`, {
+      method: 'POST', headers,
+      body: JSON.stringify({ who: 'join form', action: 'public bio', target: '', detail: {} }),
+    });
+    return { ok: true };
+  } catch {
+    return { ok: false, error: 'The write-it-now helper is resting. Type your facts and we polish them after you submit.' };
   }
 }
 

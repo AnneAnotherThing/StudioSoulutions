@@ -158,8 +158,8 @@
           <input type="text" id="f_biz" name="business" required autocomplete="organization" placeholder="e.g. Deuces Nail Studio">
         </div>
         <div class="field">
-          <label for="f_suite">Suite number</label>
-          <input type="text" id="f_suite" name="suite" placeholder="e.g. 302">
+          <label for="f_suite">Suite number <span class="req">*</span></label>
+          <input type="text" id="f_suite" name="suite" required placeholder="e.g. 302">
         </div>
       </div>
 
@@ -276,6 +276,11 @@
             <span class="dot"></span>
             <span><span class="m-t">Use my words</span><span class="m-d">Your facts go on the card just as you wrote them</span></span>
           </button>
+        </div>
+        <div id="bioWriter" style="margin-top:12px;">
+          <button type="button" class="btn btn-ghost" id="writeNowBtn" style="font-size:14px;padding:9px 20px;">See it written, right now</button>
+          <div class="fine" style="margin-top:6px;">Three versions come back in different tones; tap the one that sounds like you. You can still change it later from your studio portal.</div>
+          <div id="bioPicks" style="margin-top:10px;"></div>
         </div>
       </div>
 
@@ -398,15 +403,66 @@ phoneFieldize(document.getElementById('f_phone'));
 
 /* ----- the bio choice: polish the facts, or print them untouched ----- */
 let bioHelp = true;
+let chosenBio = '';
 document.querySelectorAll('.bio-btn').forEach(b =>
   b.addEventListener('click', () => {
     bioHelp = b.dataset.bio === 'help';
+    document.getElementById('bioWriter').style.display = bioHelp ? '' : 'none';
+    if (!bioHelp) { chosenBio = ''; document.getElementById('bioPicks').innerHTML = ''; }
     document.querySelectorAll('.bio-btn').forEach(x => {
       const on = x === b;
       x.classList.toggle('is-on', on);
       x.setAttribute('aria-checked', String(on));
     });
   }));
+
+/* The same three-tones screen the admin panel has, right on the form:
+   they see their write-up before they send anything. Anne's ask after
+   the 2026-09-15 meeting. */
+document.getElementById('writeNowBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('writeNowBtn');
+  const picks = document.getElementById('bioPicks');
+  const facts = document.getElementById('f_notes').value.trim();
+  const biz = document.getElementById('f_biz').value.trim();
+  if (!facts && !biz) {
+    picks.innerHTML = '<span class="form-msg err" style="display:block;">Give us your business name or a few facts first, so there is something to write from.</span>';
+    return;
+  }
+  btn.disabled = true; btn.textContent = 'Writing\u2026';
+  picks.innerHTML = '<span class="fine">Thinking\u2026</span>';
+  try {
+    const res = await fetch('/api/generate-bio', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        public: true,
+        name: biz,
+        suite: document.getElementById('f_suite').value.trim(),
+        services: [...document.querySelectorAll('#svcRow .svc input:checked')].map(c => c.value),
+        input: facts,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Could not write it just now.');
+    const bios = data.bios || [];
+    if (!bios.length) throw new Error('Nothing came back. Try once more.');
+    picks.innerHTML = bios.map((b, i) => `
+      <button type="button" class="bio-pick" data-pick="${i}" style="display:block;width:100%;text-align:left;font:inherit;cursor:pointer;background:#FFFDF9;border:1.5px solid var(--line-2);border-radius:12px;padding:12px 14px;margin-bottom:8px;">
+        <span style="display:block;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--sage-deep);margin-bottom:4px;">${b.tone || 'Option ' + (i + 1)}</span>
+        <span style="font-size:14px;color:var(--ink);">${b.text || ''}</span>
+      </button>`).join('');
+    picks.querySelectorAll('.bio-pick').forEach(el => el.addEventListener('click', () => {
+      chosenBio = bios[Number(el.dataset.pick)].text || '';
+      picks.querySelectorAll('.bio-pick').forEach(x => {
+        const on = x === el;
+        x.style.borderColor = on ? 'var(--sage-deep)' : 'var(--line-2)';
+        x.style.boxShadow = on ? '0 0 0 1px var(--sage-deep)' : 'none';
+        x.style.background = on ? 'rgba(139,154,126,0.10)' : '#FFFDF9';
+      });
+    }));
+  } catch (e) {
+    picks.innerHTML = '<span class="form-msg err" style="display:block;">' + e.message + '</span>';
+  } finally { btn.disabled = false; btn.textContent = 'See it written, right now'; }
+});
 
 /* ----- photos: one profile shot plus three for the gallery. Compressed
    in the browser, both so uploads fit the function and so a 4MB phone
@@ -488,6 +544,7 @@ form.addEventListener('submit', async e => {
     website:    form.website.value.trim(),
     kind:       'new',                   // updates go through the portal now
     bio_help:       bioHelp,             // polish the facts, or use them as-is
+    bio:            chosenBio,           // the write-up they tapped, if they used the writer
     photos:         pickedPhotos,
     hp:             form.company.value,
     building:       buildingName,        // the function slugs this for storage
@@ -509,8 +566,16 @@ form.addEventListener('submit', async e => {
       body: JSON.stringify(data),
     });
     if (!res.ok) throw new Error('bad status ' + res.status);
+    const out = await res.json().catch(() => ({}));
     form.style.display = 'none';
-    document.getElementById('thanksBox').style.display = 'block';
+    const box = document.getElementById('thanksBox');
+    if (out.published && out.card) {
+      const appLink = out.card.building === 'salonplus' ? '/salonplus/app/' : '/a/' + encodeURIComponent(out.card.building);
+      box.innerHTML = `<h3>You're on the map, right now.</h3>
+        <p>Your card is live in the building's app this minute, and your welcome email is on its way with your personal sign-in code, so you can change anything yourself, any time.</p>
+        <p style="margin-top:16px;"><a class="btn btn-primary" href="${appLink}">See your card in the app</a></p>`;
+    }
+    box.style.display = 'block';
   } catch {
     msg.textContent = "Hmm, that didn't go through. Give it another try in a moment.";
     msg.classList.add('err');

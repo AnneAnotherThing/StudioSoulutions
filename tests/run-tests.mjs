@@ -18,6 +18,8 @@ process.env.RESEND_API_KEY       = 'test-resend-key';
 process.env.LEAD_TO              = 'owner@test.local';
 process.env.RESEND_FROM          = 'Salon Plus Studios <hello@test.local>';
 process.env.LEADS_CODE           = 'test-passcode';
+process.env.URL                  = 'https://site.test';
+process.env.ANTHROPIC_API_KEY    = 'test-anthropic-key';
 
 const interest = (await import('../netlify/functions/salonplus-interest.mjs')).default;
 const admin    = (await import('../netlify/functions/salonplus-admin.mjs')).default;
@@ -35,7 +37,8 @@ function section(name) { console.log('\n' + name); }
    exact bodies that would have gone to Supabase and Resend. */
 let calls = [];
 let supabaseInsertPlan = [];   // per-call status overrides for ss_interest inserts
-function resetNet() { calls = []; supabaseInsertPlan = []; }
+let adminPublishPlan = [];     // per-call status overrides for the auto-publish hop
+function resetNet() { calls = []; supabaseInsertPlan = []; adminPublishPlan = []; }
 globalThis.fetch = async (url, opts = {}) => {
   const rec = { url: String(url), method: opts.method || 'GET', body: opts.body ? JSON.parse(opts.body) : null };
   calls.push(rec);
@@ -49,7 +52,20 @@ globalThis.fetch = async (url, opts = {}) => {
         name: 'Pat Tester', email: 'pat@test.local', suite: '103' }]));
     if (rec.method === 'DELETE') return mockRes(204, '');
     const status = supabaseInsertPlan.length ? supabaseInsertPlan.shift() : 201;
-    return mockRes(status, status < 300 ? '' : '{"message":"column does not exist"}');
+    return mockRes(status, status < 300 ? '[{"id":"aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee"}]' : '{"message":"column does not exist"}');
+  }
+  if (u.includes('/api/salonplus-admin')) {
+    /* The interest function's server-to-server auto-publish. */
+    const status = adminPublishPlan.length ? adminPublishPlan.shift() : 200;
+    return mockRes(status, status < 300
+      ? JSON.stringify({ ok: true, studio: { building: 'salonplus', suite: rec.body.studio.suite, name: 'Test Studio' }, couponCode: 'TESTS-1234', welcome: 'sent' })
+      : '{"error":"suite taken"}');
+  }
+  if (u.includes('api.anthropic.com')) {
+    return mockRes(200, JSON.stringify({ content: [{ text: JSON.stringify({ bios: [
+      { tone: 'Warm & welcoming', text: 'Bio one.' },
+      { tone: 'Editorial / minimal', text: 'Bio two.' },
+      { tone: 'Friendly & approachable', text: 'Bio three.' }] }) }], usage: {} }));
   }
   if (u.includes('api.resend.com')) return mockRes(200, '{"id":"mock-email"}');
   if (u.includes('/rest/v1/ss_studios')) {
@@ -311,6 +327,55 @@ await settle();
 const unknownRow = supabaseCalls().find(c => c.method === 'POST');
 ok(res.status === 200 && unknownRow && unknownRow.body.building === 'some-unknown-building',
    'an unknown building keeps its typed slug rather than being lost');
+
+/* ===== interest: the gate is gone ====================================== */
+section('interest: auto-publish');
+
+/* A new signup WITH a suite goes live on arrival through the panel's own
+   publish pipeline (Anne, after the 2026-09-15 meeting, superseding the
+   earlier publish-gate lock). Without a suite, or when the publish hop
+   fails, the lead falls back to the Inbox and nothing is lost. */
+resetNet();
+res = await post(interest, { ...NEW_LEAD, suite: '117', bio: 'A chosen bio.' });
+await settle();
+let auto = await res.json();
+ok(auto.published === true && auto.card && auto.card.suite === '117',
+   'a suited signup is live on arrival (got: ' + JSON.stringify({ published: auto.published, card: auto.card }) + ')');
+const hop = calls.find(c => c.url.includes('/api/salonplus-admin'));
+ok(hop && hop.body.code === 'test-passcode' && hop.body.who === 'auto-publish' && hop.body.studio.bio === 'A chosen bio.',
+   'the publish hop carries the server-side passcode, the auto-publish signature and the chosen bio');
+ok(resendCalls().some(c => /on the map, right now/.test(c.body.html)),
+   'the receipt says the card is already live');
+
+resetNet();
+res = await post(interest, NEW_LEAD);
+await settle();
+auto = await res.json();
+ok(auto.published === false, 'no suite means no auto-publish, the lead waits in the inbox');
+
+resetNet();
+adminPublishPlan = [400];
+res = await post(interest, { ...NEW_LEAD, suite: '117' });
+await settle();
+auto = await res.json();
+ok(res.status === 200 && auto.published === false && auto.saved === true,
+   'a failed publish hop degrades to the inbox flow without losing the lead');
+
+/* ===== bio writer: the public lane ===================================== */
+section('bio writer: public lane');
+
+const genBio = (await import('../netlify/functions/generate-bio.mjs')).default;
+resetNet();
+res = await post(genBio, { public: true, name: 'Test Studio', input: 'twelve years behind the chair' });
+const gen = await res.json();
+ok(res.status === 200 && Array.isArray(gen.bios) && gen.bios.length === 3,
+   'the join form generates three bios without a passcode (got: ' + (gen.error || (gen.bios && gen.bios.length)) + ')');
+ok(calls.some(c => c.url.includes('ss_admin_log') && c.method === 'POST'),
+   'each public generation is counted in the ledger');
+
+resetNet();
+res = await post(genBio, { name: 'Test Studio', input: 'x' });
+ok(res.status === 401, 'no passcode and no public flag is still refused');
 
 /* ===== admin: publishing sends the welcome and says so ================= */
 section('admin: welcome at publish');

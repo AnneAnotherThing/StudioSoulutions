@@ -122,6 +122,7 @@ export default async function handler(request) {
     emailLead(row, buildingLabel, photoUrls),
   ]);
   const saved  = results[0].status === 'fulfilled';
+  const savedRow = saved ? results[0].value : null;
   const mailed = results[1].status === 'fulfilled';
 
   if (!saved && !mailed) {
@@ -132,20 +133,34 @@ export default async function handler(request) {
   if (!saved)  console.warn('interest: supabase failed, email carried it', String(results[0].reason).slice(0, 300));
   if (!mailed) console.warn('interest: email failed, supabase carried it', String(results[1].reason).slice(0, 300));
 
+  /* THE GATE IS GONE (Anne, after the 2026-09-15 meeting, superseding her
+     earlier lock): a new signup with a suite goes live the moment it
+     arrives, through the same publish pipeline the panel uses, so the
+     code minting, the welcome letter and the Changes log all still
+     happen. Any failure falls back to the old flow: the lead waits in
+     the Inbox and nothing is lost. */
+  let published = false, card = null;
+  if (row.kind === 'new' && savedRow && savedRow.id && row.suite) {
+    try {
+      const pub = await autoPublish(savedRow.id, row, clip(p.bio, 400));
+      if (pub && pub.ok) { published = true; card = { building: pub.studio.building, suite: pub.studio.suite }; }
+    } catch (e) { console.warn('interest: auto-publish failed, lead waits in the inbox', String(e).slice(0, 300)); }
+  }
+
   /* The receipt is a courtesy and must never fail the submission, but it
      failed invisibly once too often (Anne, waggle 2026-09-15: "customer
      emails aren't going out"), so it is awaited and its outcome rides
      along in the response where a test can read it. */
   let receipt = 'skipped';
   if (!isMessage) {
-    try { await emailConfirmation(row, buildingLabel); receipt = row.email ? 'sent' : 'no email given'; }
+    try { await emailConfirmation(row, buildingLabel, published); receipt = row.email ? 'sent' : 'no email given'; }
     catch (e) {
       receipt = 'failed: ' + String(e).slice(0, 300);
       console.warn('interest: confirmation to submitter failed', String(e).slice(0, 300));
     }
   }
 
-  return json(200, { ok: true, saved, mailed, receipt, kind: row.kind, photos: photoUrls.length });
+  return json(200, { ok: true, saved, mailed, receipt, published, card, kind: row.kind, photos: photoUrls.length });
 }
 
 /* ----- photos ---------------------------------------------------------- */
@@ -197,13 +212,14 @@ async function saveToSupabase(row) {
   const key = process.env.SUPABASE_SERVICE_KEY;
   if (!url || !key) throw new Error('SUPABASE_URL / SUPABASE_SERVICE_KEY not set');
 
+  /* return=representation, because auto-publish needs the new row's id. */
   const insert = body => fetch(`${url}/rest/v1/${TABLE}`, {
     method: 'POST',
     headers: {
       apikey: key,
       authorization: `Bearer ${key}`,
       'content-type': 'application/json',
-      prefer: 'return=minimal',
+      prefer: 'return=representation',
     },
     body: JSON.stringify(body),
   });
@@ -222,6 +238,10 @@ async function saveToSupabase(row) {
     }
   }
   if (!res.ok) throw new Error(`supabase ${res.status}: ${(await res.text()).slice(0, 200)}`);
+  try {
+    const out = await res.json();
+    return Array.isArray(out) ? out[0] : out;
+  } catch { return null; }
 }
 
 /* ----- the two kinds of mail -------------------------------------------
@@ -348,7 +368,7 @@ async function emailLead(row, buildingLabel, photoUrls) {
 /* A receipt, so nobody is left wondering whether the form worked. Sent to
    the studio, and never allowed to affect the response: a bounced
    confirmation must not make a good submission look like a failure. */
-async function emailConfirmation(row, buildingLabel) {
+async function emailConfirmation(row, buildingLabel, published) {
   const key = process.env.RESEND_API_KEY;
   if (!key || !row.email) return;
   const from = senderAddress();
@@ -381,13 +401,17 @@ async function emailConfirmation(row, buildingLabel) {
       <a href="mailto:anne@hive-rise.com" style="color:#6B7A5F;">anne@hive-rise.com</a>.
     </p>` : `
     <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:#9A6B45;margin:0;">${escHtml(buildingLabel)}</p>
-    <h2 style="font-weight:400;margin:6px 0 14px;font-size:24px;">Welcome${first ? ', ' + first : ''}. You're on the way to the map.</h2>
+    <h2 style="font-weight:400;margin:6px 0 14px;font-size:24px;">${published ? `Welcome${first ? ', ' + first : ''}. You're on the map, right now.` : `Welcome${first ? ', ' + first : ''}. You're on the way to the map.`}</h2>
     <p style="font-size:15px;line-height:1.6;margin:0;">
       <strong>${escHtml(row.business)}</strong> is in, photos and all. Here's exactly what happens now:
     </p>
-    ${nextStep(1, `We build your card from what you just sent: your photos, your services, your hours. A real person does this, usually the same day.`)}
-    ${nextStep(2, `The moment your card goes live, <strong>you'll hear from us</strong>: one more email, your welcome letter, with a link to see your card in the app and your personal sign-in code.`)}
-    ${nextStep(3, `That code makes the card yours: from then on you can change your photos, hours and links yourself, any time, and it's live the moment you save.`)}
+    ${published
+      ? nextStep(1, `Your card is <strong>already live</strong> in the app, built from exactly what you sent. Go look.`)
+        + nextStep(2, `Right behind this note comes your <strong>welcome letter</strong>: a link to your card, and your personal sign-in code.`)
+        + nextStep(3, `That code makes the card yours: change your photos, hours and links yourself, any time, live the moment you save.`)
+      : nextStep(1, `We build your card from what you just sent: your photos, your services, your hours. A real person does this, usually the same day.`)
+        + nextStep(2, `The moment your card goes live, <strong>you'll hear from us</strong>: one more email, your welcome letter, with a link to see your card in the app and your personal sign-in code.`)
+        + nextStep(3, `That code makes the card yours: from then on you can change your photos, hours and links yourself, any time, and it's live the moment you save.`)}
     <p style="font-size:15px;line-height:1.6;margin:14px 0 12px;">
       Until then there's nothing more for you to do. If we need anything to get your card just right, we'll reach out directly.
     </p>
@@ -438,6 +462,25 @@ function brandShell(buildingLabel, inner, footNote) {
       </p>
     </div>
   </div>`;
+}
+
+/* Publishes a fresh signup through the admin pipeline, server to server,
+   so validation, code minting, the welcome email and the Changes log
+   stay in exactly one place. The passcode never leaves this server. */
+async function autoPublish(leadId, row, chosenBio) {
+  const code = process.env.LEADS_CODE;
+  if (!code) throw new Error('LEADS_CODE not set, cannot auto-publish');
+  const base = process.env.URL || 'https://studiosoulutions.com';
+  const studio = { building: row.building, suite: row.suite, status: 'live' };
+  if (chosenBio) studio.bio = chosenBio.slice(0, 400);
+  const res = await fetch(`${base}/api/salonplus-admin`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ action: 'publishLead', code, who: 'auto-publish', leadId, studio }),
+  });
+  const out = await res.json().catch(() => null);
+  if (!res.ok) throw new Error((out && out.error) || `publish ${res.status}`);
+  return out;
 }
 
 /* ----- utils ----------------------------------------------------------- */
