@@ -149,7 +149,13 @@
 
       <div class="field">
         <label for="f_building">Your building or shopping center <span class="req">*</span></label>
-        <input type="text" id="f_building" name="building_name" required placeholder="e.g. Salon Plus Studios, Phoenix">
+        <select id="f_building" name="building_pick" required>
+          <option value="">Loading the buildings&hellip;</option>
+        </select>
+        <div id="bldOtherWrap" style="display:none;margin-top:8px;">
+          <input type="text" id="f_building_other" name="building_name" placeholder="Its name and city, e.g. The Sunset Suites, Mesa">
+          <p class="fine" style="margin-top:6px;">Not on our map yet? Tell us where you are and we'll reach out about bringing your whole building on.</p>
+        </div>
       </div>
 
       <div class="grid-2">
@@ -308,9 +314,56 @@
 </div>
 
 <script>
-/* ----- ?building= prefill, for QR codes and links per building ----- */
+/* ----- the building picker: known buildings only ----- */
+/* Free-typed building names sent submissions to the fallback lane (a
+   card can't go live in a building we don't run), so the field is a
+   pick list now, with "not listed yet" as the raise-a-hand path that
+   keeps the recruiting signal. ?building= still prefills for QR codes
+   and links per building. */
 const buildingParam = new URLSearchParams(location.search).get('building');
-if (buildingParam) document.getElementById('f_building').value = buildingParam;
+const BLD_OTHER = '__other';
+const bldSelect = document.getElementById('f_building');
+const bldOtherWrap = document.getElementById('bldOtherWrap');
+const bldOtherInput = document.getElementById('f_building_other');
+const bldSlug = s => (s || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+function bldFreeTextOnly() {
+  /* If the list can't load, the form must still work: back to free text. */
+  bldSelect.style.display = 'none';
+  bldSelect.required = false;
+  bldSelect.value = BLD_OTHER;
+  bldOtherWrap.style.display = '';
+  bldOtherInput.required = true;
+  if (buildingParam) bldOtherInput.value = buildingParam;
+}
+
+function bldSyncOther() {
+  const other = bldSelect.value === BLD_OTHER;
+  bldOtherWrap.style.display = other ? '' : 'none';
+  bldOtherInput.required = other;
+  if (!other) bldOtherInput.value = '';
+}
+bldSelect.addEventListener('change', bldSyncOther);
+
+(async () => {
+  try {
+    const res = await fetch('/api/salonplus-admin', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'buildings' }),
+    });
+    const data = await res.json();
+    const list = (data.buildings || []).filter(b => b && b.name);
+    if (!res.ok || !list.length) throw new Error('no buildings');
+    bldSelect.innerHTML = '<option value="">Pick your building</option>'
+      + list.map(b => `<option value="${b.name.replace(/"/g, '&quot;')}">${b.name}${b.city ? ' · ' + b.city : ''}</option>`).join('')
+      + `<option value="${BLD_OTHER}">My building isn't listed yet</option>`;
+    if (buildingParam) {
+      const hit = list.find(b => bldSlug(b.name) === bldSlug(buildingParam) || b.slug === bldSlug(buildingParam));
+      if (hit) bldSelect.value = hit.name;
+      else { bldSelect.value = BLD_OTHER; bldSyncOther(); bldOtherInput.value = buildingParam; }
+    }
+  } catch { bldFreeTextOnly(); }
+})();
 /* The app's claim button carries the suite it was tapped on. */
 const suiteParam = new URLSearchParams(location.search).get('suite');
 if (suiteParam) document.getElementById('f_suite').value = suiteParam;
@@ -524,7 +577,8 @@ form.addEventListener('submit', async e => {
   e.preventDefault();
   msg.className = 'form-msg';
 
-  const buildingName = form.building_name.value.trim();
+  const pick = bldSelect.value;
+  const buildingName = pick && pick !== BLD_OTHER ? pick : bldOtherInput.value.trim();
   const data = {
     business:       form.business.value.trim(),
     suite:          form.suite.value.trim(),

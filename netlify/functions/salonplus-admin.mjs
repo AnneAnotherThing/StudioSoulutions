@@ -59,8 +59,11 @@ export default async function handler(request) {
   if (!url || !key) return json(500, { error: 'SUPABASE_URL / SUPABASE_SERVICE_KEY not set.' });
   const db = supabase(url, key);
 
-  // The only action that doesn't need the passcode.
+  // Public actions: the app's directory, and the join form's building
+  // picker (names and cities only, all of which each building's own app
+  // already shows the world).
   if (p.action === 'directory') return directory(db, p);
+  if (p.action === 'buildings') return buildingsList(db);
 
   /* A studio signing in to its own listing uses its suite code, not the
      admin passcode, so these are routed ahead of that gate. */
@@ -88,6 +91,15 @@ export default async function handler(request) {
 }
 
 /* ============ public: what the app reads ============================== */
+/* The join form's building picker (Anne, 2026-09-19: "only known plz",
+   after a free-typed building name sent her test to the fallback lane).
+   Only what is already public on every building's app leaves here. */
+async function buildingsList(db) {
+  const rows = await db.get(BUILDINGS, { order: 'name.asc', limit: '100' });
+  if (!rows) return json(502, { error: 'Could not load the buildings.' });
+  return json(200, { buildings: rows.map(b => ({ slug: b.slug, name: b.name, city: b.city || '' })) });
+}
+
 async function directory(db, p) {
   const building = str(p.building) || 'salonplus';
 

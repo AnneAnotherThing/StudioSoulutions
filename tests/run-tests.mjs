@@ -377,6 +377,23 @@ resetNet();
 res = await post(genBio, { name: 'Test Studio', input: 'x' });
 ok(res.status === 401, 'no passcode and no public flag is still refused');
 
+/* ===== join form: the building picker ================================== */
+section('join form: building picker');
+
+/* Free-typed building names sent Anne's test to the fallback lane, so
+   the form now picks from known buildings, fed by a public action that
+   returns only what every building's app already shows the world. */
+resetNet();
+res = await post(admin, { action: 'buildings' });
+const blds = await res.json();
+ok(res.status === 200 && Array.isArray(blds.buildings) && blds.buildings.length === 2
+   && blds.buildings.every(b => b.name && b.slug !== undefined && !('default_tier' in b)),
+   'the picker\'s building list is public, names and cities only (got: ' + JSON.stringify(blds.buildings || blds).slice(0, 120) + ')');
+
+const joinHtml = (await import('node:fs')).readFileSync(new URL('../join/index.html', import.meta.url), 'utf8');
+ok(/action:\s*'buildings'/.test(joinHtml) && joinHtml.includes("My building isn't listed yet"),
+   'the join form asks for the known-buildings list and keeps the not-listed-yet hand-raise');
+
 /* ===== admin: publishing sends the welcome and says so ================= */
 section('admin: welcome at publish');
 
