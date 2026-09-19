@@ -283,7 +283,7 @@ function tenantFromRow(r, i) {
     photo: r.photo || undefined,
     photos: (r.photos || []).length ? r.photos : undefined,
     photoFit: r.photoFit,
-    bio: r.bio || `One of the independent studios that call Salon Plus home.`,
+    bio: r.bio || `One of the independent studios that call ${BUILDING_INFO.name} home.`,
     /* Wing names describe Salon Plus's floor plan; other buildings just
        get the category until their tags arrive. */
     tags: (r.tags || []).length ? r.tags

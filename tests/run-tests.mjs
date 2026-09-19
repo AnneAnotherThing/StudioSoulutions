@@ -49,7 +49,7 @@ globalThis.fetch = async (url, opts = {}) => {
        before removing it); deletes succeed; inserts follow the plan. */
     if (rec.method === 'GET') return mockRes(200, JSON.stringify([
       { id: '11111111-2222-3333-4444-555555555555', business: 'Test Studio', kind: 'new', building: 'salonplus',
-        name: 'Pat Tester', email: 'pat@test.local', suite: '103' }]));
+        name: 'Pat Tester', email: 'pat@test.local', suite: '103', services: ['Nails', 'Other'] }]));
     if (rec.method === 'DELETE') return mockRes(204, '');
     const status = supabaseInsertPlan.length ? supabaseInsertPlan.shift() : 201;
     return mockRes(status, status < 300 ? '[{"id":"aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee"}]' : '{"message":"column does not exist"}');
@@ -393,6 +393,15 @@ ok(resendCalls().some(c => /is on the map/.test(c.body.subject)),
 ok(!!pub.couponCode, 'a studio on a no-offers level still gets a portal code');
 ok(resendCalls().some(c => /suite=103/.test(c.body.html) && /code=TESTS-1234/.test(c.body.html)),
    'the welcome carries the one-tap edit link with suite and code');
+/* Anne's HiveRise test (2026-09-19) published with no services mapped
+   and the category defaulted to hair. The lead's picks must ride onto
+   the card whenever the caller doesn't override them. */
+const inserted = calls.find(c => c.url.includes('ss_studios') && c.method === 'POST');
+ok(inserted && inserted.body.category === 'nails'
+   && JSON.stringify(inserted.body.tags) === '["Nails","Other"]'
+   && inserted.body.service === 'Nails',
+   'the lead\'s tapped services become the card\'s chips, byline and category (got: '
+   + (inserted ? JSON.stringify({ category: inserted.body.category, tags: inserted.body.tags, service: inserted.body.service }) : 'no insert') + ')');
 
 resetNet();
 res = await post(admin, { action: 'remintCode', code: 'test-passcode', id: LEAD_ID });

@@ -274,6 +274,13 @@ async function publishLead(db, p) {
        so it stays in the submission and the bio is written from it in the
        panel instead. */
     bio:          edits.bio ?? '',
+    /* Their tapped services become the card's chips, byline and filter
+       home. The panel drawer can still override all three. 'Other' stays
+       visible as a chip in their own word, but never fakes a category or
+       a byline (Anne's HiveRise test came out tagged Hair, 2026-09-19). */
+    service:      edits.service      ?? svcByline(lead.services),
+    category:     edits.category     ?? svcCategory(lead.services),
+    tags:         edits.tags         ?? svcPicks(lead.services),
     instagram:    edits.instagram    ?? lead.instagram ?? '',
     facebook:     edits.facebook     ?? lead.facebook ?? '',
     tiktok:       edits.tiktok       ?? lead.tiktok ?? '',
@@ -301,6 +308,21 @@ async function publishLead(db, p) {
   /* After the code exists, so the welcome mail can carry it. */
   const welcome = await tryWelcome(db, saved);
   return json(200, { ok: true, studio: saved, couponCode: code, welcome });
+}
+
+/* The join form's service picks, translated for the card. The app's
+   filter categories are fixed (hair, barber, nails, spa), so each pick
+   maps to its nearest one; anything unmappable leaves the category to
+   the default rather than pretending. */
+const SERVICE_CATEGORY = {
+  'hair': 'hair', 'barber': 'barber', 'nails': 'nails',
+  'lashes / brows': 'spa', 'skin / spa': 'spa', 'massage': 'spa',
+};
+function svcPicks(v)  { return (Array.isArray(v) ? v : []).map(s => str(s)).filter(Boolean); }
+function svcByline(v) { return svcPicks(v).filter(s => s.toLowerCase() !== 'other').slice(0, 2).join(' & '); }
+function svcCategory(v) {
+  for (const s of svcPicks(v)) { const c = SERVICE_CATEGORY[s.toLowerCase()]; if (c) return c; }
+  return '';
 }
 
 /* Validation is shared by save and publish so a hand-typed row and a
