@@ -1083,9 +1083,11 @@ function renderInbox() {
   const n = open.length;
   $('inboxPip').textContent = n; $('inboxPip').classList.toggle('hidden', n === 0);
 
-  const msgs    = shown.filter(l => l.kind === 'question' || l.kind === 'bug');
+  /* Building-owner leads live with the messages: they're a conversation
+     to have (pricing is per building), never something to publish. */
+  const msgs    = shown.filter(l => ['question', 'bug', 'building'].includes(l.kind));
   const changes = shown.filter(l => l.kind === 'change');
-  const fresh   = shown.filter(l => !['change', 'question', 'bug'].includes(l.kind));
+  const fresh   = shown.filter(l => !['change', 'question', 'bug', 'building'].includes(l.kind));
 
   const section = (title, blurb, rows) => rows.length
     ? `<h2 style="margin-top:26px;">${title}</h2><p class="sub" style="margin-bottom:14px;">${blurb}</p>${rows.join('')}`
@@ -1144,12 +1146,13 @@ function doneCard(l, what) {
 function msgCard(l) {
   if (l.processed) return doneCard(l, 'Answered');
   const isBug = l.kind === 'bug';
-  const accent = isBug ? 'var(--clay-deep)' : 'var(--sage-deep)';
+  const isBldg = l.kind === 'building';
+  const accent = isBug ? 'var(--clay-deep)' : isBldg ? 'var(--gold, #9A6B45)' : 'var(--sage-deep)';
   return `<div class="card" style="border-left:3px solid ${accent};">
     <div class="card-top">
       <span class="biz">${esc(l.business || l.name || 'Someone')}</span>
-      <span class="suite-tag" style="color:${accent};border-color:${accent};background:${isBug ? '#FBF3EE' : '#EFF2EA'};">
-        ${isBug ? 'Problem' : 'Question'}${l.suite ? ' &middot; Suite ' + esc(l.suite) : ''}</span>
+      <span class="suite-tag" style="color:${accent};border-color:${accent};background:${isBug ? '#FBF3EE' : isBldg ? '#F7F0E4' : '#EFF2EA'};">
+        ${isBug ? 'Problem' : isBldg ? 'Building owner' : 'Question'}${l.suite ? ' &middot; Suite ' + esc(l.suite) : ''}</span>
       <span class="when">${esc(whenOf(l))}</span>
     </div>
     <div style="margin:13px 0;padding:14px 16px;background:${isBug ? '#FBF3EE' : '#EFF2EA'};border-left:3px solid ${accent};border-radius:0 10px 10px 0;">

@@ -76,9 +76,9 @@ export default async function handler(request) {
        bio; false when their words go on the card untouched. Old clients
        don't send it, and "help them" is the safe default for those. */
     bio_help:   p.bio_help !== false,
-    /* 'new' or 'change'. One form, two jobs: a studio that isn't listed
-       yet, and one that is and wants something fixed. */
-    kind:       ['change', 'question', 'bug'].includes(p.kind) ? p.kind : 'new',
+    /* 'new' or 'change', plus messages and, since 2026-09-19, 'building':
+       an owner raising a hand for a whole building. */
+    kind:       ['change', 'question', 'bug', 'building'].includes(p.kind) ? p.kind : 'new',
     building:   slug(clip(p.building, 60)) || 'salonplus',
     source:     clip(p.source, 40) || 'salonplus-web',
   };
@@ -93,10 +93,19 @@ export default async function handler(request) {
   const isMessage = row.kind === 'question' || row.kind === 'bug';
   /* Only a NEW listing needs the two names. A change request is matched
      by suite, so demanding a business and contact name there was friction
-     for nothing. Laura's ask, Sep 2026. */
-  if (row.kind === 'new' && (!row.business || !row.name)) {
+     for nothing. Laura's ask, Sep 2026. A building lead reuses business
+     for the building's name, and needs a person attached. */
+  if ((row.kind === 'new' || row.kind === 'building') && (!row.business || !row.name)) {
     return json(400, { error: 'business and name are required' });
   }
+  /* The demo's pretend tier gate: the picked level really lands on the
+     card so the walkthrough can show the ladder, but only the demo
+     building listens. Real buildings' levels are set in the panel, and
+     will be wired to real billing when tiers go paid. */
+  const tierChoice = row.building === 'demo' && p.tier_choice !== undefined
+      && p.tier_choice !== null && p.tier_choice !== ''
+    ? Math.max(0, Math.min(9, Number(p.tier_choice) | 0))
+    : null;
   if (!row.phone && !row.email) {
     return json(400, { error: 'need a phone or an email' });
   }
@@ -142,7 +151,7 @@ export default async function handler(request) {
   let published = false, card = null;
   if (row.kind === 'new' && savedRow && savedRow.id && row.suite) {
     try {
-      const pub = await autoPublish(savedRow.id, row, clip(p.bio, 400));
+      const pub = await autoPublish(savedRow.id, row, clip(p.bio, 400), tierChoice);
       if (pub && pub.ok) { published = true; card = { building: pub.studio.building, suite: pub.studio.suite }; }
     } catch (e) { console.warn('interest: auto-publish failed, lead waits in the inbox', String(e).slice(0, 300)); }
   }
@@ -275,6 +284,13 @@ const KIND_STYLE = {
     subject: (r, b) => `[BUG] ${b}: ${r.business || r.name || 'a studio'}`,
     lead: 'Someone reported something not working. What they said is below.',
   },
+  building: {
+    accent: '#9A6B45',
+    eyebrow: b => `${b} · a building owner`,
+    heading: r => `A building wants in: ${escHtml(r.business)}`,
+    subject: (r, b) => `[BUILDING] ${r.business} — ${r.name}`,
+    lead: 'A building owner asked about running the product. Pricing is per building, so this one is a conversation, not a publish.',
+  },
   change: {
     accent: '#A8593E',
     eyebrow: b => `${b} · change requested`,
@@ -312,9 +328,10 @@ async function emailLead(row, buildingLabel, photoUrls) {
   /* On a change request the description IS the message, so it gets its own
      block above the details rather than being buried in the table. */
   const isMsg = row.kind === 'question' || row.kind === 'bug';
-  const askHtml = (isChange || isMsg) && row.notes
+  const isBldg = row.kind === 'building';
+  const askHtml = (isChange || isMsg || isBldg) && row.notes
     ? `<div style="margin:18px 0;padding:16px 18px;background:#FBF3EE;border-left:3px solid ${kind.accent};border-radius:0 10px 10px 0;">
-         <div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:${kind.accent};margin-bottom:6px;">${isMsg ? (row.kind === 'bug' ? 'What is broken' : 'Their question') : 'What they want changed'}</div>
+         <div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:${kind.accent};margin-bottom:6px;">${isBldg ? 'About their building' : isMsg ? (row.kind === 'bug' ? 'What is broken' : 'Their question') : 'What they want changed'}</div>
          <div style="font-size:15px;color:#33312D;font-weight:600;">${escHtml(row.notes)}</div>
        </div>`
     : '';
@@ -337,14 +354,16 @@ async function emailLead(row, buildingLabel, photoUrls) {
       ${line('TikTok', row.tiktok)}
       ${line('Website', row.website)}
       ${line('Booking', row.booking)}
-      ${(isChange || isMsg) ? '' : line('Facts', row.notes)}
-      ${(isChange || isMsg) ? '' : line('Write-up', row.bio_help
+      ${(isChange || isMsg || isBldg) ? '' : line('Facts', row.notes)}
+      ${(isChange || isMsg || isBldg) ? '' : line('Write-up', row.bio_help
         ? 'Write it for them: turn the facts into a bio (the admin panel button does it)'
         : 'Use their words exactly as written')}
     </table>
     ${photosHtml}
     <p style="margin-top:24px;font-size:14px;color:#6C685F;">
-      ${isMsg
+      ${isBldg
+        ? `It's waiting in <a href="https://studiosoulutions.com/leads/" style="color:#6B7A5F;">the admin panel</a>'s Inbox. Reply directly; the price is yours to shape.`
+        : isMsg
         ? `It's waiting in <a href="https://studiosoulutions.com/leads/" style="color:#6B7A5F;">the admin panel</a> under Questions.`
         : isChange
         ? `Open <a href="https://studiosoulutions.com/leads/" style="color:#6B7A5F;">the admin panel</a>, find Suite ${escHtml(row.suite || '')} and make the change.`
@@ -389,7 +408,19 @@ async function emailConfirmation(row, buildingLabel, published) {
       <td style="vertical-align:top;font-size:14.5px;line-height:1.6;color:#33312D;">${text}</td>
     </tr></table>`;
 
-  const html = brandShell(buildingLabel, isChange ? `
+  const isBldg = row.kind === 'building';
+  const html = brandShell(buildingLabel, isBldg ? `
+    <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:#9A6B45;margin:0;">Studio Soulutions</p>
+    <h2 style="font-weight:400;margin:6px 0 16px;font-size:24px;">We got it. Let's talk about your building.</h2>
+    <p style="font-size:15px;line-height:1.6;margin:0 0 12px;">
+      Thanks${first ? ', ' + first : ''}. <strong>${escHtml(who)}</strong> is in our inbox.
+      Every building is different, so pricing is shaped per building; we'll come back to you
+      directly with a plan, usually within a day.
+    </p>
+    <p style="font-size:14px;line-height:1.6;color:#6C685F;margin:0;">
+      Want to talk sooner? Email
+      <a href="mailto:anne@hive-rise.com" style="color:#6B7A5F;">anne@hive-rise.com</a> any time.
+    </p>` : isChange ? `
     <p style="letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:#9A6B45;margin:0;">${escHtml(buildingLabel)}</p>
     <h2 style="font-weight:400;margin:6px 0 16px;font-size:24px;">We got your update</h2>
     <p style="font-size:15px;line-height:1.6;margin:0 0 12px;">
@@ -467,12 +498,13 @@ function brandShell(buildingLabel, inner, footNote) {
 /* Publishes a fresh signup through the admin pipeline, server to server,
    so validation, code minting, the welcome email and the Changes log
    stay in exactly one place. The passcode never leaves this server. */
-async function autoPublish(leadId, row, chosenBio) {
+async function autoPublish(leadId, row, chosenBio, tierChoice) {
   const code = process.env.LEADS_CODE;
   if (!code) throw new Error('LEADS_CODE not set, cannot auto-publish');
   const base = process.env.URL || 'https://studiosoulutions.com';
   const studio = { building: row.building, suite: row.suite, status: 'live' };
   if (chosenBio) studio.bio = chosenBio.slice(0, 400);
+  if (tierChoice !== null && tierChoice !== undefined) studio.tier = tierChoice;
   const res = await fetch(`${base}/api/salonplus-admin`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },

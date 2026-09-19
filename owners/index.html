@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#F5EDE0" />
+<title>Bring your building on - Studio Soulutions</title>
+<meta name="description" content="Own or run a salon-suite building? Studio Soulutions gives every studio under your roof one app, one map, and their own card. Tell us about your building and we'll come back with a plan." />
+<link rel="canonical" href="https://studiosoulutions.com/owners/" />
+<link rel="icon" type="image/png" sizes="64x64" href="../assets/favicon-64.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:         #F5EDE0;
+    --bg-2:       #EFE4D2;
+    --surface:    #FBF6EE;
+    --ink:        #3D3530;
+    --ink-soft:   #6B6357;
+    --ink-faint:  #8B7E70;
+    --sage:       #8B9A7E;
+    --sage-deep:  #6B7A5F;
+    --clay:       #C97B5A;
+    --line:       #E5D9C3;
+    --line-2:     #D4C4A8;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased; line-height: 1.55;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 0 20px 70px; }
+  header { padding: 22px 0 18px; border-bottom: 1px solid var(--line); margin-bottom: 30px; }
+  .lockup { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+  .lockup img { height: 40px; width: auto; display: block; }
+  .lockup span { font-family:'Fraunces',serif; font-weight: 600; font-size: 19px; letter-spacing: -0.01em; }
+  .eyebrow { font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase; font-weight: 600; color: var(--sage-deep); }
+  h1 { font-family:'Fraunces',serif; font-weight: 600; font-size: clamp(28px, 5vw, 40px); letter-spacing: -0.02em; line-height: 1.1; margin-top: 8px; }
+  h1 em { font-style: italic; font-weight: 500; color: var(--sage-deep); }
+  .lede { color: var(--ink-soft); margin-top: 12px; max-width: 36em; }
+  .points { margin: 22px 0 0; padding: 0; list-style: none; }
+  .points li { position: relative; padding-left: 26px; margin-bottom: 10px; color: var(--ink-soft); font-size: 15px; }
+  .points li::before { content: ''; position: absolute; left: 4px; top: 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--sage); }
+  .points b { color: var(--ink); }
+
+  .form-card {
+    margin-top: 30px; background: var(--surface);
+    border: 1px solid var(--line); border-radius: 20px;
+    padding: 28px 24px; box-shadow: 0 1px 2px rgba(61,53,48,0.04), 0 10px 30px rgba(61,53,48,0.07);
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 540px) { .grid-2 { grid-template-columns: 1fr; } }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 12.5px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px; }
+  .field input[type=text], .field input[type=tel], .field input[type=email], .field textarea {
+    width: 100%; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--line-2);
+    background: #FFFDF9; font: inherit; color: var(--ink);
+  }
+  .field input:focus, .field textarea:focus { outline: none; border-color: var(--sage); }
+  .req { color: var(--clay); }
+  .hp { position: absolute; left: -9999px; top: -9999px; }
+  .btn {
+    display: inline-block; padding: 13px 28px; border-radius: 999px; border: 1px solid transparent;
+    font: inherit; font-weight: 600; font-size: 15px; cursor: pointer; transition: all .15s ease;
+  }
+  .btn-primary { background: var(--ink); color: var(--surface); }
+  .btn-primary:hover { background: var(--sage-deep); }
+  .btn-primary[disabled] { opacity: .6; cursor: default; }
+  .form-msg { margin-top: 12px; font-size: 14px; min-height: 1.2em; }
+  .form-msg.err { color: #A8593E; }
+  .fine { margin-top: 10px; font-size: 12.5px; color: var(--ink-faint); }
+  .thanks { display: none; text-align: center; padding: 40px 10px; }
+  .thanks h3 { font-family:'Fraunces',serif; font-weight: 600; font-size: 26px; }
+  .thanks p { color: var(--ink-soft); margin-top: 10px; max-width: 30em; margin-left: auto; margin-right: auto; }
+  footer { margin-top: 46px; text-align: center; font-size: 12.5px; color: var(--ink-faint); }
+  footer a { color: var(--sage-deep); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="lockup" href="/">
+      <img src="../assets/logo_ss_green_v5.png" alt="" onerror="this.style.display='none'">
+      <span>Studio Soulutions</span>
+    </a>
+  </header>
+
+  <div class="eyebrow">For building owners</div>
+  <h1>Bring your <em>whole building</em> on</h1>
+  <p class="lede">Own or run a salon-suite building? Studio Soulutions gives every studio under your roof one app and one map: their card, their photos, their booking link, findable by everyone who walks in the door, under your building's name.</p>
+
+  <ul class="points">
+    <li><b>Your building's own app</b>, wearing your name, with a floor-plan map when you want one</li>
+    <li><b>Studios run their own cards</b> through a private portal, so keeping it current costs you nothing</li>
+    <li><b>Recruiting help built in</b>: empty suites are easier to fill when the building looks alive</li>
+    <li><b>Pricing shaped per building</b>: size, suites and setup differ, so we quote yours individually</li>
+  </ul>
+
+  <div class="form-card">
+    <form id="ownerForm" novalidate>
+      <div class="grid-2">
+        <div class="field">
+          <label for="f_name">Your name <span class="req">*</span></label>
+          <input type="text" id="f_name" name="name" required autocomplete="name" placeholder="e.g. Jordan Reyes">
+        </div>
+        <div class="field">
+          <label for="f_building">Building or shopping center <span class="req">*</span></label>
+          <input type="text" id="f_building" name="building_name" required placeholder="e.g. The Sunset Suites">
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label for="f_city">City and state <span class="req">*</span></label>
+          <input type="text" id="f_city" name="city" required placeholder="e.g. Mesa, AZ">
+        </div>
+        <div class="field">
+          <label for="f_suites">Roughly how many suites</label>
+          <input type="text" id="f_suites" name="suites" inputmode="numeric" placeholder="e.g. 24">
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label for="f_email">Email</label>
+          <input type="email" id="f_email" name="email" autocomplete="email" placeholder="you@example.com">
+        </div>
+        <div class="field">
+          <label for="f_phone">Phone</label>
+          <input type="tel" id="f_phone" name="phone" autocomplete="tel" placeholder="(480) 555-0134">
+        </div>
+      </div>
+      <div class="field">
+        <label for="f_notes">Anything else about your building</label>
+        <textarea id="f_notes" name="notes" rows="4" placeholder="How full it is, what your studios do, what you'd want the app to carry..."></textarea>
+      </div>
+      <div class="hp" aria-hidden="true">
+        <label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label>
+      </div>
+      <button type="submit" class="btn btn-primary" id="submitBtn">Tell us about your building</button>
+      <p class="form-msg" id="formMsg"></p>
+      <p class="fine"><span class="req">*</span> required &middot; leave a phone or an email so we can come back to you with a plan.</p>
+    </form>
+
+    <div class="thanks" id="thanksBox">
+      <h3>We got it. Let's talk.</h3>
+      <p>Thank you. Every building is different, so pricing is shaped per building; we'll come back to you directly with a plan, usually within a day. Sooner suits you? Email <a href="mailto:anne@hive-rise.com" style="color:var(--sage-deep);">anne@hive-rise.com</a>.</p>
+    </div>
+  </div>
+
+  <footer>
+    <a href="/">Studio Soulutions</a> &middot; every studio under one roof, discoverable
+  </footer>
+</div>
+
+<script>
+const form = document.getElementById('ownerForm');
+const msg  = document.getElementById('formMsg');
+const val = id => document.getElementById(id).value.trim();
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  msg.className = 'form-msg'; msg.textContent = '';
+
+  if (!val('f_name') || !val('f_building') || !val('f_city')) {
+    msg.textContent = 'Your name, your building and its city are the three we need.';
+    msg.classList.add('err');
+    return;
+  }
+  if (!val('f_phone') && !val('f_email')) {
+    msg.textContent = 'Leave a phone number or an email so we can come back with a plan.';
+    msg.classList.add('err');
+    return;
+  }
+
+  /* City and suite count fold into the notes: the inbox reads it as one
+     conversation starter, and no new columns are needed anywhere. */
+  const parts = [
+    'City: ' + val('f_city'),
+    val('f_suites') ? 'Suites: about ' + val('f_suites') : '',
+    val('f_notes'),
+  ].filter(Boolean);
+
+  const data = {
+    kind:           'building',
+    business:       val('f_building'),
+    name:           val('f_name'),
+    email:          val('f_email'),
+    phone:          val('f_phone'),
+    notes:          parts.join(' · '),
+    building:       val('f_building'),
+    building_label: val('f_building'),
+    hp:             form.company.value,
+    source:         'owners-web',
+  };
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Sending…';
+  try {
+    const res = await fetch('/api/salonplus-interest', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error('bad status ' + res.status);
+    form.style.display = 'none';
+    document.getElementById('thanksBox').style.display = 'block';
+  } catch (err) {
+    msg.textContent = 'That did not go through. Try once more, or email anne@hive-rise.com.';
+    msg.classList.add('err');
+    btn.disabled = false; btn.textContent = 'Tell us about your building';
+  }
+});
+</script>
+</body>
+</html>

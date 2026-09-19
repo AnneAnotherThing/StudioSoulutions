@@ -361,6 +361,44 @@ auto = await res.json();
 ok(res.status === 200 && auto.published === false && auto.saved === true,
    'a failed publish hop degrades to the inbox flow without losing the lead');
 
+/* The demo's pretend tier gate: the picked level rides the hop for the
+   demo building, and only the demo building. */
+resetNet();
+res = await post(interest, { ...NEW_LEAD, building: 'The Beauty Collective', suite: '12', tier_choice: 0 });
+await settle();
+let demoHop = calls.find(c => c.url.includes('/api/salonplus-admin'));
+ok(demoHop && demoHop.body.studio.tier === 0,
+   'the demo tier pick lands on the published card (got tier: ' + (demoHop && demoHop.body.studio.tier) + ')');
+
+resetNet();
+res = await post(interest, { ...NEW_LEAD, suite: '117', tier_choice: 0 });
+await settle();
+demoHop = calls.find(c => c.url.includes('/api/salonplus-admin'));
+ok(demoHop && demoHop.body.studio.tier === undefined,
+   'a real building ignores the tier pick; its levels live in the panel');
+
+/* ===== interest: a building owner raises a hand ======================== */
+section('interest: building owners');
+
+resetNet();
+res = await post(interest, { kind: 'building', business: 'The Sunset Suites', name: 'Jordan Reyes',
+  email: 'own@test.local', notes: 'City: Mesa, AZ · Suites: about 24', building: 'The Sunset Suites',
+  building_label: 'The Sunset Suites', source: 'owners-web' });
+await settle();
+auto = await res.json();
+ok(res.status === 200 && auto.saved === true && auto.published === false && auto.kind === 'building',
+   'a building lead saves, and never tries to publish anything');
+ok(!calls.some(c => c.url.includes('/api/salonplus-admin')),
+   'no publish hop fires for a building lead');
+ok(resendCalls().some(c => /^\[BUILDING\] The Sunset Suites/.test(c.body.subject)),
+   'the owner notice wears the [BUILDING] subject');
+ok(auto.receipt === 'sent' && resendCalls().some(c => c.body.to[0] === 'own@test.local' && /talk about your building/.test(c.body.html)),
+   'the owner gets the pricing-is-per-building receipt');
+
+resetNet();
+res = await post(interest, { kind: 'building', name: 'Jordan Reyes', email: 'own@test.local' });
+ok(res.status === 400, 'a building lead without a building name is refused');
+
 /* ===== bio writer: the public lane ===================================== */
 section('bio writer: public lane');
 

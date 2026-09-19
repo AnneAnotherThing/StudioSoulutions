@@ -154,7 +154,7 @@
         </select>
         <div id="bldOtherWrap" style="display:none;margin-top:8px;">
           <input type="text" id="f_building_other" name="building_name" placeholder="Its name and city, e.g. The Sunset Suites, Mesa">
-          <p class="fine" style="margin-top:6px;">Not on our map yet? Tell us where you are and we'll reach out about bringing your whole building on.</p>
+          <p class="fine" style="margin-top:6px;">Not on our map yet? Tell us where you are and we'll reach out about bringing your whole building on. Own the building yourself? <a href="/owners/" style="color:var(--sage-deep);">Start here instead</a>.</p>
         </div>
       </div>
 
@@ -297,6 +297,13 @@
         <div id="photoStrip" style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;"></div>
       </div>
 
+      <div class="field" id="tierField" style="display:none;">
+        <div class="modeq">Pick your level</div>
+        <div style="display:inline-block;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#9A6B45;background:#F7F0E4;border:1px solid #E0CFA9;border-radius:999px;padding:4px 12px;margin-bottom:10px;">Demo only &middot; nothing is charged, no card details asked</div>
+        <div class="fine" style="margin-top:0;margin-bottom:10px;">This is where a real building's studios would choose their subscription. In the demo, tap one and your card publishes at that level so you can see the difference.</div>
+        <div id="tierPicks"></div>
+      </div>
+
       <button type="submit" class="btn btn-primary" id="submitBtn">Put me on the map</button>
       <p class="form-msg" id="formMsg"></p>
       <p class="fine"><span class="req">*</span> required &middot; phone and email count as one: leave at least one so we can reach you.</p>
@@ -342,8 +349,50 @@ function bldSyncOther() {
   bldOtherWrap.style.display = other ? '' : 'none';
   bldOtherInput.required = other;
   if (!other) bldOtherInput.value = '';
+  syncTierGate();
 }
 bldSelect.addEventListener('change', bldSyncOther);
+
+/* ----- the demo's pretend tier gate ----- */
+/* Anne, 2026-09-19: the demo shows the future paid flow. Three levels,
+   demo-labeled, nothing charged; the pick really lands on the card so
+   the walkthrough can show the ladder. Real buildings never see this;
+   their levels live in the panel until billing is wired for real. */
+const BLD_SLUGS = {};   // building name -> slug, filled when the list loads
+const TIER_PLANS = [
+  { tier: 0, name: 'On the map', price: 'Free',
+    blurb: 'Your name, suite and services, findable on the map and in search, with your own portal code to manage your card.' },
+  { tier: 1, name: 'Listed', price: '$10 a month',
+    blurb: 'Everything in On the map, plus your write-up, your hours with the Open now badge, and contact buttons on your card.' },
+  { tier: 2, name: 'Featured', price: '$25 a month',
+    blurb: 'Everything in Listed, plus photos, your booking link, your socials, and offers in the building\'s specials feed.' },
+];
+let tierChoice = 2;
+function syncTierGate() {
+  const pick = bldSelect.value;
+  const isDemo = pick && pick !== BLD_OTHER && BLD_SLUGS[pick] === 'demo';
+  document.getElementById('tierField').style.display = isDemo ? '' : 'none';
+}
+(function renderTierPicks() {
+  const box = document.getElementById('tierPicks');
+  box.innerHTML = TIER_PLANS.map(t => `
+    <button type="button" class="tier-pick" data-tier="${t.tier}" style="display:block;width:100%;text-align:left;font:inherit;cursor:pointer;background:#FFFDF9;border:1.5px solid var(--line-2);border-radius:12px;padding:12px 14px;margin-bottom:8px;">
+      <span style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;">
+        <span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--sage-deep);">${t.name}</span>
+        <span style="font-size:14px;font-weight:700;color:var(--ink);">${t.price}</span>
+      </span>
+      <span style="display:block;font-size:13.5px;color:var(--ink-soft);margin-top:4px;">${t.blurb}</span>
+    </button>`).join('');
+  const paint = () => box.querySelectorAll('.tier-pick').forEach(x => {
+    const on = Number(x.dataset.tier) === tierChoice;
+    x.style.borderColor = on ? 'var(--sage-deep)' : 'var(--line-2)';
+    x.style.boxShadow = on ? '0 0 0 1px var(--sage-deep)' : 'none';
+    x.style.background = on ? 'rgba(139,154,126,0.10)' : '#FFFDF9';
+  });
+  box.querySelectorAll('.tier-pick').forEach(el =>
+    el.addEventListener('click', () => { tierChoice = Number(el.dataset.tier); paint(); }));
+  paint();
+})();
 
 (async () => {
   try {
@@ -354,6 +403,7 @@ bldSelect.addEventListener('change', bldSyncOther);
     const data = await res.json();
     const list = (data.buildings || []).filter(b => b && b.name);
     if (!res.ok || !list.length) throw new Error('no buildings');
+    list.forEach(b => { BLD_SLUGS[b.name] = b.slug; });
     bldSelect.innerHTML = '<option value="">Pick your building</option>'
       + list.map(b => `<option value="${b.name.replace(/"/g, '&quot;')}">${b.name}${b.city ? ' · ' + b.city : ''}</option>`).join('')
       + `<option value="${BLD_OTHER}">My building isn't listed yet</option>`;
@@ -362,6 +412,7 @@ bldSelect.addEventListener('change', bldSyncOther);
       if (hit) bldSelect.value = hit.name;
       else { bldSelect.value = BLD_OTHER; bldSyncOther(); bldOtherInput.value = buildingParam; }
     }
+    syncTierGate();
   } catch { bldFreeTextOnly(); }
 })();
 /* The app's claim button carries the suite it was tapped on. */
@@ -605,6 +656,9 @@ form.addEventListener('submit', async e => {
     building_label: buildingName,        // and shows this in the lead email
     source:         'join-web',
   };
+  /* The demo's pretend tier gate: only sent when the gate is showing,
+     and the server only listens for the demo building anyway. */
+  if (document.getElementById('tierField').style.display !== 'none') data.tier_choice = tierChoice;
   if (!data.phone && !data.email) {
     msg.textContent = 'Leave a phone number or an email so we can reach you.';
     msg.classList.add('err');
