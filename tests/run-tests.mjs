@@ -38,7 +38,8 @@ function section(name) { console.log('\n' + name); }
 let calls = [];
 let supabaseInsertPlan = [];   // per-call status overrides for ss_interest inserts
 let adminPublishPlan = [];     // per-call status overrides for the auto-publish hop
-function resetNet() { calls = []; supabaseInsertPlan = []; adminPublishPlan = []; }
+let adminWelcomeValue = 'sent'; // what the mocked publish says about its welcome mail
+function resetNet() { calls = []; supabaseInsertPlan = []; adminPublishPlan = []; adminWelcomeValue = 'sent'; }
 globalThis.fetch = async (url, opts = {}) => {
   const rec = { url: String(url), method: opts.method || 'GET', body: opts.body ? JSON.parse(opts.body) : null };
   calls.push(rec);
@@ -58,7 +59,7 @@ globalThis.fetch = async (url, opts = {}) => {
     /* The interest function's server-to-server auto-publish. */
     const status = adminPublishPlan.length ? adminPublishPlan.shift() : 200;
     return mockRes(status, status < 300
-      ? JSON.stringify({ ok: true, studio: { building: 'salonplus', suite: rec.body.studio.suite, name: 'Test Studio' }, couponCode: 'TESTS-1234', welcome: 'sent' })
+      ? JSON.stringify({ ok: true, studio: { building: 'salonplus', suite: rec.body.studio.suite, name: 'Test Studio' }, couponCode: 'TESTS-1234', welcome: adminWelcomeValue })
       : '{"error":"suite taken"}');
   }
   if (u.includes('api.anthropic.com')) {
@@ -344,8 +345,19 @@ ok(auto.published === true && auto.card && auto.card.suite === '117',
 const hop = calls.find(c => c.url.includes('/api/salonplus-admin'));
 ok(hop && hop.body.code === 'test-passcode' && hop.body.who === 'auto-publish' && hop.body.studio.bio === 'A chosen bio.',
    'the publish hop carries the server-side passcode, the auto-publish signature and the chosen bio');
-ok(resendCalls().some(c => /on the map, right now/.test(c.body.html)),
-   'the receipt says the card is already live');
+ok(auto.receipt === 'welcome carried it' && !resendCalls().some(c => c.body.to[0] === 'pat@test.local'),
+   'one email, not two: the welcome carries the receipt when the card goes straight live (got receipt: ' + auto.receipt + ')');
+
+/* When the welcome hiccups, the receipt steps back in so the studio
+   still hears something, and it says the card is live. */
+resetNet();
+adminWelcomeValue = 'send failed: mailer down';
+res = await post(interest, { ...NEW_LEAD, suite: '117' });
+await settle();
+auto = await res.json();
+ok(auto.published === true && auto.receipt === 'sent'
+   && resendCalls().some(c => c.body.to[0] === 'pat@test.local' && /on the map, right now/.test(c.body.html)),
+   'a hiccuped welcome brings the receipt back, saying the card is already live');
 
 resetNet();
 res = await post(interest, NEW_LEAD);

@@ -148,20 +148,29 @@ export default async function handler(request) {
      code minting, the welcome letter and the Changes log all still
      happen. Any failure falls back to the old flow: the lead waits in
      the Inbox and nothing is lost. */
-  let published = false, card = null;
+  let published = false, card = null, welcomeSent = false;
   if (row.kind === 'new' && savedRow && savedRow.id && row.suite) {
     try {
       const pub = await autoPublish(savedRow.id, row, clip(p.bio, 400), tierChoice);
-      if (pub && pub.ok) { published = true; card = { building: pub.studio.building, suite: pub.studio.suite }; }
+      if (pub && pub.ok) {
+        published = true;
+        welcomeSent = pub.welcome === 'sent';
+        card = { building: pub.studio.building, suite: pub.studio.suite };
+      }
     } catch (e) { console.warn('interest: auto-publish failed, lead waits in the inbox', String(e).slice(0, 300)); }
   }
 
   /* The receipt is a courtesy and must never fail the submission, but it
      failed invisibly once too often (Anne, waggle 2026-09-15: "customer
      emails aren't going out"), so it is awaited and its outcome rides
-     along in the response where a test can read it. */
+     along in the response where a test can read it. One email, not two
+     (Anne, 2026-09-19): when the card went straight live AND the welcome
+     letter went out, the welcome IS the receipt and this one stays home.
+     The receipt still goes when the card waited, or the welcome hiccuped. */
   let receipt = 'skipped';
-  if (!isMessage) {
+  if (!isMessage && published && welcomeSent) {
+    receipt = 'welcome carried it';
+  } else if (!isMessage) {
     try { await emailConfirmation(row, buildingLabel, published); receipt = row.email ? 'sent' : 'no email given'; }
     catch (e) {
       receipt = 'failed: ' + String(e).slice(0, 300);
