@@ -116,6 +116,38 @@ const CAT_LABEL = { hair: 'Hair', barber: 'Barber', nails: 'Nails', spa: 'Spa & 
 const CLAIM_URL = suite =>
   `/join/?building=${encodeURIComponent(BUILDING_INFO.name)}${suite ? '&suite=' + encodeURIComponent(suite) : ''}`;
 
+/* "Show my building's QR" (Laura's ask, 2026-09-22): the app draws its
+   own front-door code on the spot, so a studio can hold their phone up
+   and a guest scans straight into this building's directory. The QR
+   library is vendored (qrcode.js beside this file), so it works on a
+   kiosk with no outside calls. */
+const APP_QR_URL = () => IS_HOME
+  ? 'https://studiosoulutions.com/salonplus/app/'
+  : `https://studiosoulutions.com/a/${encodeURIComponent(BUILDING_INFO.slug)}`;
+function showBuildingQr() {
+  const box = document.getElementById('qrBox');
+  const url = APP_QR_URL();
+  try {
+    const qr = qrcode(0, 'M');
+    qr.addData(url);
+    qr.make();
+    box.innerHTML = qr.createSvgTag({ cellSize: 6, margin: 4 });
+    const svg = box.querySelector('svg');
+    if (svg) {
+      svg.style.width = '220px'; svg.style.height = '220px';
+      svg.style.borderRadius = '12px'; svg.style.background = '#fff';
+    }
+  } catch (e) {
+    box.innerHTML = `<div style="font-size:14px;color:#A8593E;">Could not draw the code just now. The address works the same: ${url}</div>`;
+  }
+  document.getElementById('qrTitle').textContent = BUILDING_INFO.name;
+  document.getElementById('qrUrl').textContent = url.replace('https://', '');
+  document.getElementById('qrOverlay').style.display = 'flex';
+}
+function hideBuildingQr() {
+  document.getElementById('qrOverlay').style.display = 'none';
+}
+
 // ============ DATA ============
 /* The directory now lives in Supabase and is edited from the admin panel,
    so what follows is the FALLBACK: the roster baked into data.js, used

@@ -543,6 +543,9 @@ a { color: var(--sage-deep); }
 <aside class="drawer" id="drawer" aria-label="Studio details"></aside>
 <div class="toast" id="toast"></div>
 
+<!-- The vendored QR library the app uses; here it draws each building's
+     downloadable front-door code. -->
+<script src="/salonplus/app/qrcode.js"></script>
 <script>
 /* =====================================================================
    Directory admin
@@ -1453,10 +1456,43 @@ function renderBuildings() {
       <div class="links">
         <a class="btn btn-ghost btn-sm" href="/a/${esc(b.slug)}" target="_blank" rel="noopener">Open its app</a>
         <button class="btn btn-ghost btn-sm" data-bfilter="${esc(b.slug)}">See its studios</button>
+        <button class="btn btn-ghost btn-sm" data-bqr="${esc(b.slug)}" data-bqrname="${esc(b.name)}">Download QR</button>
       </div>
     </div>`;
   }).join('') || `<div class="empty">No centers yet. Add the first one below.</div>`;
 }
+
+/* Every building's front-door QR, downloadable as a print-ready PNG
+   (Anne, 2026-09-22). Drawn locally with the same vendored library the
+   app uses; nothing leaves the browser. */
+function buildingQrPng(slug) {
+  const url = slug === 'salonplus'
+    ? 'https://studiosoulutions.com/salonplus/app/'
+    : `https://studiosoulutions.com/a/${encodeURIComponent(slug)}`;
+  const qr = qrcode(0, 'M');
+  qr.addData(url);
+  qr.make();
+  const n = qr.getModuleCount();
+  const cell = 24, margin = cell * 4, size = n * cell + margin * 2;
+  const cv = document.createElement('canvas');
+  cv.width = cv.height = size;
+  const ctx = cv.getContext('2d');
+  ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, size, size);
+  ctx.fillStyle = '#2B2621';
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++)
+    if (qr.isDark(r, c)) ctx.fillRect(margin + c * cell, margin + r * cell, cell, cell);
+  return cv.toDataURL('image/png');
+}
+$('buildingList').addEventListener('click', e => {
+  const q = e.target.closest('[data-bqr]'); if (!q) return;
+  try {
+    const a = document.createElement('a');
+    a.href = buildingQrPng(q.dataset.bqr);
+    a.download = `qr-${q.dataset.bqr}-app.png`;
+    a.click();
+    toast(`${q.dataset.bqrname}'s QR saved`);
+  } catch (err) { alert('Could not draw the QR: ' + err.message); }
+});
 $('buildingList').addEventListener('click', e => {
   const b = e.target.closest('[data-bfilter]'); if (!b) return;
   filterBuilding = b.dataset.bfilter;

@@ -126,21 +126,14 @@ export default async function handler(request) {
   catch (e) { console.warn('interest: photo upload failed, lead continues without', String(e).slice(0, 300)); }
   if (photoUrls.length) row.photos = photoUrls;
 
-  const results = await Promise.allSettled([
-    saveToSupabase(row),
-    emailLead(row, buildingLabel, photoUrls),
-  ]);
-  const saved  = results[0].status === 'fulfilled';
-  const savedRow = saved ? results[0].value : null;
-  const mailed = results[1].status === 'fulfilled';
-
-  if (!saved && !mailed) {
-    console.error('interest: both sinks failed',
-      results.map(r => r.status === 'rejected' ? String(r.reason).slice(0, 300) : 'ok'));
-    return json(502, { error: 'Could not record the submission. Please try again.' });
-  }
-  if (!saved)  console.warn('interest: supabase failed, email carried it', String(results[0].reason).slice(0, 300));
-  if (!mailed) console.warn('interest: email failed, supabase carried it', String(results[1].reason).slice(0, 300));
+  /* Two sinks, now in sequence instead of side by side: the save first,
+     then the publish, then the owner notice, so the notice can announce
+     the OUTCOME ("new studio joined", Laura's ask 2026-09-22) instead of
+     the arrival. The safety is unchanged: if the save fails the email
+     still carries the lead, and only both failing fails the submission. */
+  let saved = false, savedRow = null, saveErr = null;
+  try { savedRow = await saveToSupabase(row); saved = true; }
+  catch (e) { saveErr = e; }
 
   /* THE GATE IS GONE (Anne, after the 2026-09-15 meeting, superseding her
      earlier lock): a new signup with a suite goes live the moment it
@@ -159,6 +152,18 @@ export default async function handler(request) {
       }
     } catch (e) { console.warn('interest: auto-publish failed, lead waits in the inbox', String(e).slice(0, 300)); }
   }
+
+  let mailed = false, mailErr = null;
+  try { await emailLead(row, buildingLabel, photoUrls, published); mailed = true; }
+  catch (e) { mailErr = e; }
+
+  if (!saved && !mailed) {
+    console.error('interest: both sinks failed',
+      [String(saveErr).slice(0, 300), String(mailErr).slice(0, 300)]);
+    return json(502, { error: 'Could not record the submission. Please try again.' });
+  }
+  if (!saved)  console.warn('interest: supabase failed, email carried it', String(saveErr).slice(0, 300));
+  if (!mailed) console.warn('interest: email failed, supabase carried it', String(mailErr).slice(0, 300));
 
   /* The receipt is a courtesy and must never fail the submission, but it
      failed invisibly once too often (Anne, waggle 2026-09-15: "customer
@@ -279,6 +284,16 @@ const KIND_STYLE = {
     subject: (r, b) => `${b} interest: ${r.business}${r.suite ? ` (Suite ${r.suite})` : ''}`,
     lead: '',
   },
+  /* The same submission wearing its outcome: the card already published
+     itself, so the owner hears "joined", not "interest" (Laura's ask,
+     2026-09-22). The 'new' style above stays for the one that waited. */
+  joined: {
+    accent: '#6B7A5F',
+    eyebrow: b => `${b} · new studio`,
+    heading: r => `A new studio joined: ${escHtml(r.business)}`,
+    subject: (r, b) => `New studio joined ${b}: ${r.business}${r.suite ? ` (Suite ${r.suite})` : ''}`,
+    lead: 'Their card is already live in the app and their welcome email is on its way. Nothing waits on you; give the card a look when you like.',
+  },
   question: {
     accent: '#6B7A5F',
     eyebrow: b => `${b} · question`,
@@ -313,14 +328,20 @@ const KIND_STYLE = {
   },
 };
 
-async function emailLead(row, buildingLabel, photoUrls) {
+async function emailLead(row, buildingLabel, photoUrls, published) {
   const key = process.env.RESEND_API_KEY;
-  const to  = process.env.LEAD_TO;
+  /* Building-owner leads are the product's sales mail, so they can have
+     their own inbox: set BUILDING_LEAD_TO on Netlify (for example a
+     studiosoulutions@ address) and only the [BUILDING] mail moves there;
+     everything else keeps following LEAD_TO. Unset, both go to LEAD_TO. */
+  const to = (row.kind === 'building' && process.env.BUILDING_LEAD_TO) || process.env.LEAD_TO;
   if (!key || !to) throw new Error('RESEND_API_KEY / LEAD_TO not set');
 
   const from = senderAddress();
   const cc   = process.env.LEAD_CC ? [process.env.LEAD_CC] : undefined;
-  const kind = KIND_STYLE[row.kind] || KIND_STYLE.new;
+  const kind = row.kind === 'new' && published
+    ? KIND_STYLE.joined
+    : (KIND_STYLE[row.kind] || KIND_STYLE.new);
   const isChange = row.kind === 'change';
 
   const line = (label, val) => val
@@ -376,6 +397,8 @@ async function emailLead(row, buildingLabel, photoUrls) {
         ? `It's waiting in <a href="https://studiosoulutions.com/leads/" style="color:#6B7A5F;">the admin panel</a> under Questions.`
         : isChange
         ? `Open <a href="https://studiosoulutions.com/leads/" style="color:#6B7A5F;">the admin panel</a>, find Suite ${escHtml(row.suite || '')} and make the change.`
+        : published
+        ? `Review the live card any time from <a href="https://studiosoulutions.com/leads/" style="color:#6B7A5F;">the admin panel</a>.`
         : `Publish them from <a href="https://studiosoulutions.com/leads/" style="color:#6B7A5F;">the admin panel</a>.`}
     </p>`);
 

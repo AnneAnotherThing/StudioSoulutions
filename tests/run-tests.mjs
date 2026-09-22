@@ -347,6 +347,8 @@ ok(hop && hop.body.code === 'test-passcode' && hop.body.who === 'auto-publish' &
    'the publish hop carries the server-side passcode, the auto-publish signature and the chosen bio');
 ok(auto.receipt === 'welcome carried it' && !resendCalls().some(c => c.body.to[0] === 'pat@test.local'),
    'one email, not two: the welcome carries the receipt when the card goes straight live (got receipt: ' + auto.receipt + ')');
+ok(resendCalls().some(c => c.body.to[0] === 'owner@test.local' && /^New studio joined/.test(c.body.subject)),
+   'the owner notice says joined, not interest, when the card went live (Laura, 2026-09-22)');
 
 /* When the welcome hiccups, the receipt steps back in so the studio
    still hears something, and it says the card is live. */
@@ -364,6 +366,8 @@ res = await post(interest, NEW_LEAD);
 await settle();
 auto = await res.json();
 ok(auto.published === false, 'no suite means no auto-publish, the lead waits in the inbox');
+ok(resendCalls().some(c => c.body.to[0] === 'owner@test.local' && /interest: Test Studio/.test(c.body.subject)),
+   'the one that waited still announces itself as interest');
 
 resetNet();
 adminPublishPlan = [400];
@@ -410,6 +414,21 @@ ok(auto.receipt === 'sent' && resendCalls().some(c => c.body.to[0] === 'own@test
 resetNet();
 res = await post(interest, { kind: 'building', name: 'Jordan Reyes', email: 'own@test.local' });
 ok(res.status === 400, 'a building lead without a building name is refused');
+
+/* The product's sales mail can have its own inbox: BUILDING_LEAD_TO
+   steers only the [BUILDING] notice; studio mail keeps LEAD_TO. */
+resetNet();
+process.env.BUILDING_LEAD_TO = 'sales@test.local';
+res = await post(interest, { kind: 'building', business: 'The Sunset Suites', name: 'Jordan Reyes', email: 'own@test.local' });
+await settle();
+ok(resendCalls().some(c => c.body.to[0] === 'sales@test.local' && /^\[BUILDING\]/.test(c.body.subject)),
+   'BUILDING_LEAD_TO steers the owner-lead mail to its own inbox');
+resetNet();
+res = await post(interest, NEW_LEAD);
+await settle();
+ok(resendCalls().some(c => c.body.to[0] === 'owner@test.local'),
+   'studio mail still follows LEAD_TO while BUILDING_LEAD_TO is set');
+delete process.env.BUILDING_LEAD_TO;
 
 /* ===== bio writer: the public lane ===================================== */
 section('bio writer: public lane');
