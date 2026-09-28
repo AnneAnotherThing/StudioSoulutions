@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#F5EDE0" />
+<title>Studio Soulutions QR</title>
+<meta name="description" content="A pocket QR card: one tap from the home screen, one scan for the guest." />
+<meta name="robots" content="noindex" />
+<link rel="canonical" href="https://studiosoulutions.com/qr/" />
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon-64.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
+<link rel="apple-touch-icon" href="/assets/favicon-192.png">
+<link rel="manifest" href="/qr/manifest.webmanifest">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #F5EDE0; --surface: #FBF6EE; --ink: #3D3530; --ink-soft: #6B6357;
+    --ink-faint: #8B7E70; --sage-deep: #6B7A5F; --line: #E5D9C3;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    min-height: 100vh; min-height: 100dvh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 24px 20px; text-align: center;
+  }
+  .eyebrow { font-size: 11px; letter-spacing: .3em; text-transform: uppercase; font-weight: 600; color: var(--sage-deep); }
+  h1 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 26px; margin-top: 6px; }
+  .card {
+    margin-top: 18px; background: var(--surface); border: 1px solid var(--line);
+    border-radius: 24px; padding: 22px; box-shadow: 0 10px 30px rgba(61,53,48,0.08);
+  }
+  #qrBox svg { display: block; width: min(72vw, 340px); height: min(72vw, 340px); background: #fff; border-radius: 14px; }
+  .addr { margin-top: 14px; font-size: 14px; color: var(--ink-soft); word-break: break-all; }
+  .hint { margin-top: 20px; font-size: 12.5px; color: var(--ink-faint); max-width: 24em; }
+  footer { margin-top: 22px; font-size: 12px; color: var(--ink-faint); }
+  footer a { color: var(--sage-deep); }
+</style>
+</head>
+<body>
+  <div class="eyebrow" id="eyebrow">Scan for</div>
+  <h1 id="title">Studio Soulutions</h1>
+  <div class="card"><div id="qrBox"></div></div>
+  <div class="addr" id="addr"></div>
+  <p class="hint" id="hint">Save this page to your home screen (Share, then Add to Home Screen) and the code is always one tap away.</p>
+  <footer><a href="/">studiosoulutions.com</a></footer>
+
+<script src="/salonplus/app/qrcode.js"></script>
+<script>
+/* The pocket QR card (Anne, 2026-09-28: something Laura can save to her
+   home screen to bring people to the webpage). Default: the product
+   site. ?b=<building slug> instead shows that building's app QR, so the
+   same page covers "scan for the product" and "scan for your building".
+   Only our own addresses are drawable here, never arbitrary input, so
+   nobody can mint an official-looking code for somewhere else. */
+const params = new URLSearchParams(location.search);
+const b = (params.get('b') || '').toLowerCase().replace(/[^a-z0-9-]/g, '');
+/* ?p= picks one of our own pages by name; anything not on the list
+   falls back to the homepage. */
+const PAGES = {
+  laura:  { path: '/laura/',  eyebrow: 'Scan to open', title: "Laura's hub" },
+  owners: { path: '/owners/', eyebrow: 'Scan for',     title: 'Bring your building on' },
+  join:   { path: '/join/',   eyebrow: 'Scan for',     title: 'Get your studio on the map' },
+};
+const page = PAGES[(params.get('p') || '').toLowerCase()] || null;
+const target = b
+  ? (b === 'salonplus' ? 'https://studiosoulutions.com/salonplus/app/' : `https://studiosoulutions.com/a/${b}`)
+  : page ? `https://studiosoulutions.com${page.path}`
+  : 'https://studiosoulutions.com/';
+
+if (page && !b) {
+  document.getElementById('eyebrow').textContent = page.eyebrow;
+  document.getElementById('title').textContent = page.title;
+}
+if (b) {
+  document.getElementById('eyebrow').textContent = 'Scan to open the app';
+  document.getElementById('title').textContent = 'This building\'s directory';
+  /* The building's real name, when the directory answers; the page still
+     works without it. */
+  fetch('/api/salonplus-admin', {
+    method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ action: 'directory', building: b }),
+  }).then(r => r.json()).then(d => {
+    if (d && d.building && d.building.name) document.getElementById('title').textContent = d.building.name;
+  }).catch(() => {});
+}
+
+try {
+  const qr = qrcode(0, 'M');
+  qr.addData(target);
+  qr.make();
+  document.getElementById('qrBox').innerHTML = qr.createSvgTag({ cellSize: 8, margin: 3 });
+} catch (e) {
+  document.getElementById('qrBox').textContent = 'Could not draw the code. The address below works the same.';
+}
+document.getElementById('addr').textContent = target.replace('https://', '');
+
+/* Installed to the home screen, the hint has done its job. */
+if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+  document.getElementById('hint').style.display = 'none';
+}
+</script>
+</body>
+</html>
