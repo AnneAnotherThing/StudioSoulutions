@@ -83,6 +83,9 @@
   .whatsnew .ask { font-size:14.5px; color:var(--bronze-deep); font-style:italic; }
   .whatsnew .did { font-size:15.5px; margin-top:7px; color:var(--ink); }
   .whatsnew .did strong { color:var(--bronze-deep); font-weight:600; }
+  .qrnew { display:flex; gap:18px; align-items:flex-start; margin-top:16px; }
+  .qrnew img { flex:none; background:#fff; border:1px solid var(--line); border-radius:12px; padding:8px; }
+  @media (max-width:480px) { .qrnew { flex-direction:column; } }
   code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13px; background:var(--bg-2); padding:1px 6px; border-radius:5px; color:var(--clay-deep); }
 
   /* coffee */
@@ -158,6 +161,28 @@
       <span class="name">Salon Plus Studios</span>
     </a>
   </header>
+
+  <div class="whatsnew">
+    <div class="eyebrow">New, October 17</div>
+    <h2>Your QR for Tuesday</h2>
+    <p class="sub">The sign to post in the building, ready to print.</p>
+    <div class="qrnew">
+      <img src="/assets/qr-salonplus-app.png" alt="QR code to the Salon Plus app" width="132" height="132" />
+      <div class="did">
+        This is the <strong>lobby sign</strong>: &ldquo;Who are you here to see?&rdquo; Anyone who
+        scans it lands straight in the Salon Plus app, with the map, every studio, and their offers.
+        No download, nothing to sign up for. Print it on plain letter paper, one page, and post away!
+        <div class="rowbtns">
+          <a class="mini filled" href="/salonplus/handout-lobby-sign.html">Print the sign</a>
+          <a class="mini" href="/salonplus/app/">See where it goes</a>
+        </div>
+      </div>
+    </div>
+    <p class="sub" style="margin-top:16px;">
+      For studios who aren't listed yet, the <a href="/signup-sheet.html" style="color:var(--bronze-deep);">sign-up sheet</a>
+      is the other QR. It goes to the join form instead.
+    </p>
+  </div>
 
   <div style="padding-top:34px;">
     <div class="eyebrow">For Laura</div>
