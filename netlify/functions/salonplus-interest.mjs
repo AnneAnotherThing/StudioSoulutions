@@ -144,7 +144,7 @@ export default async function handler(request) {
   let published = false, card = null, welcomeSent = false;
   if (row.kind === 'new' && savedRow && savedRow.id && row.suite) {
     try {
-      const pub = await autoPublish(savedRow.id, row, clip(p.bio, 400), tierChoice);
+      const pub = await autoPublish(savedRow.id, row, await cardBio(row, clip(p.bio, 400)), tierChoice);
       if (pub && pub.ok) {
         published = true;
         welcomeSent = pub.welcome === 'sent';
@@ -545,6 +545,41 @@ async function autoPublish(leadId, row, chosenBio, tierChoice) {
   const out = await res.json().catch(() => null);
   if (!res.ok) throw new Error((out && out.error) || `publish ${res.status}`);
   return out;
+}
+
+/* The bio a card goes live with, so no studio lands on the map with an
+   empty one (Anne's audit, 2026-10-06). A write-up they tapped wins.
+   "Use my words" prints their facts as typed, which is what the form
+   promises. "Write it for me" with nothing tapped gets the writer's first
+   version, written here. If the writer is down the card goes live without
+   a bio, and the owner mail still says to write one in the panel. */
+async function cardBio(row, tapped) {
+  if (tapped) return tapped;
+  if (!row.bio_help) return fitBio(row.notes);
+  try {
+    const res = await fetch(`${process.env.URL || 'https://studiosoulutions.com'}/api/generate-bio`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        code: process.env.LEADS_CODE, name: row.business, suite: row.suite,
+        services: row.services, hours: row.hours, input: row.notes,
+      }),
+    });
+    const out = await res.json().catch(() => null);
+    const first = res.ok && out && Array.isArray(out.bios) && out.bios[0];
+    return first && first.text ? fitBio(first.text) : '';
+  } catch (e) {
+    console.warn('interest: bio writer failed, card goes live without one', String(e).slice(0, 300));
+    return '';
+  }
+}
+
+/* Cards hold 400 characters. Longer facts are cut at a word, not mid-word. */
+function fitBio(text) {
+  const t = (text || '').trim();
+  if (t.length <= 400) return t;
+  const cut = t.slice(0, 399);
+  return cut.slice(0, cut.lastIndexOf(' ') > 300 ? cut.lastIndexOf(' ') : 399).trimEnd() + '…';
 }
 
 /* ----- utils ----------------------------------------------------------- */

@@ -55,6 +55,13 @@ globalThis.fetch = async (url, opts = {}) => {
     const status = supabaseInsertPlan.length ? supabaseInsertPlan.shift() : 201;
     return mockRes(status, status < 300 ? '[{"id":"aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee"}]' : '{"message":"column does not exist"}');
   }
+  if (u.includes('/api/generate-bio')) {
+    /* The interest function's server-side writer, for "Write it for me"
+       with nothing tapped. */
+    return mockRes(200, JSON.stringify({ bios: [
+      { tone: 'Warm & welcoming', text: 'Written bio one.' },
+      { tone: 'Editorial / minimal', text: 'Written bio two.' }] }));
+  }
   if (u.includes('/api/salonplus-admin')) {
     /* The interest function's server-to-server auto-publish. */
     const status = adminPublishPlan.length ? adminPublishPlan.shift() : 200;
@@ -345,6 +352,24 @@ ok(auto.published === true && auto.card && auto.card.suite === '117',
 const hop = calls.find(c => c.url.includes('/api/salonplus-admin'));
 ok(hop && hop.body.code === 'test-passcode' && hop.body.who === 'auto-publish' && hop.body.studio.bio === 'A chosen bio.',
    'the publish hop carries the server-side passcode, the auto-publish signature and the chosen bio');
+ok(!calls.some(c => c.url.includes('/api/generate-bio')), 'a tapped bio is used as is, the writer is not called again');
+
+/* No card goes live with an empty bio (Anne's audit, 2026-10-06). */
+const hopBio = () => (calls.find(c => c.url.includes('/api/salonplus-admin')) || { body: { studio: {} } }).body.studio.bio;
+resetNet();
+await post(interest, { ...NEW_LEAD, suite: '117', bio_help: false });
+await settle();
+ok(hopBio() === NEW_LEAD.notes, '"Use my words" puts their facts on the card as typed (got: ' + hopBio() + ')');
+resetNet();
+await post(interest, { ...NEW_LEAD, suite: '117', bio_help: false, notes: 'word '.repeat(120) });
+await settle();
+ok(hopBio().length <= 400 && hopBio().endsWith('word…'), 'long facts are cut at a word to fit the card');
+resetNet();
+await post(interest, { ...NEW_LEAD, suite: '117' });
+await settle();
+const writerHop = calls.find(c => c.url.includes('/api/generate-bio'));
+ok(writerHop && writerHop.body.code === 'test-passcode' && hopBio() === 'Written bio one.',
+   '"Write it for me" with nothing tapped goes live with the writer\'s first version (got: ' + hopBio() + ')');
 ok(auto.receipt === 'welcome carried it' && !resendCalls().some(c => c.body.to[0] === 'pat@test.local'),
    'one email, not two: the welcome carries the receipt when the card goes straight live (got receipt: ' + auto.receipt + ')');
 ok(resendCalls().some(c => c.body.to[0] === 'owner@test.local' && /^New studio joined/.test(c.body.subject)),
