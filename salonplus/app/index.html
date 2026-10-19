@@ -110,6 +110,17 @@
   .menu-card .mc-meta { color: #57524A; }
   .menu-card .mc-icon { color: #3D3530; border-color: rgba(61,53,48,0.18); }
 </style>
+<!-- Google Analytics 4: page views plus call, text, email and booking taps
+     on studio cards. analytics.js loads first so internal visits and the
+     demo building are switched off before the first hit. -->
+<script src="/assets/js/analytics.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FB9QDLZT4B"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-FB9QDLZT4B');
+</script>
 </head>
 <body>
 

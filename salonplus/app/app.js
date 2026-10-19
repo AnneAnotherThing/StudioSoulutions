@@ -20,6 +20,8 @@ const APP_BUILDING = (() => {
   return m ? m[1].toLowerCase() : 'salonplus';
 })();
 const IS_HOME = APP_BUILDING === 'salonplus';
+/* Every analytics event says which building it came from. */
+window.ssContext = { building: APP_BUILDING };
 let BUILDING_INFO = IS_HOME
   ? { slug: 'salonplus', name: 'Salon Plus Studios', city: 'Glendale, AZ', has_map: true }
   : { slug: APP_BUILDING, name: 'This Building', city: '', has_map: false };
@@ -1025,13 +1027,17 @@ function renderContactActions(t) {
       </button>
       ${claimHtml}`;
   }
+  /* What analytics.js reads off a tapped button: which studio, and
+     whether it was the booking link (tel, sms and mailto it can tell
+     from the address alone). */
+  const trackAttrs = m => ` data-studio="${escapeHtml(t.name)}"${m.key === 'book' ? ' data-booking' : ''}`;
   const [primary, ...rest] = methods;
   const primaryHtml = `
-    <a class="btn btn-primary" href="${primary.href}"${primary.target ? ` target="${primary.target}" rel="${primary.rel}"` : ''}>
+    <a class="btn btn-primary" href="${primary.href}"${primary.target ? ` target="${primary.target}" rel="${primary.rel}"` : ''}${trackAttrs(primary)}>
       ${ICONS[primary.key]} ${primary.label}
     </a>`;
   const restHtml = rest.map(m => `
-    <a class="btn btn-outline" href="${m.href}"${m.target ? ` target="${m.target}" rel="${m.rel}"` : ''}>
+    <a class="btn btn-outline" href="${m.href}"${m.target ? ` target="${m.target}" rel="${m.rel}"` : ''}${trackAttrs(m)}>
       ${ICONS[m.key]} ${m.label}
     </a>`).join('');
   return `
