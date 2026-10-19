@@ -119,7 +119,8 @@
   }
   .field select:focus { outline:none; border-color:var(--sage); }
 </style>
-<!-- Google Analytics 4 -->
+<!-- Google Analytics 4, conversion events first so internal visits are switched off before the first hit -->
+<script src="/assets/js/analytics.js"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-FB9QDLZT4B"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
@@ -314,7 +315,7 @@ gtag('config', 'G-FB9QDLZT4B');
 
       <button type="submit" class="btn btn-primary" id="submitBtn">Put me on the map</button>
       <p class="form-msg" id="formMsg"></p>
-      <p class="fine"><span class="req">*</span> required &middot; phone and email count as one: leave at least one so we can reach you.</p>
+      <p class="fine"><span class="req">*</span> required &middot; phone and email count as one: leave at least one so we can reach you. <a href="/privacy/" style="color:var(--sage-deep);">How we use it</a>.</p>
     </form>
 
     <div class="thanks" id="thanksBox">
@@ -324,7 +325,8 @@ gtag('config', 'G-FB9QDLZT4B');
   </div>
 
   <footer>
-    <a href="/">Studio Soulutions</a> &middot; every studio under one roof, discoverable
+    <a href="/">Studio Soulutions</a> &middot; every studio under one roof, discoverable<br>
+    <a href="/owners/">For building owners</a> &middot; <a href="/a/demo" data-event="demo_open">See the live demo</a> &middot; <a href="/privacy/">Privacy</a>
   </footer>
 </div>
 
@@ -683,6 +685,7 @@ form.addEventListener('submit', async e => {
     });
     if (!res.ok) throw new Error('bad status ' + res.status);
     const out = await res.json().catch(() => ({}));
+    if (window.ssTrack) ssTrack('form_submit_ok', { form_name: 'studio_signup', went_live: !!out.published });
     form.style.display = 'none';
     const box = document.getElementById('thanksBox');
     if (out.published && out.card) {

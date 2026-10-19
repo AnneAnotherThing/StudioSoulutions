@@ -4,11 +4,11 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#F5EDE0" />
-<title>Studio Soulutions - Every studio under one roof, discoverable.</title>
-<meta name="description" content="A lobby kiosk and mobile companion built for salon-suite buildings. Every artist gets discovered, not just the ones with a sign on the door. Fully customizable and white-labeled to your building." />
+<title>Studio Soulutions | The Directory App for Salon Suite Buildings</title>
+<meta name="description" content="The directory app for salon suite buildings: every studio's card, services, booking link and suite map on any phone, under your building's name. Kiosk optional." />
 
-<meta property="og:title" content="Studio Soulutions - Every studio under one roof, discoverable." />
-<meta property="og:description" content="A lobby kiosk and mobile companion for salon-suite buildings. Fully white-labeled to your brand." />
+<meta property="og:title" content="Studio Soulutions | The Directory App for Salon Suite Buildings" />
+<meta property="og:description" content="The directory app for salon suite buildings: every studio findable on any phone, under your building's name. Lobby kiosk optional." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://studiosoulutions.com" />
 <meta property="og:image" content="https://studiosoulutions.com/assets/photos/studio-soulutions-hero.jpg" />
@@ -86,7 +86,8 @@
   details[open] .faq-chev { transform: rotate(180deg); }
   .faq-chev { transition: transform 0.2s ease; }
 </style>
-<!-- Google Analytics 4 -->
+<!-- Google Analytics 4, conversion events first so internal visits are switched off before the first hit -->
+<script src="/assets/js/analytics.js"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-FB9QDLZT4B"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
@@ -233,7 +234,7 @@ gtag('config', 'G-FB9QDLZT4B');
         </div>
       </div>
     </div>
-    <p class="text-center text-xs eyebrow text-cream-40 mt-8">Live demo · <a href="/a/demo" target="_blank" rel="noopener" class="underline hover:text-[var(--ink)]">open it on your own phone →</a></p>
+    <p class="text-center text-xs eyebrow text-cream-40 mt-8">Live demo · <a href="/a/demo" data-event="demo_open" target="_blank" rel="noopener" class="underline hover:text-[var(--ink)]">open it on your own phone →</a></p>
   </div>
 </section>
 
@@ -406,6 +407,12 @@ gtag('config', 'G-FB9QDLZT4B');
       <img src="assets/logo_ss_green_v5.png" alt="Studio Soulutions" style="height:24px;width:auto;background:transparent;">
       <span class="serif text-sm" style="color: var(--ink-soft); letter-spacing: 0;">Studio Soul<span class="serif-it">utions</span></span>
     </div>
+    <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2" style="letter-spacing:.12em;" aria-label="Footer">
+      <a href="/owners/" class="underline hover:text-[var(--ink)]">For building owners</a>
+      <a href="/join/" class="underline hover:text-[var(--ink)]">Get your studio listed</a>
+      <a href="/a/demo" data-event="demo_open" class="underline hover:text-[var(--ink)]">See the live demo</a>
+      <a href="/privacy/" class="underline hover:text-[var(--ink)]">Privacy</a>
+    </nav>
     <div>Studio Soulutions · A platform for salon-suite buildings · studiosoulutions.com</div>
   </div>
 </footer>

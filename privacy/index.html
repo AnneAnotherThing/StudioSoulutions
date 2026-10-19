@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#F5EDE0" />
+<title>Privacy - Studio Soulutions</title>
+<meta name="description" content="What Studio Soulutions collects when a studio joins a building's directory or a building owner gets in touch, where it goes, and how to have it changed or deleted." />
+<link rel="canonical" href="https://studiosoulutions.com/privacy/" />
+<link rel="icon" type="image/png" sizes="64x64" href="../assets/favicon-64.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:         #F5EDE0;
+    --surface:    #FBF6EE;
+    --ink:        #3D3530;
+    --ink-soft:   #6B6357;
+    --ink-faint:  #8B7E70;
+    --sage:       #8B9A7E;
+    --sage-deep:  #6B7A5F;
+    --line:       #E5D9C3;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased; line-height: 1.6;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 0 20px 70px; }
+  header { padding: 22px 0 18px; border-bottom: 1px solid var(--line); margin-bottom: 30px; }
+  .lockup { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+  .lockup img { height: 40px; width: auto; display: block; }
+  .lockup span { font-family:'Fraunces',serif; font-weight: 600; font-size: 19px; letter-spacing: -0.01em; }
+  .eyebrow { font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase; font-weight: 600; color: var(--sage-deep); }
+  h1 { font-family:'Fraunces',serif; font-weight: 600; font-size: clamp(28px, 5vw, 40px); letter-spacing: -0.02em; line-height: 1.1; margin-top: 8px; }
+  .lede { color: var(--ink-soft); margin-top: 12px; }
+  h2 { font-family:'Fraunces',serif; font-weight: 600; font-size: 21px; margin-top: 34px; }
+  p, li { font-size: 15.5px; color: var(--ink-soft); }
+  p { margin-top: 10px; }
+  ul { margin: 10px 0 0; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  b { color: var(--ink); font-weight: 600; }
+  a { color: var(--sage-deep); }
+  .updated { margin-top: 34px; font-size: 13px; color: var(--ink-faint); }
+  footer { margin-top: 46px; text-align: center; font-size: 12.5px; color: var(--ink-faint); }
+  footer a { color: var(--sage-deep); }
+</style>
+<!-- Google Analytics 4, conversion events first so internal visits are switched off before the first hit -->
+<script src="/assets/js/analytics.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FB9QDLZT4B"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-FB9QDLZT4B');
+</script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="lockup" href="/">
+      <img src="../assets/logo_ss_green_v5.png" alt="" onerror="this.style.display='none'">
+      <span>Studio Soulutions</span>
+    </a>
+  </header>
+
+  <div class="eyebrow">Privacy</div>
+  <h1>What we collect, and where it goes</h1>
+  <p class="lede">
+    Studio Soulutions is a directory app for salon suite buildings, built and run by Hive-Rise.
+    This page covers the two forms on this site and the studio cards they create. It is short
+    because we keep only what the directory needs.
+  </p>
+
+  <h2>When a studio joins</h2>
+  <p>The join form at <a href="/join/">/join/</a> asks for:</p>
+  <ul>
+    <li><b>About you:</b> your name, phone, email, and whether it's okay to text you.</li>
+    <li><b>About your studio:</b> business name, building and suite, services, hours, booking link, website, and your Instagram, Facebook or TikTok if you add them.</li>
+    <li><b>Your words and photos:</b> the facts you write for your card, and any photos you upload.</li>
+  </ul>
+  <p>
+    <b>Your card is public on purpose.</b> That is the point of a directory. Your business name, the
+    name of the person behind the chair, suite, services, photos, bio, hours, booking link and socials
+    can show in your building's app, depending on your building's listing level. Your phone and email
+    show on your card only where your listing includes contact buttons. You can change or remove
+    anything on your card yourself, any time, from the studio portal.
+  </p>
+  <p>
+    <b>The bio writer.</b> If you choose "Write it for me", the facts you typed, your business name,
+    suite, services and hours are sent to an AI model (Claude, made by Anthropic) to write your bio. Nothing
+    else about you is sent.
+  </p>
+
+  <h2>When a building owner gets in touch</h2>
+  <p>
+    The form at <a href="/owners/">/owners/</a> asks for your name, building, city, roughly how many
+    suites, your email or phone, and anything else you want to tell us. We use it only to come back to
+    you with a plan. None of it is ever shown publicly.
+  </p>
+
+  <h2>Where it goes</h2>
+  <ul>
+    <li><b>Stored</b> in our database and photo storage (Supabase).</li>
+    <li><b>Emailed</b> to the people who run the directory, so they can welcome you or reply. A studio also gets a welcome email with its own sign-in code. Email goes out through Resend.</li>
+    <li><b>Hosted</b> on Netlify, which serves the site.</li>
+  </ul>
+  <p>We never sell your information or share it for advertising.</p>
+
+  <h2>Analytics</h2>
+  <p>
+    The public pages of this site (this one, the homepage, /join/ and /owners/) use Google Analytics
+    to count visits and whether a form went through. It uses cookies and sees what any website sees,
+    such as your browser and rough location. It does not receive what you type into the forms. The
+    building apps, the studio portal and the admin pages do not use it.
+  </p>
+
+  <h2>Changing or deleting your information</h2>
+  <p>
+    Studios can edit their own card in the studio portal. To have a card taken down, your details
+    deleted, or to ask what we hold about you, email
+    <a href="mailto:anne@hive-rise.com">anne@hive-rise.com</a> and we will take care of it.
+  </p>
+
+  <p class="updated">Last updated October 19, 2026.</p>
+
+  <footer>
+    <a href="/">Studio Soulutions</a> &middot; <a href="/owners/">For building owners</a> &middot; <a href="/join/">Get your studio listed</a>
+  </footer>
+</div>
+</body>
+</html>

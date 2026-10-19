@@ -1,17 +1,19 @@
 # Studio Soulutions
 
-> Studio Soulutions makes every studio in a salon-suite building discoverable: a mobile web app for visitors and tenants, an optional lobby kiosk, and a self-serve portal for studio owners, all white-labeled to the building's own brand. Built and run by Hive-Rise in Surprise, Arizona.
+> Studio Soulutions is the directory app for salon suite buildings: one link where visitors find every studio in the building, with each studio's card, services, hours, booking link and a suite map. An optional lobby kiosk runs the same directory, and every building's app wears that building's own name. Built and run by Hive-Rise in Surprise, Arizona.
 
-Salon-suite buildings hold dozens of independent studios behind one front door, and a walk-in has no way to know who is inside. Studio Soulutions gives the building one link: a directory app with every studio's card, services, hours, booking links and an interactive suite map. Studio owners keep their own cards current through a code-protected portal, and the building owner approves every change before it goes live.
+Salon suite buildings hold dozens of independent studios behind one front door, and a walk-in has no way to know who is inside. Studio Soulutions gives the building one link and one QR code. Studios join with a two-minute form and their card goes live right away; after that they keep it current themselves through a code-protected studio portal, and changes go live on save.
 
 ## Pages
 
 - [Home](https://studiosoulutions.com/): what the product is and who it is for
-- [Salon Plus Studios directory](https://studiosoulutions.com/salonplus/): the first live building, in Surprise, Arizona
-- [Join a directory](https://studiosoulutions.com/join/): how a studio gets its card
+- [For building owners](https://studiosoulutions.com/owners/): how a building gets its own directory app, and how to get in touch
+- [Get your studio listed](https://studiosoulutions.com/join/): how a studio gets its card
+- [Salon Plus Studios](https://studiosoulutions.com/salonplus/app/): the first live building, in Glendale, Arizona
+- [Privacy](https://studiosoulutions.com/privacy/): what the forms collect and where it goes
 
 ## Facts
 
-- The product is sold to salon-suite building owners; each building gets its own fully branded app.
-- Visitors install nothing: the app is a web app, installable from the browser on request.
+- The product is sold to salon suite building owners; each building gets its own branded app, and pricing is shaped per building.
+- Visitors install nothing: the app runs in any phone's browser and can be added to the home screen.
 - Contact and sales run through Hive-Rise (hive-rise.com), the agency behind the product.
